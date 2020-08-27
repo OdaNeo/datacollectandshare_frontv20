@@ -1,0 +1,46 @@
+{
+    "code": 200,
+    "data": [
+        {
+            "id": 3,
+            "name": "权限管理",
+            "type": "menu",
+            "url": "/rootMGT",
+            "childrenList": [
+                {
+                    "id": 4,
+                    "name": "用户管理",
+                    "type": "menu",
+                    "url": "/rootMGT/userMGT"
+                },
+                {
+                    "id": 5,
+                    "name": "角色管理",
+                    "type": "menu",
+                    "url": "/rootMGT/roleMGT"
+                },
+                {
+                    "id": 6,
+                    "name": "资源管理",
+                    "type": "menu",
+                    "url": "/rootMGT/resourcesMGT"
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "name": "数据管理",
+            "type": "menu",
+            "url": "/dataMGT",
+            "childrenList": [
+                {
+                    "id": 9,
+                    "name": "数据统计",
+                    "type": "menu",
+                    "url": "/dataMGT/dataStatistics"
+                }
+            ]
+        }
+    ],
+    "message": "{}"
+}

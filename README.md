@@ -1,3 +1,19 @@
-# dataCollectAndShare_FrontV20
+# tctdatacenter
 
-数据汇聚存储共享2.0前端。
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Customize configuration
+See [Configuration Reference](https://cli.vuejs.org/config/).
