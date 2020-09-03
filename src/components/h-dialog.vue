@@ -2,7 +2,7 @@
     <div>
         <v-dialog
         v-model="closeDialog"
-        max-width="600px"
+        max-width="750px"
         persistent
         content-class="roleDialog"
         >
@@ -39,7 +39,7 @@ import { H_Vue } from '../declaration/vue-prototype';
     }
 })
 export default class HDialog extends Vue{
-    @Prop() private title!:string 
+    @Prop() private title!:string
     @Model("hdialog",{type:Boolean}) private checked!:boolean
     @Inject() private readonly formProvide!:H_Vue
     get closeDialog(){

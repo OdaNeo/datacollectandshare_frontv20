@@ -1,8 +1,8 @@
 <template>
     <div id="h-table">
-        <div 
+        <div
         class="simple-table"
-        :style="maxHeight?'max-height:'+maxHeight+'px':''" 
+        :style="maxHeight?'max-height:'+maxHeight+'px':''"
         >
             <v-simple-table
             fixed-header
@@ -11,9 +11,9 @@
                 <template v-slot:default>
                     <thead>
                         <tr>
-                            <th 
-                            v-for="(header,index) in headers" 
-                            :key="index" 
+                            <th
+                            v-for="(header,index) in headers"
+                            :key="index"
                             :class="'text-'+header.align"
                             :style="header.divider?'border:1px solid rgba(0, 0, 0, 0.12)':''"
                             >{{header.text}}</th>
@@ -21,22 +21,22 @@
                     </thead>
                     <tbody>
                         <tr v-for="(item,key) in desserts2" :key="key" v-show="showFun(item.parentid)">
-                            <td 
-                            v-for="(header,index) in headers" 
-                            :key="index" 
+                            <td
+                            v-for="(header,index) in headers"
+                            :key="index"
                             :class="'text-'+header.align"
                             :style="header.divider?'border:1px solid rgba(0, 0, 0, 0.12)':''"
                             >
                                 <div :style="'margin-left:'+(header.expand?(item.icon?((item.level-1)*10):((item.level-1)*20)):0)+'px'">
-                                    <v-icon 
-                                    v-if="header.expand&&item.icon" 
+                                    <v-icon
+                                    v-if="header.expand&&item.icon"
                                     @click="expandMethod(item)"
                                     :style="expandStyle(item)"
                                     >mdi-chevron-right</v-icon>
                                     {{header.format?header.format(item[header.value]):item[header.value]}}
-                                    <slot 
-                                    :name="header.slot" 
-                                    v-if="header.slot" 
+                                    <slot
+                                    :name="header.slot"
+                                    v-if="header.slot"
                                     :item = item
                                     :index= key
                                     ></slot>
@@ -75,13 +75,14 @@ export default class HTable extends Vue{
     @Watch("desserts")
     private dessertsChanged(val:any,oldVal:any):void{
         this.desserts2 = []
-        this.dessertsRecursion(val,1) 
+        this.dessertsRecursion(val,1)
     }
 
     private dessertsRecursion(val:any,level:number){
         const nowVal = Object.prototype.toString.call(val) == '[object Array]'?val:[val]
+
         nowVal.forEach((dessert:any) => {
-            if(dessert.childrenList&&dessert.childrenList.length>0){
+            if(dessert&&dessert.childrenList&&dessert.childrenList.length>0){
                 this.desserts2.push({...dessert,level,icon:true})
                 this.dessertsRecursion(dessert.childrenList,level+1)
             }else{

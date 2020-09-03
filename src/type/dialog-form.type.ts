@@ -13,7 +13,7 @@ export type FormObj = {
   btnName: Array<string>
   methodName: string
   formObj: {
-    [key:string]:FormStructure|string|number|Array<any>
+    [key:string]:FormStructure|string|number|Array<any>|boolean
   }
 }
 

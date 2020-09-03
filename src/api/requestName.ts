@@ -28,6 +28,17 @@ export const GET_TOPICS_MYTOPICS = "/topics/myTopics"
 export const GET_TOPICS_MYTOPICSBYID = "/topics/myTopicsById"
 export const GET_TOPICS_FINDTOPICBYTOPICNAME = "/topics/findTopicByTopicName"
 
+// 增加主题
+export const POST_TOPICS_ADD = "/topics/addTopic"
+// 更新主题
+export const POST_TOPICS_UPDATE = "topics/updateTopic"
+// 删除主题
+export const GET_TOPICS_DELETE = "/topics/delTopic"
+// 查询主题附加信息
+export const GET_TOPICS_INFORMATION = "/topics/findTopicAdditionalByTopicName"
+// 校验主题名称是否存在
+export const GET_TOPICS_CHECKED = "/topics/findTopicByTopicName"
+
 //---------------- 主题订阅审核 ------------------
 export const GET_SUB_MODERATIONS_SELECT_STATUS = "/subModerations/selectStatus" //获取审核列表
 export const GET_SUBMODERATIONS_SELECTBYUSERNAMESTATUS = "/subModerations/selectByUserNameStatus"//通过订阅用户获取审核列表
@@ -104,7 +115,12 @@ const REQUEST_NAME:REQUEST_NAME = {
   GET_SYSNET_GETBINDBYNAME,
   GET_SYSNET_GETSYSNETLIST,
   GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG,
-  GET_SYSTEM_GETSYSTEMINFO
+  GET_SYSTEM_GETSYSTEMINFO,
+  POST_TOPICS_ADD,
+  GET_TOPICS_DELETE,
+  GET_TOPICS_INFORMATION,
+  GET_TOPICS_CHECKED,
+  POST_TOPICS_UPDATE
 }
 
 export default REQUEST_NAME

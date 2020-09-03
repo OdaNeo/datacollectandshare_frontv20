@@ -7,9 +7,10 @@ import { httpAllParams, returnDataType } from '../type/http-request.type';
 
 class HttpRequest {
   private axiosIns: AxiosInstance = axios.create({
-    baseURL: "http://112.126.65.241:8081",
+    //baseURL: "http://112.126.65.241:8081", // 测试环境
     //baseURL: "http://localhost:8080",
     //baseURL: "http://192.168.62.84:9000",
+    baseURL: "http://192.168.60.143:9000", // 郝帅本地服务
     timeout: 50000,
     headers: {
       post: {
@@ -36,7 +37,7 @@ class HttpRequest {
     })
   }
 
-  
+
   public get = async <T>(url: string,data: T,callback: Function)=> {
     const response:returnDataType = await this.requestHelper.getFun<T>(url, data)
     this.codeType(response,callback)
@@ -69,7 +70,7 @@ class HttpRequest {
       case 200:
         callback(response)
         break;
-    
+
       default:
         break;
     }

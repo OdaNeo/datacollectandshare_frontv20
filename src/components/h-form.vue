@@ -1,6 +1,6 @@
 <template>
     <div>
-        <v-form 
+        <v-form
         ref="userDialogForm"
         v-model="userDialogValid"
         >
@@ -71,8 +71,10 @@ export default class DialogForm extends Vue{
     }
 
     private reset(){
+
         // this.udf.reset()
         const formObj = this.formProvide.formObj
+
         for(let key in formObj){
             if(Object.prototype.toString.call(formObj[key]) != '[object Object]'){
                 if(Object.prototype.toString.call(formObj[key])=='[object Array]'){
@@ -89,9 +91,30 @@ export default class DialogForm extends Vue{
             }
         }
         if((this.$children[0].$children[0] as any).clearMethod){
-            (this.$children[0].$children[0] as any).clearMethod() 
-        } 
+            (this.$children[0].$children[0] as any).clearMethod()
+        }
+        this.formProvide.formObj = {
+            id:'', // 主题ID
+            canNotEdit: false, // 添加数据
+            interfaceType:1,
+            topicName:'', // 主题名称
+            messageType:'', // 消息类型
+            dataBaseIp:'', // 数据库地址
+            databaseType:'', // 数据库类型
+            header: [{key:'',value:''},],
+            url: '',
+            topicList:[
+                {
+                    number: '',
+                    key:'',
+                    type:'',
+                    description:'', // 描述
+                    disabled:false
+                }
+            ]
+        }
         this.udf.resetValidation()
+
     }
 }
 </script>

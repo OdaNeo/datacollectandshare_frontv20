@@ -102,6 +102,7 @@ export default class ViewLog extends Vue{
     }
 
     private PaginationsNow(page:number){
+        console.log('改变页签',page)
         this.pageNum = page
         this.searchMethod(false,{
             pageSize:this.pageSize,
