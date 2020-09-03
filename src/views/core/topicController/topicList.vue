@@ -232,7 +232,6 @@ export default class TopicList extends Vue{
         this.formObj.methodName = "addTopic" // 立即提交
 
         // if 增加字段
-        console.log('zheshisha',item)
         if(item){
             console.log(this.otherObj)
             this.formObj.formObj.canNotEdit = true
@@ -260,8 +259,6 @@ export default class TopicList extends Vue{
                 })
             }
         }
-        console.log(item)
-
     }
     //  提交创建
     private addTopic(formObj:TopicAdd){
@@ -373,7 +370,6 @@ export default class TopicList extends Vue{
             topicInterFaceType:item.topicInterFaceType
         })
         if(success){
-            console.log('当前状态：',bool)
             this.otherObj = data
             if(!bool){
                 this.onlyShowOther = showOther
@@ -402,12 +398,11 @@ export default class TopicList extends Vue{
         }
     }
     private PaginationsNow(page:number){
-        console.log('改变页签',page)
         this.pageNum = page
         this.searchMethod(false,{
             pageSize:this.pageSize,
             pageNum:this.pageNum
-        })
+        },!!this.tab)
     }
 
 

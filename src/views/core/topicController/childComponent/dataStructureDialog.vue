@@ -1,19 +1,21 @@
 <template>
     <div id="dataStructureDialog">
+        <!-- 附加信息-->
         <h-table
             :headers="otherHeaders"
             :desserts="desserts2"
             :height="100"
             style="margin-bottom: 10px"
-            v-show="onlyShowOther&&showOther"
+            v-show="onlyShowOther"
         ></h-table>
         <!-- 服务器拉取数据的头信息 -->
         <h-table
             :headers="otherHeaders3"
             :desserts="desserts3"
             style="margin-bottom: 10px"
-            v-show="onlyShowOther&&showOther&&showHeader"
+            v-show="onlyShowOther  && showHeader"
         ></h-table>
+        <!--详情数据-->
         <h-table
             v-show="!onlyShowOther"
             :headers="headers"
@@ -39,17 +41,14 @@ export default class DataStructureDialog extends Vue{
     @Prop() private onlyShowOther!:any //展示头信息
     private showHeader:boolean = false
     @Inject() private readonly formProvide!:H_Vue
-    private showOther:boolean = false
     get desserts(){
         console.log(this.rowObj)
         switch (this.rowObj.topicInterFaceType) {
             case 1:
                 // 没有额外信息
-                this.showOther = false
                 this.showHeader = false
                 break
             case 2:
-                this.showOther = true
                 this.showHeader = false
                 this.otherHeaders = [
                     {
@@ -65,7 +64,6 @@ export default class DataStructureDialog extends Vue{
                 ]
                 break
             case 3:
-                this.showOther = true
                 this.showHeader = true
                 this.otherHeaders = [
                     {
@@ -88,12 +86,10 @@ export default class DataStructureDialog extends Vue{
         return arr
     }
     get desserts2(){
-        console.log('当前数据',this.otherObj)
         return this.otherObj[0]
     }
     get desserts3(){
         if(this.otherObj[0]){
-            console.log('当前数2',JSON.parse(this.otherObj[0].header))
             return JSON.parse(this.otherObj[0].header)
         }
     }
