@@ -12,6 +12,7 @@ body{
 html,body{
     height: 100%;
     overflow: hidden;
+    overflow-y: hidden !important;
 }
 a{
     text-decoration: none;
@@ -78,7 +79,7 @@ visibility: hidden;
 .dialogInput > .v-input__control > .v-input__slot{
     min-height:auto !important;
     display: flex !important;
-    
+
 }
 .dialogInput > .v-input__control > .v-text-field__details{
     margin-bottom: 0 !important;
@@ -113,4 +114,11 @@ visibility: hidden;
     min-height:0px !important;
     height:0px !important;
     margin-bottom: 0px !important;
+}
+
+#h-table .simple-table{
+    height: 70vh !important;
+}
+#h-table .v-data-table__wrapper{
+    height: auto !important;
 }

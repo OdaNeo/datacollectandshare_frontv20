@@ -26,7 +26,7 @@
         <v-tabs v-model="tab" @change="tabChange">
             <v-tab v-for="item in items" :key="item">{{item}}</v-tab>
         </v-tabs>
-        <v-tabs-items v-model="tab">
+        <v-tabs-items v-model="tab" >
             <v-tab-item v-for="item in items" :key="item">
                 <h-table
                 :headers="headers"
@@ -163,7 +163,7 @@ export default class TopicList extends Vue{
     private queryTopicID = null  //查询主题ID input框内容
     private paginationLength:number = 0 //分页数
     private pageNum:number = 1 //第几页
-    private pageSize:number = 10 //每页展示多少条数据
+    private pageSize:number = 20 //每页展示多少条数据
     private headers = [  //表头内容 所有主题
         {
             text:"主题ID",
