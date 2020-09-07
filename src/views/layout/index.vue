@@ -1,6 +1,6 @@
 <template>
     <v-app id="tct">
-        <v-navigation-drawer 
+        <v-navigation-drawer
         app
         width="200"
         color="rgb(0,21,41)"
@@ -12,8 +12,8 @@
                 <NavBar1 v-show="navBar"></NavBar1>
             </transition>
         </v-navigation-drawer>
-        <v-app-bar 
-        app 
+        <v-app-bar
+        app
         height="57"
         color="rgb(0,21,41)"
         class="animated bounceInDown"
@@ -38,6 +38,7 @@ import {rootStoreModule} from "../../store/modules/root"
 import NavBar from '../../components/navbar.vue';
 import TopBar from '../../components/topbar.vue';
 import NavBar1 from '../../components/navbar1.vue'
+import DevicePixelRatio from "@/utils/windowResize";
 @Component({
     components:{
         NavBar,
@@ -77,13 +78,14 @@ export default class Login extends Vue{
     bread:boolean = false
     content:boolean = false
     created() {
+        new DevicePixelRatio().init()
         setTimeout(()=>{
             this.bread = true
             this.navBar = true
         },0)
          setTimeout(()=>{
             this.content = true
-        },1000)      
+        },1000)
     }
 }
 </script>

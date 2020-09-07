@@ -24,7 +24,7 @@
                 </v-btn>
             </v-col>
         </v-row>
-        <transition name="table" @after-leave="tableAfterEnter">
+        <transition name="table" @after-leave="tableAfterEnter" style="background: #fff">
             <div style="height:448px">
                 <v-data-table
                 :headers="headers"
@@ -60,15 +60,16 @@
                         </v-icon>
                     </template>
                 </v-data-table>
+                <v-pagination
+                        :length="paginationLength"
+                        :total-visible="7"
+                        circle
+                        @input="handleCurrentChange"
+                        :value="pageNum"
+                ></v-pagination>
             </div>
         </transition>
-        <v-pagination
-        :length="paginationLength"
-        :total-visible="7"
-        circle
-        @input="handleCurrentChange"
-        :value="pageNum"
-        ></v-pagination>
+
         <h-dialog v-model="dialogFlag">
             <user-dialog slot="dialog-content"></user-dialog>
         </h-dialog>

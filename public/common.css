@@ -117,8 +117,17 @@ visibility: hidden;
 }
 
 #h-table .simple-table{
-    height: 50vh !important;
+    max-height: 65vh !important;
 }
 #h-table .v-data-table__wrapper{
     height: auto !important;
+}
+.theme--light.v-navigation-drawer{
+    height: 3000px !important;
+}
+.theme--light.v-application{
+    background: rgb(246, 248, 251) !important;
+}
+#h-table .v-pagination{
+    background: rgb(246, 248, 251) !important;
 }
