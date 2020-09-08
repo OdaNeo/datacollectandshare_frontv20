@@ -32,8 +32,19 @@ class DevicePixelRatio {
 	//校正浏览器缩放比例
 	_correct() {
 		let t = this;
+		let body = document.getElementsByTagName('body')[0]
 		//页面devicePixelRatio（设备像素比例）变化后，计算页面body标签zoom修改其大小，来抵消devicePixelRatio带来的变化。
-		document.getElementsByTagName('body')[0].style.zoom = (1 / window.devicePixelRatio)+"";
+		switch (window.devicePixelRatio) {
+			case 1:
+				body.style.zoom = "1"
+				break;
+			case 1.25:
+				body.style.zoom = "0.9"
+				break;
+			case 1.5:
+				body.style.zoom = "0.85"
+				break;
+		}
 	}
 	//监听页面缩放
 	_watch() {
