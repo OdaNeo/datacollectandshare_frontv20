@@ -8,11 +8,11 @@
             <release-menu :systemItems="systemItems"></release-menu>
             <subscribe-menu :systemItems="systemItems"></subscribe-menu>
         </div>
-        <v-snackbar
+        <!-- <v-snackbar
         v-model="snackbar"
         >
             close
-        </v-snackbar>
+        </v-snackbar> -->
     </div>
 </template>
 <script lang="ts">
@@ -41,7 +41,7 @@ import http2 from '../../../decorator/httpDecorator2';
 // @http2()
 export default class Welcome extends Vue{
     private systemItems:any[] = []
-    private snackbar:boolean = true
+    // private snackbar:boolean = true
 
     private getYearsList(arr:string[],endTime:string):string[]{
         const yearsList:string[] = []
