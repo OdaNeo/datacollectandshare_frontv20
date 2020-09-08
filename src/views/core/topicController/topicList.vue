@@ -73,7 +73,7 @@
                             text
                             color="primary"
                             class="my-2"
-                            :disabled="item.topicInterFaceType===1"
+                            :disabled="!item.topicInterFaceType||item.topicInterFaceType===1"
                             @click="getTopicInformation(item,false,true)"
                         >
                             查看附加信息
@@ -364,6 +364,7 @@ export default class TopicList extends Vue{
     }
 
     private async getTopicInformation(item:any,bool:boolean,showOther:boolean){
+        console.log(item)
         const {success, data}:any = await this.h_request["httpGET"]("GET_TOPICS_INFORMATION",{
             topicID:item.id,
             topicName:item.topicName,
