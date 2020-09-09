@@ -243,13 +243,17 @@ export default class TopicList extends Vue{
             this.formObj.formObj.redisTimer = item.redisTimer
             if(this.otherObj[0]){
                 this.formObj.formObj.dataBaseIp = this.otherObj[0].dataBaseIp||''
-                this.formObj.formObj.databaseType =  this.otherObj[0].databaseType||''
-                this.formObj.formObj.header =  JSON.parse(this.otherObj[0].header||'')
+                this.formObj.formObj.databaseType =  this.otherObj[0].dataBaseType||''
+                this.formObj.formObj.header =  JSON.parse(this.otherObj[0].header)||''
                 this.formObj.formObj.url =  this.otherObj[0].url||''
             }
+            console.log(0)
             let obj1:any = JSON.parse(item.dsAnnotation)
+            console.log(1)
             let obj2:any = JSON.parse(item.structMapping)
+            console.log(2)
             let obj3:any = JSON.parse(item.dataStruct)[0]
+            console.log(3)
             this.formObj.formObj.topicList = []
             for(let k in obj2){
                 this.formObj.formObj.topicList.push({
