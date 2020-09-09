@@ -132,6 +132,7 @@ export default class TopicList extends Vue{
                     messageType:'', // 消息类型
                     dataBaseIp:'', // 数据库地址
                     databaseType:'', // 数据库类型
+                    redisTimer: '', // 内存过期时间
                     header: [{key:'',value:''},],
                     url: '',
                     topicList:[
@@ -239,6 +240,7 @@ export default class TopicList extends Vue{
             this.formObj.formObj.topicName = item.topicName
             this.formObj.formObj.messageType = item.queneType
             this.formObj.formObj.id = item.id
+            this.formObj.formObj.redisTimer = item.redisTimer
             if(this.otherObj[0]){
                 this.formObj.formObj.dataBaseIp = this.otherObj[0].dataBaseIp||''
                 this.formObj.formObj.databaseType =  this.otherObj[0].databaseType||''
@@ -285,6 +287,7 @@ export default class TopicList extends Vue{
                         params.topicInterFaceType = formObj.interfaceType
                         params.topicName = formObj.topicName
                         params.queneType = formObj.messageType
+                        params.redisTimer = formObj.redisTimer
                         break
                     case 2:
                         params.topicInterFaceType = formObj.interfaceType

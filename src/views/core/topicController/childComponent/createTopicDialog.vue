@@ -2,11 +2,18 @@
     <v-row id="createTopicDialog">
         <v-col cols="12"  class="btn-line">
             <div class="text-label-line" style="display: inline-block">
+                <label>数据类型：</label>
+            </div>
+            <v-btn small :disabled="formProvide.formObj.canNotEdit&&!onlineData" :color="onlineData?'primary':''" @click="showonlineData(true)">实时</v-btn>
+            <v-btn small :disabled="formProvide.formObj.canNotEdit&&onlineData" :color="!onlineData?'primary':''" @click="showonlineData(false)">离线</v-btn>
+        </v-col>
+        <v-col cols="12"  class="btn-line">
+            <div class="text-label-line" style="display: inline-block">
                 <label>接口类型：</label>
             </div>
-            <v-btn :disabled="formProvide.formObj.canNotEdit&&formProvide.formObj.interfaceType!==1" small :color="formProvide.formObj.interfaceType===1?'primary':''" @click="formProvide.formObj.interfaceType=1">通用Rest接口</v-btn>
-            <v-btn :disabled="formProvide.formObj.canNotEdit&&formProvide.formObj.interfaceType!==2" small :color="formProvide.formObj.interfaceType===2?'primary':''" @click="formProvide.formObj.interfaceType=2">数据库采集</v-btn>
-            <v-btn :disabled="formProvide.formObj.canNotEdit&&formProvide.formObj.interfaceType!==3" small :color="formProvide.formObj.interfaceType===3?'primary':''" @click="formProvide.formObj.interfaceType=3">服务主动拉取</v-btn>
+            <v-btn v-if="onlineData" :disabled="formProvide.formObj.canNotEdit&&formProvide.formObj.interfaceType!==1" small :color="formProvide.formObj.interfaceType===1?'primary':''" @click="formProvide.formObj.interfaceType=1">通用Rest接口</v-btn>
+            <v-btn v-if="!onlineData" :disabled="formProvide.formObj.canNotEdit&&formProvide.formObj.interfaceType!==2" small :color="formProvide.formObj.interfaceType===2?'primary':''" @click="formProvide.formObj.interfaceType=2">数据库采集</v-btn>
+            <v-btn v-if="!onlineData" :disabled="formProvide.formObj.canNotEdit&&formProvide.formObj.interfaceType!==3" small :color="formProvide.formObj.interfaceType===3?'primary':''" @click="formProvide.formObj.interfaceType=3">服务主动拉取</v-btn>
         </v-col>
         <v-col cols="9"  style="padding:0">
             <v-text-field
@@ -242,7 +249,32 @@
                 </v-btn>
             </v-col>
         </div>
-
+        <v-col cols="9" style="padding:0" v-if="onlineData">
+            <v-slider
+                    v-model="formProvide.formObj.redisTimer"
+                    class="align-center"
+                    max="30"
+                    min="5"
+                    :disabled="formProvide.formObj.canNotEdit"
+                    hide-details
+            >
+                <template v-slot:prepend>
+                    <div class="text-label">
+                        <label>内存过期时间：</label>
+                    </div>
+                </template>
+                <template v-slot:append>
+                    <v-text-field
+                            v-model="formProvide.formObj.redisTimer"
+                            class="mt-0 pt-0"
+                            disabled
+                            hide-details
+                            single-line
+                            style="width: 60px"
+                    ></v-text-field>
+                </template>
+            </v-slider>
+        </v-col>
     </v-row>
 </template>
 <script lang="ts">
@@ -258,6 +290,7 @@
         private messageType:string = ""
         private bool:boolean = false
         private topicBool:boolean = false
+        private onlineData:boolean = this.formProvide.formObj.interfaceType!==1?false:true
         private items:Array<any> = ['Init','String','Date','TimeStamp']
         private items2:Array<any> = ['Mysql','Oracle','Sql Server']
         private types:Array<any> = [{text:"数据量优先",value:1},{text:"顺序优先",value:2}]
@@ -299,6 +332,18 @@
             }
 
         }
+        private showonlineData(dataType:boolean){
+            if(dataType){
+                this.formProvide.formObj.interfaceType=1
+            }else{
+                if(this.formProvide.formObj.interfaceType===3){
+                    this.formProvide.formObj.interfaceType=3
+                }else{
+                    this.formProvide.formObj.interfaceType=2
+                }
+            }
+            this.onlineData = dataType
+        }
         private add(){ // 增加数据结构
             (this.formProvide.formObj.topicList as Array<any>).push({
                 number: '',
@@ -329,6 +374,7 @@
                 dataBaseIp:'', // 数据库地址
                 databaseType:'', // 数据库类型
                 header: [{key:'',value:''},],
+                redisTimer: '',
                 url: '',
                 topicList:[
                     {

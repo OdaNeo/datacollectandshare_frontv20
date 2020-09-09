@@ -14,4 +14,5 @@ export type TopicAdd = {
     header:string
     canNotEdit:boolean
     id:string
+    redisTimer:number
 }

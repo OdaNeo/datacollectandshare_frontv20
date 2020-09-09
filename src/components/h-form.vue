@@ -101,6 +101,7 @@ export default class DialogForm extends Vue{
             messageType:'', // 消息类型
             dataBaseIp:'', // 数据库地址
             databaseType:'', // 数据库类型
+            redisTimer: '',
             header: [{key:'',value:''},],
             url: '',
             topicList:[
