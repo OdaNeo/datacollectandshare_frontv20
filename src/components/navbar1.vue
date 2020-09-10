@@ -13,21 +13,21 @@
             </div>
         </div>
         <ul class="navUl">
-            <li 
-            v-for="(item,index) in navMenu" 
-            :key="index" 
-            class="navLi" 
-            @click="showChildUl($event,index)" 
+            <li
+            v-for="(item,index) in navMenu"
+            :key="index"
+            class="navLi"
+            @click="showChildUl($event,index)"
             :class="`${childUlShow==index?'navLiActive':''} ${lastChildUlShow2==index?'lastNavLi':''}`"
             >
                 <v-icon color="#FFF" style="font-size:16px;margin-left:8px;margin-right:10px">mdi-shield-lock</v-icon>
                 <p>{{item.name}}</p>
                 <v-icon color="#FFF" style="font-size:16px;margin-left:80px;" :style="childUlShow==index?'transform:rotate(180deg)':''">mdi-chevron-left</v-icon>
                 <ul class="childUl animated flipInX" v-show="childUlShow==index" style="animation-duration:1s">
-                    <router-link 
+                    <router-link
                     tag="li"
-                    :to="childItem.url" 
-                    v-for="(childItem,index2) in item.childrenList" 
+                    :to="childItem.url"
+                    v-for="(childItem,index2) in item.childrenList"
                     :key="index2"
                     @mouseenter.native="childUlMouseEnterMethod(index2)"
                     @mouseleave.native="childUlMouseLeave(index2)"
@@ -98,7 +98,7 @@ export default class NavBar1 extends Vue{
             this.lastChildUlShow2 = this.lastChildUlShow
             this.lastChildUlShow = -1
             this.flag = true
-        })   
+        })
     }
 }
 </script>
@@ -159,23 +159,23 @@ export default class NavBar1 extends Vue{
 }
 .lastNavLi{
     animation: twinkling .3s infinite ease-in-out;
-    animation-iteration-count:1 
+    animation-iteration-count:1
 }
-@keyframes twinkling{ 
-0%{ 
+@keyframes twinkling{
+0%{
 background:none
 }
 50%{
 background:rgb(204, 201, 201)
-} 
-100%{ 
-background:none; 
-} 
+}
+100%{
+background:none;
+}
 }
 .titleshadow{
     width: 100%;
     text-align: center;
-    background: -webkit-gradient(linear, left top, right top, color-stop(0, #FFF), color-stop(.4, #FFF), color-stop(.5, rgb(255,172,20)), color-stop(.6, #FFF), color-stop(1, #FFF));             
+    background: -webkit-gradient(linear, left top, right top, color-stop(0, #FFF), color-stop(.4, #FFF), color-stop(.5, rgb(255,172,20)), color-stop(.6, #FFF), color-stop(1, #FFF));
     background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: animate 3s infinite;

@@ -144,8 +144,6 @@
                 </v-col>
             </div>
         </div>
-
-
         <v-col cols="9"  style="padding:0" v-if="formProvide.formObj.interfaceType===1">
             <v-radio-group
                     v-model="formProvide.formObj.messageType"
@@ -173,83 +171,7 @@
                 ></v-radio>
             </v-radio-group>
         </v-col>
-        <div  v-for="(item,index) in formProvide.formObj.topicList" style="display: flex;flex: 1">
-            <v-col cols="5"  class="input-item">
-                <v-text-field
-                        single-line
-                        outlined
-                        dense
-                        :disabled="item.disabled"
-                        height="32"
-                        class="dialogInput"
-                        label="键"
-                        v-model="item.number"
-                        :rules="valueRequire"
-                        required
-                >
-                    <template v-slot:prepend >
-                        <div class="text-label" v-if="index===0">
-                            <label><span class="require-span">*</span>数据结构：</label>
-                        </div>
-                        <div class="text-label" v-else>
-                            <p></p>
-                            <label></label>
-                        </div>
-                    </template>
-                </v-text-field>
-            </v-col>
-            <v-col cols="2"  class="input-item">
-                <v-text-field
-                        single-line
-                        :disabled="item.disabled"
-                        outlined
-                        dense
-                        label="值"
-                        height="32"
-                        class="dialogInput"
-                        v-model="item.key"
-                        :rules="valueRequire"
-                        required
-                >
-                </v-text-field>
-            </v-col>
-            <v-col cols="2"  class="input-item">
-                <v-text-field
-                        single-line
-                        outlined
-                        :disabled="item.disabled"
-                        dense
-                        height="32"
-                        class="dialogInput"
-                        label="描述"
-                        v-model="item.description"
-                        :rules="valueRequire"
-                        required
-                >
-                </v-text-field>
-            </v-col>
-            <v-col cols="2" class="input-item">
-                <v-autocomplete
-                        v-model="item.type"
-                        :items="items"
-                        dense
-                        :disabled="item.disabled"
-                        :rules="valueRequire"
-                        required
-
-                        height="28"
-                ></v-autocomplete>
-            </v-col>
-            <v-col cols="1" class="input-item">
-                <v-btn fab dark small color="indigo" class="add-btn" v-if="formProvide.formObj.topicList.length ===index+1" @click="add()">
-                    <v-icon dark>mdi-plus</v-icon>
-                </v-btn>
-                <v-btn fab dark small color="error" class="add-btn" v-if="formProvide.formObj.topicList.length !==index+1&& !item.disabled "  @click="minus(index)" >
-                    <v-icon dark>mdi-minus</v-icon>
-                </v-btn>
-            </v-col>
-        </div>
-        <v-col cols="9" style="padding:0" v-if="onlineData">
+        <v-col cols="9" style="padding:0 0 18px 0" v-if="onlineData" >
             <v-slider
                     v-model="formProvide.formObj.redisTimer"
                     class="align-center"
@@ -275,6 +197,86 @@
                 </template>
             </v-slider>
         </v-col>
+        <div style="width: 100%">
+            <div  v-for="(item,index) in formProvide.formObj.topicList" style="display: flex;flex: 1;">
+                <v-col cols="5"  class="input-item">
+                    <v-text-field
+                            single-line
+                            outlined
+                            dense
+                            :disabled="item.disabled"
+                            height="32"
+                            class="dialogInput"
+                            label="键"
+                            v-model="item.number"
+                            :rules="valueRequire"
+                            required
+                    >
+                        <template v-slot:prepend >
+                            <div class="text-label" v-if="index===0">
+                                <label><span class="require-span">*</span>数据结构：</label>
+                            </div>
+                            <div class="text-label" v-else>
+                                <p></p>
+                                <label></label>
+                            </div>
+                        </template>
+                    </v-text-field>
+                </v-col>
+                <v-col cols="2"  class="input-item">
+                    <v-text-field
+                            single-line
+                            :disabled="item.disabled"
+                            outlined
+                            dense
+                            label="值"
+                            height="32"
+                            class="dialogInput"
+                            v-model="item.key"
+                            :rules="valueRequire"
+                            required
+                    >
+                    </v-text-field>
+                </v-col>
+                <v-col cols="2"  class="input-item">
+                    <v-text-field
+                            single-line
+                            outlined
+                            :disabled="item.disabled"
+                            dense
+                            height="32"
+                            class="dialogInput"
+                            label="描述"
+                            v-model="item.description"
+                            :rules="valueRequire"
+                            required
+                    >
+                    </v-text-field>
+                </v-col>
+                <v-col cols="2" class="input-item">
+                    <v-autocomplete
+                            v-model="item.type"
+                            :items="items"
+                            dense
+                            :disabled="item.disabled"
+                            :rules="valueRequire"
+                            required
+
+                            height="28"
+                    ></v-autocomplete>
+                </v-col>
+                <v-col cols="1" class="input-item">
+                    <v-btn fab dark small color="indigo" class="add-btn" v-if="formProvide.formObj.topicList.length ===index+1" @click="add()">
+                        <v-icon dark>mdi-plus</v-icon>
+                    </v-btn>
+                    <v-btn fab dark small color="error" class="add-btn" v-if="formProvide.formObj.topicList.length !==index+1&& !item.disabled "  @click="minus(index)" >
+                        <v-icon dark>mdi-minus</v-icon>
+                    </v-btn>
+                </v-col>
+            </div>
+        </div>
+
+
     </v-row>
 </template>
 <script lang="ts">

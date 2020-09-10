@@ -73,7 +73,7 @@
                             text
                             color="primary"
                             class="my-2"
-                            :disabled="!item.topicInterFaceType||item.topicInterFaceType===1"
+
                             @click="getTopicInformation(item,false,true)"
                         >
                             查看附加信息

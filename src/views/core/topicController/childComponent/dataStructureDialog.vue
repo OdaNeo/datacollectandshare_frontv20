@@ -3,7 +3,7 @@
         <!-- 附加信息-->
         <h-table
             :headers="otherHeaders"
-            :desserts="desserts2"
+            :desserts="dataList"
             :height="100"
             style="margin-bottom: 10px"
             v-show="onlyShowOther"
@@ -40,6 +40,7 @@ export default class DataStructureDialog extends Vue{
     @Prop() private otherObj!:any // 展示附加信息
     @Prop() private onlyShowOther!:any //展示头信息
     private showHeader:boolean = false
+    private dataList:any = []
     @Inject() private readonly formProvide!:H_Vue
     get desserts(){
         console.log(this.rowObj)
@@ -47,9 +48,18 @@ export default class DataStructureDialog extends Vue{
             case 1:
                 // 没有额外信息
                 this.showHeader = false
+                this.otherHeaders = [
+                    {
+                        text:"内存过期时间",
+                        align: "center",
+                        value:"redisTimer",
+                    },
+                ]
+                this.dataList = {redisTimer:this.rowObj.redisTimer}
                 break
             case 2:
                 this.showHeader = false
+                this.dataList = this.desserts2
                 this.otherHeaders = [
                     {
                         text:"数据库地址",
@@ -65,6 +75,7 @@ export default class DataStructureDialog extends Vue{
                 break
             case 3:
                 this.showHeader = true
+                this.dataList = this.desserts2
                 this.otherHeaders = [
                     {
                         text:"url",
