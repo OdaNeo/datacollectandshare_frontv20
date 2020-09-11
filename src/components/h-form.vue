@@ -72,19 +72,23 @@ export default class DialogForm extends Vue{
     private reset(clearAll:boolean){
         const formObj:any = this.formProvide.formObj
         if(clearAll){
-            // 增加字段的重置 至重置数据结构部分
-            if(formObj.title = "添加字段"){
-                // 增加字段的重置 至重置数据结构部分
-                for(let i=0;i<formObj.topicList.length;i++){
-                    console.log(formObj.topicList[i])
-                    if(!formObj.topicList[i].disabled&&formObj.topicList.length!=1){
-                        console.log('从第几个开始删除',i)
-                        console.log('删除几个',formObj.topicList.length-i)
-                        formObj.topicList.splice(i, formObj.topicList.length-i)
+            // 增加字段的重置 只重置数据结构部分
+            for(let i=0;i<formObj.topicList.length;i++){
+                if(!formObj.topicList[i].disabled){
+                    formObj.topicList.splice(i, formObj.topicList.length-i)
+                    // 判断是否还有值
+                    if(formObj.topicList.length===0){
+                        formObj.topicList=[{
+                            number: '',
+                            key:'',
+                            type:'',
+                            description:'', // 描述
+                            disabled:false
+                        }]
                     }
                 }
-                return
             }
+            return
         }else{
         // this.udf.reset()
         for(let key in formObj){
