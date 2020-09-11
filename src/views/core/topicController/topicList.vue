@@ -234,7 +234,7 @@ export default class TopicList extends Vue{
 
         // if 增加字段
         if(item){
-            console.log(this.otherObj)
+            this.formObj.title = "添加字段"
             this.formObj.formObj.canNotEdit = true
             this.formObj.formObj.interfaceType = item.topicInterFaceType
             this.formObj.formObj.topicName = item.topicName
@@ -247,13 +247,9 @@ export default class TopicList extends Vue{
                 this.formObj.formObj.header =  JSON.parse(this.otherObj[0].header)||''
                 this.formObj.formObj.url =  this.otherObj[0].url||''
             }
-            console.log(0)
             let obj1:any = JSON.parse(item.dsAnnotation)
-            console.log(1)
             let obj2:any = JSON.parse(item.structMapping)
-            console.log(2)
             let obj3:any = JSON.parse(item.dataStruct)[0]
-            console.log(3)
             this.formObj.formObj.topicList = []
             for(let k in obj2){
                 this.formObj.formObj.topicList.push({

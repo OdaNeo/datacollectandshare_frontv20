@@ -199,7 +199,7 @@
         </v-col>
         <div style="width: 100%">
             <div  v-for="(item,index) in formProvide.formObj.topicList" style="display: flex;flex: 1;">
-                <v-col cols="5"  class="input-item">
+                <v-col cols="4"  class="input-item">
                     <v-text-field
                             single-line
                             outlined
@@ -265,12 +265,12 @@
                             height="28"
                     ></v-autocomplete>
                 </v-col>
-                <v-col cols="1" class="input-item">
+                <v-col cols="2" class="input-item">
+                    <v-btn fab dark small color="error" class="add-btn" v-if="(formProvide.formObj.topicList.length !==index+1||index!=0)&& !item.disabled "  @click="minus(index)" >
+                        <v-icon dark>mdi-minus</v-icon>
+                    </v-btn>
                     <v-btn fab dark small color="indigo" class="add-btn" v-if="formProvide.formObj.topicList.length ===index+1" @click="add()">
                         <v-icon dark>mdi-plus</v-icon>
-                    </v-btn>
-                    <v-btn fab dark small color="error" class="add-btn" v-if="formProvide.formObj.topicList.length !==index+1&& !item.disabled "  @click="minus(index)" >
-                        <v-icon dark>mdi-minus</v-icon>
                     </v-btn>
                 </v-col>
             </div>
