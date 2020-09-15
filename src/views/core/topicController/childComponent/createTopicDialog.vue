@@ -261,7 +261,6 @@
                             :disabled="item.disabled"
                             :rules="valueRequire"
                             required
-
                             height="28"
                     ></v-autocomplete>
                 </v-col>
@@ -293,7 +292,7 @@
         private bool:boolean = false
         private topicBool:boolean = false
         private onlineData:boolean = this.formProvide.formObj.interfaceType!==1?false:true
-        private items:Array<any> = ['Init','String','Date','TimeStamp']
+        private items:Array<any> = [{text:"Int",value:1},{text:"String",value:"str"},{text:"Data",value:"Data"},{text:"TimeStamp",value:new Date().getTime()}]
         private items2:Array<any> = ['Mysql','Oracle','Sql Server']
         private types:Array<any> = [{text:"数据量优先",value:1},{text:"顺序优先",value:2}]
         private arr:Array<any> = ['','']
