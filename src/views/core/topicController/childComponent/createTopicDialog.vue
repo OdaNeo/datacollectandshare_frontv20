@@ -66,6 +66,8 @@
                     dense
                     :rules="valueRequire"
                     required
+                    single-line
+                    outlined
             >
                 <template v-slot:prepend>
                     <div class="text-label">
@@ -96,7 +98,10 @@
             </v-text-field>
         </v-col>
         <div  v-if="formProvide.formObj.interfaceType===3" >
-            <div v-for="(item,index) in formProvide.formObj.header" style="display: flex;width: 100%;flex-wrap: wrap;">
+            <div 
+            v-for="(item,index) in formProvide.formObj.header" 
+            style="display: flex;width: 100%;flex-wrap: wrap;"
+            :key="index">
                 <v-col cols="6"  style="padding:0" >
                     <v-text-field
                             single-line
@@ -198,7 +203,11 @@
             </v-slider>
         </v-col>
         <div style="width: 100%">
-            <div  v-for="(item,index) in formProvide.formObj.topicList" style="display: flex;flex: 1;">
+            <div  
+            v-for="(item,index) in formProvide.formObj.topicList" 
+            style="display: flex;flex: 1;"
+            :key="index"
+            >
                 <v-col cols="4"  class="input-item">
                     <v-text-field
                             single-line
@@ -207,7 +216,7 @@
                             :disabled="item.disabled"
                             height="32"
                             class="dialogInput"
-                            label="键"
+                            label="序号"
                             v-model="item.number"
                             :rules="valueRequire"
                             required
@@ -229,7 +238,7 @@
                             :disabled="item.disabled"
                             outlined
                             dense
-                            label="值"
+                            label="字段名"
                             height="32"
                             class="dialogInput"
                             v-model="item.key"
@@ -262,6 +271,10 @@
                             :rules="valueRequire"
                             required
                             height="28"
+                            solo
+                            single-line
+                            outlined
+                            style="min-height:32px"
                     ></v-autocomplete>
                 </v-col>
                 <v-col cols="2" class="input-item">

@@ -131,3 +131,10 @@ visibility: hidden;
 #h-table .v-pagination{
     background: rgb(246, 248, 251) !important;
 }
+.v-input input{
+    max-height:none !important;
+    height:100% !important
+}
+ #createTopicDialog .v-autocomplete.v-input > .v-input__control > .v-input__slot{
+    min-height: 32px !important;
+}
