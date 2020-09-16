@@ -4,6 +4,7 @@
         class="simple-table"
         :style="maxHeight?'max-height:'+maxHeight+'px':''"
         >
+            <p style="margin-bottom:0" class="table-title" v-show="title">{{title}}</p>
             <v-simple-table
             fixed-header
             :height="height?height+'px':undefined"
@@ -71,6 +72,7 @@ export default class HTable extends Vue{
     @Prop() private pageNum!:number
     @Prop() private headers!:any
     @Prop() private desserts!:any
+    @Prop() private title!:string
 
     @Watch("desserts")
     private dessertsChanged(val:any,oldVal:any):void{
@@ -172,5 +174,13 @@ export default class HTable extends Vue{
 }
 .simple-table table tbody tr td:last-child{
     border-right:0px !important;
+}
+.table-title{
+    height:45px;
+    text-align: center;
+    line-height: 45px;
+    border-bottom:1px solid rgba(0, 0, 0, 0.12);
+    font-size:16px;
+    color: rgba(0, 0, 0, 0.6);
 }
 </style>

@@ -14,5 +14,12 @@ export type topicTable = {
   topicName: string
   userID: number | null
   userName: string
-  userSubNameList:Array<string>
+  userSubNameList: Array<string>
+  flag: boolean
+  topicInterFaceType: number
+  redisTimer: number
+  dataBaseIp: string | null
+  dataBaseType: string | null
+  url: string | null
+  header:string|null
 }

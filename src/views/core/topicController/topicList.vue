@@ -42,19 +42,19 @@
                         text
                         color="primary"
                         class="my-2"
-                        @click="getTopicInformation(item,false,false)"
+                        @click="dataStructureDetails(item)"
                         >
                             数据结构详情
                         </v-btn>
                     </template>
-                    <template v-slot:buttons2="{item}">
+                    <template v-slot:buttons2="{item,index}">
                         <v-btn
                                 v-if="tab"
                                 small
                                 text
                                 color="primary"
                                 class="my-2"
-                                @click.stop="getTopicInformation(item,true,false)"
+                                @click.stop="addFileds(item)"
                         >
                             增加字段
                         </v-btn>
@@ -74,7 +74,7 @@
                             color="primary"
                             class="my-2"
 
-                            @click="getTopicInformation(item,false,true)"
+                            @click="getTopicInformation(item,index)"
                         >
                             查看附加信息
                         </v-btn>
@@ -83,8 +83,9 @@
             </v-tab-item>
         </v-tabs-items>
         <h-dialog v-if="dialogFlag" v-model="dialogFlag">
-            <data-structure-dialog slot="dialog-content" :rowObj="rowObj" :otherObj="otherObj" :onlyShowOther="onlyShowOther" v-if="dialogShow"></data-structure-dialog>
-            <create-topic-dialog slot="dialog-content" v-else></create-topic-dialog>
+            <data-structure-dialog slot="dialog-content" :rowObj="rowObj" v-if="dialogShow==2"></data-structure-dialog>
+            <create-topic-dialog slot="dialog-content" v-else-if="dialogShow==1"></create-topic-dialog>
+            <topic-ancilary-information-dialog slot="dialog-content" :otherObj="otherObj" v-else-if="dialogShow==3"></topic-ancilary-information-dialog>
         </h-dialog>
     </div>
 </template>
@@ -102,13 +103,15 @@ import CreateTopicDialog from './childComponent/createTopicDialog.vue';
 import { TopicAdd } from '../../../type/topic-add.type';
 import {SystemConfigFormObj} from "@/type/system-config.type";
 import {GET_TOPICS_INFORMATION} from "@/api/requestName";
+import TopicAncilaryInformationDialog from './childComponent/topicAncilaryInformationDialog.vue';
 
 @Component({
     components:{
         HTable,
         HDialog,
         DataStructureDialog,
-        CreateTopicDialog
+        CreateTopicDialog,
+        TopicAncilaryInformationDialog
     }
 })
 @http
@@ -155,7 +158,7 @@ export default class TopicList extends Vue{
         "我的主题"
     ]
     private dialogFlag:boolean = false //弹窗展示
-    private dialogShow:boolean = true //展示哪个弹窗
+    private dialogShow:number = 0 //展示哪个弹窗 1.是主题添加和修改弹窗 2.是详细信息弹窗 3.是附加信息弹窗
     private rowObj:object = {} //数据结构弹窗数据
     private otherObj:any = {} //数据结构弹窗数据 补充
     private onlyShowOther:boolean = false // 只显示补充信息
@@ -227,7 +230,7 @@ export default class TopicList extends Vue{
     //  创建主题
     private createTopic(item:any){
         this.dialogFlag = true
-        this.dialogShow = false
+        this.dialogShow = 1
         this.formObj.btnName = ["立即提交"]
         this.formObj.title = "创建主题"
         this.formObj.methodName = "addTopic" // 立即提交
@@ -321,11 +324,15 @@ export default class TopicList extends Vue{
     private async searchMethod(bool:boolean,params:object,tab?:boolean){
         if(tab){
             const {data}: returnDataType = bool?await this.h_request["httpGET"]<object>("GET_TOPICS_MYTOPICSBYID",params):await this.h_request["httpGET"]<object>("GET_TOPICS_MYTOPICS",params)
-            this.desserts = data.list
+            this.desserts = data.list.map((item:any)=>{
+                return {...item,flag:false}
+            })
             this.paginationLength = Math.floor((data["total"]/this.pageSize)+1)
         }else{
             const {data}: returnDataType = bool?await this.h_request["httpGET"]<object>("GET_TOPICS_SELECTTOPIC",params):await this.h_request["httpGET"]<object>("GET_TOPICS_FIND_ALL",params)
-            this.desserts = data.list
+            this.desserts = data.list.map((item:any)=>{
+                return {...item,flag:false}
+            })
             this.paginationLength = Math.floor((data["total"]/this.pageSize)+1)
         }
     }
@@ -359,34 +366,50 @@ export default class TopicList extends Vue{
     //数据结构展示方法
     private dataStructure(item:any,str:string){
         this.dialogFlag = true
-        this.dialogShow = true
+        this.dialogShow = 2
         this.rowObj = item
         this.formObj.title = str
         this.formObj.btnName = []
         this.formObj.methodName = " "
     }
 
-    private async getTopicInformation(item:any,bool:boolean,showOther:boolean){
-        console.log(item)
-        const {success, data}:any = await this.h_request["httpGET"]("GET_TOPICS_INFORMATION",{
-            topicID:item.id,
-            topicName:item.topicName,
-            topicInterFaceType:item.topicInterFaceType
-        })
-        if(success){
-            this.otherObj = data
-            if(!bool){
-                this.onlyShowOther = showOther
-                if(!showOther){
-                    this.dataStructure(item,"数据结构详情")
-                }else{
-                    this.dataStructure(item,"附加信息")
-                }
+    private ancillaryInformation(info:any,str:string){
+        this.dialogFlag = true
+        this.dialogShow = 3
+        this.otherObj = info
+        this.formObj.title = str
+        this.formObj.btnName = []
+        this.formObj.methodName = " "
+    }
 
-            }else{
-                this.createTopic(item)
+    private dataStructureDetails(item:any){
+        this.dataStructure(item,"数据结构详情")
+    }
+
+    private addFileds(item:any){
+        this.createTopic(item)
+    }
+
+    private async getTopicInformation(item:any,index:number){
+        let info:any = {}
+        if(!this.desserts[index].flag){
+            const {data}:any = await this.h_request["httpGET"]("GET_TOPICS_INFORMATION",{
+                topicID:item.id,
+                topicName:item.topicName,
+                topicInterFaceType:item.topicInterFaceType
+            })
+            console.log(data)
+            console.log(this.desserts[index])
+            if(data.length>0){
+                this.desserts[index].dataBaseIp = data[0].dataBaseIp
+                this.desserts[index].dataBaseType = data[0].dataBaseType
+                this.desserts[index].url = data[0].url
+                this.desserts[index].header = data[0].header
             }
+            // info = {...data[0],topicInterFaceType:item.topicInterFaceType,redisTimer:item.redisTimer}
+            this.desserts[index].flag = true;
         }
+        this.ancillaryInformation(this.desserts[index],"附加信息")
     }
     private async deleteTopic(item:any){
         const {success} = await this.h_request["httpGET"]("GET_TOPICS_DELETE",{
@@ -411,10 +434,11 @@ export default class TopicList extends Vue{
 
 
     created() {
-        this.searchMethod(false,{
-            pageSize:this.pageSize,
-            pageNum:this.pageNum
-        },false)
+        // console.log(418)
+        // this.searchMethod(false,{
+        //     pageSize:this.pageSize,
+        //     pageNum:this.pageNum
+        // },false)
     }
 }
 </script>
