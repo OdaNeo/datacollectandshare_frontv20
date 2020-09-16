@@ -97,9 +97,9 @@
                 </template>
             </v-text-field>
         </v-col>
-        <div  v-if="formProvide.formObj.interfaceType===3" >
-            <div 
-            v-for="(item,index) in formProvide.formObj.header" 
+        <div  v-if="formProvide.formObj.interfaceType===3" style="max-height:200px;overflow-y: auto;overflow-x: hidden;" >
+            <div
+            v-for="(item,index) in formProvide.formObj.header"
             style="display: flex;width: 100%;flex-wrap: wrap;"
             :key="index">
                 <v-col cols="6"  style="padding:0" >
@@ -202,9 +202,9 @@
                 </template>
             </v-slider>
         </v-col>
-        <div style="width: 100%">
-            <div  
-            v-for="(item,index) in formProvide.formObj.topicList" 
+        <div style="width: 100%;max-height:200px;overflow-y: auto;overflow-x: hidden;" >
+            <div
+            v-for="(item,index) in formProvide.formObj.topicList"
             style="display: flex;flex: 1;"
             :key="index"
             >
