@@ -9,17 +9,23 @@
                     <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
                 </v-list-item-avatar> -->
                 <v-list-item-content>
-                    <v-list-item-title>TCT管理系统</v-list-item-title>
+                    <v-list-item-title>天枢平台元数据管理中心</v-list-item-title>
                 </v-list-item-content>
             </v-list-item>
             <v-divider></v-divider>
             <div id="navContent">
-                <v-list-group
+                <!-- <v-list-group
                     v-for="item in navMenu"
                     :key="item.id"
                     :prepend-icon="parentIcon(item.name)"
                     no-action
                     :value="$route.matched[0].name==item.name"
+                > -->
+                <v-list-group
+                    v-for="item in navMenu"
+                    :key="item.id"
+                    :prepend-icon="parentIcon(item.name)"
+                    no-action
                 >
                     <template v-slot:activator>
                     <v-list-item-content>
