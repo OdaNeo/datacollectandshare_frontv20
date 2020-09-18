@@ -9,7 +9,8 @@
         class="animated bounceInLeft"
         >
             <transition name="navbar">
-                <NavBar1 v-show="navBar"></NavBar1>
+                <!-- <NavBar1 v-show="navBar"></NavBar1> -->
+                <nav-bar v-show="navBar"></nav-bar>
             </transition>
         </v-navigation-drawer>
         <v-app-bar

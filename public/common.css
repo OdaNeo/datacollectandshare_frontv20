@@ -69,9 +69,13 @@ visibility: hidden;
 .v-data-table--dense > .v-data-table__wrapper > table > thead > tr > th{
     height:45px !important;
 }
-.v-navigation-drawer__content{
+#navContent{
+    max-height:97vh;
     overflow-x: visible !important;
-    overflow-y: visible !important;
+    overflow-y: auto !important;
+}
+#navContent::-webkit-scrollbar{
+    display: none;
 }
 /* .v-text-field.v-text-field--enclosed:not(.v-text-field--rounded) > .v-input__control > .v-input__slot, .v-text-field.v-text-field--enclosed .v-text-field__details{
     padding: 0px !important;

@@ -1,6 +1,6 @@
 <template>
     <div id="navbar">
-        <v-list>
+        <v-list flat :dark="true" :expand="true" max-height="200">
             <v-list-item link>
                 <v-list-item-action>
                     <v-icon>mdi-home</v-icon>
@@ -13,36 +13,37 @@
                 </v-list-item-content>
             </v-list-item>
             <v-divider></v-divider>
-            <v-list-group
-                v-for="item in navMenu"
-                :key="item.id"
-                :prepend-icon="parentIcon(item.name)"
-                no-action
-                color="orange"
-                :value="$route.matched[0].name==item.name"
-            >
-                <template v-slot:activator>
-                <v-list-item-content>
-                    <v-list-item-title v-text="item.name"></v-list-item-title>
-                </v-list-item-content>
-                </template>
-
-                <v-list-item
-                v-for="subItem in item.childrenList"
-                :key="subItem.id"
-                link
-                input-value=true
-                color="rgb(167, 221, 1)"
-                :to="subItem.url"
+            <div id="navContent">
+                <v-list-group
+                    v-for="item in navMenu"
+                    :key="item.id"
+                    :prepend-icon="parentIcon(item.name)"
+                    no-action
+                    :value="$route.matched[0].name==item.name"
                 >
-                    <v-list-item-action>
-                        <v-icon>{{childIcon(subItem.name)}}</v-icon>
-                    </v-list-item-action>
+                    <template v-slot:activator>
                     <v-list-item-content>
-                        <v-list-item-title v-text="subItem.name"></v-list-item-title>
+                        <v-list-item-title v-text="item.name"></v-list-item-title>
                     </v-list-item-content>
-                </v-list-item>
-            </v-list-group>
+                    </template>
+
+                    <v-list-item
+                    v-for="subItem in item.childrenList"
+                    :key="subItem.id"
+                    link
+                    input-value=true
+                    color="#3F51B5"
+                    :to="subItem.url"
+                    >
+                        <v-list-item-action>
+                            <v-icon>{{childIcon(subItem.name)}}</v-icon>
+                        </v-list-item-action>
+                        <v-list-item-content>
+                            <v-list-item-title v-text="subItem.name"></v-list-item-title>
+                        </v-list-item-content>
+                    </v-list-item>
+                </v-list-group>
+            </div>
         </v-list>
     </div>
 </template>
