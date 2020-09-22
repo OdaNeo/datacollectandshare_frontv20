@@ -1,5 +1,35 @@
 <template>
     <v-row id="createTopicDialog">
+        <!-- 弹框 展示数据结 -->
+        <v-dialog
+                v-model="showConstruction"
+                width="500"
+        >
+            <v-card>
+                <v-card-title class="headline grey lighten-2">
+                    数据结构
+                </v-card-title>
+
+                <v-card-text>
+                    <p style="padding-top: 20px;">
+                        {{JSON.stringify(formProvide.formObj)}}
+                    </p>
+                </v-card-text>
+
+                <v-divider></v-divider>
+
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn
+                            color="primary"
+                            text
+                            @click="showConstruction = false"
+                    >
+                        关闭
+                    </v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
         <v-col cols="12"  class="btn-line">
             <div class="text-label-line" style="display: inline-block">
                 <label>数据类型：</label>
@@ -12,6 +42,7 @@
                 <label>接口类型：</label>
             </div>
             <v-btn v-if="onlineData" :disabled="formProvide.formObj.canNotEdit&&formProvide.formObj.interfaceType!==1" small :color="formProvide.formObj.interfaceType===1?'primary':''" @click="formProvide.formObj.interfaceType=1">通用Rest接口</v-btn>
+            <v-btn v-if="onlineData" :disabled="formProvide.formObj.canNotEdit&&formProvide.formObj.interfaceType!==4" small :color="formProvide.formObj.interfaceType===4?'primary':''" @click="formProvide.formObj.interfaceType=4">多级嵌套免校验</v-btn>
             <v-btn v-if="!onlineData" :disabled="formProvide.formObj.canNotEdit&&formProvide.formObj.interfaceType!==2" small :color="formProvide.formObj.interfaceType===2?'primary':''" @click="formProvide.formObj.interfaceType=2">数据库采集</v-btn>
             <v-btn v-if="!onlineData" :disabled="formProvide.formObj.canNotEdit&&formProvide.formObj.interfaceType!==3" small :color="formProvide.formObj.interfaceType===3?'primary':''" @click="formProvide.formObj.interfaceType=3">服务主动拉取</v-btn>
         </v-col>
@@ -149,7 +180,7 @@
                 </v-col>
             </div>
         </div>
-        <v-col cols="9"  style="padding:0" v-if="formProvide.formObj.interfaceType===1">
+        <v-col cols="9"  style="padding:0" v-if="formProvide.formObj.interfaceType===1||formProvide.formObj.interfaceType===4">
             <v-radio-group
                     v-model="formProvide.formObj.messageType"
                     single-line
@@ -176,6 +207,34 @@
                 ></v-radio>
             </v-radio-group>
         </v-col>
+        <v-col cols="9"  style="padding:0" v-if="formProvide.formObj.interfaceType===4">
+            <v-radio-group
+                    v-model="formProvide.formObj.writeElasticsearch"
+                    single-line
+                    outlined
+                    dense
+                    class="dialogInput"
+                    height="32"
+                    :disabled="formProvide.formObj.canNotEdit"
+                    row
+                    :rules="writeEsRules"
+                    required
+            >
+                <template v-slot:prepend>
+                    <div class="text-label" style="margin-top:7px">
+                        <label><span class="require-span">*</span>是否写入ES：</label>
+                    </div>
+                </template>
+                <v-radio
+                        :disabled="formProvide.formObj.canNotEdit"
+                        v-for="n in esList"
+                        :key="n.value"
+                        :label="`${n.text}`"
+                        :value="n.value"
+                ></v-radio>
+            </v-radio-group>
+        </v-col>
+
         <v-col cols="9" style="padding:0 0 18px 0" v-if="onlineData" >
             <v-slider
                     v-model="formProvide.formObj.redisTimer"
@@ -202,7 +261,7 @@
                 </template>
             </v-slider>
         </v-col>
-        <div style="width: 100%;max-height:200px;overflow-y: auto;overflow-x: hidden;" >
+        <div style="width: 100%;max-height:200px;overflow-y: auto;overflow-x: hidden;" v-if="formProvide.formObj.interfaceType!==4">
             <div
             v-for="(item,index) in formProvide.formObj.topicList"
             style="display: flex;flex: 1;"
@@ -287,8 +346,28 @@
                 </v-col>
             </div>
         </div>
-
-
+        <v-col cols="9"  style="padding:0"  v-if="onlineData">
+            <v-radio-group
+                    v-model="formProvide.formObj.messageType"
+                    single-line
+                    outlined
+                    dense
+                    class="dialogInput"
+                    height="32"
+                    :disabled="formProvide.formObj.canNotEdit"
+                    row
+                    required
+            >
+                <template v-slot:prepend>
+                    <div class="text-label" style="margin-top:7px">
+                        <label><span class="require-span"></span>数据实例：</label>
+                    </div>
+                </template>
+                <v-btn solo @click.native="showConstruction=true">
+                    查看
+                </v-btn>
+            </v-radio-group>
+        </v-col>
     </v-row>
 </template>
 <script lang="ts">
@@ -303,11 +382,13 @@
         private topicName:string = ""
         private messageType:string = ""
         private bool:boolean = false
+        private showConstruction:boolean = false
         private topicBool:boolean = false
         private onlineData:boolean = this.formProvide.formObj.interfaceType!==1?false:true
         private items:Array<any> = [{text:"Int",value:1},{text:"String",value:"str"},{text:"Data",value:"Data"},{text:"TimeStamp",value:new Date().getTime()}]
         private items2:Array<any> = ['Mysql','Oracle','Sql Server']
         private types:Array<any> = [{text:"数据量优先",value:1},{text:"顺序优先",value:2}]
+        private esList:Array<any> = [{text:"是",value:1},{text:"否",value:0}]
         private arr:Array<any> = ['','']
         private valueRequire:any = [
             (v:string) =>!!v||"不能为空",
@@ -323,7 +404,10 @@
             (v:string) => /^\w*$/.test(v) || "内容只能为数字、字母、下划线的组合"
         ]
         // 校验主题名称是否存在
-
+        private writeEsRules = [
+            (v:string) =>v!==''||"请选择是否写入ES"
+        ]
+        // 校验主题名称是否存在
         private messageTypeRules = [
             (v:string) =>!!v||"请选择消息类型"
         ]

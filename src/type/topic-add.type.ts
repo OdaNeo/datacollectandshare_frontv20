@@ -15,4 +15,5 @@ export type TopicAdd = {
     canNotEdit:boolean
     id:string
     redisTimer:number
+    writeElasticsearch:any
 }

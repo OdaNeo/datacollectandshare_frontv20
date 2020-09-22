@@ -137,6 +137,7 @@ export default class TopicList extends Vue{
                     databaseType:'', // 数据库类型
                     redisTimer: '', // 内存过期时间
                     header: [{key:'',value:''},],
+                    writeElasticsearch: '', // 是否展示
                     url: '',
                     topicList:[
                         {
@@ -304,6 +305,16 @@ export default class TopicList extends Vue{
                         params.url = formObj.url
                         params.header = JSON.stringify(formObj.header)
                         break
+                    case 4:
+                        params.topicInterFaceType = formObj.interfaceType
+                        params.topicName = formObj.topicName
+                        params.queneType = formObj.messageType
+                        params.redisTimer = formObj.redisTimer
+                        params.writeElasticsearch = formObj.writeElasticsearch
+                        delete params.dataStruct
+                        delete params.structMapping
+                        delete params.dsAnnotation
+                        break
                 }
             }else{
                 params.id = formObj.id
@@ -398,8 +409,7 @@ export default class TopicList extends Vue{
                 topicName:item.topicName,
                 topicInterFaceType:item.topicInterFaceType
             })
-            console.log(data)
-            console.log(this.desserts[index])
+
             if(data.length>0){
                 this.desserts[index].dataBaseIp = data[0].dataBaseIp
                 this.desserts[index].dataBaseType = data[0].dataBaseType
