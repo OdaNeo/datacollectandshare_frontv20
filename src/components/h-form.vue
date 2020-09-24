@@ -88,6 +88,32 @@ export default class DialogForm extends Vue{
                     }
                 }
             }
+            if(!this.formProvide.formObj.id){
+                this.formProvide.formObj = {
+                    id:'', // 主题ID
+                    canNotEdit: false, // 添加数据
+                    interfaceType:1,
+                    topicName:'', // 主题名称
+                    messageType:'', // 消息类型
+                    dataBaseIp:'', // 数据库地址
+                    databaseType:'', // 数据库类型
+                    redisTimer: '',
+                    dataStructSchema:'', //
+                    writeElasticsearch: '', // 是否展示
+                    header: [{key:'',value:''},],
+                    url: '',
+                    topicList:[
+                        {
+                            number: '',
+                            key:'',
+                            type:'',
+                            description:'', // 描述
+                            disabled:false
+                        }
+                    ]
+                }
+                this.udf.resetValidation()
+            }
             return
         }else{
         // this.udf.reset()
@@ -119,6 +145,8 @@ export default class DialogForm extends Vue{
             dataBaseIp:'', // 数据库地址
             databaseType:'', // 数据库类型
             redisTimer: '',
+            dataStructSchema:'', //
+            writeElasticsearch: '', // 是否展示
             header: [{key:'',value:''},],
             url: '',
             topicList:[

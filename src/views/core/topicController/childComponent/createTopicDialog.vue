@@ -235,7 +235,7 @@
                     </div>
                 </template>
                 <v-radio
-                        :disabled="formProvide.formObj.canNotEdit"
+                        :disabled="formProvide.formObj.canNotEdit"userDialogValid
                         v-for="n in types"
                         :key="n.value"
                         :label="`${n.text}`"
@@ -296,6 +296,22 @@
                     ></v-text-field>
                 </template>
             </v-slider>
+        </v-col>
+        <v-col cols="9"  style="padding:0"  v-if="formProvide.formObj.interfaceType===4">
+            <v-textarea
+                    outlined
+                    :disabled="formProvide.formObj.canNotEdit"
+                    v-model="formProvide.formObj.dataStructSchema"
+                    :rules="dataStructSchema"
+                    required
+            >
+                <template v-slot:prepend>
+                    <div class="text-label">
+
+                        <label><span class="require-span">*</span>数据结构：</label>
+                    </div>
+                </template>
+            </v-textarea>
         </v-col>
         <div style="width: 100%;max-height:200px;overflow-y: auto;overflow-x: hidden;" v-if="formProvide.formObj.interfaceType!==4">
             <div
@@ -420,7 +436,7 @@
         private bool:boolean = false
         private showConstruction:boolean = false
         private topicBool:boolean = false
-        private onlineData:boolean = this.formProvide.formObj.interfaceType!==1?false:true
+        private onlineData:boolean = this.formProvide.formObj.interfaceType===2||this.formProvide.formObj.interfaceType===3?false:true
         private items:Array<any> = [{text:"Int",value:1},{text:"String",value:"str"},{text:"Data",value:"Data"},{text:"TimeStamp",value:new Date().getTime()}]
         private items2:Array<any> = ['Mysql','Oracle','Sql Server']
         private types:Array<any> = [{text:"数据量优先",value:1},{text:"顺序优先",value:2}]
@@ -428,11 +444,33 @@
         private arr:Array<any> = ['','']
         private valueRequire:any = [
             (v:string) =>!!v||"不能为空",
+
         ]
         private topicNameRulesTest:any = [
             (v:string) =>!!v||"不能为空",
             (v:string) =>(v&&v.length<=20) || "内容最长可设置20个字符",
             (v:string) => /^\w*$/.test(v) || "内容只能为数字、字母、下划线的组合",
+        ]
+        private isJSON(str:string) {
+            if (typeof str == 'string') {
+                try {
+                    var obj=JSON.parse(str);
+                    if(typeof obj == 'object' && obj ){
+                        return true;
+                    }else{
+                        return false;
+                    }
+
+                } catch(e) {
+                    console.log('error：'+str+'!!!'+e);
+                    return false;
+                }
+            }
+            console.log('It is not a string!')
+        }
+        private dataStructSchema:any = [
+            (v:string) =>!!v||"不能为空",
+            (v:string) =>this.isJSON(v)||"请输入正确的Json数据"
         ]
         private topicNameRules = [
             (v:string) =>!!v||"不能为空",
@@ -509,6 +547,8 @@
                 databaseType:'', // 数据库类型
                 header: [{key:'',value:''},],
                 redisTimer: '',
+                dataStructSchema:'', //
+                writeElasticsearch: '', // 是否展示
                 url: '',
                 topicList:[
                     {

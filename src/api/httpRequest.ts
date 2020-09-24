@@ -11,7 +11,7 @@ class HttpRequest {
     // baseURL: "http://192.168.62.13:9000",
     //baseURL: "http://localhost:8080",
     //baseURL: "http://192.168.62.84:9000",
-    baseURL: "http://192.168.60.214:9000", // 郝帅本地服务
+    baseURL: "http://192.168.60.214:9000/", // 郝帅本地服务
     timeout: 50000,
     headers: {
       post: {

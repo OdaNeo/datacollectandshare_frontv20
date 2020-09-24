@@ -3,6 +3,16 @@ module.exports = {
   //"publicPath":"/tsweb2/",
   "devServer": {
     port: 8080,
+    // host: "localhost",
+    // proxy: {
+    //   '/': {
+    //     target: 'http://192.168.60.214:8080',
+    //     changeOrigin: true,
+    //     pathRewrite: {
+    //       '^/': '/'
+    //     }
+    //   }
+    // }
     // before(app){
     //   app.post("/user/findAllUser",(req,res,next)=>{
     //     res.json(userList)

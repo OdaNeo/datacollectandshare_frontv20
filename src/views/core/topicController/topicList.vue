@@ -135,9 +135,10 @@ export default class TopicList extends Vue{
                     messageType:'', // 消息类型
                     dataBaseIp:'', // 数据库地址
                     databaseType:'', // 数据库类型
+                    dataStructSchema:'', //
+                    writeElasticsearch: '', // 是否展示
                     redisTimer: '', // 内存过期时间
                     header: [{key:'',value:''},],
-                    writeElasticsearch: '', // 是否展示
                     url: '',
                     topicList:[
                         {
@@ -209,6 +210,8 @@ export default class TopicList extends Vue{
                         return '数据库采集'
                     case 3:
                         return '服务主动拉取'
+                    case 4:
+                        return '多级嵌套免校验'
                 }
             }
         },
@@ -249,6 +252,8 @@ export default class TopicList extends Vue{
             this.formObj.formObj.messageType = item.queneType
             this.formObj.formObj.id = item.id
             this.formObj.formObj.redisTimer = item.redisTimer
+            this.formObj.formObj.writeElasticsearch = item.writeElasticsearch
+            this.formObj.formObj.dataStructSchema = item.dataStructSchema
             if(this.otherObj[0]){
                 this.formObj.formObj.dataBaseIp = this.otherObj[0].dataBaseIp||''
                 this.formObj.formObj.databaseType =  this.otherObj[0].dataBaseType||''
@@ -316,6 +321,7 @@ export default class TopicList extends Vue{
                         params.queneType = formObj.messageType
                         params.redisTimer = formObj.redisTimer
                         params.writeElasticsearch = formObj.writeElasticsearch
+                        params.dataStructSchema = formObj.dataStructSchema.replace(/\s+/g,"")
                         delete params.dataStruct
                         delete params.structMapping
                         delete params.dsAnnotation

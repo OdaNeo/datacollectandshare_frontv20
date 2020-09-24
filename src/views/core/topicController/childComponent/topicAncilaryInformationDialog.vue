@@ -59,6 +59,29 @@ export default class TopicAncilaryInformationDialog extends Vue{
                         value:"url",
                     }
                 ]
+            case 4:
+                return [
+                    {
+                        text:"内存过期时间",
+                        align: "center",
+                        value:"redisTimer",
+                    },
+                    {
+                        text:"是否写入ES",
+                        align: "center",
+                        value:"writeElasticsearch",
+                        format:function(val:any){
+                            switch (val) {
+                                case 1:
+                                    return '是'
+                                case 0:
+                                    return '否'
+                            }
+
+
+                        }
+                    }
+                ]
         }
     }
 
@@ -73,6 +96,9 @@ export default class TopicAncilaryInformationDialog extends Vue{
                 text:"value",
                 align: "center",
                 value:"value",
+                formater:()=>{
+                    return '222'
+                }
             }
         ]
     }
