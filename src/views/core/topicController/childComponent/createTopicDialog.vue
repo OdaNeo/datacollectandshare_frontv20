@@ -300,7 +300,6 @@
         <v-col cols="9"  style="padding:0"  v-if="formProvide.formObj.interfaceType===4">
             <v-textarea
                     outlined
-                    :disabled="formProvide.formObj.canNotEdit"
                     v-model="formProvide.formObj.dataStructSchema"
                     :rules="dataStructSchema"
                     required
@@ -398,7 +397,7 @@
                 </v-col>
             </div>
         </div>
-        <v-col cols="9"  style="padding:0"  v-if="onlineData && formProvide.formObj.interfaceType==1">
+        <v-col cols="9"  style="padding:0"  v-if="onlineData && (formProvide.formObj.interfaceType==1||formProvide.formObj.interfaceType==4)">
             <v-radio-group
                     v-model="formProvide.formObj.messageType"
                     single-line

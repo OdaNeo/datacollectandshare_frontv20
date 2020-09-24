@@ -11,9 +11,11 @@ export type TopicAdd = {
     databaseType: string
     dataBaseIp: string
     url:string
-    header:string
+    header:any
     canNotEdit:boolean
     id:string
     redisTimer:number
     writeElasticsearch:any
+    dataStructSchema:any
+    AuthorizationObj:any
 }
