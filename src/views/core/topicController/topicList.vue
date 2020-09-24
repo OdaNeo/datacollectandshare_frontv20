@@ -147,7 +147,11 @@ export default class TopicList extends Vue{
                             description:'', // 描述
                             disabled:false
                         }
-                    ]
+                    ],
+                    AuthorizationObj:{
+                        key:"",
+                        value:""
+                    }
                 }
             }
         }
@@ -300,6 +304,7 @@ export default class TopicList extends Vue{
                         params.dataBaseIp = formObj.dataBaseIp
                         break
                     case 3:
+                        formObj.header.unshift(this.authorizationBase64(formObj.AuthorizationObj))
                         params.topicInterFaceType = formObj.interfaceType
                         params.topicName = formObj.topicName
                         params.url = formObj.url
@@ -330,6 +335,10 @@ export default class TopicList extends Vue{
             }
             resolve(success)
         })
+    }
+
+    private authorizationBase64(obj:any){
+        return {"Authorization":"basic " + window.btoa(obj.key+obj.value+"")}
     }
     //查询通用调用方法
     private async searchMethod(bool:boolean,params:object,tab?:boolean){

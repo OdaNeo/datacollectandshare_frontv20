@@ -7,12 +7,12 @@
         >
             <v-card>
                 <v-card-title class="headline grey lighten-2">
-                    数据结构
+                    数据发送示例
                 </v-card-title>
 
                 <v-card-text>
-                    <p style="padding-top: 20px;">
-                        {{JSON.stringify(formProvide.formObj)}}
+                    <p style="padding-top: 20px;white-space:pre-wrap;">
+                        {{msgSendExample}}
                     </p>
                 </v-card-text>
 
@@ -108,6 +108,42 @@
             </v-autocomplete>
 
         </v-col>
+        <div  v-if="formProvide.formObj.interfaceType===3" style="max-height:200px;overflow-y: auto;overflow-x: hidden;" >
+            <div
+            style="display: flex;width: 100%;flex-wrap: wrap;">
+                <v-col cols="7"  style="padding:0;max-width:53.8%" >
+                    <v-text-field
+                            single-line
+                            outlined
+                            clearable
+                            dense
+                            label="用户名"
+                            height="32"
+                            class="dialogInput"
+                            v-model="formProvide.formObj.AuthorizationObj.key"
+                    >
+                        <template v-slot:prepend>
+                            <div class="text-label">
+                                <label>Authorization：</label>
+                            </div>
+                        </template>
+                    </v-text-field>
+                </v-col>
+                <v-col cols="5"  style="padding:0 0 0 6px;max-width:34%" >
+                    <v-text-field
+                            single-line
+                            outlined
+                            clearable
+                            dense
+                            label="密码"
+                            height="32"
+                            class="dialogInput"
+                            v-model="formProvide.formObj.AuthorizationObj.value"
+                    >
+                    </v-text-field>
+                </v-col>
+            </div>
+        </div>
         <v-col cols="9"  style="padding:0" v-if="formProvide.formObj.interfaceType===3">
             <v-text-field
                     single-line
@@ -346,7 +382,7 @@
                 </v-col>
             </div>
         </div>
-        <v-col cols="9"  style="padding:0"  v-if="onlineData">
+        <v-col cols="9"  style="padding:0"  v-if="onlineData && formProvide.formObj.interfaceType==1">
             <v-radio-group
                     v-model="formProvide.formObj.messageType"
                     single-line
@@ -360,7 +396,7 @@
             >
                 <template v-slot:prepend>
                     <div class="text-label" style="margin-top:7px">
-                        <label><span class="require-span"></span>数据实例：</label>
+                        <label><span class="require-span"></span>数据发送示例：</label>
                     </div>
                 </template>
                 <v-btn solo @click.native="showConstruction=true">
@@ -482,15 +518,31 @@
                         description:'', // 描述
                         disabled:false
                     }
-                ]
+                ],
+                AuthorizationObj:{
+                    key:"",
+                    value:""
+                }
             }
+        }
+
+        private get msgSendExample(){
+            const topicList = this.formProvide.formObj.topicList as any[]
+            const msg:any = {}
+            topicList.forEach((element:any) => {
+                msg[element.number] = element.key
+            });
+            return JSON.stringify({
+                "requestid":new Date().getTime(),
+                "data":[msg]
+            },null,"\t")
         }
     }
 </script>
 
 <style scoped>
     .text-label{
-        width:120px;
+        width:130px;
         display: inline-block;
         text-align: right;
     }
@@ -513,7 +565,7 @@
         margin-right: 4px;
     }
     .text-label-line{
-       width: 120px;
+       width: 130px;
         display: inline-block;
         box-sizing: border-box;
         padding-right: 14px;
