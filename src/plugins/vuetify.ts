@@ -3,10 +3,5 @@ import Vuetify from 'vuetify/lib';
 
 Vue.use(Vuetify);
 
-const opts = {
-  
-}
 
-export default new Vuetify({
-
-});
+export default new Vuetify();

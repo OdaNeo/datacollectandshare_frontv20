@@ -2,6 +2,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios';
 import RequestHelper from './requestHelper';
 import { rootStoreModule } from "../store/modules/root"
 import { httpAllParams, returnDataType } from '../type/http-request.type';
+import alertUtil from '../utils/alertUtil';
 
 
 
@@ -9,9 +10,10 @@ class HttpRequest {
   private axiosIns: AxiosInstance = axios.create({
     // baseURL: "http://112.126.65.241:8081", // 测试环境
     // baseURL: "http://192.168.62.13:9000",
-    //baseURL: "http://localhost:8080",
+    //baseURL: "http://172.16.1.111:9000",
     //baseURL: "http://192.168.62.84:9000",
-    baseURL: "http://192.168.60.214:9000/", // 郝帅本地服务
+    //baseURL: "http://192.168.60.214:9000/", // 郝帅本地服务
+    baseURL:"http://localhost:9002",
     timeout: 50000,
     headers: {
       post: {
@@ -61,11 +63,14 @@ class HttpRequest {
   }
 
   private codeType(response: Array<returnDataType>|returnDataType, callback: Function) {
-    let code:number = 0
+    let code: number = 0
+    let message:string = ""
     if (Array.isArray(response)) {
       code = response[0].code
+      message = response[0].message
     } else {
       code = response["code"]
+      message = response["message"]
     }
     switch (code) {
       case 200:
@@ -73,6 +78,7 @@ class HttpRequest {
         break;
 
       default:
+        alertUtil.open("错误代码："+ code +"，错误信息："+message,true,"error")
         break;
     }
   }

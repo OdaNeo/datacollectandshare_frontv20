@@ -446,8 +446,8 @@
 
         ]
         private topicNameRulesTest:any = [
-            (v:string) =>!!v||"不能为空",
-            (v:string) =>(v&&v.length<=20) || "内容最长可设置20个字符",
+            (v:string) =>!!v||"主题名称不能为空",
+            (v:string) =>(v&&v.length<=20) || "主题名称最长可设置20个字符",
             (v:string) => /^\w*$/.test(v) || "内容只能为数字、字母、下划线的组合",
         ]
         private isJSON(str:string) {
@@ -486,22 +486,24 @@
         ]
         // 查询 主题名称是否重复
         private async checkTopicName(v:any){
-            const {success} = await this.h_request["httpGET"]("GET_TOPICS_CHECKED",{
-                topicName:v,
-            })
-            this.topicBool = success
-            if(success){
-                this.topicNameRulesTest = [
-                    (v:string) => "主题名称重复",
-                ]
-            }else{
-                this.topicNameRulesTest = [
-                    (v:string) =>!!v||"不能为空",
-                    (v:string) =>(v&&v.length<=20) || "内容最长可设置20个字符",
-                    (v:string) => /^\w*$/.test(v) || "内容只能为数字、字母、下划线的组合",
-                ]
+            if(v&&v!=""){
+                console.log(490)
+                const {success} = await this.h_request["httpGET"]("GET_TOPICS_CHECKED",{
+                    topicName:v,
+                })
+                this.topicBool = success
+                if(success){
+                    this.topicNameRulesTest = [
+                        (v:string) => "主题名称重复",
+                    ]
+                }else{
+                    this.topicNameRulesTest = [
+                        (v:string) =>!!v||"主题名称不能为空",
+                        (v:string) =>(v&&v.length<=20) || "主题名称最长可设置20个字符",
+                        (v:string) => /^\w*$/.test(v) || "内容只能为数字、字母、下划线的组合",
+                    ]
+                }
             }
-
         }
         private showonlineData(dataType:boolean){
             if(dataType){
