@@ -237,8 +237,7 @@ export default class Role extends Vue{
     }
 
     private authRole(formObj:RoleFormObj){
-         console.log('打印当前节点',formObj.roles)
-         return
+
         const{roles,id} = formObj
         return new Promise( async(resolve,reject):Promise<void>=>{
             const {success} = await this.h_request["httpPOST"]<RoleFormObj>("POST_PERMISSION_AUTHORIZATION_ADDROLEIDPERMISSIONID",{
