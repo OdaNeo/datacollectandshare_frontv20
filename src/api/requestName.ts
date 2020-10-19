@@ -58,6 +58,7 @@ export const POST_SYSTEM_ADDCONFIG = "/system/addConfig"
 export const GET_SYSNET_GETBINDLIST = "/sysnet/getBindList"
 export const GET_SYSNET_GETBINDBYNAME = "/sysnet/getBindByName"
 export const GET_SYSNET_GETSYSNETLIST = "/sysnet/getSysNetList"
+export const GET_SYSNET_ADDBINDINFO = "/sysnet/addBindInfo"
 
 //---------------- 日志审查 ---------------------------
 export const GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG = "/logMGT/viewLog/log/findAllLog"
@@ -120,7 +121,8 @@ const REQUEST_NAME:REQUEST_NAME = {
   GET_TOPICS_DELETE,
   GET_TOPICS_INFORMATION,
   GET_TOPICS_CHECKED,
-  POST_TOPICS_UPDATE
+  POST_TOPICS_UPDATE,
+  GET_SYSNET_ADDBINDINFO
 }
 
 export default REQUEST_NAME

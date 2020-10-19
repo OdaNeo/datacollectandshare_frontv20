@@ -9,7 +9,6 @@
                 clearable
                 v-model="queryUserName"
                 >
-
                 </v-text-field>
             </v-col>
             <v-col cols="2" style="max-width:19%;flex:0 0 19%">
@@ -28,6 +27,15 @@
                 @pickerDate = "(time)=> afterDate=time"
                 ></h-date-picker>
             </v-col>
+            <v-col cols="2">
+                <v-btn
+                        color="primary"
+                        dark
+                        @click="clickSearch"
+                >
+                    查询
+                </v-btn>
+            </v-col>
         </v-row>
         <h-table
         :headers="headers"
@@ -37,6 +45,7 @@
         :paginationLength="paginationLength"
         @PaginationsNow = "PaginationsNow"
         ></h-table>
+
     </div>
 </template>
 <script lang="ts">
@@ -106,10 +115,22 @@ export default class ViewLog extends Vue{
         this.pageNum = page
         this.searchMethod(false,{
             pageSize:this.pageSize,
-            pageNum:this.pageNum
+            pageNum:this.pageNum,
+            username: this.queryUserName == "" ? null : this.queryUserName,
+            startTime: this.afterDate == "" ? null : this.afterDate,
+            endTime: this.beginDate == "" ? null : this.beginDate,
         })
     }
-
+    // 带入查询条件
+    private clickSearch(){
+        this.searchMethod(false,{
+            pageSize:this.pageSize,
+            pageNum:this.pageNum,
+            username: this.queryUserName == "" ? null : this.queryUserName,
+            startTime: this.afterDate == "" ? null : this.afterDate,
+            endTime: this.beginDate == "" ? null : this.beginDate,
+        })
+    }
     created() {
         this.searchMethod(false,{
             pageSize:this.pageSize,

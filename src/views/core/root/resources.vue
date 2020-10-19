@@ -24,7 +24,7 @@
                 </v-btn>
             </v-col>
         </v-row>
-        <h-table 
+        <h-table
         :max-height="500"
         :headers="headers"
         :desserts="desserts"
@@ -80,7 +80,7 @@ export default class Resources extends Vue{
         data(){
             return{
                 title:"",
-                btnName:"",
+                btnName:[""],
                 methodName:"",
                 formObj:{
                     name:"",
@@ -150,15 +150,16 @@ export default class Resources extends Vue{
 
     private addItem(){
         this.dialogFlag = true
-        this.formObj.title = "添加权限"
-        this.formObj.btnName = "立即创建"
+        this.formObj.title = "" +
+            "添加权限"
+        this.formObj.btnName = ["立即创建","取消"]
         this.formObj.methodName = "addResources"
     }
 
     private editItem(item:any){
         this.dialogFlag = true
         this.formObj.title = "权限修改"
-        this.formObj.btnName = "立即修改"
+        this.formObj.btnName = ["立即修改","取消"]
         this.formObj.methodName = "updataResources"
         this.formObj.formObj = {
             name:item.name,

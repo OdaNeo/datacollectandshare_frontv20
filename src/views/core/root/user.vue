@@ -104,7 +104,7 @@ export default class User extends Vue{
         data(){
             return {
                 title:"",
-                btnName:"",
+                btnName:[""],
                 methodName:"",
                 formObj:{
                     loginPwd:{
@@ -127,6 +127,7 @@ export default class User extends Vue{
                     },
                     systemName:{
                         text:"",
+                        value:'',
                         reset:false
                     }
                 }
@@ -206,7 +207,7 @@ export default class User extends Vue{
     private addItem(){
         this.dialogFlag = true
         this.formObj.title = "创建用户"
-        this.formObj.btnName = "立即创建"
+        this.formObj.btnName = ["立即创建", "取消"]
         this.formObj.methodName = "addUser"
         this.formObj.formObj = {
             loginName:{
@@ -229,6 +230,7 @@ export default class User extends Vue{
             },
             systemName:{
                 text:"",
+                value:'',
                 reset:false
             }
         }
@@ -237,7 +239,7 @@ export default class User extends Vue{
     private editItem(item:userInfo){
         this.dialogFlag = true
         this.formObj.title = "用户信息编辑"
-        this.formObj.btnName = "立即修改"
+        this.formObj.btnName = ["立即修改","取消"]
         this.formObj.formObj = {
             loginName:{
                 text:item.loginName,
@@ -258,10 +260,13 @@ export default class User extends Vue{
                 reset:false
             },
             systemName:{
+                // text:item.systemName,
                 text:item.systemName,
+                value:item.email,
                 reset:false
             }
         }
+        console.log('修改',this.formObj.formObj)
     }
 
     private async searchMethod(first:boolean,bool:boolean,params:paramsType):Promise<void>{
@@ -302,13 +307,14 @@ export default class User extends Vue{
 
     private async addUser(childObj:userFormObj){
         const {loginName,loginPwd,userType,userState,systemName} = childObj
+        console.log(loginName.text,systemName,systemName.value)
         return new Promise(async (resolve, reject):Promise<any>=>{
             const {success} = await this.h_request["httpPOST"]<dialogRequestStructure>("POST_USER_ADD_USER",{
                 loginName:loginName.text,
                 loginPwd:loginPwd.text,
                 userType:userType.text,
                 userState:userState.text,
-                systemName:"ATS"
+                systemName:systemName.value
             })
             if(success){
                 const params:paramsType = {

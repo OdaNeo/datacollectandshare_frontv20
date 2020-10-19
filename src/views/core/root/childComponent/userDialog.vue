@@ -1,8 +1,8 @@
 <template>
     <v-row>
         <v-col cols="9" offset="1" style="padding:0">
-            <v-text-field 
-            single-line 
+            <v-text-field
+            single-line
             outlined
             clearable
             dense
@@ -23,8 +23,8 @@
             </v-text-field>
         </v-col>
         <v-col cols="9" offset="1" style="padding:0" v-if="formProvide.formObj.loginPwd.show">
-            <v-text-field 
-            single-line 
+            <v-text-field
+            single-line
             outlined
             clearable
             dense
@@ -44,8 +44,8 @@
             </v-text-field>
         </v-col>
         <v-col cols="7" offset="1" style="padding:0">
-            <v-select 
-            single-line 
+            <v-select
+            single-line
             outlined
             dense
             solo
@@ -66,9 +66,9 @@
             </v-select>
         </v-col>
         <v-col cols="9" offset="1" style="padding:0">
-            <v-radio-group 
+            <v-radio-group
             v-model="formProvide.formObj.userState.text"
-            single-line 
+            single-line
             outlined
             dense
             class="dialogInput"
@@ -93,8 +93,8 @@
             </v-radio-group>
         </v-col>
         <v-col cols="7" offset="1" style="padding:0">
-            <v-select 
-            single-line 
+            <v-select
+            single-line
             outlined
             dense
             solo
@@ -102,7 +102,7 @@
             :items="systemNames"
             height="32"
             class="dialogInput"
-            v-model="formProvide.formObj.systemName.text"
+            v-model="formProvide.formObj.systemName.value"
             :rules="systemNameRules"
             required
             >
@@ -149,7 +149,7 @@ export default class UserDialog extends Vue{
     private systemNameRules:Array<Function> = [
         (v:string) =>!!v||"请选择系统名称"
     ]
-    
+
     private getUserRoot({data}:returnDataType){
         this.userRoots = data.map((s:any)=>{
             return {
@@ -159,12 +159,14 @@ export default class UserDialog extends Vue{
         })
     }
     private getSystemName({data}:returnDataType){
+        console.log('这是啥',data)
         this.systemNames = data.map((s:any)=>{
             return {
                 text:s.name,
-                value:s.name
+                value:s.id.toString()
             }
         })
+        console.log('这是啥',data,this.systemNames)
     }
     private async httpAll(){
         const results = await this.h_request["httpAll"]<httpAllParams>([

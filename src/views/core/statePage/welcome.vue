@@ -18,7 +18,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { returnDataType} from '../../../type/http-request.type';
-import http from '../../../decorator/httpDecorator';
+
 import echarts from '../../../decorator/echarsDecorator';
 import { topicRankingInfo, topicRankingData } from '../../../type/welcome.type';
 import ReleaseMenu from './childComponent/releaseMenu.vue';
@@ -27,7 +27,7 @@ import UserProportion from './childComponent/userProportion.vue';
 import { userInfo } from '@/type/user.type';
 import SubscribeMenu from './childComponent/subscribeMenu.vue';
 import http2 from '../../../decorator/httpDecorator2';
-
+import http from '../../../decorator/httpDecorator';
 
 @Component({
     components:{
@@ -37,6 +37,7 @@ import http2 from '../../../decorator/httpDecorator2';
         UserProportion
     }
 })
+@http
 @echarts
 // @http2()
 export default class Welcome extends Vue{
@@ -85,7 +86,7 @@ export default class Welcome extends Vue{
         const datasList:Array<Array<number>>= this.getDatasList(this.getYearsList(["-","-"],endTime),msg.list)
         this.$nextTick(function(){
             const element = document.getElementById(elementName)
-            let myChartElement = this.h_echars.init(element as HTMLCanvasElement) 
+            let myChartElement = this.h_echars.init(element as HTMLCanvasElement)
             myChartElement.setOption({
                 baseOption:{
                     timeline:{
@@ -191,7 +192,7 @@ export default class Welcome extends Vue{
                                     ];
                                     return colorarrays[keysList[0].indexOf(params)];
                                 },
-                            }, 
+                            },
                             interval: 50
                         },
                         axisLine: {
@@ -254,7 +255,7 @@ export default class Welcome extends Vue{
                         },
                         itemStyle: {
                             normal: {
-                                color: function(params:any) {        
+                                color: function(params:any) {
                                     const colorList = ['#6bc0fb', '#7fec9d', '#fedd8b', '#ffa597', '#84e4dd', '#749f83',
                                                     '#ca8622', '#bda29a', '#a8d8ea', '#aa96da', '#fcbad3', '#ffffd2',
                                                     '#f38181', '#fce38a', '#eaffd0', '#95e1d3', '#e3fdfd', '#749f83', '#ca8622'
@@ -349,7 +350,15 @@ export default class Welcome extends Vue{
         }
         return options
     }
-
+    private async getRelease(params:any,callback:Function){
+        const result:returnDataType = await this.h_request["httpGET"]("GET_SYSTEM_GETSYSTEMINFO",params)
+        callback(result)
+    }
+    mounted(){
+        this.getRelease({},(result:returnDataType)=>{
+            this.systemItems = result.data
+        })
+    }
     async created():Promise<void> {
         // const {data}:returnDataType = await this.h_request["httpGET"]("GET_SYSTEM_GETSYSTEMINFO",{})
         // this.systemItems = data
@@ -382,5 +391,5 @@ export default class Welcome extends Vue{
                 transform: scale(1.03)
     ::-webkit-scrollbar
         display:none
-    
+
 </style>

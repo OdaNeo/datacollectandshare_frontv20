@@ -134,7 +134,17 @@ export default class TopBar extends Vue{
     get userToken() {
         return "用户Token："+rootStoreModule.UserState.userMessage.userToken
     }
-    userMenu = [{title:"注销",clickMethod:"b"}]
+    clicklLogout(){
+        console.log('注销')
+
+        // 清除vuex 的状态
+        rootStoreModule.logout()
+        // 页面跳转
+        this.$router.replace({
+            path:"/login"
+        })
+    }
+    userMenu = [{title:"注销",clickMethod:this.clicklLogout}]
 
     created() {
         setTimeout(()=>{

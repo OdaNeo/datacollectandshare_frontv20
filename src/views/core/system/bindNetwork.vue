@@ -55,6 +55,8 @@ import { returnDataType } from '../../../type/http-request.type';
 import http from '@/decorator/httpDecorator';
 import HDialog from '../../../components/h-dialog.vue';
 import BindNetDialog from './childComponent/bindNetDialog.vue';
+import {ResourcesFormObj} from "@/type/resources.type";
+import {BindNetworkObj} from "@/type/bindNetwork";
 
 @Component({
     components:{
@@ -146,7 +148,23 @@ export default class BindNetwork extends Vue{
 
     private bindNetCallBack(formObj:any){
         console.log(formObj)
+        return new Promise( async(resolve,reject):Promise<any>=>{
+            const {success} = await this.h_request["httpPOST"]<BindNetworkObj>("GET_SYSNET_ADDBINDINFO",{
+                systemId:formObj.networkId,
+                systemName:formObj.networkName,
+                networkId:formObj.systemId,
+                networkName:formObj.networkName
+            })
+            if(success){
+                this.searchMethod(false,{
+                    pageSize:this.pageSize,
+                    pageNum:this.pageNum
+                })
+            }
+            resolve(success)
+        })
     }
+
 
     private relieveNetWork(item:any){
 

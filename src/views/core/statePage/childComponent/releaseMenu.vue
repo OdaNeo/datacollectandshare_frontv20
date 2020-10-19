@@ -13,9 +13,9 @@
         <div style="width:100%;height:8%;padding-top:10px">
             <p>{{`${releaseStartTime}至${releaseEndTime}主题${releaseSystemName}发布情况`}}</p>
             <div class="iconCon">
-                <v-menu 
-                offset-y 
-                max-height="200" 
+                <v-menu
+                offset-y
+                max-height="200"
                 min-width="130"
                 transition="slide-x-transition"
                 >
@@ -45,9 +45,9 @@
                         </v-list-item>
                     </v-list>
                 </v-menu>
-                <v-menu 
-                offset-y 
-                max-height="200" 
+                <v-menu
+                offset-y
+                max-height="200"
                 min-width="130"
                 transition="slide-x-transition"
                 >
@@ -101,10 +101,10 @@
                             <span>时间选项</span>
                         </v-tooltip>
                     </template>
-                    <v-date-picker 
+                    <v-date-picker
                     v-model="releaseDate"
-                    :allowed-dates="releaseAllowedDates" 
-                    no-title 
+                    :allowed-dates="releaseAllowedDates"
+                    no-title
                     scrollable
                     locale="zh-cn">
                         <v-spacer></v-spacer>
@@ -117,7 +117,7 @@
         <div id="release" style="height:91%" v-if="releaseTopicExist"></div>
         <div v-else >
             <p style="margin-top:150px">{{`主题${releaseSystemName}在${releaseStartTime}至${releaseEndTime}没有发布主题`}}</p>
-        </div> 
+        </div>
     </div>
 </template>
 
@@ -147,7 +147,7 @@ export default class ReleaseMenu extends Vue{
     private releaseDate:string = new Date().toISOString().substr(0, 10)
     private releaseTime:boolean = false
 
-    
+
     private async getRelease(params:any,callback:Function){
         const result:returnDataType = await this.h_request["httpGET"]("GET_STATISTICS_STAT_TOPIC_DATA",params)
         callback(result)

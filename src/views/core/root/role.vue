@@ -59,7 +59,7 @@
                 >
                     删除
                 </v-btn>
-            </template> 
+            </template>
         </h-table>
         <h-dialog v-model="dialogFlag">
             <role-dialog slot="dialog-content" v-if="dialogShow"></role-dialog>
@@ -150,7 +150,7 @@ export default class Role extends Vue{
         const {data} = bool?await this.h_request["httpGET"]<object>("GET_ROLE_FIND_ALL_ROLE_BY_PARAM",params as object):await this.h_request["httpGET"]<object>("GET_ROLE_FIND_ALL_ROLE",params as object)
         const {list,total} = data
         this.desserts = list
-        this.paginationLength = Math.floor((total/this.pageSize)+1) 
+        this.paginationLength = Math.floor((total/this.pageSize)+1)
     }
 
     private searchRoles(){
@@ -237,6 +237,8 @@ export default class Role extends Vue{
     }
 
     private authRole(formObj:RoleFormObj){
+         console.log('打印当前节点',formObj.roles)
+         return
         const{roles,id} = formObj
         return new Promise( async(resolve,reject):Promise<void>=>{
             const {success} = await this.h_request["httpPOST"]<RoleFormObj>("POST_PERMISSION_AUTHORIZATION_ADDROLEIDPERMISSIONID",{
@@ -284,7 +286,7 @@ export default class Role extends Vue{
         ])
         this.desserts = data1.list
         this.paginationLength = Math.floor((data1["total"]/this.pageSize)+1)
-        this.roles = this.getRoles(data2) 
+        this.roles = this.getRoles(data2)
     }
 }
 </script>
