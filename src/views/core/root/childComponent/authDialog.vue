@@ -1,6 +1,5 @@
 <template>
     <div id="authDialog">
-        <span>{{formProvide.formObj.roles}}</span>
         <v-treeview
             selectable
             :items="roles"
