@@ -10,11 +10,11 @@ type UserStateType = {
     routeRoot:Array<string>,  //用户路由的权限
     userMessage: userMessageType,  //主题信息对象
     token:string,
-    createUserOption:{  //创建用户参数  
+    createUserOption:{  //创建用户参数
         roleList:Array<any>, //角色列表
         systemName:Array<any> //系统名称
     }
-    
+
 }
 
 
@@ -39,7 +39,7 @@ type login = {
 })
 
 export default class rootStore extends VuexModule{
-  
+
   public UserState: UserStateType = {
     username: "",
     userRoot: [],
@@ -51,7 +51,7 @@ export default class rootStore extends VuexModule{
       systemName:[]
     }
   }
-  
+
 
   @Mutation
   private MET_LOGIN({username,userRoot,routeRoot,userMessage,token}:UserLocalType) {
@@ -70,7 +70,7 @@ export default class rootStore extends VuexModule{
     this.UserState.username = ""
     this.UserState.userRoot = []
     this.UserState.routeRoot = []
-    this.UserState.userMessage = {} 
+    this.UserState.userMessage = {}
     this.UserState.token = ""
     this.UserState.createUserOption = {
       roleList: [],

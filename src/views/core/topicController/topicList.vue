@@ -333,6 +333,8 @@ export default class TopicList extends Vue{
 
 
             const {success} = await this.h_request["httpPOST"](!formObj.canNotEdit?"POST_TOPICS_ADD":"POST_TOPICS_UPDATE",params)
+
+
             if(success){
                 this.searchMethod(false,{
                     pageSize:this.pageSize,

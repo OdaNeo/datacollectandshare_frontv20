@@ -3,6 +3,7 @@
 export type FormStructure = {
   text: string
   reset: boolean
+  value: string
   disabled?: boolean
   show?: boolean
 }

@@ -4,7 +4,7 @@ export type userInfo = {
   age: number
   data: string|null
   dataJsonString: string
-  email: string
+  email: string|any
   gmtCreated: string
   gmtUpdated: string
   id: number

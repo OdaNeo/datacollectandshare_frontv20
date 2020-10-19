@@ -8,6 +8,7 @@
             item-key="id"
             v-model="formProvide.formObj.roles"
             activatable
+            selection-type="independent"
         ></v-treeview>
     </div>
 </template>
@@ -19,7 +20,9 @@ import { H_Vue } from '@/declaration/vue-prototype';
 export default class AuthDialog extends Vue{
     @Prop() private roles!:Array<any>
     @Inject() private readonly formProvide!:H_Vue
+
 }
+
 </script>
 
 <style scoped>
