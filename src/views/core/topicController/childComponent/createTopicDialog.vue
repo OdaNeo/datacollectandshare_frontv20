@@ -54,10 +54,9 @@
                     dense
                     :disabled="formProvide.formObj.canNotEdit"
                     height="32"
-                    @blur="checkTopicName(formProvide.formObj.topicName)"
                     class="dialogInput"
                     v-model="formProvide.formObj.topicName"
-                    :rules="topicNameRulesTest"
+                    :rules="h_validator.topicNameVilidata()"
                     required
             >
                 <template v-slot:prepend>
@@ -77,7 +76,7 @@
                     height="32"
                     class="dialogInput"
                     v-model="formProvide.formObj.dataBaseIp"
-                    :rules="valueRequire"
+                    :rules="h_validator.dataBaseUrlVilidata()"
                     required
                     :disabled="formProvide.formObj.canNotEdit"
             >
@@ -95,7 +94,7 @@
                     :disabled="formProvide.formObj.canNotEdit"
                     :items="items2"
                     dense
-                    :rules="valueRequire"
+                    :rules="h_validator.dataBaseTypeVilidata()"
                     required
                     single-line
                     outlined
@@ -154,7 +153,7 @@
                     height="32"
                     class="dialogInput"
                     v-model="formProvide.formObj.url"
-                    :rules="valueRequire"
+                    :rules="h_validator.urlVilidata()"
                     required
             >
                 <template v-slot:prepend>
@@ -180,7 +179,7 @@
                             height="32"
                             class="dialogInput"
                             v-model="item.key"
-                            :rules="valueRequire"
+                            :rules="h_validator.headerKeyVilidata()"
                             required
                     >
                         <template v-slot:prepend>
@@ -201,7 +200,7 @@
                             height="32"
                             class="dialogInput"
                             v-model="item.value"
-                            :rules="valueRequire"
+                            :rules="h_validator.headerValueVilidata()"
                             required
                     >
                     </v-text-field>
@@ -226,7 +225,7 @@
                     height="32"
                     :disabled="formProvide.formObj.canNotEdit"
                     row
-                    :rules="messageTypeRules"
+                    :rules="h_validator.messageTypeVilidata()"
                     required
             >
                 <template v-slot:prepend>
@@ -235,7 +234,7 @@
                     </div>
                 </template>
                 <v-radio
-                        :disabled="formProvide.formObj.canNotEdit"userDialogValid
+                        :disabled="formProvide.formObj.canNotEdit"
                         v-for="n in types"
                         :key="n.value"
                         :label="`${n.text}`"
@@ -253,7 +252,7 @@
                     height="32"
                     :disabled="formProvide.formObj.canNotEdit"
                     row
-                    :rules="writeEsRules"
+                    :rules="h_validator.writeEsVilidata()"
                     required
             >
                 <template v-slot:prepend>
@@ -301,7 +300,7 @@
             <v-textarea
                     outlined
                     v-model="formProvide.formObj.dataStructSchema"
-                    :rules="dataStructSchema"
+                    :rules="h_validator.dataStructVilidata()"
                     required
             >
                 <template v-slot:prepend>
@@ -328,7 +327,7 @@
                             class="dialogInput"
                             label="序号"
                             v-model="item.number"
-                            :rules="valueRequire"
+                            :rules="h_validator.fieldNumVilidata()"
                             required
                     >
                         <template v-slot:prepend >
@@ -352,7 +351,7 @@
                             height="32"
                             class="dialogInput"
                             v-model="item.key"
-                            :rules="valueRequire"
+                            :rules="h_validator.fieldKeyVilidata(formProvide.formObj.topicList)"
                             required
                     >
                     </v-text-field>
@@ -367,7 +366,7 @@
                             class="dialogInput"
                             label="描述"
                             v-model="item.description"
-                            :rules="valueRequire"
+                            :rules="h_validator.fieldDescriptionValidator()"
                             required
                     >
                     </v-text-field>
@@ -378,13 +377,14 @@
                             :items="items"
                             dense
                             :disabled="item.disabled"
-                            :rules="valueRequire"
+                            :rules="h_validator.fieldTypeValidator()"
                             required
                             height="28"
                             solo
                             single-line
                             outlined
                             style="min-height:32px"
+                            label="字段类型"
                     ></v-autocomplete>
                 </v-col>
                 <v-col cols="2" class="input-item">
@@ -424,10 +424,26 @@
 <script lang="ts">
     import {Component, Inject, Vue} from "vue-property-decorator";
     import http from '@/decorator/httpDecorator';
+    import validator from '@/decorator/validatorDecorator'
     import { H_Vue } from '@/declaration/vue-prototype';
 
     @Component
     @http
+    @validator([
+        "fieldKeyVilidata",
+        "fieldDescriptionValidator",
+        "fieldTypeValidator",
+        "fieldNumVilidata",
+        "topicNameVilidata",
+        "dataBaseUrlVilidata",
+        "dataBaseTypeVilidata",
+        "urlVilidata",
+        "headerKeyVilidata",
+        "headerValueVilidata",
+        "messageTypeVilidata",
+        "writeEsVilidata",
+        "dataStructVilidata"
+    ])
     export default class CreateTopicDialog extends Vue{
         @Inject() private readonly formProvide!:H_Vue
         private topicName:string = ""
@@ -441,70 +457,8 @@
         private types:Array<any> = [{text:"数据量优先",value:1},{text:"顺序优先",value:2}]
         private esList:Array<any> = [{text:"是",value:1},{text:"否",value:0}]
         private arr:Array<any> = ['','']
-        private valueRequire:any = [
-            (v:string) =>!!v||"不能为空",
 
-        ]
-        private topicNameRulesTest:any = [
-            (v:string) =>!!v||"主题名称不能为空",
-            (v:string) =>(v&&v.length<=20) || "主题名称最长可设置20个字符",
-            (v:string) => /^\w*$/.test(v) || "内容只能为数字、字母、下划线的组合",
-        ]
-        private isJSON(str:string) {
-            if (typeof str == 'string') {
-                try {
-                    var obj=JSON.parse(str);
-                    if(typeof obj == 'object' && obj ){
-                        return true;
-                    }else{
-                        return false;
-                    }
 
-                } catch(e) {
-                    console.log('error：'+str+'!!!'+e);
-                    return false;
-                }
-            }
-            console.log('It is not a string!')
-        }
-        private dataStructSchema:any = [
-            (v:string) =>!!v||"不能为空",
-            (v:string) =>this.isJSON(v)||"请输入正确的Json数据"
-        ]
-        private topicNameRules = [
-            (v:string) =>!!v||"不能为空",
-            (v:string) =>(v&&v.length<=20) || "内容最长可设置20个字符",
-            (v:string) => /^\w*$/.test(v) || "内容只能为数字、字母、下划线的组合"
-        ]
-        // 校验主题名称是否存在
-        private writeEsRules = [
-            (v:string) =>v!==''||"请选择是否写入ES"
-        ]
-        // 校验主题名称是否存在
-        private messageTypeRules = [
-            (v:string) =>!!v||"请选择消息类型"
-        ]
-        // 查询 主题名称是否重复
-        private async checkTopicName(v:any){
-            if(v&&v!=""){
-                console.log(490)
-                const {success} = await this.h_request["httpGET"]("GET_TOPICS_CHECKED",{
-                    topicName:v,
-                })
-                this.topicBool = success
-                if(success){
-                    this.topicNameRulesTest = [
-                        (v:string) => "主题名称重复",
-                    ]
-                }else{
-                    this.topicNameRulesTest = [
-                        (v:string) =>!!v||"主题名称不能为空",
-                        (v:string) =>(v&&v.length<=20) || "主题名称最长可设置20个字符",
-                        (v:string) => /^\w*$/.test(v) || "内容只能为数字、字母、下划线的组合",
-                    ]
-                }
-            }
-        }
         private showonlineData(dataType:boolean){
             if(dataType){
                 this.formProvide.formObj.interfaceType=1
@@ -578,6 +532,7 @@
                 "data":[msg]
             },null,"\t")
         }
+
     }
 </script>
 

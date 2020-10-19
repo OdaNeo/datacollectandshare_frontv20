@@ -28,6 +28,7 @@ declare module "vue/types/vue" {
     h_echars: any
     h_utils: any
     h_enum: any
+    h_validator:any
     $request: Request
     $echars:any
     $router: VueRouter
