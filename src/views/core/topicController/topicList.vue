@@ -104,6 +104,7 @@ import { TopicAdd } from '../../../type/topic-add.type';
 import {SystemConfigFormObj} from "@/type/system-config.type";
 import {GET_TOPICS_INFORMATION} from "@/api/requestName";
 import TopicAncilaryInformationDialog from './childComponent/topicAncilaryInformationDialog.vue';
+import util from '@/decorator/utilsDecorator';
 
 @Component({
     components:{
@@ -119,6 +120,7 @@ import TopicAncilaryInformationDialog from './childComponent/topicAncilaryInform
     tsFileName:"topic-list-enum",
     enumName:"queneType"
 }])
+@util
 export default class TopicList extends Vue{
 
     @Provide("formProvide") private formObj = new Vue({
@@ -334,8 +336,8 @@ export default class TopicList extends Vue{
 
             const {success} = await this.h_request["httpPOST"](!formObj.canNotEdit?"POST_TOPICS_ADD":"POST_TOPICS_UPDATE",params)
 
-
             if(success){
+                this.h_utils["alertUtil"].open("主题创建成功",true,"success")
                 this.searchMethod(false,{
                     pageSize:this.pageSize,
                     pageNum:1
@@ -445,10 +447,11 @@ export default class TopicList extends Vue{
             topicInterFaceType:item.topicInterFaceType
         })
         if(success){
+            this.h_utils["alertUtil"].open("主题删除成功",true,"success")
             this.searchMethod(false,{
                 pageSize:this.pageSize,
                 pageNum:1
-            })
+            },true)
         }
     }
     private PaginationsNow(page:number){

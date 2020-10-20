@@ -36,9 +36,23 @@ class TopicValidator{
   }
 
   //字段序号校验规则
-  public readonly fieldNumVilidata = () => {
+  public readonly fieldNumVilidata = (topicList:any[]) => {
     return [
-      (v:string) => !!v||"字段序号不能为空"
+      (v: string) => !!v || "字段序号不能为空",
+      (v: string) => (v && v.length <= 20) || "字段序号最长可设置20个字符",
+      (v:string) => /^[0-9]*[1-9][0-9]*$/.test(v)|| "字段序号只能为正整数",
+      (v:string) =>{
+          let valNum = 0;
+          topicList.forEach((element:any) => {
+              if(v==element.number){
+                  valNum++
+              }
+          });
+          if(valNum>1){
+              return "不能有重复的字段序号"
+          }
+          return true
+      }
     ]
   }
 

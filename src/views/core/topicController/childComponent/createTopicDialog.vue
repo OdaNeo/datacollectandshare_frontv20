@@ -56,7 +56,8 @@
                     height="32"
                     class="dialogInput"
                     v-model="formProvide.formObj.topicName"
-                    :rules="h_validator.topicNameVilidata()"
+                    :rules="[...h_validator.topicNameVilidata(),...topicRepeat]"
+                    @input="inputEvent"
                     required
             >
                 <template v-slot:prepend>
@@ -327,7 +328,7 @@
                             class="dialogInput"
                             label="序号"
                             v-model="item.number"
-                            :rules="h_validator.fieldNumVilidata()"
+                            :rules="h_validator.fieldNumVilidata(formProvide.formObj.topicList)"
                             required
                     >
                         <template v-slot:prepend >
@@ -457,6 +458,7 @@
         private types:Array<any> = [{text:"数据量优先",value:1},{text:"顺序优先",value:2}]
         private esList:Array<any> = [{text:"是",value:1},{text:"否",value:0}]
         private arr:Array<any> = ['','']
+        private topicRepeat:Function[] = []
 
 
         private showonlineData(dataType:boolean){
@@ -531,6 +533,23 @@
                 "requestid":new Date().getTime(),
                 "data":[msg]
             },null,"\t")
+        }
+
+        private async inputEvent(v:string){
+           if(v&&v!=""){
+                const {success} = await this.h_request["httpGET"]("GET_TOPICS_CHECKED",{
+                    topicName:v
+                })
+                if(success){
+                    this.topicRepeat = [
+                        (v:string) =>"主题名称已被注册"
+                    ]
+                }else{
+                    this.topicRepeat = []
+                }
+           }else{
+               this.topicRepeat = []
+           }
         }
 
     }
