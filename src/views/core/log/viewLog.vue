@@ -16,7 +16,7 @@
                 placeholder="选择查询起始时间"
                 :begin="true"
                 :anotherDate="afterDate"
-                @pickerDate = "(time)=> beginDate=time"
+                @pickerDate = "(time)=> afterDate=time"
                 ></h-date-picker>
             </v-col>
             <v-col cols="2" style="max-width:19%;flex:0 0 19%">
@@ -24,7 +24,7 @@
                 placeholder="选择查询截止时间"
                 :begin="false"
                 :anotherDate="beginDate"
-                @pickerDate = "(time)=> afterDate=time"
+                @pickerDate = "(time)=> beginDate=time"
                 ></h-date-picker>
             </v-col>
             <v-col cols="2">
@@ -111,7 +111,6 @@ export default class ViewLog extends Vue{
     }
 
     private PaginationsNow(page:number){
-        console.log('改变页签',page)
         this.pageNum = page
         this.searchMethod(false,{
             pageSize:this.pageSize,
@@ -123,6 +122,8 @@ export default class ViewLog extends Vue{
     }
     // 带入查询条件
     private clickSearch(){
+        // 输入查询条件的时候 要改变 pageNum
+        this.pageNum = 1
         this.searchMethod(false,{
             pageSize:this.pageSize,
             pageNum:this.pageNum,

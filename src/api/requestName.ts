@@ -4,6 +4,8 @@ export const POST_LOGIN_LOGIN: string = "/login/login";
 export const GET_USER_FIND_ALL_USER:string = "/user/findAllUser"
 export const GET_USER_FIND_ALL_USER_BY_PARAM: string = "/user/findAllUserByParam"
 export const POST_USER_ADD_USER = "/user/addUser"
+export const POST_USER_UPDATE_USER = "/user/updateUser"
+
 
 export const GET_PERMISSION_FIND_ALL_PERMISSION = "/permission/findAllPermission"
 export const GET_PERMISSION_FIND_ALL_PERMISSION_BY_PARAM = "/permission/findAllPermissionByParam"
@@ -16,6 +18,7 @@ export const GET_PERMISSION_AUTHORIZATION_FIND_ALL_PERMISSION = "/permission/aut
 export const GET_ROLE_FIND_ALL_ROLE_BY_PARAM = "/role/findAllRoleByParam"
 export const POST_ROLE_ADDROLE = "/role/addRole"
 export const PUT_ROLE_UPDATEROLE = "/role/updateRole"
+export const GET_ROLE_DELETE = "/role/delete"
 export const GET_PERMISSION_AUTHORIZATION_FINDPERMISSIONLISTBYROLEID = "/permission/authorization/findPermissionListByRoleId"
 export const POST_PERMISSION_AUTHORIZATION_ADDROLEIDPERMISSIONID = "/permission/authorization/addRoleIdPermissionId"
 
@@ -59,6 +62,8 @@ export const GET_SYSNET_GETBINDLIST = "/sysnet/getBindList"
 export const GET_SYSNET_GETBINDBYNAME = "/sysnet/getBindByName"
 export const GET_SYSNET_GETSYSNETLIST = "/sysnet/getSysNetList"
 export const GET_SYSNET_ADDBINDINFO = "/sysnet/addBindInfo"
+export const POST_SYSNET_DELETEBINDINFO = "/sysnet/delBindInfo"
+
 
 //---------------- 日志审查 ---------------------------
 export const GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG = "/logMGT/viewLog/log/findAllLog"
@@ -122,7 +127,10 @@ const REQUEST_NAME:REQUEST_NAME = {
   GET_TOPICS_INFORMATION,
   GET_TOPICS_CHECKED,
   POST_TOPICS_UPDATE,
-  GET_SYSNET_ADDBINDINFO
+  GET_SYSNET_ADDBINDINFO,
+  POST_USER_UPDATE_USER,
+  GET_ROLE_DELETE,
+  POST_SYSNET_DELETEBINDINFO
 }
 
 export default REQUEST_NAME

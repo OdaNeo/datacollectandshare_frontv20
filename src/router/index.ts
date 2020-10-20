@@ -193,7 +193,7 @@ const routes: Array<RouteConfig> = [
     children:[
       {
         path:"dataStatistics",
-        component: () => import("@/views/core/statePage/welcome.vue"),
+        component: () => import("@/views/core/data/dataStatistics.vue"),
         name:"数据统计",
         meta:{
           title:"数据统计",

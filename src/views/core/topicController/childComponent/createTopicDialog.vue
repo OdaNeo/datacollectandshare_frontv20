@@ -12,7 +12,6 @@
 
                 <v-card-text>
                     <p style="padding-top: 20px;white-space:pre-wrap;">
-<!--                        {{JSON.stringify(formProvide.formObj)}}-->
                         {{msgSendExample}}
                     </p>
                 </v-card-text>

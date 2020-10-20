@@ -18,7 +18,7 @@
                                     prepend-inner-icon="mdi-account"
                                     :rules="userRules"
                                 ></v-text-field>
-                                
+
                                 <v-text-field
                                     v-model="password"
                                     label="密码"
@@ -30,7 +30,7 @@
                                     @click:append="showPass = !showPass"
                                     :rules="passRules"
                                 ></v-text-field>
-                                
+
                                 <v-checkbox
                                     v-model="remember"
                                     label="记住账号"
@@ -89,7 +89,6 @@ export default class Login extends Vue{
             } else if (this.remember && localStorage.getItem("userAndPass")) {
                 localStorage.removeItem("userAndPass")
             }
-            console.log(this)
             const result:returnDataType = await this.h_request["httpPOST"]<userAndPassType>("POST_LOGIN_LOGIN",{ username: this.username, password: this.password })
             const username = this["username"]
             const bool:boolean = await rootStoreModule.login({username,result})

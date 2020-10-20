@@ -49,6 +49,7 @@ export type userFormObj = {
   userState: FormStructure
   systemName: FormStructure
   [key:string]:FormStructure
+  id:any
 }
 
 export type dialogRequestStructure = {
