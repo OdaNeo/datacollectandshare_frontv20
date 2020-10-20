@@ -166,6 +166,7 @@ export default class TopicSubExamine extends Vue{
             topicId:item.id
         })
         if(success){
+            this.h_utils["alertUtil"].open(status==1?"主题已审核通过":"主题已审核拒绝",true,status==1?"success":"error")
             this.searchMethod(false,{
                 pageSize:this.pageSize,
                 pageNum:this.pageNum

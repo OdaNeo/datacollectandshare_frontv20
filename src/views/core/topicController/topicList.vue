@@ -10,6 +10,10 @@
                 append-icon="mdi-magnify"
                 @click:append="searchTopic"
                 v-model="queryTopicID"
+                v-only-num="{
+                    set:this,
+                    name:'userID'
+                }"
                 >
                 </v-text-field>
             </v-col>
@@ -337,11 +341,11 @@ export default class TopicList extends Vue{
             const {success} = await this.h_request["httpPOST"](!formObj.canNotEdit?"POST_TOPICS_ADD":"POST_TOPICS_UPDATE",params)
 
             if(success){
-                this.h_utils["alertUtil"].open("主题创建成功",true,"success")
+                this.h_utils["alertUtil"].open(!formObj.canNotEdit?"主题创建成功":"主题修改成功",true,"success")
                 this.searchMethod(false,{
                     pageSize:this.pageSize,
                     pageNum:1
-                })
+                },this.tab?true:false)
             }
             resolve(success)
         })

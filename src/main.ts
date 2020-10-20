@@ -13,6 +13,37 @@ Vue.config.productionTip = false
 
 Vue.use(vueProtoInstall)
 
+Vue.directive("onlyNum", {
+  bind: function (el, binding, vnode, oldVnode) {
+    let ele:any[]|any = el.tagName === 'INPUT' ? el : el.querySelectorAll('input')
+    switch (ele.length) {
+        case 1:
+            ele = ele[0]
+            break;
+        case 2:
+            ele = ele[1]
+    }
+
+    ele.oninput = function() {
+        if(binding.value.bool==undefined){
+            let val = ele.value;
+            val = val.replace(/[^\d]/g,""); //清除"数字"和"."以外的字符
+            ele.value = val;
+            let userID = val
+            binding.value.set[binding.value.name] = userID
+        }else{
+            if(binding.value.set[binding.value.bool]){
+                let val = ele.value;
+                val = val.replace(/[^\d]/g,""); //清除"数字"和"."以外的字符
+                ele.value = val;
+                let userID = val
+                binding.value.set[binding.value.name] = userID
+            }
+        }
+    }
+  }
+})
+
 router.beforeEach(async({path:toPath,name:toName}: Route, {path:formPath}: Route, next: NavigationGuardNext<Vue>) => {
   const refresh = await rootStoreModule.refresh()
   if (refresh) {

@@ -10,6 +10,10 @@
                 append-icon="mdi-magnify"
                 @click:append="searchTopic"
                 v-model="queryTopicID"
+                 v-only-num="{
+                    set:this,
+                    name:'userID'
+                }"
                 >
 
                 </v-text-field>
