@@ -159,14 +159,12 @@ export default class UserDialog extends Vue{
         })
     }
     private getSystemName({data}:returnDataType){
-        console.log('这是啥',data)
         this.systemNames = data.map((s:any)=>{
             return {
                 text:s.name,
                 value:s.id.toString()
             }
         })
-        console.log('这是啥',data,this.systemNames)
     }
     private async httpAll(){
         const results = await this.h_request["httpAll"]<httpAllParams>([

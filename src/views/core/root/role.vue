@@ -175,6 +175,14 @@ export default class Role extends Vue{
         this.formObj.btnName = ["立即创建"]
         this.formObj.methodName = "addRole"
     }
+    // 删除角色
+    private async deleteItem(item:any){
+        const {data} = await this.h_request["httpGET"]("GET_ROLE_DELETE",{},item.id)
+        this.searchMethod(false,{
+            pageNum:this.pageNum,
+            pageSize:this.pageSize
+        })
+    }
 
     private editItem(item:any){
         this.dialogFlag = true

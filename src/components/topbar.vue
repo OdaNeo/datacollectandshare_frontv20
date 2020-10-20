@@ -135,8 +135,6 @@ export default class TopBar extends Vue{
         return "用户Token："+rootStoreModule.UserState.userMessage.userToken
     }
     clicklLogout(){
-        console.log('注销')
-
         // 清除vuex 的状态
         rootStoreModule.logout()
         // 页面跳转

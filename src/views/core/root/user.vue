@@ -52,12 +52,12 @@
                         >
                             mdi-pencil
                         </v-icon>
-                        <v-icon
-                        small
-                        @click="deleteItem(item)"
-                        >
-                            mdi-delete
-                        </v-icon>
+<!--                        <v-icon-->
+<!--                        small-->
+<!--                        @click="deleteItem(item)"-->
+<!--                        >-->
+<!--                            mdi-delete-->
+<!--                        </v-icon>-->
                     </template>
                 </v-data-table>
                 <v-pagination
@@ -235,11 +235,15 @@ export default class User extends Vue{
             }
         }
     }
+    private deleteItem(){
+
+    }
 
     private editItem(item:userInfo){
         this.dialogFlag = true
         this.formObj.title = "用户信息编辑"
         this.formObj.btnName = ["立即修改","取消"]
+        this.formObj.methodName = "editUser"
         this.formObj.formObj = {
             loginName:{
                 text:item.loginName,
@@ -264,9 +268,13 @@ export default class User extends Vue{
                 text:item.systemName,
                 value:item.email,
                 reset:false
+            },
+            userId:{
+                text:item.id,
+                value:item.id,
+                reset:false
             }
         }
-        console.log('修改',this.formObj.formObj)
     }
 
     private async searchMethod(first:boolean,bool:boolean,params:paramsType):Promise<void>{
@@ -288,7 +296,7 @@ export default class User extends Vue{
             pageSize:this.pageSize,
             pageNum:this.pageNum
         }
-        this.searchMethod(false,false,params)
+        this.searchMethod(true,true,params)
     }
     private tableAfterEnter():void{
         this.tableShow = true
@@ -303,6 +311,29 @@ export default class User extends Vue{
             loginName:this.queryUserName?this.queryUserName:null
         }
         this.searchMethod(true,true,params)
+    }
+
+    // 修改用户
+    private async editUser(childObj:userFormObj){
+        const {loginName,userType,loginPwd,userState,systemName,userId} = childObj
+        return new Promise(async (resolve, reject):Promise<any>=>{
+            const {success} = await this.h_request["httpPUT"]<dialogRequestStructure>("POST_USER_UPDATE_USER",{
+                loginName:loginName.text,
+                loginPwd:loginPwd.text,
+                userType:userType.text,
+                userState:userState.text,
+                systemName:systemName.value,
+                id: userId.value
+            })
+            if(success){
+                const params:paramsType = {
+                    pageSize:this.pageSize,
+                    pageNum:1
+                }
+                this.searchMethod(true,false,params)
+            }
+            resolve(success)
+        })
     }
 
     private async addUser(childObj:userFormObj){
