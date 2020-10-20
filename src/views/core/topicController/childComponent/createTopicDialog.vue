@@ -12,6 +12,7 @@
 
                 <v-card-text>
                     <p style="padding-top: 20px;white-space:pre-wrap;">
+<!--                        {{JSON.stringify(formProvide.formObj)}}-->
                         {{msgSendExample}}
                     </p>
                 </v-card-text>
@@ -523,10 +524,14 @@
 
         private get msgSendExample(){
             const topicList = this.formProvide.formObj.topicList as any[]
-            const msg:any = {}
-            topicList.forEach((element:any) => {
-                msg[element.number] = element.key
-            });
+            let msg:any = {}
+            if(this.formProvide.formObj.interfaceType === 1){ // 通用rest接口
+                topicList.forEach((element:any) => {
+                    msg[element.number] = element.key
+                });
+            }else if(this.formProvide.formObj.interfaceType === 4){ // 多级嵌套免校验
+                msg = this.formProvide.formObj.dataStructSchema
+            }
             return JSON.stringify({
                 "requestid":new Date().getTime(),
                 "data":[msg]
