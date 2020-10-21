@@ -80,7 +80,7 @@ import { Component, Vue,Provide } from "vue-property-decorator";
 import { VueConstructor } from 'vue';
 import {paramsType,returnDataType} from "../../../type/http-request.type"
 import http from "../../../decorator/httpDecorator";
-import { userInfo,selectInput, userParamsType, userFormObj, dialogRequestStructure } from "../../../type/user.type";
+import { userInfo, selectInput, userParamsType, userFormObj, dialogRequestStructure, dialogRequestStructure2 } from '../../../type/user.type';
 import util from "../../../decorator/utilsDecorator"
 import Enum from "../../../decorator/enumDecorator"
 import timeUtil from '../../../utils/timeUtil';
@@ -328,9 +328,8 @@ export default class User extends Vue{
     private async editUser(childObj:userFormObj){
         const {loginName,userType,loginPwd,userState,systemName,userId} = childObj
         return new Promise(async (resolve, reject):Promise<any>=>{
-            const {success} = await this.h_request["httpPUT"]<dialogRequestStructure>("POST_USER_UPDATE_USER",{
+            const {success} = await this.h_request["httpPUT"]<dialogRequestStructure2>("POST_USER_UPDATE_USER",{
                 loginName:loginName.text,
-                loginPwd:loginPwd.text,
                 userType:userType.text,
                 userState:userState.text,
                 systemName:systemName.value,
