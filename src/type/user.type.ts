@@ -48,6 +48,7 @@ export type userFormObj = {
   userType:FormStructure
   userState: FormStructure
   systemName: FormStructure
+  userId?: any
   [key:string]:FormStructure
   id:any
 }

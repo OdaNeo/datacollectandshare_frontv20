@@ -129,8 +129,14 @@ export default class User extends Vue{
                         text:"",
                         value:'',
                         reset:false
+                    },
+                    userId:{
+                        text:1,
+                        value:1,
+                        reset:false
                     }
-                }
+                },
+                userId:''
             }
         }
     })
@@ -231,6 +237,11 @@ export default class User extends Vue{
             systemName:{
                 text:"",
                 value:'',
+                reset:false
+            },
+            userId:{
+                text:1,
+                value:1,
                 reset:false
             }
         }

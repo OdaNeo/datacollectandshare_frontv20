@@ -19,7 +19,7 @@ type Request = {
 
 type Request2 = {
   [key:string]:string
-} 
+}
 
 declare module "vue/types/vue" {
   interface Vue{
@@ -30,7 +30,7 @@ declare module "vue/types/vue" {
     h_enum: any
     h_validator:any
     $request: Request
-    $echars:any
+    // $echars:any
     $router: VueRouter
     $route: Route
   }

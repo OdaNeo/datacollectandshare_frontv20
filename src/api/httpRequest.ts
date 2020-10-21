@@ -8,12 +8,12 @@ import alertUtil from '../utils/alertUtil';
 
 class HttpRequest {
   private axiosIns: AxiosInstance = axios.create({
-    //baseURL: "http://112.126.65.241:8081", // 测试环境
+    baseURL: "http://112.126.65.241:8081", // 测试环境
     // baseURL: "http://192.168.62.13:9000",
     //baseURL: "http://172.16.1.111:9000",
     //baseURL: "http://192.168.62.84:9000",
     //baseURL: "http://192.168.60.214:9000/", // 郝帅本地服务
-    baseURL:"http://192.168.60.214:9002",
+    // baseURL:"http://192.168.60.214:9002",
     timeout: 50000,
     headers: {
       post: {
