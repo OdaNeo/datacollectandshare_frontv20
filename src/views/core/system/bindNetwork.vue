@@ -150,7 +150,7 @@ export default class BindNetwork extends Vue{
         return new Promise( async(resolve,reject):Promise<any>=>{
             const {success} = await this.h_request["httpPOST"]<BindNetworkObj>("GET_SYSNET_ADDBINDINFO",{
                 systemId:formObj.systemId,
-                systemName:formObj.networkName,
+                systemName:formObj.systemName,
                 networkId:formObj.networkId,
                 networkName:formObj.networkName
             })
@@ -168,7 +168,7 @@ export default class BindNetwork extends Vue{
     private async relieveNetWork(formObj:any){
         const {data} = await this.h_request["httpPOST"]("POST_SYSNET_DELETEBINDINFO",{
             systemId:formObj.systemId,
-            systemName:formObj.networkName,
+            systemName:formObj.systemName,
             networkId:formObj.networkId,
             networkName:formObj.networkName
         })

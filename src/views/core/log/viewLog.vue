@@ -1,5 +1,7 @@
 <template>
     <div id="viewLog">
+        {{afterDate}}
+        {{beginDate}}
         <v-row>
             <v-col cols="2">
                 <v-text-field
