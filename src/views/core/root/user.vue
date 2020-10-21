@@ -362,6 +362,7 @@ export default class User extends Vue{
                     pageSize:this.pageSize,
                     pageNum:1
                 }
+                this.pageNum = 1
                 this.searchMethod(true,false,params)
             }
             resolve(success)
