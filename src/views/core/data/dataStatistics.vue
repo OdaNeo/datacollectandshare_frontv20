@@ -42,7 +42,7 @@
                             label="获取更长时间信息"
                     ></v-select>
                 </v-col>
-                <v-col cols="2">
+                <v-col cols="2" v-if="topicListNumber>1">
                     <v-select
                             v-model="releasePageNum"
                             :items="pageList"
@@ -218,6 +218,7 @@
         private beforeMonth(){
             // 当前月份 - 选定月数
             this.beginDate = moment(this.beginDate).subtract(this.currentSelectMonth, 'months').format("YYYY-MM-DD")
+            this.afterDate = moment(this.beginDate).add(this.currentSelectMonth, 'months').format("YYYY-MM-DD")
             this.getTopicList()
             this.topicListNumber = 1
             this.releasePageNum =1
@@ -226,6 +227,7 @@
         private afterMonth(){
             // 当前月份 + 选定月份
             this.beginDate = moment(this.beginDate).add(this.currentSelectMonth, 'months').format("YYYY-MM-DD")
+            this.afterDate = moment(this.beginDate).add(this.currentSelectMonth, 'months').format("YYYY-MM-DD")
             this.getTopicList()
             this.topicListNumber = 1
             this.releasePageNum =1
