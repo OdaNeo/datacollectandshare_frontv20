@@ -18,4 +18,6 @@ export type TopicAdd = {
     writeElasticsearch:any
     dataStructSchema:any
     AuthorizationObj:any
+    type:string
+    body:any
 }
