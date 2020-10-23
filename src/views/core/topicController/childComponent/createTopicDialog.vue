@@ -12,7 +12,7 @@
 
                 <v-card-text>
                     <p style="padding-top: 20px;white-space:pre-wrap;">
-                        {{msgSendExample}}
+                            {{msgSendExample}}
                     </p>
                 </v-card-text>
 
@@ -111,12 +111,13 @@
         <div  v-if="formProvide.formObj.interfaceType===3" style="max-height:200px;overflow-y: auto;overflow-x: hidden;" >
             <div
             style="display: flex;width: 100%;flex-wrap: wrap;">
-                <v-col cols="7"  style="padding:0;max-width:53.8%" >
+                <v-col cols="5"  style="padding:0;max-width:53.8%" >
                     <v-text-field
                             single-line
                             outlined
                             clearable
                             dense
+                            :disabled="formProvide.formObj.canNotEdit"
                             label="用户名"
                             height="32"
                             class="dialogInput"
@@ -133,6 +134,7 @@
                     <v-text-field
                             single-line
                             outlined
+                            :disabled="formProvide.formObj.canNotEdit"
                             clearable
                             dense
                             label="密码"
@@ -141,6 +143,9 @@
                             v-model="formProvide.formObj.AuthorizationObj.value"
                     >
                     </v-text-field>
+                </v-col>
+                <v-col cols="2"  style="padding:0 0 0 6px;max-width:34%" >
+                    <span>填写后不可修改</span>
                 </v-col>
             </div>
         </div>
@@ -164,6 +169,39 @@
                 </template>
             </v-text-field>
         </v-col>
+        <v-col cols="9"  style="padding:0" v-if="formProvide.formObj.interfaceType===3">
+            <v-autocomplete
+                    v-model="formProvide.formObj.type"
+                    :disabled="formProvide.formObj.canNotEdit"
+                    :items="items3"
+                    dense
+                    :rules="h_validator.typeVilidata()"
+                    required
+                    single-line
+                    outlined
+            >
+                <template v-slot:prepend>
+                    <div class="text-label">
+                        <label><span class="require-span">*</span>请求类型：</label>
+                    </div>
+                </template>
+            </v-autocomplete>
+        </v-col>
+        <v-col cols="9"  style="padding:0"  v-if="formProvide.formObj.interfaceType===3&&formProvide.formObj.type==='post'">
+            <v-textarea
+                    outlined
+                    v-model="formProvide.formObj.body"
+                    :disabled="formProvide.formObj.canNotEdit"
+                    :rules="h_validator.bodyVilidata()"
+                    required
+            >
+                <template v-slot:prepend>
+                    <div class="text-label">
+                        <label><span class="require-span">*</span>body：</label>
+                    </div>
+                </template>
+            </v-textarea>
+        </v-col>
         <div  v-if="formProvide.formObj.interfaceType===3" style="max-height:200px;overflow-y: auto;overflow-x: hidden;" >
             <div
             v-for="(item,index) in formProvide.formObj.header"
@@ -182,10 +220,11 @@
                             v-model="item.key"
                             :rules="h_validator.headerKeyVilidata()"
                             required
+                            v-if="item.key!=='Authorization'"
                     >
                         <template v-slot:prepend>
                             <div class="text-label">
-                                <label v-show="index===0"><span class="require-span">*</span>头信息：</label>
+                                <label v-if="item.key!=='Authorization'"><span class="require-span">*</span>头信息：</label>
                             </div>
                         </template>
                     </v-text-field>
@@ -203,6 +242,7 @@
                             v-model="item.value"
                             :rules="h_validator.headerValueVilidata()"
                             required
+                            v-if="item.key!=='Authorization'"
                     >
                     </v-text-field>
                 </v-col>
@@ -443,7 +483,9 @@
         "headerValueVilidata",
         "messageTypeVilidata",
         "writeEsVilidata",
-        "dataStructVilidata"
+        "dataStructVilidata",
+        "typeVilidata",
+        "bodyVilidata"
     ])
     export default class CreateTopicDialog extends Vue{
         @Inject() private readonly formProvide!:H_Vue
@@ -455,6 +497,7 @@
         private onlineData:boolean = this.formProvide.formObj.interfaceType===2||this.formProvide.formObj.interfaceType===3?false:true
         private items:Array<any> = [{text:"Int",value:1},{text:"String",value:"str"},{text:"Data",value:"Data"},{text:"TimeStamp",value:new Date().getTime()}]
         private items2:Array<any> = ['Mysql','Oracle','Sql Server']
+        private items3:Array<any> = ['get','post']
         private types:Array<any> = [{text:"数据量优先",value:1},{text:"顺序优先",value:2}]
         private esList:Array<any> = [{text:"是",value:1},{text:"否",value:0}]
         private arr:Array<any> = ['','']
@@ -519,7 +562,9 @@
                 AuthorizationObj:{
                     key:"",
                     value:""
-                }
+                },
+                type:'',
+                body:''
             }
         }
 

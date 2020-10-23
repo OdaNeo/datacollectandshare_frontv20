@@ -1,7 +1,7 @@
 
 
 class TopicValidator{
- 
+
   //字段名校验规则
   public readonly fieldKeyVilidata = (topicList:any[]) => {
     return [
@@ -138,6 +138,19 @@ class TopicValidator{
       (v:string) =>this.isJSON(v)||"请输入正确的Json数据"
     ]
   }
+
+    public readonly typeVilidata = () => {
+        return [
+            (v:string) =>!!v||"请选择请求类型"
+        ]
+    }
+    public readonly bodyVilidata = () => {
+        return [
+            (v:string) =>!!v||"body数据结构不能为空",
+            (v:string) =>this.isJSON(v)||"请输入正确的Json数据"
+        ]
+    }
 }
+
 
 export default TopicValidator

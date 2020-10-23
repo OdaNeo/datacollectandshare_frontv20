@@ -110,7 +110,13 @@ export default class DialogForm extends Vue{
                             description:'', // 描述
                             disabled:false
                         }
-                    ]
+                    ],
+                    AuthorizationObj:{
+                        key:"",
+                        value:""
+                    },
+                    type:'',
+                    body:''
                 }
                 this.udf.resetValidation()
             }

@@ -14,7 +14,7 @@ class HttpRequest {
     //baseURL: "http://192.168.62.84:9000",
     //baseURL: "http://192.168.60.214:9000/", // 郝帅本地服务
     baseURL:"http://192.168.60.214:9002",
-    timeout: 50000,
+    timeout: 500000,
     headers: {
       post: {
         "Content-Type":"application/json;charset=UTF-8"

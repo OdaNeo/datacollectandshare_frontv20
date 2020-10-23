@@ -158,7 +158,9 @@ export default class TopicList extends Vue{
                     AuthorizationObj:{
                         key:"",
                         value:""
-                    }
+                    },
+                    type: '', // 请求类型
+                    body:'' // body 数据结构
                 }
             }
         }
@@ -260,6 +262,20 @@ export default class TopicList extends Vue{
             this.formObj.formObj.redisTimer = item.redisTimer
             this.formObj.formObj.writeElasticsearch = item.writeElasticsearch
             this.formObj.formObj.dataStructSchema = item.dataStructSchema
+            this.formObj.formObj.type = item.type
+            this.formObj.formObj.body = item.body
+            this.formObj.formObj.url = item.url
+            console.log(item.dataBaseIp)
+            this.formObj.formObj.dataBaseIp = item.dataBaseIp
+            console.log(item.dataBaseType)
+            this.formObj.formObj.databaseType = item.dataBaseType
+
+            // console.log(item.AuthorizationObj)
+            this.formObj.formObj.AuthorizationObj = {
+                key:"***",
+                value:"***"
+            }
+            this.formObj.formObj.header = JSON.parse(item.header)
             if(this.otherObj[0]){
                 this.formObj.formObj.dataBaseIp = this.otherObj[0].dataBaseIp||''
                 this.formObj.formObj.databaseType =  this.otherObj[0].dataBaseType||''
@@ -315,11 +331,14 @@ export default class TopicList extends Vue{
                         params.dataBaseIp = formObj.dataBaseIp
                         break
                     case 3:
+                        // 只在添加的时候 转base64
                         formObj.header.unshift(this.authorizationBase64(formObj.AuthorizationObj))
                         params.topicInterFaceType = formObj.interfaceType
                         params.topicName = formObj.topicName
                         params.url = formObj.url
                         params.header = JSON.stringify(formObj.header)
+                        params.type = formObj.type
+                        params.body = formObj.body.replace(/\s+/g,"")
                         break
                     case 4:
                         params.topicInterFaceType = formObj.interfaceType
@@ -352,7 +371,8 @@ export default class TopicList extends Vue{
     }
 
     private authorizationBase64(obj:any){
-        return {"Authorization":"basic " + window.btoa(obj.key+obj.value+"")}
+        console.log('查看要处理的数据',obj)
+        return {"key":"Authorization","value":"basic " + window.btoa(obj.key+obj.value+"")}
     }
     //查询通用调用方法
     private async searchMethod(bool:boolean,params:object,tab?:boolean){
@@ -421,6 +441,7 @@ export default class TopicList extends Vue{
     }
 
     private addFileds(item:any){
+        console.log(item)
         this.createTopic(item)
     }
 
