@@ -31,6 +31,8 @@ export const GET_TOPICS_MYTOPICS = "/topics/myTopics"
 export const GET_TOPICS_MYTOPICSBYID = "/topics/myTopicsById"
 export const GET_TOPICS_FINDTOPICBYTOPICNAME = "/topics/findTopicByTopicName"
 
+export const POST_TRANSMISSION_ATS = "/transmission/ATS"
+
 // 增加主题
 export const POST_TOPICS_ADD = "/topics/addTopic"
 // 更新主题
@@ -130,7 +132,8 @@ const REQUEST_NAME:REQUEST_NAME = {
   GET_SYSNET_ADDBINDINFO,
   POST_USER_UPDATE_USER,
   GET_ROLE_DELETE,
-  POST_SYSNET_DELETEBINDINFO
+  POST_SYSNET_DELETEBINDINFO,
+  POST_TRANSMISSION_ATS
 }
 
 export default REQUEST_NAME

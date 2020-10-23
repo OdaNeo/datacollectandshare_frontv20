@@ -14,7 +14,11 @@ const routes: Array<RouteConfig> = [
   {
     path: "/login",
     name: "Login",
-    component: Login
+    component: Login,
+    meta: {
+      title: "登录",
+      access:false
+    }
   },
   {
     path: "/statePage",
@@ -22,7 +26,8 @@ const routes: Array<RouteConfig> = [
     component: StatePage,
     redirect: "/statePage/welcome",
     meta: {
-      title:"tct"
+      title: "tct",
+      access:false
     },
     children: [
       {
@@ -30,7 +35,8 @@ const routes: Array<RouteConfig> = [
         component: () => import("@/views/core/statePage/welcome.vue"),
         name: "welcome",
         meta: {
-          title: "欢迎页面"
+          title: "欢迎页面",
+          access:false
         }
       },
       {
@@ -38,7 +44,8 @@ const routes: Array<RouteConfig> = [
         component: () => import("@/views/core/statePage/404Page.vue"),
         name: "404",
         meta: {
-          title:"404页面"
+          title: "404页面",
+          access:false
         }
       }
     ]
@@ -50,7 +57,8 @@ const routes: Array<RouteConfig> = [
     redirect:"/rootMGT/userMGT",
     meta:{
       title:"权限管理",
-      icon:"mdi-shield-lock"
+      icon: "mdi-shield-lock",
+      access:true
     },
     children:[
       {
@@ -59,7 +67,8 @@ const routes: Array<RouteConfig> = [
           name:"用户管理",
           meta:{
               title:"用户管理",
-              icon:"mdi-shield-account"
+              icon: "mdi-shield-account",
+              access:true
           }
       },
       {
@@ -68,7 +77,8 @@ const routes: Array<RouteConfig> = [
           name:"角色管理",
           meta:{
               title:"角色管理",
-              icon:"mdi-account-tie"
+              icon: "mdi-account-tie",
+              access:true
           }
       },
       {
@@ -77,7 +87,8 @@ const routes: Array<RouteConfig> = [
           name:"资源管理",
           meta:{
               title:"资源管理",
-              icon:"mdi-briefcase-check"
+              icon: "mdi-briefcase-check",
+              access:true
           }
       }
     ]
@@ -89,7 +100,8 @@ const routes: Array<RouteConfig> = [
     redirect: "/topicController/topicList",
     meta: {
       title: '主题管理',
-      icon:"mdi-shield-lock"
+      icon: "mdi-shield-lock",
+      access:true
     },
     children: [
       {
@@ -98,7 +110,8 @@ const routes: Array<RouteConfig> = [
         name: "主题列表",
         meta: {
           title: "主题列表",
-          icon:"mdi-shield-lock"
+          icon: "mdi-shield-lock",
+          access:true
         }
       },
       {
@@ -107,7 +120,8 @@ const routes: Array<RouteConfig> = [
         name: "主题订阅",
         meta: {
           title: "主题订阅",
-          icon:"mdi-shield-lock"
+          icon: "mdi-shield-lock",
+          access:true
         }
       },
       {
@@ -116,7 +130,8 @@ const routes: Array<RouteConfig> = [
         name: "主题订阅审核",
         meta: {
           title: "主题订阅审核",
-          icon:"mdi-shield-lock"
+          icon: "mdi-shield-lock",
+          access:true
         }
       },
       {
@@ -125,7 +140,8 @@ const routes: Array<RouteConfig> = [
         name: "主题审核记录",
         meta: {
           title: "主题审核记录",
-          icon:"mdi-shield-lock"
+          icon: "mdi-shield-lock",
+          access:true
         }
       },
     ]
@@ -137,7 +153,8 @@ const routes: Array<RouteConfig> = [
     redirect:"/systemMGT/systemConfig",
     meta:{
       title:"系统管理",
-      icon:"mdi-shield-lock"
+      icon: "mdi-shield-lock",
+      access:true
     },
     children:[
       {
@@ -146,7 +163,8 @@ const routes: Array<RouteConfig> = [
         name:"系统配置",
         meta:{
           title:"系统配置",
-          icon:"mdi-shield-lock"
+          icon: "mdi-shield-lock",
+          access:true
         }
       },
       {
@@ -155,7 +173,8 @@ const routes: Array<RouteConfig> = [
         name:"绑定网络",
         meta:{
           title:"绑定网络",
-          icon:"mdi-shield-lock"
+          icon: "mdi-shield-lock",
+          access:true
         }
       }
     ]
@@ -167,7 +186,8 @@ const routes: Array<RouteConfig> = [
     redirect:"/logMGT/viewLog",
     meta:{
       title:"日志管理",
-      icon:"mdi-shield-lock"
+      icon: "mdi-shield-lock",
+      access:true
     },
     children:[
       {
@@ -176,7 +196,8 @@ const routes: Array<RouteConfig> = [
         name:"日志审查",
         meta:{
           title:"日志审查",
-          icon:"mdi-shield-lock"
+          icon: "mdi-shield-lock",
+          access:true
         }
       }
     ]
@@ -188,7 +209,8 @@ const routes: Array<RouteConfig> = [
     redirect:"/dataMGT/dataStatistics",
     meta:{
       title:"数据管理",
-      icon:"mdi-shield-lock"
+      icon: "mdi-shield-lock",
+      access:true
     },
     children:[
       {
@@ -197,7 +219,29 @@ const routes: Array<RouteConfig> = [
         name:"数据统计",
         meta:{
           title:"数据统计",
-          icon:"mdi-shield-lock"
+          icon: "mdi-shield-lock",
+          access:true
+        }
+      }
+    ]
+  },
+  {
+    path:"/private",
+    name:"内部调试页面",
+    component:StatePage,
+    redirect:"/private/topicProducerAndconsume",
+    meta:{
+      title:"内部调试页面",
+      access:false
+    },
+    children:[
+      {
+        path:"topicProducerAndconsume",
+        component: () => import("@/views/private/topicProducerAndConsume.vue"),
+        name:"主题生产消费测试",
+        meta:{
+          title:"主题生产消费测试",
+          access:false
         }
       }
     ]

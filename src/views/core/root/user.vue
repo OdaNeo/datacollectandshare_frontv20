@@ -38,13 +38,13 @@
                 loading-text="努力加载中..."
                 v-show="tableShow"
                 >
-                    <template v-slot:item.gmtCreated="{item}">
+                    <template v-slot:[`item.gmtCreated`]="{item}">
                         {{h_utils.timeutil.stamptoTime(item.gmtCreated,"-")}}
                     </template>
-                    <template v-slot:item.userState="{item}">
+                    <template v-slot:[`item.userState`]="{item}">
                         {{h_enum["userState"][item.userState]}}
                     </template>
-                    <template v-slot:item.actions="{ item }">
+                    <template [`v-slot:item.actions`]="{ item }">
                         <v-icon
                         small
                         class="mr-4"
