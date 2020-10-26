@@ -218,13 +218,12 @@
                             height="32"
                             class="dialogInput"
                             v-model="item.key"
-                            :rules="h_validator.headerKeyVilidata()"
                             required
                             v-if="item.key!=='Authorization'"
                     >
                         <template v-slot:prepend>
                             <div class="text-label">
-                                <label v-if="item.key!=='Authorization'"><span class="require-span">*</span>头信息：</label>
+                                <label v-if="item.key!=='Authorization'">头信息：</label>
                             </div>
                         </template>
                     </v-text-field>
@@ -240,7 +239,6 @@
                             height="32"
                             class="dialogInput"
                             v-model="item.value"
-                            :rules="h_validator.headerValueVilidata()"
                             required
                             v-if="item.key!=='Authorization'"
                     >
