@@ -332,7 +332,9 @@ export default class TopicList extends Vue{
                         break
                     case 3:
                         // 只在添加的时候 转base64
-                        formObj.header.unshift(this.authorizationBase64(formObj.AuthorizationObj))
+                        if(formObj.AuthorizationObj.key!=='' && formObj.AuthorizationObj.value!==''){
+                            formObj.header.unshift(this.authorizationBase64(formObj.AuthorizationObj))
+                        }
                         params.topicInterFaceType = formObj.interfaceType
                         params.topicName = formObj.topicName
                         params.url = formObj.url
