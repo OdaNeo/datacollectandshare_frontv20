@@ -250,7 +250,7 @@
                     <v-btn fab dark small color="indigo" class="add-btn"  v-if="formProvide.formObj.header.length ===index+1" @click="add2()">
                         <v-icon dark>mdi-plus</v-icon>
                     </v-btn>
-                    <v-btn fab dark small color="error" class="add-btn" v-if="formProvide.formObj.header.length !==index+1"  @click="minus2(index)" >
+                    <v-btn fab dark small color="error" class="add-btn" v-if="formProvide.formObj.header.length !==index+1 && item.key!=='Authorization'"  @click="minus2(index)" >
                         <v-icon dark>mdi-minus</v-icon>
                     </v-btn>
                 </v-col>
