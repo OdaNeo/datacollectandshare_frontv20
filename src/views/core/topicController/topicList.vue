@@ -374,7 +374,7 @@ export default class TopicList extends Vue{
 
     private authorizationBase64(obj:any){
         console.log('查看要处理的数据',obj)
-        return {"key":"Authorization","value":"basic " + window.btoa(obj.key+obj.value+"")}
+        return {"key":"Authorization","value":"Basic " + window.btoa(obj.key+':'+ obj.value+"")}
     }
     //查询通用调用方法
     private async searchMethod(bool:boolean,params:object,tab?:boolean){
