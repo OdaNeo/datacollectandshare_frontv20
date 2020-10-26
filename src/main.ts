@@ -6,6 +6,7 @@ import vuetify from './plugins/vuetify'
 import vueProtoInstall from './plugins/vueProtoInstall'
 import {rootStoreModule} from './store/modules/root'
 import { Route, NavigationGuardNext } from 'vue-router'
+import alertUtil from './utils/alertUtil';
 
 const { UserState, logout } = rootStoreModule
 
@@ -44,35 +45,55 @@ Vue.directive("onlyNum", {
   }
 })
 
-router.beforeEach(async({path:toPath,name:toName}: Route, {path:formPath}: Route, next: NavigationGuardNext<Vue>) => {
+router.beforeEach(async ({ path: toPath, name: toName, meta: toMeta }: Route, { path: formPath }: Route, next: NavigationGuardNext<Vue>) => {
+  console.log(formPath)
+  console.log(toPath)
+  if (toPath == "/login") {
+    logout()
+    next()
+  }
   const refresh = await rootStoreModule.refresh()
   if (refresh) {
     const routeRootString = JSON.stringify(UserState.routeRoot)
     if (routeRootString.indexOf('"' + toPath + '"') !== -1) {
       next()
     } else {
-      if(['/login'].indexOf(toPath)!==-1){
-        logout()
-        next();
-      }else if (['/login'].indexOf(formPath) !== -1){
-        if (toName == "welcome") {
-            next();
-        }else{
-            next({
-                path:'/statePage/welcome'
-            });
-        }
-      }else if (['/statePage/welcome'].indexOf(toPath) !== -1) {
-        next();
-      }else{
-        if (toName == "page404") {
-            next();
+      if (toName) {
+        if (toMeta.access) {
+          alertUtil.open("您没有权限访问" + toName + "页面", true, "error")
+          next({
+              path: '/statePage/welcome'
+          });
         } else {
-            next({
-                path: '/statePage/page404'
-            });
+          next()
         }
+      } else {
+        next({
+            path: '/statePage/404'
+        });
       }
+      // if(['/login'].indexOf(toPath)!==-1){
+      //   logout()
+      //   next();
+      // }else if (['/login'].indexOf(formPath) !== -1){
+      //   if (toName == "welcome") {
+      //       next();
+      //   }else{
+      //       next({
+      //           path:'/statePage/welcome'
+      //       });
+      //   }
+      // }else if (['/statePage/welcome'].indexOf(toPath) !== -1) {
+      //   next();
+      // }else{
+      //   if (toName == "page404") {
+      //       next();
+      //   } else {
+      //       next({
+      //           path: '/statePage/page404'
+      //       });
+      //   }
+      // }
     }
   } else {
     if (['/login'].indexOf(toPath) !== -1) {
