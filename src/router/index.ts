@@ -100,7 +100,7 @@ const routes: Array<RouteConfig> = [
     redirect: "/topicController/topicList",
     meta: {
       title: '主题管理',
-      icon: "mdi-shield-lock",
+      icon: "mdi-folder-cog-outline",
       access:true
     },
     children: [
@@ -110,7 +110,7 @@ const routes: Array<RouteConfig> = [
         name: "主题列表",
         meta: {
           title: "主题列表",
-          icon: "mdi-shield-lock",
+          icon: "mdi-folder-multiple",
           access:true
         }
       },
@@ -120,7 +120,7 @@ const routes: Array<RouteConfig> = [
         name: "主题订阅",
         meta: {
           title: "主题订阅",
-          icon: "mdi-shield-lock",
+          icon: "mdi-folder-heart",
           access:true
         }
       },
@@ -130,7 +130,7 @@ const routes: Array<RouteConfig> = [
         name: "主题订阅审核",
         meta: {
           title: "主题订阅审核",
-          icon: "mdi-shield-lock",
+          icon: "mdi-folder-edit",
           access:true
         }
       },
@@ -140,7 +140,7 @@ const routes: Array<RouteConfig> = [
         name: "主题审核记录",
         meta: {
           title: "主题审核记录",
-          icon: "mdi-shield-lock",
+          icon: "mdi-folder-clock",
           access:true
         }
       },
@@ -153,7 +153,7 @@ const routes: Array<RouteConfig> = [
     redirect:"/systemMGT/systemConfig",
     meta:{
       title:"系统管理",
-      icon: "mdi-shield-lock",
+      icon: "mdi-monitor-multiple",
       access:true
     },
     children:[
@@ -163,7 +163,7 @@ const routes: Array<RouteConfig> = [
         name:"系统配置",
         meta:{
           title:"系统配置",
-          icon: "mdi-shield-lock",
+          icon: "mdi-monitor-edit",
           access:true
         }
       },
@@ -173,7 +173,7 @@ const routes: Array<RouteConfig> = [
         name:"绑定网络",
         meta:{
           title:"绑定网络",
-          icon: "mdi-shield-lock",
+          icon: "mdi-monitor-star",
           access:true
         }
       }
@@ -186,7 +186,7 @@ const routes: Array<RouteConfig> = [
     redirect:"/logMGT/viewLog",
     meta:{
       title:"日志管理",
-      icon: "mdi-shield-lock",
+      icon: "mdi-clipboard-text-multiple",
       access:true
     },
     children:[
@@ -196,7 +196,7 @@ const routes: Array<RouteConfig> = [
         name:"日志审查",
         meta:{
           title:"日志审查",
-          icon: "mdi-shield-lock",
+          icon: "mdi-clipboard-search",
           access:true
         }
       }
@@ -209,7 +209,7 @@ const routes: Array<RouteConfig> = [
     redirect:"/dataMGT/dataStatistics",
     meta:{
       title:"数据管理",
-      icon: "mdi-shield-lock",
+      icon: "mdi-database-cog",
       access:true
     },
     children:[
@@ -219,7 +219,7 @@ const routes: Array<RouteConfig> = [
         name:"数据统计",
         meta:{
           title:"数据统计",
-          icon: "mdi-shield-lock",
+          icon: "mdi-database-clock",
           access:true
         }
       }
