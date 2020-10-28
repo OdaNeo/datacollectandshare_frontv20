@@ -78,6 +78,12 @@ export const GET_USER_ADDUSER_FIND_ALL_ROLE = "/user/addUser/findAllRole"
 export const GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER = "/user/addUser/getSystemInfoAndAddUser"
 export const GET_SYSTEM_GETSYSTEMINFO = "/system/getSystemInfo"
 
+
+//-------------------命令管理——————————————————————————————
+export const GET_CMD_FIND_ALL = "/cmd/findAll"
+export const GET_CMD_MYTOPICS = "/cmd/findCmdInfoByUserId"
+
+
 type REQUEST_NAME = {
   [key: string]: string
 }
@@ -133,7 +139,8 @@ const REQUEST_NAME:REQUEST_NAME = {
   POST_USER_UPDATE_USER,
   GET_ROLE_DELETE,
   POST_SYSNET_DELETEBINDINFO,
-  POST_TRANSMISSION_ATS
+  POST_TRANSMISSION_ATS,
+  GET_CMD_FIND_ALL
 }
 
 export default REQUEST_NAME

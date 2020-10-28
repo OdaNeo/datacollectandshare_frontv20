@@ -226,6 +226,29 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
+    path:"/cmdInfoController",
+    name:"命令管理",
+    component:StatePage,
+    redirect:"/cmdInfoController/cmdList",
+    meta:{
+      title:"命令管理",
+      icon: "mdi-database-cog",
+      access:true
+    },
+    children:[
+      {
+        path:"cmdList",
+        component: () => import("@/views/core/cmdInfoController/cmdList.vue"),
+        name:"命令列表",
+        meta:{
+          title:"命令列表",
+          icon: "mdi-database-clock",
+          access:true
+        }
+      }
+    ]
+  },
+  {
     path:"/private",
     name:"内部调试页面",
     component:StatePage,
