@@ -142,7 +142,7 @@ export default class TopicList extends Vue{
                     dataBaseIp:'', // 数据库地址
                     databaseType:'', // 数据库类型
                     dataStructSchema:'', //
-                    writeElasticsearch: '', // 是否展示
+                    writeElasticsearch: 1, // 是否展示
                     redisTimer: '', // 内存过期时间
                     header: [{key:'',value:''},],
                     url: '',
@@ -323,6 +323,7 @@ export default class TopicList extends Vue{
                         params.topicName = formObj.topicName
                         params.queneType = formObj.messageType
                         params.redisTimer = formObj.redisTimer
+                        params.writeElasticsearch = formObj.writeElasticsearch
                         break
                     case 2:
                         params.topicInterFaceType = formObj.interfaceType
