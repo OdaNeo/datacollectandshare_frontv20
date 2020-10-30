@@ -99,7 +99,7 @@ export default class DialogForm extends Vue{
                     databaseType:'', // 数据库类型
                     redisTimer: '',
                     dataStructSchema:'', //
-                    writeElasticsearch: '', // 是否展示
+                    writeElasticsearch: 1, // 是否展示
                     header: [{key:'',value:''},],
                     url: '',
                     topicList:[
@@ -152,7 +152,7 @@ export default class DialogForm extends Vue{
             databaseType:'', // 数据库类型
             redisTimer: '',
             dataStructSchema:'', //
-            writeElasticsearch: '', // 是否展示
+            writeElasticsearch: 1, // 是否展示
             header: [{key:'',value:''},],
             url: '',
             topicList:[
