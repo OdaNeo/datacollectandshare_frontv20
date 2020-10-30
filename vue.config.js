@@ -4,7 +4,6 @@ module.exports = {
   "devServer": {
     port: 8080,
     open: true,
-    host: "192.168.59.192",
     // proxy: {
     //   '/': {
     //     target: 'http://192.168.60.214:8080',

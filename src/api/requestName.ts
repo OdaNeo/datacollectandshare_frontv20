@@ -80,8 +80,6 @@ export const GET_CMD_FIND_ALL = '/cmd/findAll'
 export const GET_CMD_MYCMD = '/cmd/findCmdInfoByUserId'
 export const GET_CMD_MYCMDBYID = '/cmd/findCmdInfoById'
 
-export const GET_CMD_INFORMATION = '/topics/findTopicAdditionalByTopicName'
-
 // 校验cmd是否存在
 export const GET_CMD_CHECKED = '/cmd/isRepeat'
 export const GET_CMD_SELECTCMD = '/cmd/findCmdInfoById'
@@ -151,7 +149,6 @@ const REQUEST_NAME: REQUEST_NAME = {
   GET_CMD_FIND_ALL,
   GET_CMD_MYCMD,
   GET_CMD_MYCMDBYID,
-  GET_CMD_INFORMATION,
   GET_CMD_SELECTCMD,
   GET_CMD_CHECKED,
   POST_CMD_ADD,

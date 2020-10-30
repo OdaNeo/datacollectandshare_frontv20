@@ -27,8 +27,8 @@
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="item in items" :key="item">
         <h-table :headers="headers" :desserts="desserts" :height="500" :pageNum="pageNum" @PaginationsNow="PaginationsNow" :paginationLength="paginationLength">
-          <template v-slot:buttons="{ item, index }">
-            <v-btn small text color="primary" class="my-2" @click="dataStructureDetails(item, index)">子系统信息详情</v-btn>
+          <template v-slot:buttons="{ item }">
+            <v-btn small text color="primary" class="my-2" @click="dataStructureDetails(item)">订阅统信息详情</v-btn>
           </template>
           <template v-slot:buttons2="{ item, index }">
             <v-btn v-if="tab" small text color="primary" class="my-2" @click.stop="addFileds(item)">修改</v-btn>
@@ -39,7 +39,7 @@
       </v-tab-item>
     </v-tabs-items>
     <h-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <data-structure-dialog slot="dialog-content" :rowObj="rowObj" :cmdIndex="cmdIndex" v-if="dialogShow == 2" />
+      <data-structure-dialog slot="dialog-content" :rowObj="rowObj" v-if="dialogShow == 2" />
       <create-cmd-dialog slot="dialog-content" v-else-if="dialogShow == 1" />
       <cmd-ancilary-information-dialog slot="dialog-content" :otherObj="otherObj" v-else-if="dialogShow == 3" />
     </h-dialog>
@@ -50,14 +50,13 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import { paramsType, returnDataType } from '../../../type/http-request.type'
 import http from '../../../decorator/httpDecorator'
 import HTable from '../../../components/h-table.vue'
-import Enum from '../../../decorator/enumDecorator'
 import HDialog from '../../../components/h-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import CreateCmdDialog from './childComponent/createCmdDialog.vue'
 import { CmdAdd } from '../../../type/cmd-add.type'
-import { SystemConfigFormObj } from '../../../type/system-config.type'
 import cmdAncilaryInformationDialog from './childComponent/cmdAncilaryInformationDialog.vue'
 import util from '../../../decorator/utilsDecorator'
+import alertUtil from '../../../utils/alertUtil'
 
 @Component({
   components: {
@@ -84,8 +83,10 @@ export default class CmdList extends Vue {
           userName: '', // 所属用户
           producer: '', // 源系统名称
           consumers: '', // 订阅系统名
+          consumersObj: [{ val: '' }],
           description: '', //描述（描述）
-          exchanges: '' //交换机名称
+          exchanges: '', //交换机名称
+          topicList: [] // 解耦，防止子组件报错
         }
       }
     }
@@ -96,7 +97,6 @@ export default class CmdList extends Vue {
   private dialogFlag: boolean = false //弹窗展示
   private dialogShow: number = 0 //展示哪个弹窗 1.是添加和修改弹窗 2.是详细信息弹窗 3.是描述弹窗
   private rowObj: object = {} //子系统信息详情
-  private cmdIndex: number = -1 //index
   private otherObj: any = {} //描述
   private onlyShowOther: boolean = false // 只显示补充信息
 
@@ -123,12 +123,12 @@ export default class CmdList extends Vue {
       value: 'userName'
     },
     {
-      text: '源系统名称',
+      text: '生产系统名',
       align: 'center',
       value: 'producer'
     },
     {
-      text: '子系统信息',
+      text: '订阅系统信息',
       align: 'center',
       slot: 'buttons'
     },
@@ -140,16 +140,48 @@ export default class CmdList extends Vue {
   ]
   // 添加命令调用方法
   //  创建命令
+
   private createCommend(item: any) {
-    console.log(item)
     this.dialogFlag = true
     this.dialogShow = 1
     this.formObj.btnName = ['立即提交']
     this.formObj.title = '创建命令'
     this.formObj.methodName = 'addCmd' // 立即提交
+    this.formObj.formObj = {
+      id: '', // 命令ID
+      canNotEdit: false, // 添加数据
+      cmdName: '', // 命令名称
+      userName: '', // 所属用户
+      producer: '', // 源系统名称
+      consumers: '', // 订阅系统名
+      consumersObj: [{ val: '' }],
+      description: '', //描述（描述）
+      exchanges: '', //交换机名称
+      topicList: [] // 解耦，防止子组件报错
+    }
 
     // if 增加字段
     if (item) {
+      let _consumersObj = []
+      let _consumers = item.consumers.split(',')
+
+      for (let i = 0; i < _consumers.length; i++) {
+        _consumersObj.push({
+          val: _consumers[i]
+        })
+      }
+      this.formObj.formObj = {
+        id: item.id, // 命令ID
+        canNotEdit: true, // 添加数据
+        cmdName: item.cmdName, // 命令名称
+        userName: '', // 所属用户
+        producer: item.producer, // 源系统名称
+        consumers: item.consumers, // 订阅系统名
+        consumersObj: _consumersObj,
+        description: item.description, //描述（描述）
+        exchanges: '', //交换机名称
+        topicList: [] // 解耦，防止子组件报错
+      }
     }
   }
   //  提交创建
@@ -157,6 +189,31 @@ export default class CmdList extends Vue {
     return new Promise(
       async (resolve, reject): Promise<void> => {
         let params: any = {}
+        let _consumers = []
+
+        for (let i = 0; i < formObj.consumersObj.length; i++) {
+          _consumers.push(formObj.consumersObj[i].val)
+        }
+        formObj.consumers = _consumers.join(',')
+        const _l = _consumers.length
+        // 提交订阅系统名称有重复，报错
+        for (let i = 0; i < _l; i++) {
+          let _i = _consumers.shift()
+          if (_i && _consumers.includes(_i)) {
+            alertUtil.open('订阅系统名"' + _i + '"已存在', true, 'error')
+
+            return
+          } else {
+            alertUtil.close()
+          }
+        }
+        //  ADD 不提交id，UPDATE提交id
+        formObj.canNotEdit ? (params['id'] = formObj.id) : (params['id'] = '')
+
+        params['cmdName'] = formObj.cmdName
+        params['consumers'] = formObj.consumers
+        params['producer'] = formObj.producer
+        params['description'] = formObj.description
 
         const { success } = await this.h_request['httpPOST'](!formObj.canNotEdit ? 'POST_CMD_ADD' : 'POST_CMD_UPDATE', params)
 
@@ -177,21 +234,16 @@ export default class CmdList extends Vue {
     )
   }
 
-  private authorizationBase64(obj: any) {
-    console.log('查看要处理的数据', obj)
-    return { 'key': 'Authorization', 'value': 'Basic ' + window.btoa(obj.key + ':' + obj.value + '') }
-  }
   //查询通用调用方法
   private async searchMethod(bool: boolean, params: object, tab?: boolean) {
-    console.log(params)
     if (tab) {
       const { data }: returnDataType = bool ? await this.h_request['httpGET']<object>('GET_CMD_MYCMDBYID', params) : await this.h_request['httpGET']<object>('GET_CMD_MYCMD', params)
 
-      //   console.log(data)
+      data.list &&
+        (this.desserts = data.list.map((item: any) => {
+          return { ...item, flag: false }
+        }))
 
-      this.desserts = data.list.map((item: any) => {
-        return { ...item, flag: false }
-      })
       this.paginationLength = Math.ceil(data['total'] / this.pageSize)
     } else {
       const { data }: returnDataType = bool ? await this.h_request['httpGET']<object>('GET_CMD_SELECTCMD', params) : await this.h_request['httpGET']<object>('GET_CMD_FIND_ALL', params)
@@ -200,7 +252,7 @@ export default class CmdList extends Vue {
         (this.desserts = data.list.map((item: any) => {
           return { ...item, flag: false }
         }))
-        
+
       this.paginationLength = Math.ceil(data['total'] / this.pageSize)
     }
   }
@@ -217,7 +269,6 @@ export default class CmdList extends Vue {
         !!this.tab
       )
     } else {
-      console.log(this.queryCmdID)
       this.searchMethod(
         true,
         {
@@ -241,11 +292,10 @@ export default class CmdList extends Vue {
   }
 
   //数据结构展示方法
-  private dataStructure(item: any, str: string, index: number) {
+  private dataStructure(item: any, str: string) {
     this.dialogFlag = true
     this.dialogShow = 2
     this.rowObj = item
-    this.cmdIndex = index
     this.formObj.title = str
     this.formObj.btnName = []
     this.formObj.methodName = ' '
@@ -260,8 +310,8 @@ export default class CmdList extends Vue {
     this.formObj.methodName = ' '
   }
 
-  private dataStructureDetails(item: any, index: number) {
-    this.dataStructure(item, '子系统信息详情', index)
+  private dataStructureDetails(item: any) {
+    this.dataStructure(item, '子系统信息详情')
   }
 
   private addFileds(item: any) {

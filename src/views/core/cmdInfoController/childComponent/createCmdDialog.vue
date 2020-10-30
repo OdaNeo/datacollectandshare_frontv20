@@ -3,7 +3,7 @@
     <!-- 弹框 展示数据结 -->
     <v-dialog v-model="showConstruction" width="500">
       <v-card>
-        <v-card-title class="headline grey lighten-2"> 数据发送示例 </v-card-title>
+        <v-card-title class="headline grey lighten-2">数据发送示例</v-card-title>
 
         <v-card-text>
           <p style="padding-top: 20px; white-space: pre-wrap">
@@ -30,6 +30,7 @@
         class="dialogInput"
         v-model="formProvide.formObj.cmdName"
         :rules="[...h_validator.cmdNameVilidata(), ...cmdRepeat]"
+        :disabled="formProvide.formObj.canNotEdit"
         @input="inputEvent(formProvide.formObj.cmdName, formProvide.formObj.producer)"
         required
       >
@@ -50,6 +51,7 @@
         class="dialogInput"
         v-model="formProvide.formObj.producer"
         :rules="[...h_validator.cmdProducerVilidata(), ...cmdRepeat]"
+        :disabled="formProvide.formObj.canNotEdit"
         @input="inputEvent(formProvide.formObj.cmdName, formProvide.formObj.producer)"
         required
       >
@@ -60,6 +62,42 @@
         </template>
       </v-text-field>
     </v-col>
+    <div style="width: 100%; max-height: 200px; overflow-y: auto; overflow-x: hidden">
+      <div v-for="(item, index) in formProvide.formObj.consumersObj" style="display: flex; flex: 1" :key="index">
+        <v-col cols="9" style="padding: 0" class="input-item">
+          <v-text-field
+            single-line
+            outlined
+            clearable
+            dense
+            height="32"
+            class="dialogInput"
+            @input="vilidata(item.val)"
+            v-model="item.val"
+            :rules="[...h_validator.cmdConsumersVilidata(item.val), ...cmdRepeat]"
+            required
+          >
+            <template v-slot:prepend>
+              <div class="text-label" v-if="index === 0">
+                <label><span class="require-span">*</span>订阅系统名：</label>
+              </div>
+              <div class="text-label" v-else>
+                <p></p>
+                <label></label>
+              </div>
+            </template>
+          </v-text-field>
+        </v-col>
+        <v-col cols="2" class="input-item">
+          <v-btn fab dark small color="error" class="add-btn" v-if="(formProvide.formObj.consumersObj.length !== index + 1 || index != 0) && !item.disabled" @click="minus(index)">
+            <v-icon dark>mdi-minus</v-icon>
+          </v-btn>
+          <v-btn fab dark small color="indigo" class="add-btn" v-if="formProvide.formObj.consumersObj.length === index + 1" @click="add()">
+            <v-icon dark>mdi-plus</v-icon>
+          </v-btn>
+        </v-col>
+      </div>
+    </div>
     <v-col cols="9" style="padding: 0">
       <v-text-field
         single-line
@@ -68,13 +106,13 @@
         dense
         height="32"
         class="dialogInput"
-        v-model="formProvide.formObj.consumers"
-        :rules="[...h_validator.cmdConsumersVilidata(), ...cmdRepeat]"
+        v-model="formProvide.formObj.description"
+        :rules="[...h_validator.cmdDescriptionVilidata(), ...cmdRepeat]"
         required
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <label><span class="require-span">*</span>订阅系统名：</label>
+            <label><span class="require-span">*</span>描述</label>
           </div>
         </template>
       </v-text-field>
@@ -96,30 +134,38 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 import http from '../../../../decorator/httpDecorator'
 import validator from '../../../../decorator/validatorDecorator'
 import { H_Vue } from '../../../../declaration/vue-prototype'
+import alertUtil from '../../../../utils/alertUtil'
 
 @Component
 @http
-@validator(['cmdNameVilidata', 'cmdProducerVilidata', 'cmdConsumersVilidata'])
+@validator(['cmdNameVilidata', 'cmdProducerVilidata', 'cmdConsumersVilidata', 'cmdDescriptionVilidata'])
 export default class CreateCmdDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private cmdName: string = ''
   private producer: string = ''
   private consumers: string = ''
 
-  private messageType: string = ''
-  private bool: boolean = false
+  private consumersObj: Array<{ val: any }> = []
+
+  private description: string = ''
   private showConstruction: boolean = false
 
   private cmdRepeat: Function[] = []
 
   private clearMethod() {
     this.formProvide.formObj = {
+      id: '',
       canNotEdit: false, // 添加数据
       cmdName: '', // 命令名称
-      messageType: '', // 消息类型
+      producer: '', // 生产系统名
+      consumers: '', // 订阅系统名
+      description: '', // 描述,
+      consumersObj: [{ val: '' }],
+      topicList: []
     }
   }
 
+  // 数据示例
   private get msgSendExample() {
     let msg: any = {}
     return JSON.stringify(
@@ -135,7 +181,6 @@ export default class CreateCmdDialog extends Vue {
   private async inputEvent(v: string, p: string) {
     // producer cmdName都有，才发送数据
     if (v && v != '' && p && p != '') {
-      console.log(1)
       const { success } = await this.h_request['httpGET']('GET_CMD_CHECKED', {
         cmdName: v,
         producer: p
@@ -147,6 +192,33 @@ export default class CreateCmdDialog extends Vue {
       }
     } else {
       this.cmdRepeat = []
+    }
+  }
+
+  private add() {
+    // 增加数据结构
+    ;(this.formProvide.formObj.consumersObj as Array<{ val: any }>).push({
+      val: ''
+    })
+  }
+  private minus(num: number) {
+    // 删减数据结构
+    ;(this.formProvide.formObj.consumersObj as Array<{ val: any }>).splice(num, 1)
+  }
+
+  private vilidata(val: string | number) {
+    const _consumers = []
+    const _consumersObj = this.formProvide.formObj.consumersObj as Array<{ val: any }>
+    for (let i = 0; i < _consumersObj.length; i++) {
+      _consumers.push(_consumersObj[i].val)
+    }
+
+    _consumers.pop()
+
+    if (_consumers.includes(val)) {
+      alertUtil.open('订阅系统名"' + val + '"已存在', true, 'error')
+    } else {
+      alertUtil.close()
     }
   }
 }

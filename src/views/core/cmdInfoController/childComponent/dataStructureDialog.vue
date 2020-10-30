@@ -14,15 +14,20 @@ import HTable from '../../../../components/h-table.vue'
 })
 export default class DataStructureDialog extends Vue {
   @Prop() private rowObj!: any
-  @Prop() private cmdIndex!: number
   get desserts() {
     let arr = []
+
     const _data = this.rowObj
-    arr.push({
-      id: this.cmdIndex + 1,
-      key: _data.consumers,
-      value: _data.queueNames
-    })
+
+    let _consumers = _data.consumers.split(',')
+    let _queueNames = _data.queueNames.split(',')
+    for (let i = 0; i < _consumers.length; i++) {
+      arr.push({
+        id: i + 1,
+        key: _consumers[i],
+        value: _queueNames[i]
+      })
+    }
     return arr
   }
   private headers = [
@@ -32,7 +37,7 @@ export default class DataStructureDialog extends Vue {
       value: 'id'
     },
     {
-      text: '子系统名称',
+      text: '订阅系统名称',
       align: 'center',
       value: 'key'
     },
