@@ -107,12 +107,10 @@
         height="32"
         class="dialogInput"
         v-model="formProvide.formObj.description"
-        :rules="[...h_validator.cmdDescriptionVilidata(), ...cmdRepeat]"
-        required
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <label><span class="require-span">*</span>描述</label>
+            <label>描述</label>
           </div>
         </template>
       </v-text-field>
@@ -138,7 +136,7 @@ import alertUtil from '../../../../utils/alertUtil'
 
 @Component
 @http
-@validator(['cmdNameVilidata', 'cmdProducerVilidata', 'cmdConsumersVilidata', 'cmdDescriptionVilidata'])
+@validator(['cmdNameVilidata', 'cmdProducerVilidata', 'cmdConsumersVilidata'])
 export default class CreateCmdDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private cmdName: string = ''
@@ -209,13 +207,16 @@ export default class CreateCmdDialog extends Vue {
   private vilidata(val: string | number) {
     const _consumers = []
     const _consumersObj = this.formProvide.formObj.consumersObj as Array<{ val: any }>
+
     for (let i = 0; i < _consumersObj.length; i++) {
-      _consumers.push(_consumersObj[i].val)
+      if(_consumersObj[i].val){
+        _consumers.push(_consumersObj[i].val)
+      }
     }
 
-    _consumers.pop()
+    console.log(_consumers)
 
-    if (_consumers.includes(val)) {
+    if (_consumers.indexOf(val)!==_consumers.lastIndexOf(val)) {
       alertUtil.open('订阅系统名"' + val + '"已存在', true, 'error')
     } else {
       alertUtil.close()

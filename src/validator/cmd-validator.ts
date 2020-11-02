@@ -22,10 +22,6 @@ class CmdValidator {
     ]
   }
 
-  // cmd description校验规则
-  public readonly cmdDescriptionVilidata = () => {
-    return [(v: string) => !!v || '描述不能为空', (v: string) => (v && v.length <= 20) || '描述最长可设置20个字符', (v: string) => /^\w*$/.test(v) || '内容只能为数字、字母、下划线的组合']
-  }
 }
 
 export default CmdValidator
