@@ -47,7 +47,6 @@ export default class DialogForm extends Vue {
   private reset(clearAll: boolean) {
     const formObj: any = this.formProvide.formObj
     if (clearAll) {
-      console.log(formObj)
       // 增加字段的重置 只重置数据结构部分
       for (let i = 0; i < formObj.topicList.length; i++) {
         if (!formObj.topicList[i].disabled) {
@@ -101,8 +100,8 @@ export default class DialogForm extends Vue {
       }
 
       // 重制描述与订阅系统名
-      formObj.description=""
-      formObj.consumersObj=[{ val: '' }]
+      formObj.description && (formObj.description = '')
+      formObj.consumersObj && (formObj.consumersObj = [{ val: '' }])
 
       return
     } else {
