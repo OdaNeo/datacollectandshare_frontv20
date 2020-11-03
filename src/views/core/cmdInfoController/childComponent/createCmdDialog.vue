@@ -3,11 +3,14 @@
     <!-- 弹框 展示数据结 -->
     <v-dialog v-model="showConstruction" width="500">
       <v-card>
-        <v-card-title class="headline grey lighten-2">数据发送示例</v-card-title>
+        <v-card-title class="headline grey lighten-2">Body示例</v-card-title>
 
         <v-card-text>
           <p style="padding-top: 20px; white-space: pre-wrap">
-            {{ msgSendExample }}
+            <span>{<br/>   
+            "cmddata": "{/"cmdId/":/"900001/",/"cmdContent/":/"这是一条测试信息/"}"
+            <br/>}
+            </span>
           </p>
         </v-card-text>
 
@@ -99,18 +102,10 @@
       </div>
     </div>
     <v-col cols="9" style="padding: 0">
-      <v-text-field
-        single-line
-        outlined
-        clearable
-        dense
-        height="32"
-        class="dialogInput"
-        v-model="formProvide.formObj.description"
-      >
+      <v-text-field single-line outlined clearable dense height="32" class="dialogInput" v-model="formProvide.formObj.description">
         <template v-slot:prepend>
           <div class="text-label">
-            <label>描述</label>
+            <label>描述：</label>
           </div>
         </template>
       </v-text-field>
@@ -119,7 +114,7 @@
       <v-radio-group single-line outlined dense class="dialogInput" height="32" row required>
         <template v-slot:prepend>
           <div class="text-label" style="margin-top: 7px">
-            <label><span class="require-span"></span>数据发送示例：</label>
+            <label><span class="require-span"></span>Body示例：</label>
           </div>
         </template>
         <v-btn solo @click.native="showConstruction = true">查看</v-btn>
@@ -163,18 +158,7 @@ export default class CreateCmdDialog extends Vue {
     }
   }
 
-  // 数据示例
-  private get msgSendExample() {
-    let msg: any = {}
-    return JSON.stringify(
-      {
-        'requestid': new Date().getTime(),
-        'data': [msg]
-      },
-      null,
-      '\t'
-    )
-  }
+  
 
   private async inputEvent(v: string, p: string) {
     // producer cmdName都有，才发送数据
@@ -209,14 +193,14 @@ export default class CreateCmdDialog extends Vue {
     const _consumersObj = this.formProvide.formObj.consumersObj as Array<{ val: any }>
 
     for (let i = 0; i < _consumersObj.length; i++) {
-      if(_consumersObj[i].val){
+      if (_consumersObj[i].val) {
         _consumers.push(_consumersObj[i].val)
       }
     }
 
     console.log(_consumers)
 
-    if (_consumers.indexOf(val)!==_consumers.lastIndexOf(val)) {
+    if (_consumers.indexOf(val) !== _consumers.lastIndexOf(val)) {
       alertUtil.open('订阅系统名"' + val + '"已存在', true, 'error')
     } else {
       alertUtil.close()
