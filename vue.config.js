@@ -2,7 +2,6 @@ const userList = require("./mock/user.json")
 module.exports = {
   //"publicPath":"/tsweb2/",
   "devServer": {
-    // host:'192.168.59.192',
     port: 8080,
     open: true,
     // proxy: {
