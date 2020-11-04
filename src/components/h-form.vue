@@ -98,6 +98,11 @@ export default class DialogForm extends Vue {
         }
         this.udf.resetValidation()
       }
+
+      // 重制描述与订阅系统名
+      formObj.description && (formObj.description = '')
+      formObj.consumersObj && (formObj.consumersObj = [{ val: '' }])
+
       return
     } else {
       // this.udf.reset()
@@ -132,6 +137,7 @@ export default class DialogForm extends Vue {
         dataStructSchema: '', //
         writeElasticsearch: 1, // 是否展示
         header: [{ key: '', value: '' }],
+        consumersObj: [{ val: '' }],
         url: '',
         topicList: [
           {
