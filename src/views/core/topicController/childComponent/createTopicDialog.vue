@@ -291,7 +291,6 @@
                     height="32"
                     :disabled="formProvide.formObj.canNotEdit"
                     row
-                    :rules="h_validator.writeEsVilidata()"
                     required
             >
                 <template v-slot:prepend>
