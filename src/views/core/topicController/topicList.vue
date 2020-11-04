@@ -1,5 +1,4 @@
 <template>
-<!--    -->
     <div id="topicList">
         <v-row>
             <v-col cols="3">
