@@ -3,7 +3,7 @@
     <v-form ref="userDialogForm" v-model="userDialogValid">
       <slot name="dialog-form-content"></slot>
       <v-row>
-        <v-col cols="5" offset="3" style="padding: 0; margin-left: 153px">
+        <v-col cols="7" offset="3" style="padding: 0; margin-left: 153px">
           <v-btn color="primary" class="mr-4" height="32" solo :disabled="!userDialogValid" v-if="formProvide.btnName.length > 0 && formProvide.btnName[0]" @click="validate($event)">
             {{ formProvide.btnName[0] }}
           </v-btn>
@@ -11,6 +11,7 @@
             {{ formProvide.btnName[1] }}
           </v-btn>
           <v-btn class="mr-4" height="32" solo v-if="formProvide.btnName.length > 0 && !formProvide.btnName[1]" @click="reset(true)">重置</v-btn>
+          <v-btn class="mr-4" height="32" solo v-if="!formProvide.formObj.id && formProvide.upLoad" @click="openUpload($event)" >上传文件</v-btn>
         </v-col>
       </v-row>
     </v-form>
@@ -43,6 +44,16 @@ export default class DialogForm extends Vue {
   private cancel(e: Event) {
     const parent = this.$parent.$parent.$parent.$parent as any
     parent.closeMethod(e)
+  }
+
+  // 打开上传excel页面
+  private openUpload(e:Event){
+
+    const parent = this.$parent.$parent.$parent.$parent as any
+    const parent2 = this.$parent.$parent.$parent.$parent.$parent as any
+
+    parent.closeMethod(e)
+    parent2.openUpload()
   }
   private reset(clearAll: boolean) {
     const formObj: any = this.formProvide.formObj

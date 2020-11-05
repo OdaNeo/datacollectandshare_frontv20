@@ -232,7 +232,7 @@ const routes: Array<RouteConfig> = [
     redirect:"/cmdInfoController/cmdList",
     meta:{
       title:"命令管理",
-      icon: "mdi-database-cog",
+      icon: "mdi-console",
       access:true
     },
     children:[
@@ -242,7 +242,7 @@ const routes: Array<RouteConfig> = [
         name:"命令列表",
         meta:{
           title:"命令列表",
-          icon: "mdi-database-clock",
+          icon: "mdi-console-line ",
           access:true
         }
       }

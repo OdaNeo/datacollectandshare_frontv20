@@ -208,8 +208,7 @@ export default class CmdList extends Vue {
           }
         }
         //  ADD 不提交id，UPDATE提交id
-        formObj.canNotEdit ? (params['id'] = formObj.id) : (params['id'] = '')
-
+        formObj.canNotEdit && (params['id'] = formObj.id)
         params['cmdName'] = formObj.cmdName
         params['consumers'] = formObj.consumers
         params['producer'] = formObj.producer

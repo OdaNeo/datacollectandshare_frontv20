@@ -17,7 +17,7 @@
                 >
                 </v-text-field>
             </v-col>
-            <v-col cols="2">
+            <v-col cols="1">
                 <v-btn
                 color="primary"
                 dark
@@ -91,6 +91,24 @@
             <create-topic-dialog slot="dialog-content" v-else-if="dialogShow==1"></create-topic-dialog>
             <topic-ancilary-information-dialog slot="dialog-content" :otherObj="otherObj" v-else-if="dialogShow==3"></topic-ancilary-information-dialog>
         </h-dialog>
+        <!-- 上传文件对话框 -->
+        <v-dialog
+            v-model="upLoadFlag"
+            max-width="750px"
+            persistent
+            content-class="upLoadDialog"
+        >
+            <v-card>
+                <v-card-title class="dialog-title">上传文件</v-card-title>
+                <v-card-text>仅支持.xls, .xlsx格式的单文件上传。</v-card-text>
+                <v-file-input accept=".xls,.xlsx" label="File input" @change="upLoadFile" @click:clear="canUpLoad=false" style="width:730px" :key="forceRenderFlag"/>
+                <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn  class="mr-4"  solo :disabled="!canUpLoad" @click="upLoadFileConfirm">确定上传</v-btn>
+                    <v-btn  class="mr-4"  solo @click="upLoadFileCancel">取消上传</v-btn>
+                </v-card-actions>
+            </v-card>
+        </v-dialog>
     </div>
 </template>
 <script lang="ts">
@@ -109,6 +127,9 @@ import {SystemConfigFormObj} from "@/type/system-config.type";
 import {GET_TOPICS_INFORMATION} from "@/api/requestName";
 import TopicAncilaryInformationDialog from './childComponent/topicAncilaryInformationDialog.vue';
 import util from '@/decorator/utilsDecorator';
+import { MomentInputObject } from "moment";
+
+import XLSX from 'xlsx';
 
 @Component({
     components:{
@@ -133,6 +154,7 @@ export default class TopicList extends Vue{
                 title:"",
                 btnName:([] as string[]),
                 methodName:"",
+                upLoad:true,// 主题列表页面上传文件按钮flag
                 formObj:{
                     id:'', // 主题ID
                     canNotEdit: false, // 添加数据
@@ -176,6 +198,14 @@ export default class TopicList extends Vue{
     private rowObj:object = {} //数据结构弹窗数据
     private otherObj:any = {} //数据结构弹窗数据 补充
     private onlyShowOther:boolean = false // 只显示补充信息
+
+    private upLoadFlag:boolean = false
+    private canUpLoad:boolean = false
+    private SheetNames:string[] = [""]
+    private Sheets:any
+    private forceRenderFlag:number=Math.random()
+    private fileName:string=""
+    private topicListNameList=['序号','字段名','字段类型(Int,String,TimeStamp)','字段含义']
 
     private desserts:Array<topicTable> = []  //数据列表
     private queryTopicID = null  //查询主题ID input框内容
@@ -489,8 +519,70 @@ export default class TopicList extends Vue{
             pageNum:this.pageNum
         },!!this.tab)
     }
+    public openUpload(){
+        this.upLoadFlag=true
+    }
 
+    // 上传文件
+    private  upLoadFile  (e:File[]){
+        const file=e as any 
+        if(!file){ return }
+        // xlsx 或者 xls 格式才能上传
+        if(file.type==='application/vnd.ms-excel'|| file.type=== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'){
+            
+            const reader = new FileReader()
+            reader.onload  = (e:any) =>{
+                const data = new Uint8Array(e.target.result)
+                const {SheetNames,Sheets} = XLSX.read(data, {type: 'array'})
+                
+                this.canUpLoad=true
+                this.SheetNames=SheetNames
+                this.Sheets=Sheets
+                this.fileName=file.name.split('.')[0]
+            }
+            reader.readAsArrayBuffer(file);
+        }
+    }
 
+    //  确定上传
+    private upLoadFileConfirm(){
+        this.upLoadFlag = false
+        this.dialogFlag = true
+        this.canUpLoad=false
+        this.forceRenderFlag=Math.random()
+
+        // 填充创建主题页面
+        this.formObj.formObj.topicName=this.fileName
+        const obj=this.Sheets.sheet1
+        const _l:number=obj['!ref'].split('D')[1]
+
+         this.formObj.formObj.topicList = []
+         
+            for(let i=1;i<_l;i++){
+                this.formObj.formObj.topicList.push({
+                    number: obj[`A${i+1}`].v,
+                    key: obj[`B${i+1}`].v,
+                    type: obj[`C${i+1}`].v,
+                    description: obj[`D${i+1}`].v,
+                    disabled:false
+                })
+            }
+
+        console.log(this.formObj.formObj.topicList)
+
+    }
+    // 取消上传
+    private upLoadFileCancel(){
+        this.upLoadFlag = false
+        this.dialogFlag = true
+        this.canUpLoad=false
+
+        this.forceRenderFlag=Math.random()
+
+        this.SheetNames = [""]
+        this.Sheets={}
+        this.fileName=""
+    }
     created() {
         // console.log(418)
         // this.searchMethod(false,{
@@ -501,6 +593,10 @@ export default class TopicList extends Vue{
 }
 </script>
 <style scoped>
+.dialog-title{
+    text-align: center;
+    display: block;
+}
 .table-leave-to{
     opacity:0;
     transform: translate3d(800px,0,0);
