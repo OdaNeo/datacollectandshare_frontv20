@@ -26,6 +26,12 @@
                     创建主题
                 </v-btn>
             </v-col>
+            <v-col cols="1">
+                <v-btn 
+                color="primary"
+                dark
+                @click="openUpload($event)">通过文件创建</v-btn>
+            </v-col>
         </v-row>
         <v-tabs v-model="tab" @change="tabChange">
             <v-tab v-for="item in items" :key="item">{{item}}</v-tab>
@@ -86,6 +92,7 @@
                 </h-table>
             </v-tab-item>
         </v-tabs-items>
+
         <h-dialog v-if="dialogFlag" v-model="dialogFlag">
             <data-structure-dialog slot="dialog-content" :rowObj="rowObj" v-if="dialogShow==2"></data-structure-dialog>
             <create-topic-dialog slot="dialog-content" v-else-if="dialogShow==1"></create-topic-dialog>
@@ -100,7 +107,7 @@
         >
             <v-card>
                 <v-card-title class="dialog-title">上传文件</v-card-title>
-                <v-card-text>仅支持.xls, .xlsx格式的单文件上传。</v-card-text>
+                <v-card-text>支持.xls, .xlsx格式的单文件上传。文件名将自动填充主题名称。</v-card-text>
                 <v-file-input accept=".xls,.xlsx" label="File input" @change="upLoadFile" @click:clear="canUpLoad=false" style="width:730px" :key="forceRenderFlag"/>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -117,16 +124,16 @@ import { paramsType, returnDataType } from '../../../type/http-request.type';
 import http from "../../../decorator/httpDecorator";
 import { topicTable } from '../../../type/topic.type';
 import HTable from '../../../components/h-table.vue';
-import Enum from '@/decorator/enumDecorator';
+import Enum from '../../../decorator/enumDecorator';
 import { queneType } from '../../../enum/topic-list-enum';
 import HDialog from '../../../components/h-dialog.vue';
 import DataStructureDialog from './childComponent/dataStructureDialog.vue';
 import CreateTopicDialog from './childComponent/createTopicDialog.vue';
 import { TopicAdd } from '../../../type/topic-add.type';
-import {SystemConfigFormObj} from "@/type/system-config.type";
-import {GET_TOPICS_INFORMATION} from "@/api/requestName";
+import {SystemConfigFormObj} from "../../../type/system-config.type";
+import {GET_TOPICS_INFORMATION} from "../../../api/requestName";
 import TopicAncilaryInformationDialog from './childComponent/topicAncilaryInformationDialog.vue';
-import util from '@/decorator/utilsDecorator';
+import util from '../../../decorator/utilsDecorator';
 import { MomentInputObject } from "moment";
 
 import XLSX from 'xlsx';
@@ -154,13 +161,13 @@ export default class TopicList extends Vue{
                 title:"",
                 btnName:([] as string[]),
                 methodName:"",
-                upLoad:true,// 主题列表页面上传文件按钮flag
+                // upLoad:true,// 主题列表页面上传文件按钮flag
                 formObj:{
                     id:'', // 主题ID
                     canNotEdit: false, // 添加数据
                     interfaceType:1,
                     topicName:'', // 主题名称
-                    messageType:'', // 消息类型
+                    messageType:'' as string | number, // 消息类型
                     dataBaseIp:'', // 数据库地址
                     databaseType:'', // 数据库类型
                     dataStructSchema:'', //
@@ -170,10 +177,10 @@ export default class TopicList extends Vue{
                     url: '',
                     topicList:[
                         {
-                            number: '',
-                            key:'',
-                            type:'',
-                            description:'', // 描述
+                            ['' as string]: '' as any,
+                            ['' as string]:'' as any,
+                            ['' as string]:'' as any,
+                            ['' as string]:'' as any,// 描述
                             disabled:false
                         }
                     ],
@@ -206,6 +213,8 @@ export default class TopicList extends Vue{
     private forceRenderFlag:number=Math.random()
     private fileName:string=""
     private topicListNameList=['序号','字段名','字段类型(Int,String,TimeStamp)','字段含义']
+    private sheetObj:any
+    private sheetCurIndex:number=1
 
     private desserts:Array<topicTable> = []  //数据列表
     private queryTopicID = null  //查询主题ID input框内容
@@ -295,12 +304,9 @@ export default class TopicList extends Vue{
             this.formObj.formObj.type = item.type
             this.formObj.formObj.body = item.body
             this.formObj.formObj.url = item.url
-            console.log(item.dataBaseIp)
             this.formObj.formObj.dataBaseIp = item.dataBaseIp
-            console.log(item.dataBaseType)
             this.formObj.formObj.databaseType = item.dataBaseType
 
-            // console.log(item.AuthorizationObj)
             this.formObj.formObj.AuthorizationObj = {
                 key:"***",
                 value:"***"
@@ -312,6 +318,8 @@ export default class TopicList extends Vue{
                 this.formObj.formObj.header =  JSON.parse(this.otherObj[0].header)||''
                 this.formObj.formObj.url =  this.otherObj[0].url||''
             }
+
+
             let obj1:any = JSON.parse(item.dsAnnotation)
             let obj2:any = JSON.parse(item.structMapping)
             let obj3:any = JSON.parse(item.dataStruct)[0]
@@ -320,7 +328,7 @@ export default class TopicList extends Vue{
                 this.formObj.formObj.topicList.push({
                     number: k,
                     key: obj2[k],
-                    type: obj3[k],
+                    type:((typeof obj3[k] === 'number') && obj3[k] > 1) ? "TimeStamp" : obj3[k],
                     description: obj1[k],
                     disabled:true
                 })
@@ -329,13 +337,17 @@ export default class TopicList extends Vue{
     }
     //  提交创建
     private addTopic(formObj:TopicAdd){
+        
         return new Promise(async (resolve,reject):Promise<void>=>{
             let dataStruct:any = {};
             let dataStructNumber:any = {};
             let description:any = {}
+
+            console.log(formObj.topicList)
+
             formObj.topicList.forEach((val,index)=>{
                 dataStruct[val.number] = val.key;
-                dataStructNumber[val.number] = val.type=="1"?Number(val.type):val.type;
+                dataStructNumber[val.number] = val.type==="1" ? Number(val.type): val.type === "TimeStamp"  ? new Date().getTime() : val.type;
                 description[val.number] = val.description;
             })
             let _numberS = JSON.stringify(dataStruct);
@@ -389,8 +401,9 @@ export default class TopicList extends Vue{
                 params.id = formObj.id
             }
 
+            console.log(params)
 
-            const {success} = await this.h_request["httpPOST"](!formObj.canNotEdit?"POST_TOPICS_ADD":"POST_TOPICS_UPDATE",params)
+            const { success } = await this.h_request["httpPOST"](!formObj.canNotEdit?"POST_TOPICS_ADD":"POST_TOPICS_UPDATE",params)
 
             if(success){
                 this.h_utils["alertUtil"].open(!formObj.canNotEdit?"主题创建成功":"主题修改成功",true,"success")
@@ -474,7 +487,6 @@ export default class TopicList extends Vue{
     }
 
     private addFileds(item:any){
-        console.log(item)
         this.createTopic(item)
     }
 
@@ -519,7 +531,7 @@ export default class TopicList extends Vue{
             pageNum:this.pageNum
         },!!this.tab)
     }
-    public openUpload(){
+    public openUpload(e:Event){
         this.upLoadFlag=true
     }
 
@@ -543,38 +555,63 @@ export default class TopicList extends Vue{
             reader.readAsArrayBuffer(file);
         }
     }
-
+    private handleObjKey(k:string){
+       switch(this.sheetObj[`${k}1`].v){
+        case '序号':
+            return "number"
+        case '字段名':
+            return "key"
+        case '字段类型(Int,String,TimeStamp)':
+            return "type"
+        case '字段含义':
+            return "description"
+       }
+    }
+    // ['序号','字段名','字段类型(Int,String,TimeStamp)','字段含义']
+    // this.formObj.formObj.topicList.type 转义
+    private handleObjKeyType(k:string){
+        switch(k){
+            case 'Int':
+                return 1
+            case 'String':
+                return "str"
+            case 'TimeStamp':
+                return "TimeStamp"
+            default:
+                return k
+       }
+    }
     //  确定上传
     private upLoadFileConfirm(){
+        this.createTopic(false)
+
         this.upLoadFlag = false
-        this.dialogFlag = true
-        this.canUpLoad=false
+        this.canUpLoad = false
         this.forceRenderFlag=Math.random()
 
         // 填充创建主题页面
         this.formObj.formObj.topicName=this.fileName
-        const obj=this.Sheets.sheet1
-        const _l:number=obj['!ref'].split('D')[1]
 
-         this.formObj.formObj.topicList = []
+        this.formObj.formObj.messageType = 1
+       
+        this.Sheets[`sheet${this.sheetCurIndex}`] && (this.sheetObj=this.Sheets[`sheet${this.sheetCurIndex}`])
+
+        const _l:number=this.sheetObj['!ref'].split('D')[1]
+        this.formObj.formObj.topicList = []
          
-            for(let i=1;i<_l;i++){
-                this.formObj.formObj.topicList.push({
-                    number: obj[`A${i+1}`].v,
-                    key: obj[`B${i+1}`].v,
-                    type: obj[`C${i+1}`].v,
-                    description: obj[`D${i+1}`].v,
-                    disabled:false
-                })
-            }
-
-        console.log(this.formObj.formObj.topicList)
-
+        for(let i=1;i<_l;i++){
+            this.formObj.formObj.topicList.push({
+                [this.handleObjKey('A') as string] :this.handleObjKeyType(this.sheetObj[`A${i+1}`].v),
+                [this.handleObjKey('B') as string] :this.handleObjKeyType(this.sheetObj[`B${i+1}`].v),
+                [this.handleObjKey('C') as string] :this.handleObjKeyType(this.sheetObj[`C${i+1}`].v),
+                [this.handleObjKey('D') as string] :this.handleObjKeyType(this.sheetObj[`D${i+1}`].v),
+                disabled:false
+            })
+        }
     }
     // 取消上传
     private upLoadFileCancel(){
         this.upLoadFlag = false
-        this.dialogFlag = true
         this.canUpLoad=false
 
         this.forceRenderFlag=Math.random()
@@ -583,13 +620,7 @@ export default class TopicList extends Vue{
         this.Sheets={}
         this.fileName=""
     }
-    created() {
-        // console.log(418)
-        // this.searchMethod(false,{
-        //     pageSize:this.pageSize,
-        //     pageNum:this.pageNum
-        // },false)
-    }
+
 }
 </script>
 <style scoped>

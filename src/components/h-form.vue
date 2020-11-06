@@ -11,7 +11,6 @@
             {{ formProvide.btnName[1] }}
           </v-btn>
           <v-btn class="mr-4" height="32" solo v-if="formProvide.btnName.length > 0 && !formProvide.btnName[1]" @click="reset(true)">重置</v-btn>
-          <v-btn class="mr-4" height="32" solo v-if="!formProvide.formObj.id && formProvide.upLoad" @click="openUpload($event)" >上传文件</v-btn>
         </v-col>
       </v-row>
     </v-form>
@@ -46,15 +45,7 @@ export default class DialogForm extends Vue {
     parent.closeMethod(e)
   }
 
-  // 打开上传excel页面
-  private openUpload(e:Event){
-
-    const parent = this.$parent.$parent.$parent.$parent as any
-    const parent2 = this.$parent.$parent.$parent.$parent.$parent as any
-
-    parent.closeMethod(e)
-    parent2.openUpload()
-  }
+ 
   private reset(clearAll: boolean) {
     const formObj: any = this.formProvide.formObj
     if (clearAll) {
