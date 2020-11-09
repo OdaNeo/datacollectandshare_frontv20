@@ -7,9 +7,10 @@
 
         <v-card-text>
           <p style="padding-top: 20px; white-space: pre-wrap">
-            <span>{<br/>   
-            "cmddata": "{/"cmdId/":/"900001/",/"cmdContent/":/"这是一条测试信息/"}"
-            <br/>}
+            <span
+              >{<br />
+              "cmddata": "{/"cmdId/":/"900001/",/"cmdContent/":/"这是一条测试信息/"}"
+              <br />}
             </span>
           </p>
         </v-card-text>
@@ -45,19 +46,7 @@
       </v-text-field>
     </v-col>
     <v-col cols="9" style="padding: 0">
-      <v-text-field
-        single-line
-        outlined
-        clearable
-        dense
-        height="32"
-        class="dialogInput"
-        v-model="formProvide.formObj.producer"
-        :rules="[...h_validator.cmdProducerVilidata(), ...cmdRepeat]"
-        :disabled="formProvide.formObj.canNotEdit"
-        @input="inputEvent(formProvide.formObj.cmdName, formProvide.formObj.producer)"
-        required
-      >
+      <v-text-field single-line outlined clearable dense height="32" class="dialogInput" v-model="formProvide.formObj.producer" disabled>
         <template v-slot:prepend>
           <div class="text-label">
             <label><span class="require-span">*</span>生产系统名：</label>
@@ -65,42 +54,24 @@
         </template>
       </v-text-field>
     </v-col>
-    <div style="width: 100%; max-height: 200px; overflow-y: auto; overflow-x: hidden">
-      <div v-for="(item, index) in formProvide.formObj.consumersObj" style="display: flex; flex: 1" :key="index">
-        <v-col cols="9" style="padding: 0" class="input-item">
-          <v-text-field
-            single-line
-            outlined
-            clearable
-            dense
-            height="32"
-            class="dialogInput"
-            @input="vilidata(item.val)"
-            v-model="item.val"
-            :rules="[...h_validator.cmdConsumersVilidata(item.val), ...cmdRepeat]"
-            required
-          >
-            <template v-slot:prepend>
-              <div class="text-label" v-if="index === 0">
-                <label><span class="require-span">*</span>订阅系统名：</label>
-              </div>
-              <div class="text-label" v-else>
-                <p></p>
-                <label></label>
-              </div>
-            </template>
-          </v-text-field>
-        </v-col>
-        <v-col cols="2" class="input-item">
-          <v-btn fab dark small color="error" class="add-btn" v-if="(formProvide.formObj.consumersObj.length !== index + 1 || index != 0) && !item.disabled" @click="minus(index)">
-            <v-icon dark>mdi-minus</v-icon>
-          </v-btn>
-          <v-btn fab dark small color="indigo" class="add-btn" v-if="formProvide.formObj.consumersObj.length === index + 1" @click="add()">
-            <v-icon dark>mdi-plus</v-icon>
-          </v-btn>
-        </v-col>
+    <v-col cols="9" style="padding: 0">
+      <div class="text-label dialogInput" style="font-size: 16px; color: rgba(0, 0, 0, 0.87); margin-top: 8px; margin-right: 9px; vertical-align: top">
+        <label><span class="require-span">*</span>订阅系统名：</label>
       </div>
-    </div>
+      <v-row class="checkbox-container" justify="start">
+        <v-checkbox
+          required
+          v-model="formProvide.formObj.consumers"
+          :rules="[...h_validator.cmdConsumersVilidata()]"
+          v-for="item in systemList"
+          :key="item.id"
+          class="mx-2 checkbox-item"
+          :label="item.name"
+          :value="item.name"
+        >
+        </v-checkbox>
+      </v-row>
+    </v-col>
     <v-col cols="9" style="padding: 0">
       <v-text-field single-line outlined clearable dense height="32" class="dialogInput" v-model="formProvide.formObj.description">
         <template v-slot:prepend>
@@ -131,34 +102,13 @@ import alertUtil from '../../../../utils/alertUtil'
 
 @Component
 @http
-@validator(['cmdNameVilidata', 'cmdProducerVilidata', 'cmdConsumersVilidata'])
+@validator(['cmdNameVilidata', 'cmdConsumersVilidata'])
 export default class CreateCmdDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
-  private cmdName: string = ''
-  private producer: string = ''
-  private consumers: string = ''
 
-  private consumersObj: Array<{ val: any }> = []
-
-  private description: string = ''
   private showConstruction: boolean = false
-
+  private systemList: Array<{ name: string }> = []
   private cmdRepeat: Function[] = []
-
-  private clearMethod() {
-    this.formProvide.formObj = {
-      id: '',
-      canNotEdit: false, // 添加数据
-      cmdName: '', // 命令名称
-      producer: '', // 生产系统名
-      consumers: '', // 订阅系统名
-      description: '', // 描述,
-      consumersObj: [{ val: '' }],
-      topicList: []
-    }
-  }
-
-  
 
   private async inputEvent(v: string, p: string) {
     // producer cmdName都有，才发送数据
@@ -177,34 +127,30 @@ export default class CreateCmdDialog extends Vue {
     }
   }
 
-  private add() {
-    // 增加数据结构
-    ;(this.formProvide.formObj.consumersObj as Array<{ val: any }>).push({
-      val: ''
-    })
-  }
-  private minus(num: number) {
-    // 删减数据结构
-    ;(this.formProvide.formObj.consumersObj as Array<{ val: any }>).splice(num, 1)
-  }
+  private async getProducerList() {
+    let data: Array<{ id: string; name: string }>
+    this.systemList.length = 0
 
-  private vilidata(val: string | number) {
-    const _consumers = []
-    const _consumersObj = this.formProvide.formObj.consumersObj as Array<{ val: any }>
-
-    for (let i = 0; i < _consumersObj.length; i++) {
-      if (_consumersObj[i].val) {
-        _consumers.push(_consumersObj[i].val)
+    if (sessionStorage.systemInfo) {
+      data = JSON.parse(sessionStorage.systemInfo)
+      for (let i = 0; i < data.length; i++) {
+        this.systemList.push({ name: data[i].name })
       }
-    }
-
-    console.log(_consumers)
-
-    if (_consumers.indexOf(val) !== _consumers.lastIndexOf(val)) {
-      alertUtil.open('订阅系统名"' + val + '"已存在', true, 'error')
+      return
     } else {
-      alertUtil.close()
+      const res = await this.h_request['httpGET']('GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER', {})
+      data = res.data
+      sessionStorage.systemInfo = JSON.stringify(data)
+      for (let i = 0; i < data.length; i++) {
+        this.systemList.push({ name: data[i].name })
+      }
+      return
     }
+
+  }
+
+  created() {
+    this.getProducerList()
   }
 }
 </script>
@@ -224,14 +170,16 @@ export default class CreateCmdDialog extends Vue {
 .btn-line .v-btn {
   margin-right: 10px;
 }
-.input-item {
-  margin-right: 6px;
-  padding: 0;
+
+.checkbox-container {
+  width: 400px;
+  margin-left: 130px;
+  margin-top: -20px;
+  margin-right: -10px;
 }
-.add-btn {
-  width: 30px;
-  height: 30px;
-  margin-right: 4px;
+.checkbox-item {
+  min-width: 70px;
+  height: 40px;
 }
 .text-label-line {
   width: 130px;

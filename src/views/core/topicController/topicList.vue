@@ -167,7 +167,7 @@ export default class TopicList extends Vue{
                     canNotEdit: false, // 添加数据
                     interfaceType:1,
                     topicName:'', // 主题名称
-                    messageType:'' as string | number, // 消息类型
+                    messageType:0, // 消息类型
                     dataBaseIp:'', // 数据库地址
                     databaseType:'', // 数据库类型
                     dataStructSchema:'', //
@@ -401,7 +401,6 @@ export default class TopicList extends Vue{
                 params.id = formObj.id
             }
 
-            console.log(params)
 
             const { success } = await this.h_request["httpPOST"](!formObj.canNotEdit?"POST_TOPICS_ADD":"POST_TOPICS_UPDATE",params)
 

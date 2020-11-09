@@ -487,7 +487,7 @@
     export default class CreateTopicDialog extends Vue{
         @Inject() private readonly formProvide!:H_Vue
         private topicName:string = ""
-        private messageType:string = ""
+        private messageType:number = 0
         private bool:boolean = false
         private showConstruction:boolean = false
         private topicBool:boolean = false
@@ -539,7 +539,7 @@
                 canNotEdit: false, // 添加数据
                 interfaceType:1,
                 topicName:'', // 主题名称
-                messageType:'', // 消息类型
+                messageType:0, // 消息类型
                 dataBaseIp:'', // 数据库地址
                 databaseType:'', // 数据库类型
                 header: [{key:'',value:''},],

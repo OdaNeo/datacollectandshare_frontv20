@@ -57,6 +57,7 @@ import { CmdAdd } from '../../../type/cmd-add.type'
 import cmdAncilaryInformationDialog from './childComponent/cmdAncilaryInformationDialog.vue'
 import util from '../../../decorator/utilsDecorator'
 import alertUtil from '../../../utils/alertUtil'
+import { rootStoreModule } from '../../../store/modules/root'
 
 @Component({
   components: {
@@ -82,11 +83,8 @@ export default class CmdList extends Vue {
           cmdName: '', // 命令名称
           userName: '', // 所属用户
           producer: '', // 源系统名称
-          consumers: '', // 订阅系统名
-          consumersObj: [{ val: '' }],
-          description: '', //描述（描述）
-          exchanges: '', //交换机名称
-          topicList: [] // 解耦，防止子组件报错
+          consumers: [] as Array<string>, // 订阅系统名
+          description: '' //描述（描述）
         }
       }
     }
@@ -99,6 +97,9 @@ export default class CmdList extends Vue {
   private rowObj: object = {} //子系统信息详情
   private otherObj: any = {} //描述
   private onlyShowOther: boolean = false // 只显示补充信息
+
+  private systemName = rootStoreModule.UserState.userMessage.systemName
+  private producer: string = ''
 
   private desserts: Array<any> = [] //数据列表
   private queryCmdID = null //查询命令ID input框内容
@@ -152,35 +153,22 @@ export default class CmdList extends Vue {
       canNotEdit: false, // 添加数据
       cmdName: '', // 命令名称
       userName: '', // 所属用户
-      producer: '', // 源系统名称
-      consumers: '', // 订阅系统名
-      consumersObj: [{ val: '' }],
-      description: '', //描述（描述）
-      exchanges: '', //交换机名称
-      topicList: [] // 解耦，防止子组件报错
+      producer: this.producer, // 系统名称不可修改
+      consumers: [] as Array<string>, // 订阅系统名
+      description: '' //描述（描述）
     }
 
     // if 增加字段
     if (item) {
-      let _consumersObj = []
-      let _consumers = item.consumers.split(',')
-
-      for (let i = 0; i < _consumers.length; i++) {
-        _consumersObj.push({
-          val: _consumers[i]
-        })
-      }
+      this.formObj.title = '修改命令'
       this.formObj.formObj = {
         id: item.id, // 命令ID
         canNotEdit: true, // 添加数据
         cmdName: item.cmdName, // 命令名称
         userName: '', // 所属用户
-        producer: item.producer, // 源系统名称
-        consumers: item.consumers, // 订阅系统名
-        consumersObj: _consumersObj,
-        description: item.description, //描述（描述）
-        exchanges: '', //交换机名称
-        topicList: [] // 解耦，防止子组件报错
+        producer: item.producer, // 系统名称
+        consumers: item.consumers.split(','), // 订阅系统名
+        description: item.description //描述（描述）
       }
     }
   }
@@ -189,28 +177,10 @@ export default class CmdList extends Vue {
     return new Promise(
       async (resolve, reject): Promise<void> => {
         let params: any = {}
-        let _consumers = []
-
-        for (let i = 0; i < formObj.consumersObj.length; i++) {
-          _consumers.push(formObj.consumersObj[i].val)
-        }
-        formObj.consumers = _consumers.join(',')
-        const _l = _consumers.length
-        // 提交订阅系统名称有重复，报错
-        for (let i = 0; i < _l; i++) {
-          let _i = _consumers.shift()
-          if (_i && _consumers.includes(_i)) {
-            alertUtil.open('订阅系统名"' + _i + '"已存在', true, 'error')
-
-            return
-          } else {
-            alertUtil.close()
-          }
-        }
         //  ADD 不提交id，UPDATE提交id
         formObj.canNotEdit && (params['id'] = formObj.id)
         params['cmdName'] = formObj.cmdName
-        params['consumers'] = formObj.consumers
+        params['consumers'] = formObj.consumers.join(',')
         params['producer'] = formObj.producer
         params['description'] = formObj.description
 
@@ -353,6 +323,28 @@ export default class CmdList extends Vue {
       },
       !!this.tab
     )
+  }
+  private async getProducerList() {
+    let data: Array<{ id: string; name: string }>
+
+    if (sessionStorage.systemInfo) {
+      data = JSON.parse(sessionStorage.systemInfo)
+    } else {
+      const res = await this.h_request['httpGET']('GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER', {})
+      data = res.data
+      sessionStorage.systemInfo = JSON.stringify(data)
+    }
+
+    for (let i = 0; i < data.length; i++) {
+      if (data[i].id === this.systemName) {
+        this.producer = data[i].name
+        return
+      }
+    }
+  }
+
+  created() {
+    this.getProducerList()
   }
 }
 </script>

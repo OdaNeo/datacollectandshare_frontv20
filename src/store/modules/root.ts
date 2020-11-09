@@ -23,7 +23,7 @@ type UserLocalType = {
   userRoot: Array<userRootType>,
   routeRoot: Array<string>
   userMessage: userMessageType,
-  token:string
+  token:string,
 }
 
 type login = {

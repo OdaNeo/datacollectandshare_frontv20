@@ -95,8 +95,10 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import {rootStoreModule} from "../store/modules/root"
+import http from '../decorator/httpDecorator'
 
 @Component
+@http
 export default class TopBar extends Vue{
     private dialog:boolean = false
     private titleState:boolean = false
@@ -123,13 +125,30 @@ export default class TopBar extends Vue{
                 return "用户状态："+ '无'
         }
     }
-    get usersysName() {
-        switch (rootStoreModule.UserState.userMessage.systemName) {
-            case '0':
-                return "系统名称："+ '云平台'
-            default:
-                return "系统名称："+ '无'
+    get  usersysName () {
+        let data: Array<{ id: string; name: string }>
+
+        if (sessionStorage.systemInfo) {
+            data = JSON.parse(sessionStorage.systemInfo)
+            for (let i = 0; i < data.length; i++) {
+            if (data[i].id === rootStoreModule.UserState.userMessage.systemName) {
+                return `系统名称：${data[i].name}`
+            }
         }
+            
+        } else {
+            this.h_request['httpGET']('GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER', {}).then(res=>{
+            data = res.data
+            sessionStorage.systemInfo=JSON.stringify(data) 
+            
+            for (let i = 0; i < data.length; i++) {
+            if (data[i].id === rootStoreModule.UserState.userMessage.systemName) {
+                return `系统名称：${data[i].name}`
+            }
+            }
+        })
+        }
+
     }
     get userToken() {
         return "用户Token："+rootStoreModule.UserState.userMessage.userToken

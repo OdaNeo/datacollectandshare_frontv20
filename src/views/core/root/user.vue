@@ -246,9 +246,6 @@ export default class User extends Vue{
             }
         }
     }
-    private deleteItem(){
-
-    }
 
     private editItem(item:userInfo){
         this.dialogFlag = true

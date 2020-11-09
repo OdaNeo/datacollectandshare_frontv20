@@ -11,7 +11,7 @@ class HttpRequest {
     //baseURL: "http://172.16.1.111:9000",
     //baseURL: "http://192.168.62.84:9000",
     //baseURL: "http://192.168.60.214:9000/", // 郝帅本地服务
-    // baseURL: 'http://192.168.62.228:9002',
+    // baseURL: 'http://192.168.59.65:9002',
     timeout: 500000,
     headers: {
       post: {
