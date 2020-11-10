@@ -46,8 +46,6 @@ Vue.directive("onlyNum", {
 })
 
 router.beforeEach(async ({ path: toPath, name: toName, meta: toMeta }: Route, { path: formPath }: Route, next: NavigationGuardNext<Vue>) => {
-  console.log(formPath)
-  console.log(toPath)
   if (toPath == "/login") {
     logout()
     next()
