@@ -177,7 +177,6 @@ export default class TopicList extends Vue{
                     url: '',
                     topicList:[
                         {
-                            ['' as string]: '' as any,
                             ['' as string]:'' as any,
                             ['' as string]:'' as any,
                             ['' as string]:'' as any,// 描述
@@ -397,7 +396,6 @@ export default class TopicList extends Vue{
                 params.id = formObj.id
             }
 
-
             const { success } = await this.h_request["httpPOST"](!formObj.canNotEdit?"POST_TOPICS_ADD":"POST_TOPICS_UPDATE",params)
 
             if(success){
@@ -552,8 +550,6 @@ export default class TopicList extends Vue{
     }
     private handleObjKey(k:string){
        switch(this.sheetObj[`${k}1`].v){
-        case '序号':
-            return "number"
         case '字段名':
             return "key"
         case '字段类型(Int,String,TimeStamp)':
