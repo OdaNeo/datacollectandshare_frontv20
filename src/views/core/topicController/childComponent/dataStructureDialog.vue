@@ -30,7 +30,7 @@ export default class DataStructureDialog extends Vue{
         for(let key in dataStruct){
             arr.push({
                 id:key,
-                key:JSON.parse(this.rowObj.structMapping)[key],
+                key:JSON.parse(this.rowObj.dsAnnotation)[key],
                 value:dataStruct[key]
             })
         }

@@ -355,30 +355,6 @@
             style="display: flex;flex: 1;"
             :key="index"
             >
-                <!-- <v-col cols="4"  class="input-item">
-                    <v-text-field
-                            single-line
-                            outlined
-                            dense
-                            :disabled="item.disabled"
-                            height="32"
-                            class="dialogInput"
-                            label="序号"
-                            v-model="item.number"
-                            :rules="h_validator.fieldNumVilidata(formProvide.formObj.topicList)"
-                            required
-                    >
-                        <template v-slot:prepend >
-                            <div class="text-label" v-if="index===0">
-                                <label><span class="require-span">*</span>数据结构：</label>
-                            </div>
-                            <div class="text-label" v-else>
-                                <p></p>
-                                <label></label>
-                            </div>
-                        </template>
-                    </v-text-field>
-                </v-col> -->
                 <v-col cols="5"  class="input-item">
                     <v-text-field
                             single-line

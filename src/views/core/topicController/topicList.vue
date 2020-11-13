@@ -319,14 +319,13 @@ export default class TopicList extends Vue{
             }
 
 
-            let obj1:any = JSON.parse(item.dsAnnotation)
-            let obj2:any = JSON.parse(item.structMapping)
+            let obj1:any = JSON.parse(item.dsAnnotation)// 描述
             let obj3:any = JSON.parse(item.dataStruct)[0]
             this.formObj.formObj.topicList = []
-            for(let k in obj2){
+
+            for(let k in obj1){
                 this.formObj.formObj.topicList.push({
-                    number: k,
-                    key: obj2[k],
+                    key: obj1[k],
                     type:((typeof obj3[k] === 'number') && obj3[k] > 1) ? "TimeStamp" : obj3[k],
                     description: obj1[k],
                     disabled:true
@@ -354,7 +353,6 @@ export default class TopicList extends Vue{
                 dsAnnotation : _numberS,
             }
 
-            console.log(params)
 
             if(!formObj.canNotEdit){
                 switch (formObj.interfaceType) {
