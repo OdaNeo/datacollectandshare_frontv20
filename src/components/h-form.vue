@@ -115,7 +115,6 @@ export default class DialogForm extends Vue {
           },
           topicList: [
             {
-              number: '',
               key: '',
               type: '',
               description: '', // 描述
@@ -203,7 +202,6 @@ export default class DialogForm extends Vue {
         },
         topicList: [
           {
-            number: '',
             key: '',
             type: '',
             description: '', // 描述

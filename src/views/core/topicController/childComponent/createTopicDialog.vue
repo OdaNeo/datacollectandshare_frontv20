@@ -355,7 +355,7 @@
             style="display: flex;flex: 1;"
             :key="index"
             >
-                <v-col cols="4"  class="input-item">
+                <!-- <v-col cols="4"  class="input-item">
                     <v-text-field
                             single-line
                             outlined
@@ -378,8 +378,8 @@
                             </div>
                         </template>
                     </v-text-field>
-                </v-col>
-                <v-col cols="2"  class="input-item">
+                </v-col> -->
+                <v-col cols="5"  class="input-item">
                     <v-text-field
                             single-line
                             :disabled="item.disabled"
@@ -392,9 +392,18 @@
                             :rules="h_validator.fieldKeyVilidata(formProvide.formObj.topicList)"
                             required
                     >
+                    <template v-slot:prepend >
+                            <div class="text-label" v-if="index===0">
+                                <label><span class="require-span">*</span>数据结构：</label>
+                            </div>
+                            <div class="text-label" v-else>
+                                <p></p>
+                                <label></label>
+                            </div>
+                    </template>
                     </v-text-field>
                 </v-col>
-                <v-col cols="2"  class="input-item">
+                <v-col cols="3"  class="input-item">
                     <v-text-field
                             single-line
                             outlined
@@ -515,7 +524,7 @@
         }
         private add(){ // 增加数据结构
             (this.formProvide.formObj.topicList as Array<any>).push({
-                number: '',
+                // number: '',
                 key:'',
                 type:'',
                 disabled:false
@@ -549,7 +558,6 @@
                 url: '',
                 topicList:[
                     {
-                        number: '',
                         key:'',
                         type:'',
                         description:'', // 描述

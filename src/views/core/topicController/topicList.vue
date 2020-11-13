@@ -212,7 +212,6 @@ export default class TopicList extends Vue{
     private Sheets:any
     private forceRenderFlag:number=Math.random()
     private fileName:string=""
-    private topicListNameList=['序号','字段名','字段类型(Int,String,TimeStamp)','字段含义']
     private sheetObj:any
     private sheetCurIndex:number=1
 
@@ -343,21 +342,20 @@ export default class TopicList extends Vue{
             let dataStructNumber:any = {};
             let description:any = {}
 
-            console.log(formObj.topicList)
-
             formObj.topicList.forEach((val,index)=>{
-                dataStruct[val.number] = val.key;
-                dataStructNumber[val.number] = val.type==="1" ? Number(val.type): val.type === "TimeStamp"  ? new Date().getTime() : val.type;
-                description[val.number] = val.description;
+                dataStruct[val.key] = val.description;
+                dataStructNumber[val.key] = val.type==="1" ? Number(val.type): val.type === "TimeStamp"  ? Date.now() : val.type;
             })
             let _numberS = JSON.stringify(dataStruct);
             let _keyS = '['+JSON.stringify(dataStructNumber)+']';
-            let _description = JSON.stringify(description);
             let params:any ={
                 dataStruct: _keyS,
-                structMapping : _numberS,
-                dsAnnotation : _description,
+                structMapping :"",
+                dsAnnotation : _numberS,
             }
+
+            console.log(params)
+
             if(!formObj.canNotEdit){
                 switch (formObj.interfaceType) {
                     case 1:
