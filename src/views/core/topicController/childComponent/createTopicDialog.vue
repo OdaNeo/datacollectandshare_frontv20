@@ -565,21 +565,22 @@
             },null,"\t")
         }
 
-        private async inputEvent(v:string){
-           if(v&&v!=""){
+        public async inputEvent(v:string){
+          
+            if(v&&v!=""){
                 const {success} = await this.h_request["httpGET"]("GET_TOPICS_CHECKED",{
                     topicName:v
                 })
                 if(success){
                     this.topicRepeat = [
                         (v:string) =>"主题名称已被注册"
-                    ]
+                    ]                                         
                 }else{
                     this.topicRepeat = []
                 }
-           }else{
+            }else{
                this.topicRepeat = []
-           }
+            }
         }
 
     }

@@ -95,7 +95,7 @@
 
         <h-dialog v-if="dialogFlag" v-model="dialogFlag">
             <data-structure-dialog slot="dialog-content" :rowObj="rowObj" v-if="dialogShow==2"></data-structure-dialog>
-            <create-topic-dialog slot="dialog-content" v-else-if="dialogShow==1"></create-topic-dialog>
+            <create-topic-dialog slot="dialog-content" v-else-if="dialogShow==1" ref='createTopicDialog'></create-topic-dialog>
             <topic-ancilary-information-dialog slot="dialog-content" :otherObj="otherObj" v-else-if="dialogShow==3"></topic-ancilary-information-dialog>
         </h-dialog>
         <!-- 上传文件对话框 -->
@@ -107,7 +107,7 @@
         >
             <v-card>
                 <v-card-title class="dialog-title">上传文件</v-card-title>
-                <v-card-text>支持.xls, .xlsx格式的单文件上传。文件名将自动填充主题名称。</v-card-text>
+                <v-card-text>支持.xls, .xlsx格式的单文件上传。文件名将自动填充主题名称。如果遇到无法提交的情况，请尝试更改主题名称。</v-card-text>
                 <v-file-input accept=".xls,.xlsx" label="File input" @change="upLoadFile" @click:clear="canUpLoad=false" style="width:730px" :key="forceRenderFlag"/>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -410,7 +410,6 @@ export default class TopicList extends Vue{
     }
 
     private authorizationBase64(obj:any){
-        console.log('查看要处理的数据',obj)
         return {"key":"Authorization","value":"Basic " + window.btoa(obj.key+':'+ obj.value+"")}
     }
     //查询通用调用方法
@@ -573,7 +572,8 @@ export default class TopicList extends Vue{
        }
     }
     //  确定上传
-    private upLoadFileConfirm(){
+    private async upLoadFileConfirm(){
+
         this.createTopic(false)
 
         this.upLoadFlag = false
@@ -582,6 +582,10 @@ export default class TopicList extends Vue{
 
         // 填充创建主题页面
         this.formObj.formObj.topicName=this.fileName
+
+        await this.$nextTick()
+        const child=this.$refs.createTopicDialog as CreateTopicDialog
+        child.inputEvent(this.formObj.formObj.topicName) 
 
         this.formObj.formObj.messageType = 1
        
@@ -611,6 +615,7 @@ export default class TopicList extends Vue{
         this.Sheets={}
         this.fileName=""
     }
+    
 
 }
 </script>
