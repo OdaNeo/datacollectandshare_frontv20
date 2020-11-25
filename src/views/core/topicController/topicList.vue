@@ -591,7 +591,7 @@ export default class TopicList extends Vue{
        
         this.Sheets[`sheet${this.sheetCurIndex}`] && (this.sheetObj=this.Sheets[`sheet${this.sheetCurIndex}`])
 
-        const _l:number=this.sheetObj['!ref'].split('D')[1]
+        const _l:number=this.sheetObj['!ref'].split('C')[1]
         this.formObj.formObj.topicList = []
          
         for(let i=1;i<_l;i++){
@@ -599,7 +599,6 @@ export default class TopicList extends Vue{
                 [this.handleObjKey('A') as string] :this.handleObjKeyType(this.sheetObj[`A${i+1}`].v),
                 [this.handleObjKey('B') as string] :this.handleObjKeyType(this.sheetObj[`B${i+1}`].v),
                 [this.handleObjKey('C') as string] :this.handleObjKeyType(this.sheetObj[`C${i+1}`].v),
-                [this.handleObjKey('D') as string] :this.handleObjKeyType(this.sheetObj[`D${i+1}`].v),
                 disabled:false
             })
         }
