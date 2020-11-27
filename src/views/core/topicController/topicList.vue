@@ -580,27 +580,27 @@ export default class TopicList extends Vue{
         this.forceRenderFlag=Math.random()
 
         // 填充创建主题页面
-        this.formObj.formObj.topicName=this.fileName
-
+        this.formObj.formObj.messageType = 1
+        this.Sheets[`sheet${this.sheetCurIndex}`] && (this.sheetObj=this.Sheets[`sheet${this.sheetCurIndex}`])
+        const _l:number=this.sheetObj['!ref'].split('C')[1]
+       
+        // 获取dom
         await this.$nextTick()
         const child=this.$refs.createTopicDialog as CreateTopicDialog
-        child.inputEvent(this.formObj.formObj.topicName) 
 
-        this.formObj.formObj.messageType = 1
-       
-        this.Sheets[`sheet${this.sheetCurIndex}`] && (this.sheetObj=this.Sheets[`sheet${this.sheetCurIndex}`])
-
-        const _l:number=this.sheetObj['!ref'].split('C')[1]
-        this.formObj.formObj.topicList = []
-         
-        for(let i=1;i<_l;i++){
-            this.formObj.formObj.topicList.push({
-                [this.handleObjKey('A') as string] :this.handleObjKeyType(this.sheetObj[`A${i+1}`].v),
-                [this.handleObjKey('B') as string] :this.handleObjKeyType(this.sheetObj[`B${i+1}`].v),
-                [this.handleObjKey('C') as string] :this.handleObjKeyType(this.sheetObj[`C${i+1}`].v),
-                disabled:false
-            })
-        }
+        setTimeout(()=>{
+            this.formObj.formObj.topicList=[]
+            for(let i=1;i<_l;i++){
+                this.formObj.formObj.topicList.push({
+                    [this.handleObjKey('A') as string] :this.handleObjKeyType(this.sheetObj[`A${i+1}`]?this.sheetObj[`A${i+1}`].v:''),
+                    [this.handleObjKey('B') as string] :this.handleObjKeyType(this.sheetObj[`B${i+1}`]?this.sheetObj[`B${i+1}`].v:''),
+                    [this.handleObjKey('C') as string] :this.handleObjKeyType(this.sheetObj[`C${i+1}`]?this.sheetObj[`C${i+1}`].v:''),
+                    disabled:false
+                })
+            }
+            this.formObj.formObj.topicName=this.fileName
+            child.inputEvent(this.fileName)   
+        })
     }
     // 取消上传
     private upLoadFileCancel(){
@@ -613,7 +613,6 @@ export default class TopicList extends Vue{
         this.Sheets={}
         this.fileName=""
     }
-    
 
 }
 </script>

@@ -97,9 +97,10 @@ router.beforeEach(async ({ path: toPath, name: toName, meta: toMeta }: Route, { 
     if (['/login'].indexOf(toPath) !== -1) {
       next()
     } else {
-      next({
-        path:"/login"
-      })
+      // next({
+      //   path:"/login"
+      // })
+      next()
     }
   }
 })

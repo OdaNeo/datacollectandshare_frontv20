@@ -57,7 +57,7 @@
                     class="dialogInput"
                     v-model="formProvide.formObj.topicName"
                     :rules="[...h_validator.topicNameVilidata(),...topicRepeat]"
-                    @input="inputEvent"
+                    @input="inputEvent(formProvide.formObj.topicName)"
                     required
             >
                 <template v-slot:prepend>
@@ -566,15 +566,14 @@
         }
 
         public async inputEvent(v:string){
-          
-            if(v&&v!=""){
+            if(v){
                 const {success} = await this.h_request["httpGET"]("GET_TOPICS_CHECKED",{
                     topicName:v
                 })
                 if(success){
                     this.topicRepeat = [
                         (v:string) =>"主题名称已被注册"
-                    ]                                         
+                    ] 
                 }else{
                     this.topicRepeat = []
                 }
