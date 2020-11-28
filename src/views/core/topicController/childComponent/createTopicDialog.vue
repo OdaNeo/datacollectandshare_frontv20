@@ -363,7 +363,7 @@
                             dense
                             label="字段名"
                             height="32"
-                            class="dialogInput"
+                            class="dialogInput topicListKey"
                             v-model="item.key"
                             :rules="[...h_validator.fieldKeyVilidata(formProvide.formObj.topicList)]"
                             required
@@ -485,7 +485,6 @@
         private arr:Array<any> = ['','']
         private topicRepeat:Function[] = []
 
-
         private showonlineData(dataType:boolean){
             if(dataType){
                 this.formProvide.formObj.interfaceType=1
@@ -582,7 +581,12 @@
                this.topicRepeat = []
             }
         }
-
+        // public async dispatchInputEvent(n:number){
+        //     await this.$nextTick()
+        //     const node=document.getElementsByClassName('topicListKey')[n] as EventTarget
+        //     node.dispatchEvent(new Event('input')) 
+        // }
+      
     }
 </script>
 

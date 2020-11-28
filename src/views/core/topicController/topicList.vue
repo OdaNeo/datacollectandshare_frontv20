@@ -591,16 +591,19 @@ export default class TopicList extends Vue{
                     disabled:false
                 })
         }
-       
         // 获取dom
         await this.$nextTick()
         const child=this.$refs.createTopicDialog as CreateTopicDialog
 
         setTimeout(()=>{
-            this.formObj.formObj.topicName=this.fileName 
-            this.formObj.formObj.topicList=_topicList
+            this.formObj.formObj.topicName=this.fileName
             child.inputEvent(this.fileName)
-        },10)
+            this.formObj.formObj.topicList.length=0
+            this.formObj.formObj.topicList=[..._topicList]  
+            // this.formObj.formObj.topicList.forEach((_,index)=>{
+            //     child.dispatchInputEvent(index) 
+            // })
+        },1)
     }
     // 取消上传
     private upLoadFileCancel(){
