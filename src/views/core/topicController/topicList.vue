@@ -107,7 +107,7 @@
         >
             <v-card>
                 <v-card-title class="dialog-title">上传文件</v-card-title>
-                <v-card-text>支持.xls, .xlsx格式的单文件上传。文件名将自动填充主题名称。如果遇到无法提交的情况，请尝试更改主题名称。</v-card-text>
+                <v-card-text>支持.xls, .xlsx格式的单文件上传。文件名将自动填充主题名称</v-card-text>
                 <v-file-input accept=".xls,.xlsx" label="File input" @change="upLoadFile" @click:clear="canUpLoad=false" style="width:730px" :key="forceRenderFlag"/>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -578,29 +578,29 @@ export default class TopicList extends Vue{
         this.upLoadFlag = false
         this.canUpLoad = false
         this.forceRenderFlag=Math.random()
-
-        // 填充创建主题页面
-        this.formObj.formObj.topicName=this.fileName
-
+        this.formObj.formObj.messageType = 1
+        this.Sheets[`sheet${this.sheetCurIndex}`] && (this.sheetObj=this.Sheets[`sheet${this.sheetCurIndex}`])
+        const _l:number=this.sheetObj['!ref'].split('C')[1]
+         
+        let _topicList:Array<any> =[]
+        for(let i=1;i<_l;i++){
+                _topicList.push({
+                    [this.handleObjKey('A') as string] :this.handleObjKeyType(this.sheetObj[`A${i+1}`]?this.sheetObj[`A${i+1}`].v:''),
+                    [this.handleObjKey('B') as string] :this.handleObjKeyType(this.sheetObj[`B${i+1}`]?this.sheetObj[`B${i+1}`].v:''),
+                    [this.handleObjKey('C') as string] :this.handleObjKeyType(this.sheetObj[`C${i+1}`]?this.sheetObj[`C${i+1}`].v:''),
+                    disabled:false
+                })
+        }
+       
+        // 获取dom
         await this.$nextTick()
         const child=this.$refs.createTopicDialog as CreateTopicDialog
-        child.inputEvent(this.formObj.formObj.topicName) 
 
-        this.formObj.formObj.messageType = 1
-       
-        this.Sheets[`sheet${this.sheetCurIndex}`] && (this.sheetObj=this.Sheets[`sheet${this.sheetCurIndex}`])
-
-        const _l:number=this.sheetObj['!ref'].split('C')[1]
-        this.formObj.formObj.topicList = []
-         
-        for(let i=1;i<_l;i++){
-            this.formObj.formObj.topicList.push({
-                [this.handleObjKey('A') as string] :this.handleObjKeyType(this.sheetObj[`A${i+1}`].v),
-                [this.handleObjKey('B') as string] :this.handleObjKeyType(this.sheetObj[`B${i+1}`].v),
-                [this.handleObjKey('C') as string] :this.handleObjKeyType(this.sheetObj[`C${i+1}`].v),
-                disabled:false
-            })
-        }
+        setTimeout(()=>{
+            this.formObj.formObj.topicName=this.fileName 
+            this.formObj.formObj.topicList=_topicList
+            child.inputEvent(this.fileName)
+        },10)
     }
     // 取消上传
     private upLoadFileCancel(){

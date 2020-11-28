@@ -4,15 +4,18 @@ class TopicValidator{
 
   //字段名校验规则
   public readonly fieldKeyVilidata = (topicList:any[]) => {
+    console.log(topicList)
     return [
       (v:string) =>!!v||"字段名不能为空",
       (v:string) =>{
           let valNum = 0;
           topicList.forEach((element:any) => {
-              if(v==element.key){
+              if(v&&v===element.key){
                   valNum++
               }
           });
+          console.log(v)
+          console.log(valNum)
           if(valNum>1){
               return "数据结构不能有重复的字段名"
           }

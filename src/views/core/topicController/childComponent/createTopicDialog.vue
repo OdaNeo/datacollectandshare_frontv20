@@ -57,7 +57,7 @@
                     class="dialogInput"
                     v-model="formProvide.formObj.topicName"
                     :rules="[...h_validator.topicNameVilidata(),...topicRepeat]"
-                    @input="inputEvent"
+                    @input="inputEvent(formProvide.formObj.topicName)"
                     required
             >
                 <template v-slot:prepend>
@@ -365,7 +365,7 @@
                             height="32"
                             class="dialogInput"
                             v-model="item.key"
-                            :rules="h_validator.fieldKeyVilidata(formProvide.formObj.topicList)"
+                            :rules="[...h_validator.fieldKeyVilidata(formProvide.formObj.topicList)]"
                             required
                     >
                     <template v-slot:prepend >
@@ -500,9 +500,9 @@
         }
         private add(){ // 增加数据结构
             (this.formProvide.formObj.topicList as Array<any>).push({
-                // number: '',
                 key:'',
                 type:'',
+                description:'', // 描述
                 disabled:false
             })
         }
@@ -567,7 +567,7 @@
 
         public async inputEvent(v:string){
           
-            if(v&&v!=""){
+            if(v){
                 const {success} = await this.h_request["httpGET"]("GET_TOPICS_CHECKED",{
                     topicName:v
                 })
