@@ -135,7 +135,6 @@ import {GET_TOPICS_INFORMATION} from "../../../api/requestName";
 import TopicAncilaryInformationDialog from './childComponent/topicAncilaryInformationDialog.vue';
 import util from '../../../decorator/utilsDecorator';
 import { MomentInputObject } from "moment";
-// import VForm from 'vuetify'
 
 import XLSX from 'xlsx';
 
@@ -162,7 +161,6 @@ export default class TopicList extends Vue{
                 title:"",
                 btnName:([] as string[]),
                 methodName:"",
-                // upLoad:true,// 主题列表页面上传文件按钮flag
                 formObj:{
                     id:'', // 主题ID
                     canNotEdit: false, // 添加数据
@@ -600,7 +598,6 @@ export default class TopicList extends Vue{
             this.formObj.formObj.topicName=this.fileName
             child.inputEvent(this.fileName)
             this.formObj.formObj.topicList=[..._topicList]
-            // child.handleTopicListKey()
         },1)
     }
     // 取消上传

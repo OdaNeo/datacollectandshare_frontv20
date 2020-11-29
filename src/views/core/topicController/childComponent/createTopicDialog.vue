@@ -364,10 +364,12 @@
                             label="字段名"
                             height="32"
                             class="dialogInput"
-                            v-model="item.key"
+                            v-model.trim="item.key"
                             :rules="[...h_validator.fieldKeyVilidata(formProvide.formObj.topicList)]"
+                            :error-messages='keyErrorMessages[index]'
                             required
                     >
+                    <!--  -->
                     <template v-slot:prepend >
                             <div class="text-label" v-if="index===0">
                                 <label><span class="require-span">*</span>数据结构：</label>
@@ -445,11 +447,10 @@
     </v-row>
 </template>
 <script lang="ts">
-    import {Component, Inject, Vue} from "vue-property-decorator";
+    import {Component, Inject, Vue, Watch} from "vue-property-decorator";
     import http from '../../../../decorator/httpDecorator';
     import validator from '../../../../decorator/validatorDecorator'
     import { H_Vue } from '../../../../declaration/vue-prototype';
-import { nextTick } from "vue/types/umd";
 
     @Component
     @http
@@ -485,7 +486,8 @@ import { nextTick } from "vue/types/umd";
         private esList:Array<any> = [{text:"是",value:1},{text:"否",value:0}]
         private arr:Array<any> = ['','']
         private topicRepeat:Function[] = []
-        private keyRepeat:Function[] = []
+        private keyErrorMessages:Array<string> =[]
+        private keyRepeat:Array<any> = []
 
         private showonlineData(dataType:boolean){
             if(dataType){
@@ -501,7 +503,7 @@ import { nextTick } from "vue/types/umd";
         }
         private add(){ // 增加数据结构
             (this.formProvide.formObj.topicList as Array<any>).push({
-                key:'',
+                key:undefined,
                 type:'',
                 description:'', // 描述
                 disabled:false
@@ -535,7 +537,7 @@ import { nextTick } from "vue/types/umd";
                 url: '',
                 topicList:[
                     {
-                        key:'',
+                        key:undefined,
                         type:'',
                         description:'', // 描述
                         disabled:false
@@ -584,31 +586,22 @@ import { nextTick } from "vue/types/umd";
             }
         }
 
-        // public keyInputEvent(topicList:any){
-        //     this.keyRepeat = [
-        //     (v:string) =>!!v||"字段名不能为空",
-        //     (v:string) =>{
-        //         let valNum = 0;
-        //         topicList.forEach((element:any) => {
-        //             if(v&&v===element.key){
-        //                 valNum++
-        //             }
-        //         });
-        //         if(valNum>1){
-        //             return "数据结构不能有重复的字段名"
-        //         }
-        //         return true
-        //     }
-        //     ]
-        // }
-        // public async handleTopicListKey(){
-        //     const topicList = this.formProvide.formObj.topicList as any[]
-        //     await this.$nextTick()
-
-        //     topicList.forEach((_:any,index:any)=>{
-        //         this.$refs.topicListKey[index].$emit('blur')
-        //     })
-        // }
+        // "字段名" 用js修改v-model不会触发rules校验，如果手动emit触发input事件，会导致v-model归空，原因未知。所以这里改成了watch方法
+        @Watch('formProvide.formObj.topicList', {deep: true})
+        keyInputEvent(newVal:Array<any>){
+            this.keyErrorMessages.length=newVal.length
+            this.keyRepeat.length=0
+            newVal.forEach((item,index:number)=>{
+                if(item.key===""){
+                    this.keyErrorMessages[index]='字段名不能为空'
+                }else if(item.key&&this.keyRepeat.includes(item.key)){
+                    this.keyErrorMessages[index]='数据结构不能有重复的字段名'
+                }else{
+                    this.keyErrorMessages[index]=''
+                }
+                this.keyRepeat.push(item.key)
+            })
+        }
     }
 </script>
 
