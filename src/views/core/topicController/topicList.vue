@@ -93,9 +93,9 @@
             </v-tab-item>
         </v-tabs-items>
 
-        <h-dialog v-if="dialogFlag" v-model="dialogFlag">
+        <h-dialog v-if="dialogFlag" v-model="dialogFlag" ref="HDialog">
             <data-structure-dialog slot="dialog-content" :rowObj="rowObj" v-if="dialogShow==2"></data-structure-dialog>
-            <create-topic-dialog slot="dialog-content" v-else-if="dialogShow==1" ref='createTopicDialog'></create-topic-dialog>
+            <create-topic-dialog slot="dialog-content" v-else-if="dialogShow==1" ref="createTopicDialog"></create-topic-dialog>
             <topic-ancilary-information-dialog slot="dialog-content" :otherObj="otherObj" v-else-if="dialogShow==3"></topic-ancilary-information-dialog>
         </h-dialog>
         <!-- 上传文件对话框 -->
@@ -135,6 +135,7 @@ import {GET_TOPICS_INFORMATION} from "../../../api/requestName";
 import TopicAncilaryInformationDialog from './childComponent/topicAncilaryInformationDialog.vue';
 import util from '../../../decorator/utilsDecorator';
 import { MomentInputObject } from "moment";
+// import VForm from 'vuetify'
 
 import XLSX from 'xlsx';
 
@@ -598,11 +599,8 @@ export default class TopicList extends Vue{
         setTimeout(()=>{
             this.formObj.formObj.topicName=this.fileName
             child.inputEvent(this.fileName)
-            this.formObj.formObj.topicList.length=0
-            this.formObj.formObj.topicList=[..._topicList]  
-            // this.formObj.formObj.topicList.forEach((_,index)=>{
-            //     child.dispatchInputEvent(index) 
-            // })
+            this.formObj.formObj.topicList=[..._topicList]
+            // child.handleTopicListKey()
         },1)
     }
     // 取消上传

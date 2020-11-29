@@ -363,7 +363,7 @@
                             dense
                             label="字段名"
                             height="32"
-                            class="dialogInput topicListKey"
+                            class="dialogInput"
                             v-model="item.key"
                             :rules="[...h_validator.fieldKeyVilidata(formProvide.formObj.topicList)]"
                             required
@@ -449,6 +449,7 @@
     import http from '../../../../decorator/httpDecorator';
     import validator from '../../../../decorator/validatorDecorator'
     import { H_Vue } from '../../../../declaration/vue-prototype';
+import { nextTick } from "vue/types/umd";
 
     @Component
     @http
@@ -484,6 +485,7 @@
         private esList:Array<any> = [{text:"是",value:1},{text:"否",value:0}]
         private arr:Array<any> = ['','']
         private topicRepeat:Function[] = []
+        private keyRepeat:Function[] = []
 
         private showonlineData(dataType:boolean){
             if(dataType){
@@ -581,12 +583,32 @@
                this.topicRepeat = []
             }
         }
-        // public async dispatchInputEvent(n:number){
-        //     await this.$nextTick()
-        //     const node=document.getElementsByClassName('topicListKey')[n] as EventTarget
-        //     node.dispatchEvent(new Event('input')) 
+
+        // public keyInputEvent(topicList:any){
+        //     this.keyRepeat = [
+        //     (v:string) =>!!v||"字段名不能为空",
+        //     (v:string) =>{
+        //         let valNum = 0;
+        //         topicList.forEach((element:any) => {
+        //             if(v&&v===element.key){
+        //                 valNum++
+        //             }
+        //         });
+        //         if(valNum>1){
+        //             return "数据结构不能有重复的字段名"
+        //         }
+        //         return true
+        //     }
+        //     ]
         // }
-      
+        // public async handleTopicListKey(){
+        //     const topicList = this.formProvide.formObj.topicList as any[]
+        //     await this.$nextTick()
+
+        //     topicList.forEach((_:any,index:any)=>{
+        //         this.$refs.topicListKey[index].$emit('blur')
+        //     })
+        // }
     }
 </script>
 
