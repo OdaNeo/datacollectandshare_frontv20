@@ -57,8 +57,7 @@ export default class DialogForm extends Vue {
             if (formObj.topicList.length === 0) {
               formObj.topicList = [
                 {
-                  number: '',
-                  key: '',
+                  key: undefined,
                   type: '',
                   description: '', // 描述
                   disabled: false
@@ -115,7 +114,7 @@ export default class DialogForm extends Vue {
           },
           topicList: [
             {
-              key: '',
+              key: undefined,
               type: '',
               description: '', // 描述
               disabled: false

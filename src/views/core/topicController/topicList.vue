@@ -93,9 +93,9 @@
             </v-tab-item>
         </v-tabs-items>
 
-        <h-dialog v-if="dialogFlag" v-model="dialogFlag">
+        <h-dialog v-if="dialogFlag" v-model="dialogFlag" ref="HDialog">
             <data-structure-dialog slot="dialog-content" :rowObj="rowObj" v-if="dialogShow==2"></data-structure-dialog>
-            <create-topic-dialog slot="dialog-content" v-else-if="dialogShow==1" ref='createTopicDialog'></create-topic-dialog>
+            <create-topic-dialog slot="dialog-content" v-else-if="dialogShow==1" ref="createTopicDialog"></create-topic-dialog>
             <topic-ancilary-information-dialog slot="dialog-content" :otherObj="otherObj" v-else-if="dialogShow==3"></topic-ancilary-information-dialog>
         </h-dialog>
         <!-- 上传文件对话框 -->
@@ -107,7 +107,7 @@
         >
             <v-card>
                 <v-card-title class="dialog-title">上传文件</v-card-title>
-                <v-card-text>支持.xls, .xlsx格式的单文件上传。文件名将自动填充主题名称。如果遇到无法提交的情况，请尝试更改主题名称。</v-card-text>
+                <v-card-text>支持.xls, .xlsx格式的单文件上传。文件名将自动填充主题名称</v-card-text>
                 <v-file-input accept=".xls,.xlsx" label="File input" @change="upLoadFile" @click:clear="canUpLoad=false" style="width:730px" :key="forceRenderFlag"/>
                 <v-card-actions>
                     <v-spacer></v-spacer>
@@ -161,7 +161,6 @@ export default class TopicList extends Vue{
                 title:"",
                 btnName:([] as string[]),
                 methodName:"",
-                // upLoad:true,// 主题列表页面上传文件按钮flag
                 formObj:{
                     id:'', // 主题ID
                     canNotEdit: false, // 添加数据
@@ -579,28 +578,28 @@ export default class TopicList extends Vue{
         this.canUpLoad = false
         this.forceRenderFlag=Math.random()
 
-        // 填充创建主题页面
         this.formObj.formObj.messageType = 1
         this.Sheets[`sheet${this.sheetCurIndex}`] && (this.sheetObj=this.Sheets[`sheet${this.sheetCurIndex}`])
         const _l:number=this.sheetObj['!ref'].split('C')[1]
-       
-        // 获取dom
-        await this.$nextTick()
-        const child=this.$refs.createTopicDialog as CreateTopicDialog
-
-        setTimeout(()=>{
-            this.formObj.formObj.topicList=[]
-            for(let i=1;i<_l;i++){
-                this.formObj.formObj.topicList.push({
+         
+        let _topicList:Array<any> =[]
+        for(let i=1;i<_l;i++){
+                _topicList.push({
                     [this.handleObjKey('A') as string] :this.handleObjKeyType(this.sheetObj[`A${i+1}`]?this.sheetObj[`A${i+1}`].v:''),
                     [this.handleObjKey('B') as string] :this.handleObjKeyType(this.sheetObj[`B${i+1}`]?this.sheetObj[`B${i+1}`].v:''),
                     [this.handleObjKey('C') as string] :this.handleObjKeyType(this.sheetObj[`C${i+1}`]?this.sheetObj[`C${i+1}`].v:''),
                     disabled:false
                 })
-            }
+        }
+        // 获取dom
+        await this.$nextTick()
+        const child=this.$refs.createTopicDialog as CreateTopicDialog
+
+        setTimeout(()=>{
             this.formObj.formObj.topicName=this.fileName
-            child.inputEvent(this.fileName)   
-        })
+            child.inputEvent(this.fileName)
+            this.formObj.formObj.topicList=[..._topicList]
+        },1)
     }
     // 取消上传
     private upLoadFileCancel(){

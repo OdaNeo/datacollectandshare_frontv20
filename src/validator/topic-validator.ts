@@ -6,18 +6,18 @@ class TopicValidator{
   public readonly fieldKeyVilidata = (topicList:any[]) => {
     return [
       (v:string) =>!!v||"字段名不能为空",
-      (v:string) =>{
-          let valNum = 0;
-          topicList.forEach((element:any) => {
-              if(v==element.key){
-                  valNum++
-              }
-          });
-          if(valNum>1){
-              return "数据结构不能有重复的字段名"
-          }
-          return true
-      }
+      // (v:string) =>{
+      //     let valNum = 0;
+      //     topicList.forEach((element:any) => {
+      //         if(v&&v===element.key){
+      //             valNum++
+      //         }
+      //     });
+      //     if(valNum>1){
+      //         return "数据结构不能有重复的字段名"
+      //     }
+      //     return true
+      // }
     ]
   }
 
