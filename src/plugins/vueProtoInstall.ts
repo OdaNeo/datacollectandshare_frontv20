@@ -6,7 +6,7 @@ import 'echarts-liquidfill'
 
 const protoInstall = {
   install: (Vue: VueConstructor, options: any):void => {
-    Vue.prototype.$request = new RequestData()
+    Vue.prototype.$request = new RequestData([])
     Vue.prototype.$echarts = Echarts
   }
 }

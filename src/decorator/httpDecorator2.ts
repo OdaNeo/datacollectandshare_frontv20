@@ -1,18 +1,18 @@
 import { VueConstructor } from 'vue';
 import HttpInit from "../api/httpDecoratorInit"
 
-const http2 = (https: Array<any>) => {
+type httpHeader = {
+  methodName?: string,
+  header?:Array<any>  
+}
+
+const http2 = (httpHeader?:httpHeader) => {
   return (target: VueConstructor) => {
-    const httpInit = HttpInit.requestData
-    let httpObj: { [key: string]: Function } = {}
-    https.forEach((http) => {
-      httpObj[http] = (params: any) => {
-        return new Promise((resolve,reject) => {
-          resolve(true)
-        })
-      }
-    })
-    target.prototype["h_request2"] = httpObj;
+    if (!httpHeader||JSON.stringify(httpHeader)==="{}") {
+      target.prototype["h_request"] = new HttpInit().httpRequestInit();
+    } else {
+      target.prototype[httpHeader.methodName?httpHeader.methodName:"h_request"] = new HttpInit().httpRequestInit(httpHeader.header?httpHeader.header:[]);
+    }
   }
 }
 

@@ -30,6 +30,8 @@ export const GET_TOPICS_MYTOPICSBYID = '/topics/myTopicsById'
 export const GET_TOPICS_FINDTOPICBYTOPICNAME = '/topics/findTopicByTopicName'
 
 export const POST_TRANSMISSION_ATS = '/transmission/ATS'
+export const GET_TRANSMISSION_REALTIME = '/transmission/realtime/ATS'
+export const GET_TRANSMISSION_HISTORY = '/transmission/history/ATS'
 
 // 增加主题
 export const POST_TOPICS_ADD = '/topics/addTopic'
@@ -153,7 +155,9 @@ const REQUEST_NAME: REQUEST_NAME = {
   GET_CMD_CHECKED,
   POST_CMD_ADD,
   POST_CMD_UPDATE,
-  GET_CMD_DELETE
+  GET_CMD_DELETE,
+  GET_TRANSMISSION_REALTIME,
+  GET_TRANSMISSION_HISTORY
 }
 
 export default REQUEST_NAME

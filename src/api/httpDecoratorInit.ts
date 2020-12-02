@@ -1,9 +1,9 @@
 import RequestData from './index';
 class Init{
-  public static requestData: RequestData
+  // public static requestData: RequestData
   // public static httpAll:HttpAll
-  public static httpRequestInit() {
-    Init.requestData = new RequestData()
+  public httpRequestInit(headers?:Array<any>) {
+    return new RequestData(headers?headers:[])
   }
 }
 
