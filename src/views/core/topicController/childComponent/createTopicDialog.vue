@@ -57,7 +57,7 @@
                     class="dialogInput"
                     v-model="formProvide.formObj.topicName"
                     :rules="[...h_validator.topicNameVilidata(),...topicRepeat]"
-                    @input="inputEvent"
+                    @input="inputEvent(formProvide.formObj.topicName)"
                     required
             >
                 <template v-slot:prepend>
@@ -364,10 +364,12 @@
                             label="字段名"
                             height="32"
                             class="dialogInput"
-                            v-model="item.key"
-                            :rules="h_validator.fieldKeyVilidata(formProvide.formObj.topicList)"
+                            v-model.trim="item.key"
+                            :rules="[...h_validator.fieldKeyVilidata(formProvide.formObj.topicList)]"
+                            :error-messages='keyErrorMessages[index]'
                             required
                     >
+                    <!--  -->
                     <template v-slot:prepend >
                             <div class="text-label" v-if="index===0">
                                 <label><span class="require-span">*</span>数据结构：</label>
@@ -445,7 +447,7 @@
     </v-row>
 </template>
 <script lang="ts">
-    import {Component, Inject, Vue} from "vue-property-decorator";
+    import {Component, Inject, Vue, Watch} from "vue-property-decorator";
     import http from '../../../../decorator/httpDecorator';
     import validator from '../../../../decorator/validatorDecorator'
     import { H_Vue } from '../../../../declaration/vue-prototype';
@@ -484,7 +486,8 @@
         private esList:Array<any> = [{text:"是",value:1},{text:"否",value:0}]
         private arr:Array<any> = ['','']
         private topicRepeat:Function[] = []
-
+        private keyErrorMessages:Array<string> =[]
+        private keyRepeat:Array<any> = []
 
         private showonlineData(dataType:boolean){
             if(dataType){
@@ -500,9 +503,9 @@
         }
         private add(){ // 增加数据结构
             (this.formProvide.formObj.topicList as Array<any>).push({
-                // number: '',
-                key:'',
+                key:undefined,
                 type:'',
+                description:'', // 描述
                 disabled:false
             })
         }
@@ -534,7 +537,7 @@
                 url: '',
                 topicList:[
                     {
-                        key:'',
+                        key:undefined,
                         type:'',
                         description:'', // 描述
                         disabled:false
@@ -566,15 +569,15 @@
         }
 
         public async inputEvent(v:string){
-          
-            if(v&&v!=""){
+
+            if(v){
                 const {success} = await this.h_request["httpGET"]("GET_TOPICS_CHECKED",{
                     topicName:v
                 })
                 if(success){
                     this.topicRepeat = [
                         (v:string) =>"主题名称已被注册"
-                    ]                                         
+                    ] 
                 }else{
                     this.topicRepeat = []
                 }
@@ -583,6 +586,22 @@
             }
         }
 
+        // "字段名" 用js修改v-model不会触发rules校验，如果手动emit触发input事件，会导致v-model归空，原因未知。所以这里改成了watch方法
+        @Watch('formProvide.formObj.topicList', {deep: true})
+        keyInputEvent(newVal:Array<any>){
+            this.keyErrorMessages.length=newVal.length
+            this.keyRepeat.length=0
+            newVal.forEach((item,index:number)=>{
+                if(item.key===""){
+                    this.keyErrorMessages[index]='字段名不能为空'
+                }else if(item.key&&this.keyRepeat.includes(item.key)){
+                    this.keyErrorMessages[index]='数据结构不能有重复的字段名'
+                }else{
+                    this.keyErrorMessages[index]=''
+                }
+                this.keyRepeat.push(item.key)
+            })
+        }
     }
 </script>
 

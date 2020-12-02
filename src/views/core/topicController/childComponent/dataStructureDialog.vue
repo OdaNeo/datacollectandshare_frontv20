@@ -27,21 +27,18 @@ export default class DataStructureDialog extends Vue{
     get desserts(){
         let arr = []
         const dataStruct = JSON.parse(this.rowObj.dataStruct)[0]
+        const dsAnnotation = JSON.parse(this.rowObj.dsAnnotation)
         for(let key in dataStruct){
             arr.push({
-                id:key,
-                key:JSON.parse(this.rowObj.dsAnnotation)[key],
-                value:dataStruct[key]
+                key:key,
+                value:dataStruct[key],
+                description:dsAnnotation[key]
             })
         }
         return arr
     }
     private headers = [
-        {
-            text:"数据编号",
-            align: "center",
-            value:"id",
-        },
+      
         {
             text:"数据key",
             align: "center",
@@ -51,6 +48,11 @@ export default class DataStructureDialog extends Vue{
             text:"数据value",
             align: "center",
             value:"value"
+        },
+        {
+            text:"描述",
+            align: "center",
+            value:"description"
         }
     ]
 }
