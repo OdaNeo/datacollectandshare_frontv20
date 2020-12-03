@@ -1,6 +1,6 @@
 const userList = require("./mock/user.json")
 module.exports = {
-  "publicPath": process.env.NODE_ENV === 'development' ? '/' : '/',
+  //"publicPath": process.env.NODE_ENV === 'development' ? '/' : '/',
   // "publicPath":"/tsweb2/",
   "devServer": {
     port: 8080,

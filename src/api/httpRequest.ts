@@ -4,13 +4,18 @@ import { rootStoreModule } from '../store/modules/root'
 import { httpAllParams, returnDataType } from '../type/http-request.type'
 import alertUtil from '../utils/alertUtil'
 
+type headerObj = {
+  headerKey: string,
+  headerVal: string|number
+}
+
 class HttpRequest {
   private axiosIns: AxiosInstance = axios.create({
     baseURL: 'http://112.126.65.241:9002', // 测试环境
     // baseURL: "http://192.168.62.13:9000",
     //baseURL: "http://172.16.1.111:9000",
     //baseURL: "http://192.168.62.84:9000",
-    // baseURL: "http://192.168.60.214:9002/", // 郝帅本地服务
+    //baseURL: "http://192.168.56.1:9002/", // 郝帅本地服务
     // baseURL: 'http://192.168.59.65:9002',
     timeout: 500000,
     headers: {
@@ -20,12 +25,17 @@ class HttpRequest {
     }
   })
   private requestHelper: RequestHelper = new RequestHelper(this.axiosIns)
-  constructor() {
-    // this.axiosIns.defaults.baseURL = "http://localhost:9000"
-    // this.axiosIns.defaults.timeout = 10000
-    // this.axiosIns.defaults.headers.post["Content-Type"] = "application/json;charset=UTF-8"
+  constructor(headers:Array<any>) {
+    console.log(headers)
     this.axiosIns.interceptors.request.use((config: AxiosRequestConfig) => {
-      config.headers['Authorization'] = rootStoreModule.UserState.token
+      if (headers.length > 0) {
+        headers.forEach((header:headerObj) => {
+          config.headers[header.headerKey] = header.headerVal
+        })
+      } else {
+        config.headers['Authorization'] = rootStoreModule.UserState.token
+      }
+      //config.headers["x-auth-token"] = 1234
       return config
     })
 

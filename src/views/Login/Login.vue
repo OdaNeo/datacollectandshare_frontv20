@@ -59,14 +59,12 @@
 import { Component, Vue } from "vue-property-decorator";
 import {rootStoreModule} from "../../store/modules/root"
 import http from '../../decorator/httpDecorator';
-import init from '../../decorator/initDecorator';
 import { returnDataType } from '../../type/http-request.type';
 import { userAndPassType } from '../../type/login.type';
 import http2 from '../../decorator/httpDecorator2';
 
 @Component
 @http
-@init
 export default class Login extends Vue{
 
     valid:boolean = false

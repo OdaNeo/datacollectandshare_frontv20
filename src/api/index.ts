@@ -6,8 +6,8 @@ import { returnDataType,httpAllParams } from "../type/http-request.type"
 
 class RequestData{
   public httpRequest: HttpRequest
-  constructor() {
-    this.httpRequest = new HttpRequest()
+  constructor(headers: Array<any>) {
+    this.httpRequest = new HttpRequest(headers)
   }
   public httpGET: Function = <T = any>(requestName: string, params: T,...urlArr:Array<string>) => {
     const url = this.urlFormat(REQUEST_NAME[requestName],[...urlArr])

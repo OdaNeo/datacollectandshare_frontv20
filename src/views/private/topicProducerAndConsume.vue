@@ -11,7 +11,16 @@
                             v-model="topicId"
                             solo
                             dense
-                            placeholder="请输入查找的主题ID"
+                            placeholder="请输入生产的主题ID"
+                            clearable
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="10" offset="1" style="padding:0">
+                        <v-text-field
+                            v-model="userToken"
+                            solo
+                            dense
+                            placeholder="请输入生产的用户token"
                             clearable
                         ></v-text-field>
                     </v-col>
@@ -46,19 +55,21 @@
                             dense
                             placeholder="随机生成数据数量"
                             clearable
-                        ></v-text-field>
-                    </v-col>
-                    <v-col cols="10" offset="1" v-if="producerMsgState=='1'" style="padding:0">
-                        <v-btn
-                        color="primary"
-                        class="mr-4"
-                        solo
-                        @click="createMsg"
                         >
-                            生成数据
-                        </v-btn>
+                            <template v-slot:append-outer>
+                                <v-btn
+                                color="primary"
+                                class="mr-4"
+                                solo
+                                @click="createMsg"
+                                style="margin-top:-4px"
+                                >
+                                    生成数据
+                                </v-btn>
+                            </template>
+                        </v-text-field>
                     </v-col>
-                    <v-col cols="10" offset="1" v-if="producerMsgState=='1'" style="padding:0" class="expansion">
+                    <v-col cols="10" offset="1" v-if="producerMsgState=='1'" style="padding:0;margin-top:0" class="expansion">
                         <v-expansion-panels>
                             <v-expansion-panel
                             v-for="(item,i) in createMsgArray"
@@ -72,6 +83,23 @@
                         </v-expansion-panels>
                     </v-col>
                     <v-col cols="10" offset="1" v-if="producerMsgState=='1'" style="padding:0;margin-top:10px">
+                        <v-radio-group
+                        v-model="collectiveState"
+                        single-line
+                        outlined
+                        dense
+                        solo
+                        row
+                        >
+                            <v-radio
+                                v-for="n in collective"
+                                :key="n.value"
+                                :label="`${n.text}`"
+                                :value="n.value"
+                            ></v-radio>
+                        </v-radio-group>
+                    </v-col>
+                    <v-col cols="10" offset="1" v-if="producerMsgState=='1'&&collectiveState=='2'" style="padding:0">
                         <v-text-field
                             v-model="sendMsgRate"
                             solo
@@ -98,13 +126,21 @@
                         >
                             单独发送数据
                         </v-btn>
-                         <v-btn
+                        <v-btn
                         color="primary"
                         class="mr-4"
                         solo
-                        @click="sendMsgAndConsume"
+                        @click="sendMsgAndConsumeRealtime"
                         >
-                            发送数据并消费
+                            发送数据并消费实时数据
+                        </v-btn>
+                        <v-btn
+                        color="primary"
+                        class="mr-4"
+                        solo
+                        @click="sendMsgAndConsumeHistorytime"
+                        >
+                            发送数据并消费历史数据
                         </v-btn>
                     </v-col>
                </v-row>
@@ -112,23 +148,84 @@
         </div>
         <div id="topicConsume">
             <h3>主题消费数据</h3>
+            <v-form
+            ref="consumeForm"
+            >
+                <v-row>
+                    <v-col cols="10" offset="1" style="padding:0">
+                        <v-text-field
+                            v-model="consumeTopicId"
+                            solo
+                            dense
+                            placeholder="请输入消费的主题ID"
+                            clearable
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="10" offset="1" style="padding:0">
+                        <v-text-field
+                            v-model="consumeUserToken"
+                            solo
+                            dense
+                            placeholder="请输入消费的用户token"
+                            clearable
+                        ></v-text-field>
+                    </v-col>
+                    <v-col cols="10" offset="1" style="padding:0;margin-bottom:20px">
+                        <v-btn
+                        color="primary"
+                        class="mr-4"
+                        solo
+                        @click="consumeRealtimeMethod(consumeTopicId,consumeUserToken)"
+                        >
+                            消费实时数据
+                        </v-btn>
+                        <v-btn
+                        color="primary"
+                        class="mr-4"
+                        solo
+                        @click="consumeHistoryMethod(consumeTopicId,consumeUserToken)"
+                        >
+                            消费离线数据
+                        </v-btn>
+                    </v-col>
+                     <v-col cols="10" offset="1" style="padding:0">
+                        <p class="consumeBox" style="white-space:pre-wrap;padding-top:10px;padding-left:10px">{{consumeBox}}</p>
+                    </v-col>
+                </v-row>
+            </v-form>
         </div>
     </div>
 </template>
 <script lang="ts">
 import http from '@/decorator/httpDecorator';
+import http2 from '@/decorator/httpDecorator2';
+import util from '@/decorator/utilsDecorator';
 import { Component, Vue} from "vue-property-decorator";
+import RequestData from '@/api';
 
 @Component
 @http
+@http2({
+    methodName:"h_request2",
+    header:[{
+        headerKey:"x-auth-token",
+        headerVal:1234
+    }]
+})
+@util
 export default class TopicProducerAndConsume extends Vue{
     private producerForm:boolean = true
+    private consumeForm:boolean = true
 
     private topicId:string = ""
+
+    private consumeTopicId:string = ""
 
     private createMsgNum:string = "" 
 
     private producerMsgState:string = ""
+
+    private collectiveState:string = "1"
 
     private createMsgArray:any[] = []
 
@@ -136,7 +233,16 @@ export default class TopicProducerAndConsume extends Vue{
 
     private delayConsume:string = ""
 
+    private userToken:string = ""
+
+    private consumeUserToken:string = ""
+
+    private consumeBox:string = ""
+
     private msgStates:Array<any> = [{text:"随机生成数据",value:"1"},{text:"指定数据",value:"2"}]
+
+    private collective:Array<any> = [{text:"打包发送",value:"1"},{text:"单条发送",value:"2"}]
+
 
     private async createMsg(){
         const result = await this.h_request["httpGET"]<object>("GET_TOPICS_SELECTTOPIC",{
@@ -160,7 +266,7 @@ export default class TopicProducerAndConsume extends Vue{
                         val = i+1;
                         break;
                     case "str":
-                        val = "str"+i
+                        val = key+"_"+i
                         break;
                     default:
                         break;
@@ -172,23 +278,94 @@ export default class TopicProducerAndConsume extends Vue{
         return createRandomArray
     }
 
-    private sendMsg(){
-        this.createMsgArray.forEach((element:any,i:number) => {
-            setTimeout(async ()=>{
-                const {success} = await this.h_request["httpPOST"]("POST_TRANSMISSION_ATS",{
-                    data:[
-                        element
-                    ]
+    private async sendMsg(callback?:Function){
+        if(this.userToken){
+            const h_request3 = new RequestData([{
+                headerKey:"x-auth-token",
+                headerVal:this.userToken
+            }])
+            if(this.collectiveState == "1"){
+                const {success} = await h_request3["httpPOST"]("POST_TRANSMISSION_ATS",{
+                    requestId:new Date().getTime(),
+                    data:this.createMsgArray
                 },this.topicId)
                 if(success){
-
+                    this.h_utils["alertUtil"].open(this.topicId+"主题生产成功，可以进行消费了！",true,"success")
+                    callback&&callback()
                 }
-            },Number(this.sendMsgRate)*i)
-        });
+            }else{
+                this.createMsgArray.forEach((element:any,i:number) => {
+                    setTimeout(async ()=>{
+                        const {success} = await h_request3["httpPOST"]("POST_TRANSMISSION_ATS",{
+                            requestId:new Date().getTime(),
+                            data:[
+                                element
+                            ]
+                        },this.topicId)
+                        if(success){
+                            this.h_utils["alertUtil"].open(this.topicId+"主题生产成功，可以进行消费了！",true,"success")
+                            callback&&callback()
+                        }
+                    },Number(this.sendMsgRate)*i)
+                });
+            }
+        }else{
+            this.h_utils["alertUtil"].open("请设置主题生产的用户的token",true,"error")
+        }
     }
 
-    private sendMsgAndConsume(){
+    private async consumeRealtimeMethod(id:string,token:string){
+        if(id&&token){
+            const h_request3 = new RequestData([{
+                headerKey:"x-auth-token",
+                headerVal:token
+            }])
+            const response = await h_request3["httpGET"]("GET_TRANSMISSION_REALTIME",{},id)
+            this.consumeBox = JSON.stringify(response,null,"\t")
+            
+        }else{
+            this.h_utils["alertUtil"].open("请设置主题消费的用户的token",true,"error")
+        }
+    }
 
+    private async consumeHistoryMethod(id:string,token:string){
+        if(id&&token){
+            const h_request3 = new RequestData([{
+                headerKey:"x-auth-token",
+                headerVal:token
+            }])
+            const response = await h_request3["httpPOST"]("GET_TRANSMISSION_HISTORY",{
+                "query_sql":"select * from "+id
+            },id)
+            this.consumeBox = JSON.stringify(response,null,"\t")
+            
+        }else{
+            this.h_utils["alertUtil"].open("请设置主题消费的用户的token",true,"error")
+        }
+    }
+
+    private sendMsgAndConsumeRealtime(){
+        let time = 200
+        if(this.delayConsume){
+            time = Number(this.delayConsume)
+        }
+        this.sendMsg(()=>{
+            setTimeout(()=>{
+                this.consumeRealtimeMethod(this.topicId,this.userToken)
+            },time)
+        })
+    }
+
+    private sendMsgAndConsumeHistorytime(){
+        let time = 200
+        if(this.delayConsume){
+            time = Number(this.delayConsume)
+        }
+        this.sendMsg(()=>{
+            setTimeout(()=>{
+                this.consumeHistoryMethod(this.topicId,this.userToken)
+            },time)
+        })
     }
 }
 </script>
@@ -202,18 +379,24 @@ export default class TopicProducerAndConsume extends Vue{
         text-align: center;
     }
     #topicProducer{
-        width:35%;
+        width:50%;
         height:100%;
         border-right:1px solid rgba(0,0,0,0.87)
     }
     #topicConsume{
         height:100%;
-        width:65%
+        width:50%
     }
     .expansion{
         margin-top:20px;
-        max-height: 250px;
+        max-height: 150px;
         overflow-x: hidden;
         overflow-y:auto;
+    }
+    .consumeBox{
+        width:100%;
+        height:400px;
+        overflow: auto;
+        box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
     }
 </style>
