@@ -202,7 +202,7 @@ export default class TopicSub extends Vue {
   private async cancelScribe(item: any) {
     const { success } = await this.h_request[
       "httpPOST"
-    ]("POST_TOPICS_DELSUBUSER", { topicId: item.id, subUserID: item.userID });
+    ]("POST_TOPICS_DELSUBUSER", { topicID: item.id, subUserID: item.userID });
     if (success) {
       this.searchMethod(false, {
         pageSize: this.pageSize,
