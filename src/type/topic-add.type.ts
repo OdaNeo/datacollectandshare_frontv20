@@ -20,4 +20,9 @@ export type TopicAdd = {
     AuthorizationObj:any
     type:string
     body:any
+    port:string
+    host:string
+    baseUrl:string
+    userName:string
+    password:string
 }

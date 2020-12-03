@@ -150,6 +150,36 @@ class TopicValidator{
             (v:string) =>this.isJSON(v)||"请输入正确的Json数据"
         ]
     }
+    //baseUrl
+  public readonly baseUrlVilidata = () => {
+    return [
+      (v:string) =>!!v||"baseUrl不能为空"
+    ]
+  }
+  //host校验规则
+  public readonly hostVilidata = () => {
+    return [
+      (v:string) =>!!v||"host不能为空"
+    ]
+  }
+  //port校验规则
+  public readonly portVilidata = () => {
+    return [
+      (v:string) =>!!v||"port不能为空"
+    ]
+  }
+  //FTP账号校验规则
+  public readonly ftpNameVilidata = () => {
+    return [
+      (v:string) =>!!v||"FTP账号不能为空"
+    ]
+  }
+  //FTP密码校验规则
+  public readonly ftpPasswordVilidata = () => {
+    return [
+      (v:string) =>!!v||"FTP密码不能为空"
+    ]
+  }
 }
 
 
