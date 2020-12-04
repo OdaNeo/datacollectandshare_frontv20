@@ -195,7 +195,7 @@ export default class TopicSub extends Vue {
     if (success) {
       this.searchMethod(false, {
         pageSize: this.pageSize,
-        pageNum: 1,
+        pageNum: this.pageNum,
       });
     }
   }
@@ -207,7 +207,7 @@ export default class TopicSub extends Vue {
     if (success) {
       this.searchMethod(false, {
         pageSize: this.pageSize,
-        pageNum: 1,
+        pageNum: this.pageNum,
       });
     }
   }
