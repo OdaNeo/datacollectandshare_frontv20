@@ -11,13 +11,13 @@ type headerObj = {
 
 class HttpRequest {
   private axiosIns: AxiosInstance = axios.create({
-    // baseURL: 'http://112.126.65.241:9002', // 测试环境
+    baseURL: 'http://112.126.65.241:9002', // 测试环境
     // baseURL: "http://192.168.62.13:9000",
     //baseURL: "http://172.16.1.111:9000",
     //baseURL: "http://192.168.62.84:9000",
     //baseURL: "http://192.168.56.1:9002/", // 郝帅本地服务
     // baseURL: 'http://192.168.59.65:9002',
-    baseURL: 'http://192.168.63.76:9002',
+    // baseURL: 'http://192.168.63.76:9002',
     timeout: 500000,
     headers: {
       post: {

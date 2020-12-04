@@ -23,6 +23,7 @@
       :desserts="desserts"
       :height="450"
       :pageNum="pageNum"
+      @PaginationsNow="PaginationsNow"
       :paginationLength="paginationLength"
     >
       <template v-slot:buttons="{ item }">
@@ -209,6 +210,17 @@ export default class TopicSub extends Vue {
         pageNum: 1,
       });
     }
+  }
+
+   private PaginationsNow(page: number) {
+    this.pageNum = page;
+    this.searchMethod(
+      false,
+      {
+        pageSize: this.pageSize,
+        pageNum: this.pageNum,
+      },
+    );
   }
   created() {
     this.searchMethod(false, {
