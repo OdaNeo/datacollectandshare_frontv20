@@ -25,5 +25,18 @@ module.exports = {
   },
   "transpileDependencies": [
     "vuetify"
-  ]
+  ],
+  // 生产环境去掉console和注释
+  configureWebpack: (config)=>{
+    if(process.env.NODE_ENV === 'production'){
+      config.optimization.minimizer[0].options.terserOptions={
+        compress: {
+          drop_console: true // 移除console
+        },
+        output: {
+          comments: false // 移除js中的注释
+        }
+      }
+    }
+  }
 }
