@@ -68,7 +68,17 @@
         @click="formProvide.formObj.interfaceType = 4"
         >多级嵌套免校验</v-btn
       >
-
+      <v-btn
+        v-if="onlineData"
+        :disabled="
+          formProvide.formObj.canNotEdit &&
+          formProvide.formObj.interfaceType !== 6
+        "
+        small
+        :color="formProvide.formObj.interfaceType === 6 ? 'primary' : ''"
+        @click="formProvide.formObj.interfaceType = 6"
+        >protobuf</v-btn
+      >
       <v-btn
         v-if="!onlineData"
         :disabled="
@@ -425,7 +435,7 @@
             </template>
           </v-text-field>
         </v-col>
-        <v-col cols="3" style="padding:0 0 0 6px;">
+        <v-col cols="3" style="padding: 0 0 0 6px">
           <v-text-field
             single-line
             outlined
@@ -445,7 +455,7 @@
           cols="2"
           class="input-item"
           v-if="!formProvide.formObj.canNotEdit"
-          style="padding-left: 6px;"
+          style="padding-left: 6px"
         >
           <v-btn
             fab
@@ -466,7 +476,7 @@
             class="add-btn"
             v-if="
               formProvide.formObj.header.length !== index + 1 &&
-                item.key !== 'Authorization'
+              item.key !== 'Authorization'
             "
             @click="minus2(index)"
           >
@@ -477,10 +487,11 @@
     </div>
     <v-col
       cols="9"
-      style="padding:0"
+      style="padding: 0"
       v-if="
         formProvide.formObj.interfaceType === 1 ||
-          formProvide.formObj.interfaceType === 4
+        formProvide.formObj.interfaceType === 4 || 
+        formProvide.formObj.interfaceType === 6
       "
     >
       <v-radio-group
@@ -513,8 +524,9 @@
       cols="9"
       style="padding:0"
       v-if="
+        formProvide.formObj.interfaceType === 1 ||
         formProvide.formObj.interfaceType === 4 ||
-          formProvide.formObj.interfaceType === 1
+        formProvide.formObj.interfaceType === 6 
       "
     >
       <v-radio-group
@@ -591,8 +603,9 @@
       style="width: 100%;max-height:200px;overflow-y: auto;overflow-x: hidden;"
       v-if="
         formProvide.formObj.interfaceType === 1 ||
-          formProvide.formObj.interfaceType === 2 ||
-          formProvide.formObj.interfaceType === 3
+        formProvide.formObj.interfaceType === 2 ||
+        formProvide.formObj.interfaceType === 3 ||
+        formProvide.formObj.interfaceType === 6 
       "
     >
       <div
@@ -693,9 +706,7 @@
       cols="9"
       style="padding:0"
       v-if="
-        onlineData &&
-          (formProvide.formObj.interfaceType == 1 ||
-            formProvide.formObj.interfaceType == 4)
+        onlineData && formProvide.formObj.interfaceType === 4
       "
     >
       <v-radio-group

@@ -1,8 +1,7 @@
-const userList = require("./mock/user.json")
+const userList = require("./mock/user.json");
 module.exports = {
-  //"publicPath": process.env.NODE_ENV === 'development' ? '/' : '/',
-  // "publicPath":"/tsweb2/",
-  "devServer": {
+  // publicPath:"/tsweb2/",
+  devServer: {
     port: 8080,
     open: true,
     // proxy: {
@@ -20,23 +19,19 @@ module.exports = {
     //   })
     // }
   },
-  "configureWebpack": {
-    "devtool": "source-map"
-  },
-  "transpileDependencies": [
-    "vuetify"
-  ],
-  // 生产环境去掉console和注释
-  configureWebpack: (config)=>{
-    if(process.env.NODE_ENV === 'production'){
-      config.optimization.minimizer[0].options.terserOptions={
+  transpileDependencies: ["vuetify"],
+  // 生产环境去掉console和注释，开发环境启用source-map
+  configureWebpack: (config) => {
+    if (process.env.NODE_ENV === "production") {
+      config.optimization.minimizer[0].options.terserOptions = {
         compress: {
-          drop_console: true // 移除console
+          drop_console: true, // 移除console
         },
         output: {
-          comments: false // 移除js中的注释
-        }
-      }
+          comments: false, // 移除js中的注释
+        },
+      };
     }
-  }
-}
+    config.devtool = process.env.NODE_ENV === "production" ? undefined : "source-map";
+  },
+};

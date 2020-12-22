@@ -69,9 +69,22 @@
               text
               color="primary"
               class="my-2"
-              @click="deleteTopic(item)"
+              @click.stop="
+                HConfirmShow = true;
+                HConfirmItem = item;
+              "
             >
               删除
+            </v-btn>
+              <v-btn
+              small
+              v-if="tab && item.topicInterFaceType===6"
+              text
+              color="primary"
+              class="my-2"
+              @click.stop="downloadFile(item)"
+            >
+              下载
             </v-btn>
             <v-btn
               small
@@ -115,7 +128,7 @@
         <v-card-title class="dialog-title">上传文件</v-card-title>
         <v-card-text
           >支持.xls,
-          .xlsx格式的单文件上传。文件名将自动填充主题名称</v-card-text
+          .xlsx格式的单文件上传。文件名将自动填充主题名称。</v-card-text
         >
         <v-file-input
           accept=".xls,.xlsx"
@@ -138,6 +151,11 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+    <h-confirm
+      v-if="HConfirmShow"
+      @hcancel="HConfirmShow = false"
+      @hconfirm="deleteTopic"
+    />
   </div>
 </template>
 <script lang="ts">
@@ -146,6 +164,7 @@ import { paramsType, returnDataType } from "../../../type/http-request.type";
 import http from "../../../decorator/httpDecorator";
 import { topicTable } from "../../../type/topic.type";
 import HTable from "../../../components/h-table.vue";
+import HConfirm from "../../../components/h-confirm.vue";
 import Enum from "../../../decorator/enumDecorator";
 import { queneType } from "../../../enum/topic-list-enum";
 import HDialog from "../../../components/h-dialog.vue";
@@ -158,12 +177,14 @@ import TopicAncilaryInformationDialog from "./childComponent/topicAncilaryInform
 import util from "../../../decorator/utilsDecorator";
 import { MomentInputObject } from "moment";
 
+import { saveAs } from 'file-saver';
 import XLSX from "xlsx";
 
 @Component({
   components: {
     HTable,
     HDialog,
+    HConfirm,
     DataStructureDialog,
     CreateTopicDialog,
     TopicAncilaryInformationDialog,
@@ -238,6 +259,13 @@ export default class TopicList extends Vue {
   private fileName: string = "";
   private sheetObj: any;
   private sheetCurIndex: number = 1;
+
+  private HConfirmShow = false;
+  private HConfirmItem = {
+    id: "",
+    topicName: "",
+    topicInterFaceType: 0,
+  };
 
   private desserts: Array<topicTable> = []; //数据列表
   private queryTopicID = null; //查询主题ID input框内容
@@ -456,7 +484,6 @@ export default class TopicList extends Vue {
           !formObj.canNotEdit ? "POST_TOPICS_ADD" : "POST_TOPICS_UPDATE",
           params
         );
-
         if (success) {
           this.h_utils["alertUtil"].open(
             !formObj.canNotEdit ? "主题创建成功" : "主题修改成功",
@@ -602,13 +629,18 @@ export default class TopicList extends Vue {
     }
     this.ancillaryInformation(this.desserts[index], "附加信息");
   }
-  private async deleteTopic(item: any) {
+
+  private async deleteTopic() {
+    if (this.HConfirmItem.id === undefined) {
+      return;
+    }
     const { success } = await this.h_request["httpGET"]("GET_TOPICS_DELETE", {
-      topicID: item.id,
-      topicName: item.topicName,
-      topicInterFaceType: item.topicInterFaceType,
+      topicID: this.HConfirmItem.id,
+      topicName: this.HConfirmItem.topicName,
+      topicInterFaceType: this.HConfirmItem.topicInterFaceType,
     });
     if (success) {
+      this.HConfirmShow = false;
       this.h_utils["alertUtil"].open("主题删除成功", true, "success");
       this.searchMethod(
         false,
@@ -732,6 +764,11 @@ export default class TopicList extends Vue {
     this.SheetNames = [""];
     this.Sheets = {};
     this.fileName = "";
+  }
+
+  // 下载
+  private downloadFile(item:any){
+    console.log(item)
   }
 }
 </script>

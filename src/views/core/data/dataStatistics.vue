@@ -7,6 +7,7 @@
                             v-model="systemValue"
                             :items="systemItems"
                             label="请选择系统"
+                            @change="getTopicList"
                     ></v-select>
                 </v-col>
                 <v-col cols="2" >
@@ -28,16 +29,23 @@
                                     v-on="on"
                             ></v-text-field>
                         </template>
-                        <v-date-picker locale="zh-cn" v-model="beginDate" no-title scrollable>
-                            <v-spacer></v-spacer>
+                        <v-date-picker 
+                            locale="zh-cn" 
+                            v-model="beginDate" 
+                            @change="getTopicList" 
+                            @click.native="$refs.menu.save(beginDate)" 
+                            no-title 
+                            scrollable>
+                            <!-- <v-spacer></v-spacer>
                             <v-btn text color="primary" @click="menu = false">取消</v-btn>
-                            <v-btn text color="primary" @click="$refs.menu.save(beginDate)">确定</v-btn>
+                            <v-btn text color="primary" @click="$refs.menu.save(beginDate)">确定</v-btn> -->
                         </v-date-picker>
                     </v-menu>
                 </v-col>
                 <v-col cols="2">
                     <v-select
                             v-model="currentSelectMonth"
+                            @change="getTopicList" 
                             :items="monthSelectItems"
                             label="获取更长时间信息"
                     ></v-select>
@@ -47,6 +55,7 @@
                             v-model="releasePageNum"
                             :items="pageList"
                             label="获取更多主题信息"
+                            @change="getTopicList"
                     ></v-select>
                 </v-col>
                 <v-col cols="2">
@@ -146,13 +155,13 @@
 </template>
 <script lang="ts">
     import {Component, Vue, Prop, Watch} from "vue-property-decorator";
-    import http from "@/decorator/httpDecorator";
-    import util from "@/decorator/utilsDecorator";
+    import http from "../../../decorator/httpDecorator";
+    import util from "../../../decorator/utilsDecorator";
     import HDatePicker from '../../../components/h-date-picker.vue';
-    import {returnDataType} from "@/type/http-request.type";
-    import echarts from "@/decorator/echarsDecorator";
+    import {returnDataType} from "../../../type/http-request.type";
+    import echarts from "../../../decorator/echarsDecorator";
     import moment from "moment";
-    import rootStore from "@/store/modules/root";
+    import rootStore from "../../../store/modules/root";
     @Component({
         components:{
             HDatePicker
@@ -219,38 +228,34 @@
             // 当前月份 - 选定月数
             this.beginDate = moment(this.beginDate).subtract(this.currentSelectMonth, 'months').format("YYYY-MM-DD")
             this.afterDate = moment(this.beginDate).add(this.currentSelectMonth, 'months').format("YYYY-MM-DD")
-            this.getTopicList()
             this.topicListNumber = 1
             this.releasePageNum =1
+            this.getTopicList()
         }
         // 下个月
         private afterMonth(){
             // 当前月份 + 选定月份
             this.beginDate = moment(this.beginDate).add(this.currentSelectMonth, 'months').format("YYYY-MM-DD")
             this.afterDate = moment(this.beginDate).add(this.currentSelectMonth, 'months').format("YYYY-MM-DD")
-            this.getTopicList()
             this.topicListNumber = 1
             this.releasePageNum =1
+            this.getTopicList()
         }
         // 系统选择
         @Watch("beginDate")
         private dessertsChanged(val:any,oldVal:any):void{
-            console.log('执行监听',val,oldVal)
             this.afterDate = moment(val).add(this.currentSelectMonth, 'months').format("YYYY-MM-DD")
         }
         @Watch("currentSelectMonth")
         private selectMonthChanged(val:any,oldVal:any):void{
-            console.log('执行监听',val,oldVal)
             this.afterDate = moment(this.beginDate).add(this.currentSelectMonth, 'months').format("YYYY-MM-DD")
         }
         private judgStartTime() {
-            console.log('输出的开始时间',this.startTimeRelease)
             return this.echartsType == "Release"
                 ? this.startTimeRelease
                 : this.startTimeSubscribe;
         }
         private judgEndTime() {
-            console.log('输出的结束时间',this.endTimeRelease)
             return this.echartsType == "Release"
                 ? this.endTimeRelease
                 : this.endTimeSubscribe;
@@ -332,16 +337,13 @@
                     }
                 });
             });
-            //console.log({ res, keys });
             return { res, keys };
         }
         private renderItem(params:any, api:any) {
             var categoryIndex = api.value(0);
             var start = api.coord([api.value(1), categoryIndex]);
-            // console.log(start)
             var end = api.coord([api.value(2), categoryIndex]);
             var height = api.size([0, 1])[1] * 0.6;
-            // console.log(start[1] - height / 2)
             var rectShape = (this as any).$echarts.graphic.clipRectByRect(
                 {
                     x: start[0],
@@ -444,7 +446,7 @@
                     top: 30,
                     height: 250,
                     width: "70%",
-                    left: "15%"
+                    left: "20%"
                 },
                 xAxis: {
                     type: "time",
@@ -502,19 +504,18 @@
                 ]
             };
             if (options && typeof options === "object") {
-                console.log('执行渲染')
                 this.echartsType == "Release"
                     ? this.myChartRelease.setOption(options, true)
                     : this.myChartSubscribe.setOption(options, true);
             }
         }
 
-
         // 生成数据
-        private getTopicList(){
-            // 判断系统 和是时间都有值得情况下
-            if(this.systemValue===''||this.beginDate===''){
-                console.log('条件不足')
+        private async getTopicList(){
+            // 获得 this.afterDate的值
+            await this.$nextTick()
+            // 判断系统和是时间都有值的情况下
+            if(this.systemValue===''||this.beginDate===''||this.afterDate===''){
                 return
             }
             if(this.echartsType == "Release"){
@@ -537,8 +538,6 @@
                 this.startTimeSubscribe = this.beginDate
                 this.endTimeRelease = this.afterDate
                 this.endTimeSubscribe = this.afterDate
-                console.log('查看请求数据',result)
-                console.log(result.data.list===[])
                 if(result.data.list.length!==0){
                     this.haveData = true
                     this.echartsType == "Release"
@@ -642,7 +641,6 @@
                 ]
             };
             if (options && typeof options === "object") {
-                console.log('打印参数',options,this.echartsProport)
                 this.echartsProport.setOption(options, true);
             }
         }
@@ -655,7 +653,6 @@
                 this.noMsg = true
                 this.painting(this.genData(data));
             }else{
-                console.log('没有')
                 this.noMsg = false
             }
 
@@ -674,9 +671,7 @@
                         value: currentItem.id
                     })
                 })
-                console.log(this.systemItems)
             })
-            // this.getData()
         }
     }
 </script>

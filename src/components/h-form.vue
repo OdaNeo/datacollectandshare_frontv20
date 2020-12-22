@@ -72,7 +72,7 @@ export default class DialogForm extends Vue {
         this.formProvide.formObj = {
           id: '', // 主题ID
           canNotEdit: false, // 添加数据
-          interfaceType: 1,
+          interfaceType: this.formProvide.formObj.interfaceType,
           topicName: '', // 主题名称
           messageType: 0, // 消息类型
           dataBaseIp: '', // 数据库地址

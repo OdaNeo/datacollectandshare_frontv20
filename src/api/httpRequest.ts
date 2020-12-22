@@ -27,7 +27,6 @@ class HttpRequest {
   })
   private requestHelper: RequestHelper = new RequestHelper(this.axiosIns)
   constructor(headers:Array<any>) {
-    console.log(headers)
     this.axiosIns.interceptors.request.use((config: AxiosRequestConfig) => {
       if (headers.length > 0) {
         headers.forEach((header:headerObj) => {
