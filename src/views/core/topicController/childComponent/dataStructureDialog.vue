@@ -1,7 +1,7 @@
 <template>
     <div id="dataStructureDialog">
         <h-table
-                v-if="rowObj.topicInterFaceType!==4"
+            v-if="rowObj.topicInterFaceType!==4"
             :headers="headers"
             :desserts="desserts"
             :height="400"

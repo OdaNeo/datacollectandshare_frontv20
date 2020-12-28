@@ -136,6 +136,24 @@
     </v-col>
     <v-col
       cols="9"
+      style="padding:0;margin-left:7px;"
+      v-if="
+        onlineData && formProvide.formObj.interfaceType === 6
+      "
+    >
+      <v-file-input
+        :rules="h_validator.fileInputVilidata()"
+        @change="readFile"
+        label="File input"
+        style="padding-top:0px"
+      >
+        <template v-slot:prepend-inner>
+          <span class="require-span">*</span>
+        </template>
+      </v-file-input>
+    </v-col> 
+    <v-col
+      cols="9"
       style="padding:0"
       v-if="formProvide.formObj.interfaceType === 5"
     >
@@ -490,8 +508,7 @@
       style="padding: 0"
       v-if="
         formProvide.formObj.interfaceType === 1 ||
-        formProvide.formObj.interfaceType === 4 || 
-        formProvide.formObj.interfaceType === 6
+        formProvide.formObj.interfaceType === 4
       "
     >
       <v-radio-group
@@ -525,8 +542,7 @@
       style="padding:0"
       v-if="
         formProvide.formObj.interfaceType === 1 ||
-        formProvide.formObj.interfaceType === 4 ||
-        formProvide.formObj.interfaceType === 6 
+        formProvide.formObj.interfaceType === 4
       "
     >
       <v-radio-group
@@ -554,7 +570,6 @@
         ></v-radio>
       </v-radio-group>
     </v-col>
-
     <v-col cols="9" style="padding:0 0 18px 0" v-if="onlineData">
       <v-slider
         v-model="formProvide.formObj.redisTimer"
@@ -604,8 +619,7 @@
       v-if="
         formProvide.formObj.interfaceType === 1 ||
         formProvide.formObj.interfaceType === 2 ||
-        formProvide.formObj.interfaceType === 3 ||
-        formProvide.formObj.interfaceType === 6 
+        formProvide.formObj.interfaceType === 3 
       "
     >
       <div
@@ -730,6 +744,7 @@
         </v-btn>
       </v-radio-group>
     </v-col>
+    
   </v-row>
 </template>
 <script lang="ts">
@@ -737,7 +752,8 @@ import { Component, Inject, Vue, Watch } from "vue-property-decorator";
 import http from "../../../../decorator/httpDecorator";
 import validator from "../../../../decorator/validatorDecorator";
 import { H_Vue } from "../../../../declaration/vue-prototype";
-
+import axios from "axios"
+import { rootStoreModule } from '../../../../store/modules/root'
 @Component
 @http
 @validator([
@@ -761,6 +777,7 @@ import { H_Vue } from "../../../../declaration/vue-prototype";
   "portVilidata",
   "ftpNameVilidata",
   "ftpPasswordVilidata",
+  "fileInputVilidata"
 ])
 export default class CreateTopicDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue;
@@ -802,6 +819,8 @@ export default class CreateTopicDialog extends Vue {
   private topicRepeat: Function[] = [];
   private keyErrorMessages: Array<string> = [];
   private keyRepeat: Array<any> = [];
+
+  private file:File|null=null
 
   private showonlineData(dataType: boolean) {
     if (dataType) {
@@ -913,6 +932,39 @@ export default class CreateTopicDialog extends Vue {
     } else {
       this.topicRepeat = [];
     }
+  }
+
+  // 读取文件
+  private readFile(e: File) {
+    if (!e) {
+      return;
+    }
+    this.file=e
+  }
+
+  // 上传文件
+  public upLoadFile(){
+    if(!this.file){
+      return
+    }
+    const forms=new FormData()
+    forms.append('protoFile',this.file)
+    forms.append('redisTimer', this.formProvide.formObj.redisTimer.toString())
+    forms.append('topicName',this.formProvide.formObj.topicName.toString())
+    
+    // 此处vetur报错是插件的问题 https://github.com/vuejs/vetur/issues/2602
+    axios({
+      method:"post",
+      url: process.env.VUE_APP_BASE_API + '/topics/addProtobufTopic',
+      data:forms,
+      timeout:500000,
+      headers:{
+        'Content-Type':'multipart/form-data',
+        'Authorization':rootStoreModule.UserState.token
+      }
+    }).then((res)=>{
+      console.log(res)
+    })
   }
 
   // "字段名" 用js修改v-model不会触发rules校验，如果手动emit触发input事件，会导致v-model归空，原因未知。所以这里改成了watch方法

@@ -44,6 +44,8 @@ export const GET_TOPICS_DELETE = '/topics/delTopic'
 export const GET_TOPICS_INFORMATION = '/topics/findTopicAdditionalByTopicName'
 // 校验主题名称是否存在
 export const GET_TOPICS_CHECKED = '/topics/findTopicByTopicName'
+// 下载protobuf文件
+export const GET_TOPICS_PROTOBUFDOWNLOAD='/topics/protobufDownload'
 
 //---------------- 主题订阅审核 ------------------
 export const GET_SUB_MODERATIONS_SELECT_STATUS = '/subModerations/selectStatus' //获取审核列表
@@ -91,7 +93,7 @@ export const GET_CMD_SELECTCMD = '/cmd/findCmdInfoById'
 export const POST_CMD_ADD = '/cmd/addCmdInfo'
 export const POST_CMD_UPDATE = '/cmd/updateCmdInfo'
 export const GET_CMD_DELETE = '/cmd/delCmdInfo'
-
+// 
 
 type REQUEST_NAME = {
   [key: string]: string
@@ -159,7 +161,8 @@ const REQUEST_NAME: REQUEST_NAME = {
   POST_CMD_UPDATE,
   GET_CMD_DELETE,
   GET_TRANSMISSION_REALTIME,
-  GET_TRANSMISSION_HISTORY
+  GET_TRANSMISSION_HISTORY,
+  GET_TOPICS_PROTOBUFDOWNLOAD
 }
 
 export default REQUEST_NAME

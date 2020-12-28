@@ -54,7 +54,7 @@
           </template>
           <template v-slot:buttons2="{ item, index }">
             <v-btn
-              v-if="tab"
+              v-if="tab && (item.topicInterFaceType===1 || item.topicInterFaceType===2 || item.topicInterFaceType===3)"
               small
               text
               color="primary"
@@ -78,7 +78,7 @@
             </v-btn>
               <v-btn
               small
-              v-if="tab && item.topicInterFaceType===6"
+              v-if="tab && item.topicInterFaceType===1"
               text
               color="primary"
               class="my-2"
@@ -222,7 +222,6 @@ export default class TopicList extends Vue {
           userName: "", // ?拉取ftp 用户名
           password: "", // ?拉取ftp 密码
           header: [{ key: "", value: "" }],
-
           url: "",
           topicList: [
             {
@@ -476,6 +475,11 @@ export default class TopicList extends Vue {
               delete params.structMapping;
               delete params.dsAnnotation;
               break;
+            case 6:
+              // protobuf情况下需要formData文件上传，与现有axios拦截逻辑不同，故将逻辑写在子组件内，此处直接调用子组件方法。
+              const child = this.$refs.createTopicDialog as CreateTopicDialog;
+              child.upLoadFile()
+              return;
           }
         } else {
           params.id = formObj.id;
@@ -522,6 +526,7 @@ export default class TopicList extends Vue {
             "GET_TOPICS_MYTOPICS",
             params
           );
+      // console.log(data)
       this.desserts = data.list.map((item: any) => {
         return { ...item, flag: false };
       });
@@ -536,6 +541,7 @@ export default class TopicList extends Vue {
             "GET_TOPICS_FIND_ALL",
             params
           );
+      // console.log(data)
       this.desserts = data.list.map((item: any) => {
         return { ...item, flag: false };
       });
@@ -569,6 +575,7 @@ export default class TopicList extends Vue {
 
   //tab切换方法
   private tabChange(tab: number) {
+    this.pageNum=1
     this.searchMethod(
       false,
       {
@@ -767,8 +774,11 @@ export default class TopicList extends Vue {
   }
 
   // 下载
-  private downloadFile(item:any){
-    console.log(item)
+  private async downloadFile(item:any){
+    const data = await this.h_request["httpGET"]("GET_TOPICS_PROTOBUFDOWNLOAD", {
+      id: item.id,
+    });
+    console.log(data)
   }
 }
 </script>

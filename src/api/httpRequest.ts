@@ -11,7 +11,7 @@ type headerObj = {
 
 class HttpRequest {
   private axiosIns: AxiosInstance = axios.create({
-    baseURL: 'http://172.51.216.119:46100', // 测试环境
+    baseURL: process.env.VUE_APP_BASE_API,
     // baseURL: 'http://112.126.65.241:9002', // 测试环境
     // baseURL: "http://192.168.62.13:9000",
     //baseURL: "http://172.16.1.111:9000",

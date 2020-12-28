@@ -180,6 +180,12 @@ class TopicValidator{
       (v:string) =>!!v||"FTP密码不能为空"
     ]
   }
+  //protobuf文件上传规则
+  public readonly fileInputVilidata = () => {
+    return [
+      (v:unknown) =>!!v||"请上传文件"
+    ]
+  }
 }
 
 
