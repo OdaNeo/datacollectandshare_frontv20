@@ -43,7 +43,7 @@
               color="primary"
               class="my-2"
               @click="dataStructureDetails(item)"
-              >订阅统信息详情</v-btn
+              >订阅系统信息详情</v-btn
             >
           </template>
           <template v-slot:buttons2="{ item, index }">
