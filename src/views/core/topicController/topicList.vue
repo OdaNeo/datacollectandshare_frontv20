@@ -43,6 +43,7 @@
         >
           <template v-slot:buttons="{ item }">
             <v-btn
+              v-if="item.topicInterFaceType !== 6"
               small
               text
               color="primary"
@@ -54,7 +55,12 @@
           </template>
           <template v-slot:buttons2="{ item, index }">
             <v-btn
-              v-if="tab && (item.topicInterFaceType===1 || item.topicInterFaceType===2 || item.topicInterFaceType===3)"
+              v-if="
+                tab &&
+                (item.topicInterFaceType === 1 ||
+                  item.topicInterFaceType === 2 ||
+                  item.topicInterFaceType === 3)
+              "
               small
               text
               color="primary"
@@ -76,9 +82,9 @@
             >
               删除
             </v-btn>
-              <v-btn
+            <v-btn
               small
-              v-if="tab && item.topicInterFaceType===1"
+              v-if="tab && item.topicInterFaceType === 6"
               text
               color="primary"
               class="my-2"
@@ -110,6 +116,7 @@
         slot="dialog-content"
         v-else-if="dialogShow == 1"
         ref="createTopicDialog"
+        @create-protobuf-file="createProtobufFile"
       ></create-topic-dialog>
       <topic-ancilary-information-dialog
         slot="dialog-content"
@@ -135,7 +142,7 @@
           label="File input"
           @change="upLoadFile"
           @click:clear="canUpLoad = false"
-          style="width:730px"
+          style="width: 730px"
           :key="forceRenderFlag"
         />
         <v-card-actions>
@@ -176,8 +183,12 @@ import { GET_TOPICS_INFORMATION } from "../../../api/requestName";
 import TopicAncilaryInformationDialog from "./childComponent/topicAncilaryInformationDialog.vue";
 import util from "../../../decorator/utilsDecorator";
 import { MomentInputObject } from "moment";
+import alertUtil from "../../../utils/alertUtil";
 
-import { saveAs } from 'file-saver';
+import axios from "axios";
+import { rootStoreModule } from "../../../store/modules/root";
+
+import { saveAs } from "file-saver";
 import XLSX from "xlsx";
 
 @Component({
@@ -265,6 +276,8 @@ export default class TopicList extends Vue {
     topicName: "",
     topicInterFaceType: 0,
   };
+  private file: File | null = null;
+  private forms = new FormData();
 
   private desserts: Array<topicTable> = []; //数据列表
   private queryTopicID = null; //查询主题ID input框内容
@@ -312,6 +325,8 @@ export default class TopicList extends Vue {
             return "多级嵌套免校验";
           case 5:
             return "拉取FTP";
+          case 6:
+            return "PROTOBUF";
         }
       },
     },
@@ -476,36 +491,83 @@ export default class TopicList extends Vue {
               delete params.dsAnnotation;
               break;
             case 6:
-              // protobuf情况下需要formData文件上传，与现有axios拦截逻辑不同，故将逻辑写在子组件内，此处直接调用子组件方法。
-              const child = this.$refs.createTopicDialog as CreateTopicDialog;
-              child.upLoadFile()
-              return;
+              if (!this.file) {
+                break;
+              }
+              this.forms.append("protoFile", this.file);
+              this.forms.append("redisTimer", formObj.redisTimer.toString());
+              this.forms.append("topicName", formObj.topicName.toString());
+              break;
           }
         } else {
           params.id = formObj.id;
         }
-        const { success } = await this.h_request["httpPOST"](
-          !formObj.canNotEdit ? "POST_TOPICS_ADD" : "POST_TOPICS_UPDATE",
-          params
-        );
-        if (success) {
-          this.h_utils["alertUtil"].open(
-            !formObj.canNotEdit ? "主题创建成功" : "主题修改成功",
-            true,
-            "success"
+        // protobuf情况下需要formData文件上传，与现有axios拦截逻辑不同
+        if (formObj.interfaceType !== 6) {
+          const { success } = await this.h_request["httpPOST"](
+            !formObj.canNotEdit ? "POST_TOPICS_ADD" : "POST_TOPICS_UPDATE",
+            params
           );
-          this.searchMethod(
-            false,
-            {
-              pageSize: this.pageSize,
-              pageNum: 1,
+          if (success) {
+            this.h_utils["alertUtil"].open(
+              !formObj.canNotEdit ? "主题创建成功" : "主题修改成功",
+              true,
+              "success"
+            );
+            this.searchMethod(
+              false,
+              {
+                pageSize: this.pageSize,
+                pageNum: 1,
+              },
+              this.tab ? true : false
+            );
+          }
+          resolve(success);
+        } else {
+          // protobuf文件上传
+          // 如果此处vetur报错，请将工程文件放在vscode根目录下 https://github.com/vuejs/vetur/issues/2602
+          axios({
+            method: "post",
+            url: process.env.VUE_APP_BASE_API + "/topics/addProtobufTopic",
+            data: this.forms,
+            timeout: 500000,
+            headers: {
+              "Content-Type": "multipart/form-data",
+              Authorization: rootStoreModule.UserState.token,
             },
-            this.tab ? true : false
-          );
+          })
+            .then(({ data }) => {
+              if (data.success) {
+                this.h_utils["alertUtil"].open("主题创建成功", true, "success");
+                this.searchMethod(
+                  false,
+                  {
+                    pageSize: this.pageSize,
+                    pageNum: 1,
+                  },
+                  this.tab ? true : false
+                );
+              } else {
+                console.log(data);
+                alertUtil.open(
+                  "错误代码：" + data.code + "，错误信息：" + data.message,
+                  true,
+                  "error"
+                );
+              }
+              resolve(data.success);
+            })
+            .catch((err) => {
+              console.log(err);
+            });
         }
-        resolve(success);
       }
     );
+  }
+
+  private createProtobufFile(file: File) {
+    this.file = file;
   }
 
   private authorizationBase64(obj: any) {
@@ -526,7 +588,7 @@ export default class TopicList extends Vue {
             "GET_TOPICS_MYTOPICS",
             params
           );
-      // console.log(data)
+      // console.log(data);
       this.desserts = data.list.map((item: any) => {
         return { ...item, flag: false };
       });
@@ -541,7 +603,7 @@ export default class TopicList extends Vue {
             "GET_TOPICS_FIND_ALL",
             params
           );
-      // console.log(data)
+      // console.log(data);
       this.desserts = data.list.map((item: any) => {
         return { ...item, flag: false };
       });
@@ -575,7 +637,7 @@ export default class TopicList extends Vue {
 
   //tab切换方法
   private tabChange(tab: number) {
-    this.pageNum=1
+    this.pageNum = 1;
     this.searchMethod(
       false,
       {
@@ -774,11 +836,43 @@ export default class TopicList extends Vue {
   }
 
   // 下载
-  private async downloadFile(item:any){
-    const data = await this.h_request["httpGET"]("GET_TOPICS_PROTOBUFDOWNLOAD", {
-      id: item.id,
-    });
-    console.log(data)
+  private async downloadFile(item: any) {
+    axios({
+      method: "get",
+      url: process.env.VUE_APP_BASE_API + "/topics/protobufDownload",
+      params: { id: item.id },
+      timeout: 500000,
+      responseType: "blob",
+      headers: {
+        Authorization: rootStoreModule.UserState.token,
+      },
+    })
+      .then((res) => {
+        console.log(res);
+        const filename = res.headers["content-disposition"]
+          ? res.headers["content-disposition"].split("=")[1]
+          : "proto.zip";
+        const blob = new Blob([res.data], {
+          type: "application/octet-stream",
+        });
+        const tempLink = document.createElement("a");
+        const blobURL = window.URL.createObjectURL(blob);
+
+        tempLink.style.display = "none";
+        tempLink.href = blobURL;
+        tempLink.setAttribute("download", decodeURI(filename));
+
+        if (typeof tempLink.download === "undefined") {
+          tempLink.setAttribute("target", "_blank");
+        }
+        document.body.appendChild(tempLink);
+        tempLink.click();
+        document.body.removeChild(tempLink);
+        window.URL.revokeObjectURL(blobURL);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
   }
 }
 </script>

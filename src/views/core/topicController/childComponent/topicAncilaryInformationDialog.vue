@@ -77,10 +77,16 @@ export default class TopicAncilaryInformationDialog extends Vue{
                                 case 0:
                                     return '否'
                             }
-
-
                         }
                     }
+                ]
+            case 6:
+                return [
+                    {
+                        text:"内存过期时间",
+                        align: "center",
+                        value:"redisTimer",
+                    },
                 ]
         }
     }

@@ -29,6 +29,7 @@
         :desserts="desserts"
         :height="450"
         :pageNum="pageNum"
+        @PaginationsNow="PaginationsNow"
         :paginationLength="paginationLength"
         >
             <template v-slot:operation="{item}">
@@ -178,6 +179,14 @@ export default class BindNetwork extends Vue{
         })
     }
 
+    private PaginationsNow(page: number) {
+        this.pageNum = page;
+        this.searchMethod(false,{
+            pageSize: this.pageSize,
+            pageNum: this.pageNum,
+        });
+    }
+    
     created() {
         this.searchMethod(false,{
             pageSize:this.pageSize,

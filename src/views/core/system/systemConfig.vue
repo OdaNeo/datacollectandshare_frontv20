@@ -29,6 +29,7 @@
         :desserts="desserts"
         :height="450"
         :pageNum="pageNum"
+        @PaginationsNow="PaginationsNow"
         :paginationLength="paginationLength"
         >
             <template v-slot:serial-number="{index}">
@@ -174,6 +175,14 @@ export default class SystemConfig extends Vue{
         const {data}: returnDataType = bool?await this.h_request["httpGET"]<object>("GET_SYSTEM_GETINFOBYTYPENAME",params):await this.h_request["httpGET"]<object>("GET_SYSTEM_FINDALL",params)
         this.paginationLength = Math.floor((data["total"]/this.pageSize)+1)
         this.desserts = data["list"]
+    }
+
+    private PaginationsNow(page: number) {
+        this.pageNum = page;
+        this.searchMethod(false,{
+            pageSize: this.pageSize,
+            pageNum: this.pageNum,
+        });
     }
 
     created() {

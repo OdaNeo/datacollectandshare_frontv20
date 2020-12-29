@@ -142,6 +142,7 @@
       "
     >
       <v-file-input
+        accept=".proto"
         :rules="h_validator.fileInputVilidata()"
         @change="readFile"
         label="File input"
@@ -643,7 +644,6 @@
             :error-messages="keyErrorMessages[index]"
             required
           >
-            <!--  -->
             <template v-slot:prepend>
               <div class="text-label" v-if="index === 0">
                 <label><span class="require-span">*</span>数据结构：</label>
@@ -752,8 +752,7 @@ import { Component, Inject, Vue, Watch } from "vue-property-decorator";
 import http from "../../../../decorator/httpDecorator";
 import validator from "../../../../decorator/validatorDecorator";
 import { H_Vue } from "../../../../declaration/vue-prototype";
-import axios from "axios"
-import { rootStoreModule } from '../../../../store/modules/root'
+
 @Component
 @http
 @validator([
@@ -819,8 +818,6 @@ export default class CreateTopicDialog extends Vue {
   private topicRepeat: Function[] = [];
   private keyErrorMessages: Array<string> = [];
   private keyRepeat: Array<any> = [];
-
-  private file:File|null=null
 
   private showonlineData(dataType: boolean) {
     if (dataType) {
@@ -939,32 +936,7 @@ export default class CreateTopicDialog extends Vue {
     if (!e) {
       return;
     }
-    this.file=e
-  }
-
-  // 上传文件
-  public upLoadFile(){
-    if(!this.file){
-      return
-    }
-    const forms=new FormData()
-    forms.append('protoFile',this.file)
-    forms.append('redisTimer', this.formProvide.formObj.redisTimer.toString())
-    forms.append('topicName',this.formProvide.formObj.topicName.toString())
-    
-    // 此处vetur报错是插件的问题 https://github.com/vuejs/vetur/issues/2602
-    axios({
-      method:"post",
-      url: process.env.VUE_APP_BASE_API + '/topics/addProtobufTopic',
-      data:forms,
-      timeout:500000,
-      headers:{
-        'Content-Type':'multipart/form-data',
-        'Authorization':rootStoreModule.UserState.token
-      }
-    }).then((res)=>{
-      console.log(res)
-    })
+      this.$emit('create-protobuf-file',e) 
   }
 
   // "字段名" 用js修改v-model不会触发rules校验，如果手动emit触发input事件，会导致v-model归空，原因未知。所以这里改成了watch方法

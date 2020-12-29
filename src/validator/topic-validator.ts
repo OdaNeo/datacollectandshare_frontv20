@@ -183,7 +183,8 @@ class TopicValidator{
   //protobuf文件上传规则
   public readonly fileInputVilidata = () => {
     return [
-      (v:unknown) =>!!v||"请上传文件"
+      (v:File) =>!!v||"请上传.proto文件",
+      (v:File) =>!!(v && v.name.match('.proto'))||"文件格式错误"
     ]
   }
 }
