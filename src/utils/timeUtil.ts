@@ -3,7 +3,7 @@ class timeUtil{
     const date: Date = new Date(Number(stamp))
     const year: number = date.getFullYear()
     const month: string = (date.getMonth() + 1).toString().padStart(2,"0")
-    const day: string = date.getDay().toString().padStart(2,"0")
+    const day: string = date.getDate().toString().padStart(2,"0")
     return Reg?year+Reg+month+Reg+day:year+"/"+month+"/"+day
   }
 
