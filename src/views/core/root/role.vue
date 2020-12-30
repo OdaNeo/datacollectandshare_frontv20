@@ -150,7 +150,7 @@ export default class Role extends Vue{
         const {data} = bool?await this.h_request["httpGET"]<object>("GET_ROLE_FIND_ALL_ROLE_BY_PARAM",params as object):await this.h_request["httpGET"]<object>("GET_ROLE_FIND_ALL_ROLE",params as object)
         const {list,total} = data
         this.desserts = list
-        this.paginationLength = Math.floor((total/this.pageSize)+1)
+        this.paginationLength = Math.ceil((total/this.pageSize))
     }
 
     private searchRoles(){
@@ -292,7 +292,7 @@ export default class Role extends Vue{
             }
         ])
         this.desserts = data1.list
-        this.paginationLength = Math.floor((data1["total"]/this.pageSize)+1)
+        this.paginationLength = Math.ceil((data1["total"]/this.pageSize))
         this.roles = this.getRoles(data2)
     }
 }

@@ -588,11 +588,10 @@ export default class TopicList extends Vue {
             "GET_TOPICS_MYTOPICS",
             params
           );
-      // console.log(data);
       this.desserts = data.list.map((item: any) => {
         return { ...item, flag: false };
       });
-      this.paginationLength = Math.floor(data["total"] / this.pageSize + 1);
+      this.paginationLength = Math.ceil(data["total"] / this.pageSize);
     } else {
       const { data }: returnDataType = bool
         ? await this.h_request["httpGET"]<object>(
@@ -603,11 +602,10 @@ export default class TopicList extends Vue {
             "GET_TOPICS_FIND_ALL",
             params
           );
-      // console.log(data);
       this.desserts = data.list.map((item: any) => {
         return { ...item, flag: false };
       });
-      this.paginationLength = Math.floor(data["total"] / this.pageSize + 1);
+      this.paginationLength = Math.ceil(data["total"] / this.pageSize);
     }
   }
 

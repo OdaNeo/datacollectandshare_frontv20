@@ -289,11 +289,11 @@ export default class User extends Vue{
         const {data}: returnDataType = bool?await this.h_request["httpGET"]<paramsType>("GET_USER_FIND_ALL_USER_BY_PARAM",params):await this.h_request["httpGET"]<paramsType>("GET_USER_FIND_ALL_USER",params)
         this.loadState = false
         if(first){
-            this.paginationLength = Math.floor((data["total"]/this.pageSize)+1)
+            this.paginationLength = Math.ceil((data["total"]/this.pageSize))
             this.desserts = data["list"]
         }else{
             this.tableShow = false
-            this.paginationLengthBF = Math.floor((data["total"]/this.pageSize)+1)
+            this.paginationLengthBF = Math.ceil((data["total"]/this.pageSize))
             this.dessertsBF = data["list"]
         }
     }

@@ -149,7 +149,7 @@ export default class TopicSubExamine extends Vue{
 
      async searchMethod(bool:boolean,params:object){
         const {data}: returnDataType = bool?await this.h_request["httpGET"]<object>("GET_SUBMODERATIONS_SELECTBYUSERNAMESTATUS",params):await this.h_request["httpGET"]<object>("GET_SUB_MODERATIONS_SELECT_STATUS",params)
-        this.paginationLength = Math.floor((data["total"]/this.pageSize)+1)
+        this.paginationLength = Math.ceil((data["total"]/this.pageSize))
         this.desserts = data["list"]
     }
 

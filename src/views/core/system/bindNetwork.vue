@@ -120,7 +120,7 @@ export default class BindNetwork extends Vue{
 
     async searchMethod(bool:boolean,params:object){
         const {data}: returnDataType = bool?await this.h_request["httpGET"]<object>("GET_SYSNET_GETBINDBYNAME",params):await this.h_request["httpGET"]<object>("GET_SYSNET_GETBINDLIST",params)
-        this.paginationLength = Math.floor((data["total"]/this.pageSize)+1)
+        this.paginationLength = Math.ceil((data["total"]/this.pageSize))
         this.desserts = data["list"]
     }
 

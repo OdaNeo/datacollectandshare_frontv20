@@ -58,13 +58,13 @@
                             @change="getTopicList"
                     ></v-select>
                 </v-col>
-                <v-col cols="2">
+                <!-- <v-col cols="2">
                    <v-btn
                        color="primary"
                        @click="getTopicList"
                        dark
                    >生成数据</v-btn>
-                </v-col>
+                </v-col> -->
             </v-row>
             <v-row class="chartContent">
                 <v-tabs v-model="tabs"

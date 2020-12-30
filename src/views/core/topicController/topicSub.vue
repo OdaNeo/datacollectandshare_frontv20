@@ -163,7 +163,7 @@ export default class TopicSub extends Vue {
           "GET_TOPICS_FIND_ALL_TOPIC",
           params
         );
-    this.paginationLength = Math.floor(data["total"] / this.pageSize + 1);
+    this.paginationLength = Math.ceil(data["total"] / this.pageSize);
     this.desserts = data["list"];
   }
 
