@@ -848,7 +848,7 @@ export default class TopicList extends Vue {
       .then((res) => {
         console.log(res);
         const filename = res.headers["content-disposition"]
-          ? res.headers["content-disposition"].split("=")[1]
+          ? res.headers["content-disposition"].split("=")[1].split('"')[1]
           : "proto.zip";
         const blob = new Blob([res.data], {
           type: "application/octet-stream",
