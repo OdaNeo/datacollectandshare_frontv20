@@ -3,7 +3,7 @@
         <v-row>
             <v-col cols="3">
                 <v-text-field
-                    v-model="queryUserName"
+                    v-model.trim="queryUserName"
                     solo
                     dense
                     placeholder="请输入查找的账号名称"
@@ -289,11 +289,11 @@ export default class User extends Vue{
         const {data}: returnDataType = bool?await this.h_request["httpGET"]<paramsType>("GET_USER_FIND_ALL_USER_BY_PARAM",params):await this.h_request["httpGET"]<paramsType>("GET_USER_FIND_ALL_USER",params)
         this.loadState = false
         if(first){
-            this.paginationLength = Math.ceil((data["total"]/this.pageSize))
+            this.paginationLength = Math.ceil((data["total"]/this.pageSize)) || 1
             this.desserts = data["list"]
         }else{
             this.tableShow = false
-            this.paginationLengthBF = Math.ceil((data["total"]/this.pageSize))
+            this.paginationLengthBF = Math.ceil((data["total"]/this.pageSize)) || 1
             this.dessertsBF = data["list"]
         }
     }
@@ -315,10 +315,11 @@ export default class User extends Vue{
     private searchUserList(){
         const params:userParamsType = {
             pageSize:this.pageSize,
-            pageNum:this.pageNum,
+            pageNum:1,
             loginName:this.queryUserName?this.queryUserName:null
         }
         this.searchMethod(true,true,params)
+        this.pageNum=1
     }
 
     // 修改用户
@@ -337,6 +338,7 @@ export default class User extends Vue{
                     pageSize:this.pageSize,
                     pageNum:1
                 }
+                this.pageNum=1
                 this.searchMethod(true,false,params)
             }
             resolve(success)
@@ -345,7 +347,6 @@ export default class User extends Vue{
 
     private async addUser(childObj:userFormObj){
         const {loginName,loginPwd,userType,userState,systemName} = childObj
-        console.log(loginName.text,systemName,systemName.value)
         return new Promise(async (resolve, reject):Promise<any>=>{
             const {success} = await this.h_request["httpPOST"]<dialogRequestStructure>("POST_USER_ADD_USER",{
                 loginName:loginName.text,
@@ -371,8 +372,9 @@ export default class User extends Vue{
         this.loadState = true
         const params:paramsType = {
             pageSize:this.pageSize,
-            pageNum:this.pageNum
+            pageNum:1
         }
+        this.pageNum=1
         this.searchMethod(true,false,params)
     }
 }

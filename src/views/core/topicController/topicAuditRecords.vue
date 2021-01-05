@@ -157,7 +157,7 @@ export default class TopicAuditRecords extends Vue{
 
     async searchMethod(bool:boolean,params:object){
         const {data}: returnDataType = bool?await this.h_request["httpGET"]<object>("GET_SUBMODERATIONS_SELECTAUDITSTATUSBYTOPICID",params):await this.h_request["httpGET"]<object>("GET_SUB_MODERATIONS_SELECT_AUDIT_STATUS",params)
-        this.paginationLength = Math.ceil((data["total"]/this.pageSize))
+        this.paginationLength = Math.ceil((data["total"]/this.pageSize)) || 1
         this.desserts = data["list"]
     }
 
@@ -174,6 +174,7 @@ export default class TopicAuditRecords extends Vue{
             status:index
         })
         this.btnAction = index
+        this.pageNum=1
     }
 
     private searchTopicID(){
@@ -191,14 +192,16 @@ export default class TopicAuditRecords extends Vue{
                 status:this.btnAction
             })
         }
+        this.pageNum=1
     }
 
     created() {
         this.searchMethod(false,{
             pageSize:this.pageSize,
-            pageNum:this.pageNum,
+            pageNum:1,
             status:this.btnAction
         })
+        this.pageNum=1
     }
 }
 </script>

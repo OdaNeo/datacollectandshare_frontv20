@@ -150,22 +150,23 @@ export default class Role extends Vue{
         const {data} = bool?await this.h_request["httpGET"]<object>("GET_ROLE_FIND_ALL_ROLE_BY_PARAM",params as object):await this.h_request["httpGET"]<object>("GET_ROLE_FIND_ALL_ROLE",params as object)
         const {list,total} = data
         this.desserts = list
-        this.paginationLength = Math.ceil((total/this.pageSize))
+        this.paginationLength = Math.ceil((total/this.pageSize)) || 1
     }
 
     private searchRoles(){
-        if(this.queryRolesName == ""){
+        if(!this.queryRolesName){
             this.searchMethod(false,{
-                pageNum:this.pageNum,
+                pageNum:1,
                 pageSize:this.pageSize
             })
         }else{
             this.searchMethod(true,{
                 name:this.queryRolesName,
-                pageNum:this.pageNum,
+                pageNum:1,
                 pageSize:this.pageSize
             })
         }
+        this.pageNum=1
     }
 
     private addItem(){
@@ -179,9 +180,10 @@ export default class Role extends Vue{
     private async deleteItem(item:any){
         const {data} = await this.h_request["httpGET"]("GET_ROLE_DELETE",{},item.id)
         this.searchMethod(false,{
-            pageNum:this.pageNum,
+            pageNum:1,
             pageSize:this.pageSize
         })
+        this.pageNum=1
     }
 
     private editItem(item:any){
@@ -219,10 +221,11 @@ export default class Role extends Vue{
             })
             if(success){
                 this.searchMethod(false,{
-                    pageNum:this.pageNum,
+                    pageNum:1,
                     pageSize:this.pageSize
                 })
             }
+            this.pageNum=1
             resolve(success)
         })
     }
@@ -236,10 +239,11 @@ export default class Role extends Vue{
             })
             if(success){
                 this.searchMethod(false,{
-                    pageNum:this.pageNum,
+                    pageNum:1,
                     pageSize:this.pageSize
                 })
             }
+            this.pageNum=1
             resolve(success)
         })
     }
@@ -292,7 +296,7 @@ export default class Role extends Vue{
             }
         ])
         this.desserts = data1.list
-        this.paginationLength = Math.ceil((data1["total"]/this.pageSize))
+        this.paginationLength = Math.ceil((data1["total"]/this.pageSize)) || 1
         this.roles = this.getRoles(data2)
     }
 }

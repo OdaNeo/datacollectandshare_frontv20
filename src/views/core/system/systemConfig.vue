@@ -122,7 +122,7 @@ export default class SystemConfig extends Vue{
     ]
 
     private searchSystem(){
-        if(this.querySystemName==""){
+        if(!this.querySystemName){
             this.searchMethod(false,{
                 pageSize:this.pageSize,
                 pageNum:1
@@ -134,6 +134,7 @@ export default class SystemConfig extends Vue{
                 pageNum:1
             })
         }
+        this.pageNum=1
     }
 
     private addConfigure(){
@@ -157,6 +158,7 @@ export default class SystemConfig extends Vue{
                     pageNum:1
                 })
             }
+            this.pageNum=1
             resolve(success)
         })
     }
@@ -168,12 +170,13 @@ export default class SystemConfig extends Vue{
                 pageSize:this.pageSize,
                 pageNum:1
             })
+            this.pageNum=1
         }
     }
 
     async searchMethod(bool:boolean,params:object){
         const {data}: returnDataType = bool?await this.h_request["httpGET"]<object>("GET_SYSTEM_GETINFOBYTYPENAME",params):await this.h_request["httpGET"]<object>("GET_SYSTEM_FINDALL",params)
-        this.paginationLength = Math.ceil((data["total"]/this.pageSize))
+        this.paginationLength = Math.ceil((data["total"]/this.pageSize)) || 1
         this.desserts = data["list"]
     }
 
@@ -188,8 +191,9 @@ export default class SystemConfig extends Vue{
     created() {
         this.searchMethod(false,{
             pageSize:this.pageSize,
-            pageNum:this.pageNum
+            pageNum:1
         })
+        this.pageNum=1
     }
 }
 </script>

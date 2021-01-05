@@ -147,9 +147,9 @@ export default class TopicSubExamine extends Vue{
         }
     ]
 
-     async searchMethod(bool:boolean,params:object){
+    async searchMethod(bool:boolean,params:object){
         const {data}: returnDataType = bool?await this.h_request["httpGET"]<object>("GET_SUBMODERATIONS_SELECTBYUSERNAMESTATUS",params):await this.h_request["httpGET"]<object>("GET_SUB_MODERATIONS_SELECT_STATUS",params)
-        this.paginationLength = Math.ceil((data["total"]/this.pageSize))
+        this.paginationLength = Math.ceil((data["total"]/this.pageSize)) || 1
         this.desserts = data["list"]
     }
 
@@ -188,13 +188,15 @@ export default class TopicSubExamine extends Vue{
                 pageNum:1
             })
         }
+        this.pageNum=1
     }
 
     created() {
         this.searchMethod(true,{
             pageSize:this.pageSize,
-            pageNum:this.pageNum
+            pageNum:1
         })
+        this.pageNum=1
     }
 }
 </script>

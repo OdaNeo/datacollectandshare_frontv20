@@ -163,7 +163,7 @@ export default class TopicSub extends Vue {
           "GET_TOPICS_FIND_ALL_TOPIC",
           params
         );
-    this.paginationLength = Math.ceil(data["total"] / this.pageSize);
+    this.paginationLength = Math.ceil(data["total"] / this.pageSize) || 1;
     this.desserts = data["list"];
   }
 
@@ -186,6 +186,7 @@ export default class TopicSub extends Vue {
         pageNum: 1,
       });
     }
+    this.pageNum=1
   }
 
   private async subscribe(item: any) {
@@ -225,7 +226,7 @@ export default class TopicSub extends Vue {
   created() {
     this.searchMethod(false, {
       pageSize: this.pageSize,
-      pageNum: this.pageNum,
+      pageNum: 1,
     });
   }
 }

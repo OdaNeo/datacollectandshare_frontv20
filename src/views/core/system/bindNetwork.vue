@@ -120,7 +120,7 @@ export default class BindNetwork extends Vue{
 
     async searchMethod(bool:boolean,params:object){
         const {data}: returnDataType = bool?await this.h_request["httpGET"]<object>("GET_SYSNET_GETBINDBYNAME",params):await this.h_request["httpGET"]<object>("GET_SYSNET_GETBINDLIST",params)
-        this.paginationLength = Math.ceil((data["total"]/this.pageSize))
+        this.paginationLength = Math.ceil((data["total"]/this.pageSize)) || 1
         this.desserts = data["list"]
     }
 
@@ -128,16 +128,17 @@ export default class BindNetwork extends Vue{
         if(!this.querySystemName){
             this.searchMethod(false,{
                 pageSize:this.pageSize,
-                pageNum:this.pageNum
+                pageNum:1
             })
         }else{
             this.searchMethod(true,{
                 type:"system",
                 name:this.querySystemName,
                 pageSize:this.pageSize,
-                pageNum:this.pageNum
+                pageNum:1
             })
         }
+        this.pageNum=1
     }
 
     private bindNet(){
@@ -158,8 +159,9 @@ export default class BindNetwork extends Vue{
             if(success){
                 this.searchMethod(false,{
                     pageSize:this.pageSize,
-                    pageNum:this.pageNum
+                    pageNum:1
                 })
+                this.pageNum=1
             }
             resolve(success)
         })
@@ -175,8 +177,9 @@ export default class BindNetwork extends Vue{
         })
         this.searchMethod(false,{
             pageSize:this.pageSize,
-            pageNum:this.pageNum
+            pageNum:1
         })
+        this.pageNum=1
     }
 
     private PaginationsNow(page: number) {
@@ -190,8 +193,9 @@ export default class BindNetwork extends Vue{
     created() {
         this.searchMethod(false,{
             pageSize:this.pageSize,
-            pageNum:this.pageNum
+            pageNum:1
         })
+        this.pageNum=1
     }
 }
 </script>

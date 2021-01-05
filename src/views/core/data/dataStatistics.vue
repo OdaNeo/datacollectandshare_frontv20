@@ -544,7 +544,7 @@
                         ? (this.topicMsgRelease = this.dataStructure(result.data.list))
                         : (this.topicMsgSubscribe = this.dataStructure(result.data.list));
                     // 根据请求的数据 生成下拉菜单
-                    this.topicListNumber = Math.ceil(result.data.total / 10)
+                    this.topicListNumber = Math.ceil(result.data.total / 10) || 1
                     this.pageList = []
                     for(let j=0;j<this.topicListNumber;j++){
                         this.pageList.push({

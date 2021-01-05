@@ -249,6 +249,29 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
+    path:"/videoController",
+    name:"视频管理",
+    component:StatePage,
+    redirect:"/videoController/videoList",
+    meta:{
+      title:"视频管理",
+      icon: "mdi-video-box ",
+      access:true
+    },
+    children:[
+      {
+        path:"videoList",
+        component: () => import("@/views/core/videoController/videoList.vue"),
+        name:"视频列表",
+        meta:{
+          title:"视频列表",
+          icon: "mdi-file-video ",
+          access:true
+        }
+      }
+    ]
+  },
+  {
     path:"/private",
     name:"内部调试页面",
     component:StatePage,

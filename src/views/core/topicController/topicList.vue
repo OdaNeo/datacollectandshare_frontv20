@@ -43,7 +43,7 @@
         >
           <template v-slot:buttons="{ item }">
             <v-btn
-              v-if="item.topicInterFaceType !== 6"
+              v-if="item.topicInterFaceType !== 6 && item.topicInterFaceType !== 5"
               small
               text
               color="primary"
@@ -93,6 +93,7 @@
               下载
             </v-btn>
             <v-btn
+              v-if="item.topicInterFaceType !== 5"
               small
               text
               color="primary"
@@ -522,6 +523,7 @@ export default class TopicList extends Vue {
               },
               this.tab ? true : false
             );
+            this.pageNum = 1;
           }
           resolve(success);
         } else {
@@ -548,8 +550,8 @@ export default class TopicList extends Vue {
                   },
                   this.tab ? true : false
                 );
+                this.pageNum = 1;
               } else {
-                console.log(data);
                 alertUtil.open(
                   "错误代码：" + data.code + "，错误信息：" + data.message,
                   true,
@@ -591,7 +593,7 @@ export default class TopicList extends Vue {
       this.desserts = data.list.map((item: any) => {
         return { ...item, flag: false };
       });
-      this.paginationLength = Math.ceil(data["total"] / this.pageSize);
+      this.paginationLength = Math.ceil(data["total"] / this.pageSize) || 1;
     } else {
       const { data }: returnDataType = bool
         ? await this.h_request["httpGET"]<object>(
@@ -605,7 +607,7 @@ export default class TopicList extends Vue {
       this.desserts = data.list.map((item: any) => {
         return { ...item, flag: false };
       });
-      this.paginationLength = Math.ceil(data["total"] / this.pageSize);
+      this.paginationLength = Math.ceil(data["total"] / this.pageSize) || 1;
     }
   }
 
@@ -630,12 +632,12 @@ export default class TopicList extends Vue {
         },
         !!this.tab
       );
-    }
+    };
+    this.pageNum = 1;
   }
 
   //tab切换方法
   private tabChange(tab: number) {
-    this.pageNum = 1;
     this.searchMethod(
       false,
       {
@@ -644,6 +646,7 @@ export default class TopicList extends Vue {
       },
       !!tab
     );
+    this.pageNum = 1;
   }
 
   //数据结构展示方法
@@ -717,6 +720,7 @@ export default class TopicList extends Vue {
         },
         true
       );
+      this.pageNum = 1
     }
   }
   private PaginationsNow(page: number) {
