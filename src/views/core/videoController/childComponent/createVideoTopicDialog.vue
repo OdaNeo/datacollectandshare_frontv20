@@ -9,9 +9,9 @@
         dense
         height="32"
         class="dialogInput"
-        v-model="formProvide.formObj.videoCmdName"
-        :rules="[...h_validator.videoCmdNameVilidata(), ...cmdRepeat]"
-        @input="inputEvent(formProvide.formObj.videoCmdName)"
+        v-model="formProvide.formObj.videoTopicName"
+        :rules="[...h_validator.videoTopicNameValidate(), ...topicRepeat]"
+        @input="inputEvent(formProvide.formObj.videoTopicName)"
         required
       >
         <template v-slot:prepend>
@@ -30,11 +30,29 @@
         height="32" 
         class="dialogInput" 
         v-model="formProvide.formObj.dataSource"
-        :rules="[...h_validator.videoCmdConsumersVilidata()]"
+        :rules="[...h_validator.videoDataSourceValidate()]"
       >
         <template v-slot:prepend>
           <div class="text-label">
             <label><span class="require-span">*</span>数据源地址：</label>
+          </div>
+        </template>
+      </v-text-field>
+    </v-col>
+    <v-col cols="9" style="padding: 0">
+      <v-text-field 
+        single-line 
+        outlined 
+        clearable 
+        dense 
+        height="32" 
+        class="dialogInput" 
+        v-model="formProvide.formObj.cameraPosition"
+        :rules="[...h_validator.videoCameraPositionValidate()]"
+      >
+        <template v-slot:prepend>
+          <div class="text-label">
+            <label><span class="require-span">*</span>摄像头位置：</label>
           </div>
         </template>
       </v-text-field>
@@ -50,12 +68,12 @@ import alertUtil from '../../../../utils/alertUtil'
 
 @Component
 @http
-@validator(['videoCmdNameVilidata', 'videoCmdConsumersVilidata'])
+@validator(['videoTopicNameValidate', 'videoDataSourceValidate','videoCameraPositionValidate'])
 export default class CreateVideoTopicDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
 
   private systemList: Array<{ name: string }> = []
-  private cmdRepeat: Function[] = []
+  private topicRepeat: Function[] = []
 
   private async inputEvent(v: string) {
     // if (v && v != '') {
@@ -63,12 +81,12 @@ export default class CreateVideoTopicDialog extends Vue {
     //     cmdName: v,
     //   })
     //   if (success) {
-    //     this.cmdRepeat = [(v: string) => '命令名称已被注册']
+    //     this.topicRepeat = [(v: string) => '命令名称已被注册']
     //   } else {
-    //     this.cmdRepeat = []
+    //     this.topicRepeat = []
     //   }
     // } else {
-    //   this.cmdRepeat = []
+    //   this.topicRepeat = []
     // }
   }
 }

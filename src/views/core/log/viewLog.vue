@@ -1,7 +1,5 @@
 <template>
     <div id="viewLog">
-        {{afterDate}}
-        {{beginDate}}
         <v-row>
             <v-col cols="2">
                 <v-text-field
@@ -18,7 +16,7 @@
                 placeholder="选择查询起始时间"
                 :begin="true"
                 :anotherDate="afterDate"
-                @pickerDate = "(time)=> afterDate=time"
+                @pickerDate = "(time)=> beginDate=time"
                 ></h-date-picker>
             </v-col>
             <v-col cols="2" style="max-width:19%;flex:0 0 19%">
@@ -26,7 +24,7 @@
                 placeholder="选择查询截止时间"
                 :begin="false"
                 :anotherDate="beginDate"
-                @pickerDate = "(time)=> beginDate=time"
+                @pickerDate = "(time)=> afterDate=time"
                 ></h-date-picker>
             </v-col>
             <v-col cols="2">
@@ -106,36 +104,35 @@ export default class ViewLog extends Vue{
         }
     ]
 
-    private async searchMethod(bool:boolean,params:object){
-        const {data}: returnDataType = bool?await this.h_request["httpGET"]<object>("GET_SYSNET_GETBINDBYNAME",params):await this.h_request["httpGET"]<object>("GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG",params)
+    private async searchMethod(params:object){
+        const { data }: returnDataType = await this.h_request["httpGET"]<object>("GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG",params)
         this.paginationLength = Math.ceil((data["total"]/this.pageSize)) || 1
         this.desserts = data["list"]
     }
 
     private PaginationsNow(page:number){
         this.pageNum = page
-        this.searchMethod(false,{
+        this.searchMethod({
             pageSize:this.pageSize,
             pageNum:this.pageNum,
-            username: this.queryUserName == "" ? null : this.queryUserName,
-            startTime: this.afterDate == "" ? null : this.afterDate,
-            endTime: this.beginDate == "" ? null : this.beginDate,
+            username: this.queryUserName ? this.queryUserName : null,
+            startTime:this.beginDate? this.h_utils.timeutil.timeToStamp(this.beginDate,"-"):null,
+            endTime:this.afterDate? this.h_utils.timeutil.timeToStamp(this.afterDate,"-"):null ,
         })
     }
     // 带入查询条件
     private clickSearch(){
-        // 输入查询条件的时候 要改变 pageNum
         this.pageNum = 1
-        this.searchMethod(false,{
+        this.searchMethod({
             pageSize:this.pageSize,
             pageNum:this.pageNum,
-            username: this.queryUserName == "" ? null : this.queryUserName,
-            startTime: this.afterDate == "" ? null : this.afterDate,
-            endTime: this.beginDate == "" ? null : this.beginDate,
-        })
+            username: this.queryUserName ? this.queryUserName : null,
+            startTime:this.beginDate? this.h_utils.timeutil.timeToStamp(this.beginDate,"-"): null,
+            endTime:this.afterDate? this.h_utils.timeutil.timeToStamp(this.afterDate,"-"): null ,
+        })  
     }
     created() {
-        this.searchMethod(false,{
+        this.searchMethod({
             pageSize:this.pageSize,
             pageNum:1
         })

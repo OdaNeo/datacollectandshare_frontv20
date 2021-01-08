@@ -157,16 +157,11 @@
     import {Component, Vue, Prop, Watch} from "vue-property-decorator";
     import http from "../../../decorator/httpDecorator";
     import util from "../../../decorator/utilsDecorator";
-    import HDatePicker from '../../../components/h-date-picker.vue';
     import {returnDataType} from "../../../type/http-request.type";
     import echarts from "../../../decorator/echarsDecorator";
     import moment from "moment";
     import rootStore from "../../../store/modules/root";
-    @Component({
-        components:{
-            HDatePicker
-        }
-    })
+    @Component({})
     @echarts
     @http
     @util

@@ -1,0 +1,11 @@
+<template>
+    <div>123</div>
+</template>
+<script lang="ts">
+import { Component, Inject, Vue } from 'vue-property-decorator'
+
+@Component
+export default class VideoPopup extends Vue {
+}
+</script>
+<style scoped></style>

@@ -19,7 +19,7 @@
                 </v-card-title>
                 <v-card-text>
                     <v-container>
-                        <h-form>
+                        <h-form ref="hform" @cancel="closeMethod" @validate="closeMethod">
                             <slot name="dialog-content" slot="dialog-form-content"></slot>
                         </h-form>
                     </v-container>
@@ -46,10 +46,10 @@ export default class HDialog extends Vue{
         return this.checked
     }
     set closeDialog(newValue){}
-    public closeMethod(e:any){
-        this.$emit('hdialog',e.target.closeDialog)
-        const child = this.$children[0].$children[0].$children[0].$children[1] as any
-        child.reset()
+    public closeMethod(){
+        this.$emit('hdialog')
+        const child = this.$refs.hform as HForm
+        child.reset(false)
     }
 }
 </script>

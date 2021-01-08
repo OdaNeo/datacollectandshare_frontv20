@@ -130,25 +130,12 @@ export default class TopBar extends Vue{
 
         if (sessionStorage.systemInfo) {
             data = JSON.parse(sessionStorage.systemInfo)
-            for (let i = 0; i < data.length; i++) {
-            if (data[i].id === rootStoreModule.UserState.userMessage.systemName) {
-                return `系统名称：${data[i].name}`
+                for (let i = 0; i < data.length; i++) {
+                if (data[i].id === rootStoreModule.UserState.userMessage.systemName) {
+                    return `系统名称：${data[i].name}`
+                }
             }
         }
-            
-        } else {
-            this.h_request['httpGET']('GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER', {}).then(res=>{
-            data = res.data
-            sessionStorage.systemInfo=JSON.stringify(data) 
-            
-            for (let i = 0; i < data.length; i++) {
-            if (data[i].id === rootStoreModule.UserState.userMessage.systemName) {
-                return `系统名称：${data[i].name}`
-            }
-            }
-        })
-        }
-
     }
     get userToken() {
         return "用户Token："+rootStoreModule.UserState.userMessage.userToken

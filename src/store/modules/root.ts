@@ -65,6 +65,7 @@ export default class rootStore extends VuexModule{
   @Mutation
   private MET_LOGOUT() {
     sessionStorage.removeItem("userInfo")
+    sessionStorage.removeItem("systemInfo")
     sessionStorage.removeItem("id")
     localStorage.removeItem("userAndPass")
     this.UserState.username = ""

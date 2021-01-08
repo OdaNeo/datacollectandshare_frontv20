@@ -36,62 +36,33 @@
           @PaginationsNow="PaginationsNow"
           :paginationLength="paginationLength"
         >
-          <!-- <template v-slot:buttons="{ item }">
+         <template v-slot:dataSourceList="{ item }">
             <v-btn
               small
               text
               color="primary"
               class="my-2"
-              @click="dataStructureDetails(item)"
-              >订阅系统信息详情</v-btn
+              @click.stop="showVideoPopup(item.dataSourceList)"
+              >{{item.dataSourceList}}</v-btn
             >
-          </template> -->
-          <template v-slot:buttons2="{ item, index }">
-            <!-- <v-btn
-              v-if="tab"
-              small
-              text
-              color="primary"
-              class="my-2"
-              @click.stop="addFileds(item)"
-              >修改</v-btn
-            > -->
+          </template>
+          <template v-slot:buttons2="{ item }">
             <v-btn
               small
               v-if="tab"
               text
               color="primary"
               class="my-2"
-              @click="
-                HConfirmShow = true;
-                HConfirmItem = item;
-              "
-              >删除</v-btn
-            >
-            <v-btn
-              small
-              text
-              color="primary"
-              class="my-2"
-              @click="getVideoTopicDescription(item, index)"
-              >查看描述</v-btn
-            >
+              @click="HConfirmShow = true;HConfirmItem = item;"
+            >删除
+            </v-btn>
           </template>
         </h-table>
       </v-tab-item>
     </v-tabs-items>
     <h-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <!-- <data-structure-dialog
-        slot="dialog-content"
-        :rowObj="rowObj"
-        v-if="dialogShow == 2"
-      /> -->
       <create-video-topic-dialog slot="dialog-content" v-if="dialogShow === 1" />
-      <topic-ancilary-information-dialog
-        slot="dialog-content"
-        :otherObj="otherObj"
-        v-else-if="dialogShow === 3"
-      />
+      <video-popup slot="dialog-content" v-if="dialogShow === 2" />
     </h-dialog>
     <h-confirm
       v-if="HConfirmShow"
@@ -107,10 +78,9 @@ import http from "../../../decorator/httpDecorator";
 import HTable from "../../../components/h-table.vue";
 import HConfirm from "../../../components/h-confirm.vue";
 import HDialog from "../../../components/h-dialog.vue";
-// import DataStructureDialog from "./childComponent/dataStructureDialog.vue";
 import CreateVideoTopicDialog from "./childComponent/createVideoTopicDialog.vue";
+import VideoPopup from "./childComponent/videoPopup.vue"
 import { VideoTopicAdd } from "../../../type/video-add.type";
-import topicAncilaryInformationDialog from "./childComponent/topicAncilaryInformationDialog.vue";
 import util from "../../../decorator/utilsDecorator";
 import alertUtil from "../../../utils/alertUtil";
 import { rootStoreModule } from "../../../store/modules/root";
@@ -120,9 +90,8 @@ import { rootStoreModule } from "../../../store/modules/root";
     HTable,
     HDialog,
     HConfirm,
-    // DataStructureDialog,
     CreateVideoTopicDialog,
-    topicAncilaryInformationDialog,
+    VideoPopup
   },
 })
 @http
@@ -137,6 +106,7 @@ export default class CmdList extends Vue {
         formObj: {
           videoTopicName:'',// 视频主题名
           dataSource:'',// 数据源地址
+          cameraPosition:'', //摄像头位置
         },
       };
     },
@@ -145,8 +115,7 @@ export default class CmdList extends Vue {
   private tab = null;
   private items = ["所有主题", "我的主题"];
   private dialogFlag: boolean = false; //弹窗展示
-  private dialogShow: number = 0; //展示哪个弹窗 1.是添加和修改弹窗 3.是描述弹窗
-  // private rowObj: object = {}; //子系统信息详情
+  private dialogShow: number = 0; //展示哪个弹窗 1.创建主题 2.视频弹窗
   private otherObj: any = {}; //描述
 
   private HConfirmShow = false;
@@ -169,7 +138,7 @@ export default class CmdList extends Vue {
     {
       text: "主题名称",
       align: "center",
-      value: "cmdName",
+      value: "topicName",
     },
     {
       text: "所属用户",
@@ -179,17 +148,17 @@ export default class CmdList extends Vue {
     {
       text: "数据源地址",
       align: "center",
-      value: "",
+      value: "dataSource",
     },
     {
       text: "摄像头位置",
       align: "center",
-      value: "",
+      value: "cameraPosition",
     },
     {
       text: "数据存储目录",
       align: "center",
-      slot: "",
+      slot: "dataSourceList",
     },
     {
       text: "操作",
@@ -208,6 +177,7 @@ export default class CmdList extends Vue {
     this.formObj.formObj = {
         videoTopicName:'',// 视频主题名
         dataSource:'',// 数据源地址
+        cameraPosition:'' // 摄像头位置
     };
   }
 
@@ -249,14 +219,34 @@ export default class CmdList extends Vue {
       }
     );
   }
+  // 视频弹窗
+  private showVideoPopup(list:string){
+    this.dialogFlag = true;
+    this.dialogShow = 2;
+    this.formObj.title = "视频";
+    this.formObj.btnName = [];
+    this.formObj.methodName = ""; 
+  }
 
   //查询通用调用方法
   private async searchMethod(bool: boolean, params: object, tab?: boolean) {
+    const data=
+        {
+          list:
+          [{
+            id: 123123,
+            topicName:1231,
+            userName: "user2",
+            dataSource: "ATS",
+            cameraPosition: "Position1",
+            dataSourceList: "dataSourceList"
+          }],
+          total:1
+        }
     if (tab) {
-      const { data }: returnDataType = bool
-        ? await this.h_request["httpGET"]<object>("GET_CMD_MYCMDBYID", params)
-        : await this.h_request["httpGET"]<object>("GET_CMD_MYCMD", params);
-
+      // const { data }: returnDataType = bool
+      //   ? await this.h_request["httpGET"]<object>("GET_CMD_MYCMDBYID", params)
+      //   : await this.h_request["httpGET"]<object>("GET_CMD_MYCMD", params);
       data.list &&
         (this.desserts = data.list.map((item: any) => {
           return { ...item, flag: false };
@@ -264,9 +254,9 @@ export default class CmdList extends Vue {
 
       this.paginationLength = Math.ceil(data["total"] / this.pageSize) || 1;
     } else {
-      const { data }: returnDataType = bool
-        ? await this.h_request["httpGET"]<object>("GET_CMD_SELECTCMD", params)
-        : await this.h_request["httpGET"]<object>("GET_CMD_FIND_ALL", params);
+      // const { data }: returnDataType = bool
+      //   ? await this.h_request["httpGET"]<object>("GET_CMD_SELECTCMD", params)
+      //   : await this.h_request["httpGET"]<object>("GET_CMD_FIND_ALL", params);
 
       data.list &&
         (this.desserts = data.list.map((item: any) => {
@@ -313,62 +303,27 @@ export default class CmdList extends Vue {
     this.pageNum=1
   }
 
-  //数据结构展示方法
-  // private dataStructure(item: any, str: string) {
-  //   this.dialogFlag = true;
-  //   this.dialogShow = 2;
-  //   this.rowObj = item;
-  //   this.formObj.title = str;
-  //   this.formObj.btnName = [];
-  //   this.formObj.methodName = " ";
-  // }
-
-  private ancillaryInformation(info: any, str: string) {
-    this.dialogFlag = true;
-    this.dialogShow = 3;
-    this.otherObj = info;
-    this.formObj.title = str;
-    this.formObj.btnName = [];
-    this.formObj.methodName = " ";
-  }
-
-  // private dataStructureDetails(item: any) {
-  //   this.dataStructure(item, "子系统信息详情");
-  // }
-  // private addFileds(item: any) {
-  //   this.createTopicVideo(item);
-  // }
-
-  private getVideoTopicDescription(item: any, index: number) {
-    // 查看描述
-    let info: any = {};
-    if (!this.desserts[index].flag) {
-      this.desserts[index].flag = true;
-    }
-    this.ancillaryInformation(this.desserts[index], "描述");
-  }
-
   // 删除主题
   private async deleteVideoTopic() {
     if (this.HConfirmItem.id === undefined) {
       return;
     }
-    const { success } = await this.h_request["httpGET"]("GET_CMD_DELETE", {
-      id: this.HConfirmItem.id,
-    });
-    if (success) {
-      this.HConfirmShow = false;
-      this.h_utils["alertUtil"].open("主题删除成功", true, "success");
-      this.searchMethod(
-        false,
-        {
-          pageSize: this.pageSize,
-          pageNum: 1,
-        },
-        true
-      );
-      this.pageNum=1
-    }
+    // const { success } = await this.h_request["httpGET"]("GET_CMD_DELETE", {
+    //   id: this.HConfirmItem.id,
+    // });
+    // if (success) {
+    //   this.HConfirmShow = false;
+    //   this.h_utils["alertUtil"].open("主题删除成功", true, "success");
+    //   this.searchMethod(
+    //     false,
+    //     {
+    //       pageSize: this.pageSize,
+    //       pageNum: 1,
+    //     },
+    //     true
+    //   );
+    //   this.pageNum=1
+    // }
   }
   
   // 分页

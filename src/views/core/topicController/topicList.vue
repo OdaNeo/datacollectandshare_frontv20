@@ -84,7 +84,7 @@
             </v-btn>
             <v-btn
               small
-              v-if="tab && item.topicInterFaceType === 6"
+              v-if="item.topicInterFaceType === 6"
               text
               color="primary"
               class="my-2"
@@ -111,18 +111,18 @@
       <data-structure-dialog
         slot="dialog-content"
         :rowObj="rowObj"
-        v-if="dialogShow == 2"
+        v-if="dialogShow === 2"
       ></data-structure-dialog>
       <create-topic-dialog
         slot="dialog-content"
-        v-else-if="dialogShow == 1"
+        v-else-if="dialogShow === 1"
         ref="createTopicDialog"
         @create-protobuf-file="createProtobufFile"
       ></create-topic-dialog>
       <topic-ancilary-information-dialog
         slot="dialog-content"
         :otherObj="otherObj"
-        v-else-if="dialogShow == 3"
+        v-else-if="dialogShow === 3"
       ></topic-ancilary-information-dialog>
     </h-dialog>
     <!-- 上传文件对话框 -->

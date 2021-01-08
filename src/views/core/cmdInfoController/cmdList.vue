@@ -408,23 +408,14 @@ export default class CmdList extends Vue {
 
     if (sessionStorage.systemInfo) {
       data = JSON.parse(sessionStorage.systemInfo);
-    } else {
-      const res = await this.h_request["httpGET"](
-        "GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER",
-        {}
-      );
-      data = res.data;
-      sessionStorage.systemInfo = JSON.stringify(data);
-    }
-
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].id === this.systemName) {
-        this.producer = data[i].name;
-        return;
+      for (let i = 0; i < data.length; i++) {
+          if (data[i].id === this.systemName) {
+            this.producer = data[i].name;
+            return;
+          }
       }
     }
   }
-
   created() {
     this.getProducerList();
   }

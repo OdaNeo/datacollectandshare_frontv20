@@ -1,20 +1,18 @@
 <template>
-  <div>
     <v-form ref="userDialogForm" v-model="userDialogValid">
       <slot name="dialog-form-content"></slot>
       <v-row>
         <v-col cols="7" offset="3" style="padding: 0; margin-left: 153px">
-          <v-btn color="primary" class="mr-4" height="32" solo :disabled="!userDialogValid" v-if="formProvide.btnName.length > 0 && formProvide.btnName[0]" @click="validate($event)">
+          <v-btn color="primary" class="mr-4" height="32" solo :disabled="!userDialogValid" v-if="formProvide.btnName && formProvide.btnName[0]" @click="validate">
             {{ formProvide.btnName[0] }}
           </v-btn>
-          <v-btn class="mr-4" height="32" solo v-if="formProvide.btnName.length > 0 && formProvide.btnName[1]" @click="cancel($event)">
+          <v-btn class="mr-4" height="32" solo v-if="formProvide.btnName && formProvide.btnName[1]" @click="$emit('cancel')">
             {{ formProvide.btnName[1] }}
           </v-btn>
-          <v-btn class="mr-4" height="32" solo v-if="formProvide.btnName.length > 0 && !formProvide.btnName[1]" @click="reset(true)">重置</v-btn>
+          <v-btn class="mr-4" height="32" solo v-if="formProvide.btnName && !formProvide.btnName[1]" @click="reset(true)">重置</v-btn>
         </v-col>
       </v-row>
     </v-form>
-  </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Ref, Inject } from 'vue-property-decorator'
@@ -29,23 +27,17 @@ export default class DialogForm extends Vue {
   private userDialogValid: boolean = true
   private formProvideBF = JSON.parse(JSON.stringify(this.formProvide.formObj))
 
-  private async validate(e: Event) {
-    if (this.udf.validate()) {
-      const parent = this.$parent.$parent.$parent.$parent as any
-      const parent2 = this.$parent.$parent.$parent.$parent.$parent as any
-      const bool = await parent2[this.formProvide.methodName](this.formProvide.formObj)
+  private async validate() {
+    if (this.udf.validate() && this.formProvide.methodName) {
+      const parent = this.$parent.$parent.$parent.$parent.$parent as any
+      const bool = await parent[this.formProvide.methodName](this.formProvide.formObj)
       if (bool) {
-        parent.closeMethod(e)
+        this.$emit('validate')
       }
     }
   }
 
-  private cancel(e: Event) {
-    const parent = this.$parent.$parent.$parent.$parent as any
-    parent.closeMethod(e)
-  }
-
-  private reset(clearAll: boolean) {
+  public reset(clearAll: boolean) {
     const formObj: any = this.formProvide.formObj
     if (clearAll) {
       // 增加字段的重置 只重置数据结构部分

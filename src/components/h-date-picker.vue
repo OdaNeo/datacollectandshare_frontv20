@@ -20,14 +20,15 @@
             ></v-text-field>
         </template>
         <v-date-picker
-        v-model="date"
-        no-title
-        scrollable
-        locale="zh-cn"
-        :allowed-dates="begin?allowedBeginDates:allowedAfterDates">
+            v-model="date"
+            no-title
+            scrollable
+            locale="zh-cn"
+            @click.native="pickerClick"
+            :allowed-dates="begin?allowedBeginDates:allowedAfterDates">
             <v-spacer></v-spacer>
-            <v-btn text color="primary" @click="cancelClick">取消</v-btn>
-            <v-btn text color="primary" @click="pickerClick">确定</v-btn>
+            <v-btn text color="primary" @click.stop="cancelClick">取消</v-btn>
+            <!-- <v-btn text color="primary" @click="pickerClick">确定</v-btn> -->
         </v-date-picker>
     </v-menu>
 </template>
