@@ -1,60 +1,55 @@
 import { Module, VuexModule, Mutation, Action, getModule } from 'vuex-module-decorators'
-
 import store from '@/store'
-import {returnDataType} from "../../type/http-request.type"
-import {userRootType,userMessageType} from "../../type/vuex.type"
+import { returnDataType } from '../../type/http-request.type'
+import { userRootType, userMessageType } from '../../type/vuex.type'
 
 type UserStateType = {
-    username:string,  //用户名称
-    userRoot:Array<userRootType>,   //用户整体权限
-    routeRoot:Array<string>,  //用户路由的权限
-    userMessage: userMessageType,  //主题信息对象
-    token:string,
-    createUserOption:{  //创建用户参数
-        roleList:Array<any>, //角色列表
-        systemName:Array<any> //系统名称
-    }
-
+  username: string // 用户名称
+  userRoot: Array<userRootType> // 用户整体权限
+  routeRoot: Array<string> // 用户路由的权限
+  userMessage: userMessageType // 主题信息对象
+  token: string
+  createUserOption: {
+    // 创建用户参数
+    roleList: Array<any> // 角色列表
+    systemName: Array<any> // 系统名称
+  }
 }
 
-
 type UserLocalType = {
-  username: string,
-  userRoot: Array<userRootType>,
+  username: string
+  userRoot: Array<userRootType>
   routeRoot: Array<string>
-  userMessage: userMessageType,
-  token:string,
+  userMessage: userMessageType
+  token: string
 }
 
 type login = {
-  username: string,
-  result:returnDataType
+  username: string
+  result: returnDataType
 }
 
 @Module({
-  name: "Root",
+  name: 'Root',
   namespaced: true,
   dynamic: true,
   store
 })
-
-export default class rootStore extends VuexModule{
-
+export default class rootStore extends VuexModule {
   public UserState: UserStateType = {
-    username: "",
+    username: '',
     userRoot: [],
     routeRoot: [],
     userMessage: {},
-    token:"",
+    token: '',
     createUserOption: {
       roleList: [],
-      systemName:[]
+      systemName: []
     }
   }
 
-
   @Mutation
-  private MET_LOGIN({username,userRoot,routeRoot,userMessage,token}:UserLocalType) {
+  private MET_LOGIN({ username, userRoot, routeRoot, userMessage, token }: UserLocalType) {
     this.UserState.username = username
     this.UserState.userRoot = userRoot
     this.UserState.routeRoot = routeRoot
@@ -64,43 +59,43 @@ export default class rootStore extends VuexModule{
 
   @Mutation
   private MET_LOGOUT() {
-    sessionStorage.removeItem("userInfo")
-    sessionStorage.removeItem("systemInfo")
-    sessionStorage.removeItem("id")
-    localStorage.removeItem("userAndPass")
-    this.UserState.username = ""
+    sessionStorage.removeItem('userInfo')
+    sessionStorage.removeItem('systemInfo')
+    sessionStorage.removeItem('id')
+    localStorage.removeItem('userAndPass')
+    this.UserState.username = ''
     this.UserState.userRoot = []
     this.UserState.routeRoot = []
     this.UserState.userMessage = {}
-    this.UserState.token = ""
+    this.UserState.token = ''
     this.UserState.createUserOption = {
       roleList: [],
-      systemName:[]
+      systemName: []
     }
   }
 
-  @Action({rawError: true})
-  public async login({username,result}:login): Promise<boolean>{
+  @Action({ rawError: true })
+  public async login({ username, result }: login): Promise<boolean> {
     getRouteRoot(result.data)
     const userSession: UserLocalType = {
       username: username,
       userRoot: result.data,
-      routeRoot:RouteRoot,
+      routeRoot: RouteRoot,
       userMessage: JSON.parse(result.message),
-      token:"Bearer "+JSON.parse(result.message).place
+      token: 'Bearer ' + JSON.parse(result.message).place
     }
-    sessionStorage.setItem("userInfo", JSON.stringify(userSession))
-    this.context.commit("MET_LOGIN",userSession)
+    sessionStorage.setItem('userInfo', JSON.stringify(userSession))
+    this.context.commit('MET_LOGIN', userSession)
     return true
   }
 
   @Action({ rawError: true })
-  public async refresh(): Promise<boolean>{
-    if (this.UserState.username == "") {
+  public async refresh(): Promise<boolean> {
+    if (this.UserState.username === '') {
       let userSession = sessionStorage.getItem('userInfo')
       if (userSession) {
         userSession = JSON.parse(userSession)
-        this.context.commit("MET_LOGIN", userSession)
+        this.context.commit('MET_LOGIN', userSession)
         return true
       } else {
         return false
@@ -111,22 +106,22 @@ export default class rootStore extends VuexModule{
   }
 
   @Action({ rawError: true })
-  public logout(): void{
-    this.context.commit("MET_LOGOUT")
+  public logout(): void {
+    this.context.commit('MET_LOGOUT')
   }
 
-  get navMenuList(): Array<userRootType>{
+  get navMenuList(): Array<userRootType> {
     if (this.UserState.userRoot.length > 0) {
       return this.UserState.userRoot.filter(item => {
-        return item.childrenList && item.type=="menu"&&item.childrenList.length!=0
+        return item.childrenList && item.type === 'menu' && item.childrenList.length !== 0
       })
     }
     return []
   }
 }
 
-const RouteRoot:Array<string> = []
-function getRouteRoot(data: Array<userRootType>):void {
+const RouteRoot: Array<string> = []
+function getRouteRoot(data: Array<userRootType>): void {
   data.forEach(ele => {
     if (ele.childrenList) {
       getRouteRoot(ele.childrenList)

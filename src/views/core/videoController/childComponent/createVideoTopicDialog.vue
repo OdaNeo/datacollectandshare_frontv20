@@ -22,13 +22,13 @@
       </v-text-field>
     </v-col>
     <v-col cols="9" style="padding: 0">
-      <v-text-field 
-        single-line 
-        outlined 
-        clearable 
-        dense 
-        height="32" 
-        class="dialogInput" 
+      <v-text-field
+        single-line
+        outlined
+        clearable
+        dense
+        height="32"
+        class="dialogInput"
         v-model="formProvide.formObj.dataSource"
         :rules="[...h_validator.videoDataSourceValidate()]"
       >
@@ -40,13 +40,13 @@
       </v-text-field>
     </v-col>
     <v-col cols="9" style="padding: 0">
-      <v-text-field 
-        single-line 
-        outlined 
-        clearable 
-        dense 
-        height="32" 
-        class="dialogInput" 
+      <v-text-field
+        single-line
+        outlined
+        clearable
+        dense
+        height="32"
+        class="dialogInput"
         v-model="formProvide.formObj.cameraPosition"
         :rules="[...h_validator.videoCameraPositionValidate()]"
       >
@@ -64,11 +64,10 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 import http from '../../../../decorator/httpDecorator'
 import validator from '../../../../decorator/validatorDecorator'
 import { H_Vue } from '../../../../declaration/vue-prototype'
-import alertUtil from '../../../../utils/alertUtil'
 
 @Component
 @http
-@validator(['videoTopicNameValidate', 'videoDataSourceValidate','videoCameraPositionValidate'])
+@validator(['videoTopicNameValidate', 'videoDataSourceValidate', 'videoCameraPositionValidate'])
 export default class CreateVideoTopicDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
 
@@ -76,6 +75,7 @@ export default class CreateVideoTopicDialog extends Vue {
   private topicRepeat: Function[] = []
 
   private async inputEvent(v: string) {
+    console.log(v)
     // if (v && v != '') {
     //   const { success } = await this.h_request['httpGET']('GET_CMD_CHECKED', {
     //     cmdName: v,

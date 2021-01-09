@@ -1,21 +1,21 @@
-import { paramsType } from './http-request.type';
-import { FormStructure } from './dialog-form.type';
+import { paramsType } from './http-request.type'
+import { FormStructure } from './dialog-form.type'
 export type userInfo = {
   age: number
-  data: string|null
+  data: string | null
   dataJsonString: string
-  email: string|any
+  email: string | any
   gmtCreated: string
   gmtUpdated: string
   id: number
-  isRemenberPwd: string|null
+  isRemenberPwd: string | null
   loginName: string
   loginPwd: string
   pageNum: number
   pageSize: number
   phone: string
   place: string
-  requestId: number|null
+  requestId: number | null
   sex: number
   systemName: string
   uid: number
@@ -23,44 +23,43 @@ export type userInfo = {
   userState: number
   userToken: string
   userType: number
-  [key:string]:any
+  [key: string]: any
 }
 
 export type selectInput = {
-  text: string,
-  value:string|number
+  text: string
+  value: string | number
 }
 
-export interface userParamsType extends paramsType{
-  loginName?: string|null
-  userState?: number|null
+export interface userParamsType extends paramsType {
+  loginName?: string | null
+  userState?: number | null
 }
 
 export type userFormVar = {
   text: string
-  value:string
+  value: string
 }
-
 
 export type userFormObj = {
   loginName: FormStructure
   loginPwd: FormStructure
-  userType:FormStructure
+  userType: FormStructure
   userState: FormStructure
   systemName: FormStructure
   userId?: any
-  [key:string]:FormStructure
-  id:any
+  [key: string]: FormStructure
+  id: any
 }
 
-export interface dialogRequestStructure2{
+export interface dialogRequestStructure2 {
   loginName: string
-  userType:string
+  userType: string
   userState: string
   systemName: string
-  [key:string]:string
+  [key: string]: string
 }
 
-export interface dialogRequestStructure extends dialogRequestStructure2{
+export interface dialogRequestStructure extends dialogRequestStructure2 {
   loginPwd: string
 }

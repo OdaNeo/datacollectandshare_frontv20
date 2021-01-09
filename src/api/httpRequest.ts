@@ -1,13 +1,9 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-import RequestHelper from './requestHelper'
+// import RequestHelper from './requestHelper'
 import { rootStoreModule } from '../store/modules/root'
-import { httpAllParams, returnDataType } from '../type/http-request.type'
+import { httpAllParams, returnDataType, headerObj } from '../type/http-request.type'
 import alertUtil from '../utils/alertUtil'
-
-type headerObj = {
-  headerKey: string,
-  headerVal: string|number
-}
+import REQUEST_NAME from './requestName'
 
 class HttpRequest {
   private axiosIns: AxiosInstance = axios.create({
@@ -19,17 +15,19 @@ class HttpRequest {
       }
     }
   })
-  private requestHelper: RequestHelper = new RequestHelper(this.axiosIns)
-  constructor(headers:Array<any>) {
+
+  // private requestHelper: RequestHelper = new RequestHelper(this.axiosIns)
+
+  constructor(headers: Array<headerObj>) {
     this.axiosIns.interceptors.request.use((config: AxiosRequestConfig) => {
       if (headers.length > 0) {
-        headers.forEach((header:headerObj) => {
+        headers.forEach((header: headerObj) => {
           config.headers[header.headerKey] = header.headerVal
         })
       } else {
-        config.headers['Authorization'] = rootStoreModule.UserState.token
+        config.headers.Authorization = rootStoreModule.UserState.token
       }
-      //config.headers["x-auth-token"] = 1234
+      // config.headers["x-auth-token"] = 1234
       return config
     })
 
@@ -42,35 +40,55 @@ class HttpRequest {
     })
   }
 
-  public get = async <T>(url: string, data: T, callback: Function) => {
-    const response: returnDataType = await this.requestHelper.getFun<T>(url, data)
+  public get = async <T>(url: string, data: T, callback: Function): Promise<void> => {
+    const response: returnDataType = await this.axiosIns.get(url, {
+      params: data
+    })
     this.codeType(response, callback)
   }
 
-  public post = async <T>(url: string, data: T, callback: Function) => {
-    const response: returnDataType = await this.requestHelper.postFun<T>(url, data)
+  public post = async <T>(url: string, data: T, callback: Function): Promise<void> => {
+    const response: returnDataType = await this.axiosIns.post(url, data)
     this.codeType(response, callback)
   }
 
-  public put = async <T>(url: string, data: T, callback: Function) => {
-    const response: returnDataType = await this.requestHelper.putFun<T>(url, data)
+  public put = async <T>(url: string, data: T, callback: Function): Promise<void> => {
+    const response: returnDataType = await this.axiosIns.put(url, data)
     this.codeType(response, callback)
   }
 
-  public all = async <T extends httpAllParams>(data: Array<T>, callback: Function) => {
-    const response: Array<returnDataType> = await this.requestHelper.allFun<T>(data)
+  public all = async <T extends httpAllParams>(data: Array<T>, callback: Function): Promise<void> => {
+    const httpList = data.map(
+      (item: T): Promise<returnDataType> => {
+        switch (item.method) {
+          case 'get':
+            return this.axiosIns.get(REQUEST_NAME[item.name], {
+              params: item.data
+            })
+          case 'post':
+            return this.axiosIns.post(REQUEST_NAME[item.name], item.data)
+          case 'put':
+            return this.axiosIns.put(REQUEST_NAME[item.name], item.data)
+          default:
+            return this.axiosIns.get(REQUEST_NAME[item.name], {
+              params: item.data
+            })
+        }
+      }
+    )
+    const response: Array<returnDataType> = await axios.all(httpList)
     this.codeType(response, callback)
   }
 
   private codeType(response: Array<returnDataType> | returnDataType, callback: Function) {
-    let code: number = 0
-    let message: string = ''
+    let code = 0
+    let message = ''
     if (Array.isArray(response)) {
       code = response[0].code
       message = response[0].message
     } else {
-      code = response['code']
-      message = response['message']
+      code = response.code
+      message = response.message
     }
     switch (code) {
       case 200:

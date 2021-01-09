@@ -21,5 +21,5 @@ export type topicTable = {
   dataBaseIp: string | null
   dataBaseType: string | null
   url: string | null
-  header:string|null
+  header: string | null
 }

@@ -3,31 +3,30 @@ import { Module, VuexModule, Mutation, Action, getModule } from 'vuex-module-dec
 import store from '@/store'
 
 type AS = {
-  text: string,
-  visible: boolean,
-  timeout: number,
-  color: string,
-  counter?:number
+  text: string
+  visible: boolean
+  timeout: number
+  color: string
+  counter?: number
 }
 
 @Module({
-  name: "Alert",
+  name: 'Alert',
   namespaced: true,
   dynamic: true,
   store
 })
-
-export default class alertStore extends VuexModule{
-  public AlertState:AS  = {
-    text: "",
+export default class alertStore extends VuexModule {
+  public AlertState: AS = {
+    text: '',
     visible: false,
     timeout: 6000,
-    color: "info",
-    counter:0
+    color: 'info',
+    counter: 0
   }
 
   @Mutation
-  private SET_ALERT({text,visible,timeout,color}:AS) {
+  private SET_ALERT({ text, visible, timeout, color }: AS) {
     this.AlertState.text = text
     this.AlertState.visible = visible
     this.AlertState.timeout = timeout
@@ -37,19 +36,19 @@ export default class alertStore extends VuexModule{
 
   @Mutation
   private CLEAR_ALERT() {
-    this.AlertState.text = ""
+    this.AlertState.text = ''
     this.AlertState.visible = false
-    this.AlertState.color = "info"
+    this.AlertState.color = 'info'
   }
 
-  @Action({rawError: true})
-  public openAlert(opt:AS){
-    this.context.commit("SET_ALERT",opt)
+  @Action({ rawError: true })
+  public openAlert(opt: AS): void {
+    this.context.commit('SET_ALERT', opt)
   }
 
-  @Action({rawError: true})
-  public closeAlert(){
-    this.context.commit("CLEAR_ALERT")
+  @Action({ rawError: true })
+  public closeAlert(): void {
+    this.context.commit('CLEAR_ALERT')
   }
 }
 

@@ -1,5 +1,8 @@
 {
-  "requests":[
-    {"url":"/logMGT/viewLog/log/findAllLog","method":"get"}
+  "requests": [
+    {
+      "url": "/logMGT/viewLog/log/findAllLog",
+      "method": "get"
+    }
   ]
 }

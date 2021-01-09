@@ -1,10 +1,10 @@
-import timeUtil from "./timeUtil"
-import alertUtil from './alertUtil';
-import TopicNameSwitch from './topicNameSwitch';
-class utils{
+import timeUtil from './timeUtil'
+import alertUtil from './alertUtil'
+import TopicNameSwitch from './topicNameSwitch'
+class Utils {
   private timeutil = timeUtil
   private alertUtil = alertUtil
   private topicNameSwitch = TopicNameSwitch
 }
 
-export default utils
+export default Utils

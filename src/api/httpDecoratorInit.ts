@@ -1,10 +1,10 @@
-import RequestData from './index';
-class Init{
+import RequestData from './index'
+import { headerObj } from '../type/http-request.type'
+class Init {
   // public static requestData: RequestData
   // public static httpAll:HttpAll
-  public httpRequestInit(headers?:Array<any>) {
-    return new RequestData(headers?headers:[])
+  public httpRequestInit(headers?: Array<headerObj>): RequestData {
+    return new RequestData(headers || [])
   }
 }
-
 export default Init

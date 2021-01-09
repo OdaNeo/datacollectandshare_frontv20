@@ -1,13 +1,12 @@
-import { VueConstructor } from 'vue';
-import HValidator from '../validator/h-validator';
-
+import { VueConstructor } from 'vue'
+import HValidator from '../validator/h-validator'
 
 const validator = (vnames: string[]) => {
-  return (target: VueConstructor) => {
-    if (!target.prototype["h_validator"]) {
-      target.prototype["h_validator"] = {}
+  return (target: VueConstructor): void => {
+    if (!target.prototype.h_validator) {
+      target.prototype.h_validator = {}
     }
-    target.prototype["h_validator"] = new HValidator(vnames).getValidators()
+    target.prototype.h_validator = new HValidator(vnames).getValidators()
   }
 }
 

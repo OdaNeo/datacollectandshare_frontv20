@@ -1,8 +1,8 @@
 export type ResourcesFormObj = {
   name: string
   url: string
-  parentid:number
+  parentid: number
   type: string
-  id?:string
-  [key:string]:string|number|undefined
+  id?: string
+  [key: string]: string | number | undefined
 }

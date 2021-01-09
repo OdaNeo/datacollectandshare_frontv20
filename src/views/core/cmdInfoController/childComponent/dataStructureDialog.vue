@@ -1,11 +1,11 @@
 <template>
   <div id="dataStructureDialog">
-    <h-table :headers="headers" :desserts="desserts" :height="400" style="margin-bottom: 10px"></h-table>
+    <h-table :headers="headers" :desserts="desserts" :height="400" class="mb-10"></h-table>
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop, Inject } from 'vue-property-decorator'
-import HTable from '../../../../components/h-table.vue'
+import { Component, Vue, Prop } from 'vue-property-decorator'
+import HTable from '@/components/h-table.vue'
 
 @Component({
   components: {
@@ -14,13 +14,11 @@ import HTable from '../../../../components/h-table.vue'
 })
 export default class DataStructureDialog extends Vue {
   @Prop() private rowObj!: any
-  get desserts() {
-    let arr = []
-
+  get desserts(): Array<{}> {
+    const arr = []
     const _data = this.rowObj
-
-    let _consumers = _data.consumers.split(',')
-    let _queueNames = _data.queueNames.split(',')
+    const _consumers = _data.consumers.split(',')
+    const _queueNames = _data.queueNames.split(',')
     for (let i = 0; i < _consumers.length; i++) {
       arr.push({
         id: i + 1,

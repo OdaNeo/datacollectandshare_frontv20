@@ -1,7 +1,7 @@
 {
     "code": 200,
-    "message":"成功",
-    "success":true,
+    "message": "成功",
+    "success": true,
     "data": [
         {
             "id": 1,

@@ -1,8 +1,8 @@
-import { userInfo } from './user.type';
+import { userInfo } from './user.type'
 
 export type topicMsg = {
   SystemName: string
-  count:number
+  count: number
 }
 
 export type topicProportionOpt = {
@@ -16,16 +16,16 @@ export type topicRankingInfo = {
   list: Array<userInfo>
   pageNum: number
   pageSize: number
-  total:number
+  total: number
 }
 
 export type topicRankingData = {
   time: string
   count: string
-  [key:string]:any
+  [key: string]: any
 }
 
 export type userProportion = {
-  name: string,
+  name: string
   value: number
 }

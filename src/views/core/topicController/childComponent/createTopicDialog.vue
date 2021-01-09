@@ -3,12 +3,10 @@
     <!-- 弹框 展示数据结 -->
     <v-dialog v-model="showConstruction" width="500">
       <v-card>
-        <v-card-title class="headline grey lighten-2">
-          数据发送示例
-        </v-card-title>
+        <v-card-title class="headline grey lighten-2"> 数据发送示例 </v-card-title>
 
         <v-card-text>
-          <p style="padding-top: 20px;white-space:pre-wrap;">
+          <p style="padding-top: 20px; white-space: pre-wrap">
             {{ msgSendExample }}
           </p>
         </v-card-text>
@@ -17,9 +15,7 @@
 
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="showConstruction = false">
-            关闭
-          </v-btn>
+          <v-btn color="primary" text @click="showConstruction = false"> 关闭 </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -48,10 +44,7 @@
       </div>
       <v-btn
         v-if="onlineData"
-        :disabled="
-          formProvide.formObj.canNotEdit &&
-            formProvide.formObj.interfaceType !== 1
-        "
+        :disabled="formProvide.formObj.canNotEdit && formProvide.formObj.interfaceType !== 1"
         small
         :color="formProvide.formObj.interfaceType === 1 ? 'primary' : ''"
         @click="formProvide.formObj.interfaceType = 1"
@@ -59,10 +52,7 @@
       >
       <v-btn
         v-if="onlineData"
-        :disabled="
-          formProvide.formObj.canNotEdit &&
-            formProvide.formObj.interfaceType !== 4
-        "
+        :disabled="formProvide.formObj.canNotEdit && formProvide.formObj.interfaceType !== 4"
         small
         :color="formProvide.formObj.interfaceType === 4 ? 'primary' : ''"
         @click="formProvide.formObj.interfaceType = 4"
@@ -70,10 +60,7 @@
       >
       <v-btn
         v-if="onlineData"
-        :disabled="
-          formProvide.formObj.canNotEdit &&
-          formProvide.formObj.interfaceType !== 6
-        "
+        :disabled="formProvide.formObj.canNotEdit && formProvide.formObj.interfaceType !== 6"
         small
         :color="formProvide.formObj.interfaceType === 6 ? 'primary' : ''"
         @click="formProvide.formObj.interfaceType = 6"
@@ -81,10 +68,7 @@
       >
       <v-btn
         v-if="!onlineData"
-        :disabled="
-          formProvide.formObj.canNotEdit &&
-            formProvide.formObj.interfaceType !== 2
-        "
+        :disabled="formProvide.formObj.canNotEdit && formProvide.formObj.interfaceType !== 2"
         small
         :color="formProvide.formObj.interfaceType === 2 ? 'primary' : ''"
         @click="formProvide.formObj.interfaceType = 2"
@@ -92,10 +76,7 @@
       >
       <v-btn
         v-if="!onlineData"
-        :disabled="
-          formProvide.formObj.canNotEdit &&
-            formProvide.formObj.interfaceType !== 3
-        "
+        :disabled="formProvide.formObj.canNotEdit && formProvide.formObj.interfaceType !== 3"
         small
         :color="formProvide.formObj.interfaceType === 3 ? 'primary' : ''"
         @click="formProvide.formObj.interfaceType = 3"
@@ -103,17 +84,14 @@
       >
       <v-btn
         v-if="!onlineData"
-        :disabled="
-          formProvide.formObj.canNotEdit &&
-            formProvide.formObj.interfaceType !== 5
-        "
+        :disabled="formProvide.formObj.canNotEdit && formProvide.formObj.interfaceType !== 5"
         small
         :color="formProvide.formObj.interfaceType === 5 ? 'primary' : ''"
         @click="formProvide.formObj.interfaceType = 5"
         >拉取FTP</v-btn
       >
     </v-col>
-    <v-col cols="9" style="padding:0">
+    <v-col cols="9" style="padding: 0">
       <v-text-field
         single-line
         outlined
@@ -134,30 +112,20 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col
-      cols="9"
-      style="padding:0;margin-left:7px;"
-      v-if="
-        onlineData && formProvide.formObj.interfaceType === 6
-      "
-    >
+    <v-col cols="9" style="padding: 0; margin-left: 7px" v-if="onlineData && formProvide.formObj.interfaceType === 6">
       <v-file-input
         accept=".proto"
         :rules="h_validator.fileInputVilidata()"
         @change="readFile"
         label="File input"
-        style="padding-top:0px"
+        style="padding-top: 0px"
       >
         <template v-slot:prepend-inner>
           <span class="require-span">*</span>
         </template>
       </v-file-input>
-    </v-col> 
-    <v-col
-      cols="9"
-      style="padding:0"
-      v-if="formProvide.formObj.interfaceType === 5"
-    >
+    </v-col>
+    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 5">
       <v-text-field
         single-line
         outlined
@@ -177,12 +145,9 @@
         </template>
       </v-text-field>
     </v-col>
-    <div
-      v-if="formProvide.formObj.interfaceType === 5"
-      style="max-height:200px;overflow-y: auto;overflow-x: hidden;"
-    >
-      <div style="display: flex;width: 100%;flex-wrap: wrap;">
-        <v-col cols="6" style="padding:0;max-width:70%">
+    <div v-if="formProvide.formObj.interfaceType === 5" style="max-height: 200px; overflow-y: auto; overflow-x: hidden">
+      <div style="display: flex; width: 100%; flex-wrap: wrap">
+        <v-col cols="6" style="padding: 0; max-width: 70%">
           <v-text-field
             single-line
             outlined
@@ -202,7 +167,7 @@
             </template>
           </v-text-field>
         </v-col>
-        <v-col cols="6" style="padding:0 0 0 6px;max-width:40%">
+        <v-col cols="6" style="padding: 0 0 0 6px; max-width: 40%">
           <v-text-field
             single-line
             outlined
@@ -219,11 +184,7 @@
         </v-col>
       </div>
     </div>
-    <v-col
-      cols="9"
-      style="padding:0"
-      v-if="formProvide.formObj.interfaceType === 5"
-    >
+    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 5">
       <v-text-field
         single-line
         outlined
@@ -243,11 +204,7 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col
-      cols="9"
-      style="padding:0"
-      v-if="formProvide.formObj.interfaceType === 5"
-    >
+    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 5">
       <v-text-field
         single-line
         outlined
@@ -267,11 +224,7 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col
-      cols="9"
-      style="padding:0"
-      v-if="formProvide.formObj.interfaceType === 2"
-    >
+    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 2">
       <v-text-field
         single-line
         outlined
@@ -291,11 +244,7 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col
-      cols="9"
-      style="padding:0"
-      v-if="formProvide.formObj.interfaceType === 2"
-    >
+    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 2">
       <v-autocomplete
         v-model="formProvide.formObj.databaseType"
         :disabled="formProvide.formObj.canNotEdit"
@@ -313,12 +262,9 @@
         </template>
       </v-autocomplete>
     </v-col>
-    <div
-      v-if="formProvide.formObj.interfaceType === 3"
-      style="max-height:200px;overflow-y: auto;overflow-x: hidden;"
-    >
-      <div style="display: flex;width: 100%;flex-wrap: wrap;">
-        <v-col cols="5" style="padding:0;max-width:53.8%">
+    <div v-if="formProvide.formObj.interfaceType === 3" style="max-height: 200px; overflow-y: auto; overflow-x: hidden">
+      <div style="display: flex; width: 100%; flex-wrap: wrap">
+        <v-col cols="5" style="padding: 0; max-width: 53.8%">
           <v-text-field
             single-line
             outlined
@@ -337,7 +283,7 @@
             </template>
           </v-text-field>
         </v-col>
-        <v-col cols="5" style="padding:0 0 0 6px;max-width:34%">
+        <v-col cols="5" style="padding: 0 0 0 6px; max-width: 34%">
           <v-text-field
             single-line
             outlined
@@ -351,16 +297,12 @@
           >
           </v-text-field>
         </v-col>
-        <v-col cols="2" style="padding:0 0 0 6px;max-width:34%">
+        <v-col cols="2" style="padding: 0 0 0 6px; max-width: 34%">
           <span>填写后不可修改</span>
         </v-col>
       </div>
     </div>
-    <v-col
-      cols="9"
-      style="padding:0"
-      v-if="formProvide.formObj.interfaceType === 3"
-    >
+    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 3">
       <v-text-field
         single-line
         outlined
@@ -380,11 +322,7 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col
-      cols="9"
-      style="padding:0"
-      v-if="formProvide.formObj.interfaceType === 3"
-    >
+    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 3">
       <v-autocomplete
         v-model="formProvide.formObj.type"
         :disabled="formProvide.formObj.canNotEdit"
@@ -404,11 +342,8 @@
     </v-col>
     <v-col
       cols="9"
-      style="padding:0"
-      v-if="
-        formProvide.formObj.interfaceType === 3 &&
-          formProvide.formObj.type === 'post'
-      "
+      style="padding: 0"
+      v-if="formProvide.formObj.interfaceType === 3 && formProvide.formObj.type === 'post'"
     >
       <v-textarea
         outlined
@@ -424,16 +359,13 @@
         </template>
       </v-textarea>
     </v-col>
-    <div
-      v-if="formProvide.formObj.interfaceType === 3"
-      style="max-height:200px;overflow-y: auto;overflow-x: hidden;"
-    >
+    <div v-if="formProvide.formObj.interfaceType === 3" style="max-height: 200px; overflow-y: auto; overflow-x: hidden">
       <div
         v-for="(item, index) in formProvide.formObj.header"
-        style="display: flex;width: 100%;flex-wrap: wrap;"
+        style="display: flex; width: 100%; flex-wrap: wrap"
         :key="index"
       >
-        <v-col cols="6" style="padding:0">
+        <v-col cols="6" style="padding: 0">
           <v-text-field
             single-line
             outlined
@@ -470,12 +402,7 @@
           >
           </v-text-field>
         </v-col>
-        <v-col
-          cols="2"
-          class="input-item"
-          v-if="!formProvide.formObj.canNotEdit"
-          style="padding-left: 6px"
-        >
+        <v-col cols="2" class="input-item" v-if="!formProvide.formObj.canNotEdit" style="padding-left: 6px">
           <v-btn
             fab
             dark
@@ -493,10 +420,7 @@
             small
             color="error"
             class="add-btn"
-            v-if="
-              formProvide.formObj.header.length !== index + 1 &&
-              item.key !== 'Authorization'
-            "
+            v-if="formProvide.formObj.header.length !== index + 1 && item.key !== 'Authorization'"
             @click="minus2(index)"
           >
             <v-icon dark>mdi-minus</v-icon>
@@ -507,10 +431,7 @@
     <v-col
       cols="9"
       style="padding: 0"
-      v-if="
-        formProvide.formObj.interfaceType === 1 ||
-        formProvide.formObj.interfaceType === 4
-      "
+      v-if="formProvide.formObj.interfaceType === 1 || formProvide.formObj.interfaceType === 4"
     >
       <v-radio-group
         v-model="formProvide.formObj.messageType"
@@ -525,7 +446,7 @@
         required
       >
         <template v-slot:prepend>
-          <div class="text-label" style="margin-top:7px">
+          <div class="text-label" style="margin-top: 7px">
             <label><span class="require-span">*</span>消息类型：</label>
           </div>
         </template>
@@ -540,11 +461,8 @@
     </v-col>
     <v-col
       cols="9"
-      style="padding:0"
-      v-if="
-        formProvide.formObj.interfaceType === 1 ||
-        formProvide.formObj.interfaceType === 4
-      "
+      style="padding: 0"
+      v-if="formProvide.formObj.interfaceType === 1 || formProvide.formObj.interfaceType === 4"
     >
       <v-radio-group
         v-model="formProvide.formObj.writeElasticsearch"
@@ -558,7 +476,7 @@
         required
       >
         <template v-slot:prepend>
-          <div class="text-label" style="margin-top:7px">
+          <div class="text-label" style="margin-top: 7px">
             <label><span class="require-span">*</span>是否写入ES：</label>
           </div>
         </template>
@@ -571,7 +489,7 @@
         ></v-radio>
       </v-radio-group>
     </v-col>
-    <v-col cols="9" style="padding:0 0 18px 0" v-if="onlineData">
+    <v-col cols="9" style="padding: 0 0 18px 0" v-if="onlineData">
       <v-slider
         v-model="formProvide.formObj.redisTimer"
         class="align-center"
@@ -597,11 +515,7 @@
         </template>
       </v-slider>
     </v-col>
-    <v-col
-      cols="9"
-      style="padding:0"
-      v-if="formProvide.formObj.interfaceType === 4"
-    >
+    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 4">
       <v-textarea
         outlined
         v-model="formProvide.formObj.dataStructSchema"
@@ -616,18 +530,14 @@
       </v-textarea>
     </v-col>
     <div
-      style="width: 100%;max-height:200px;overflow-y: auto;overflow-x: hidden;"
+      style="width: 100%; max-height: 200px; overflow-y: auto; overflow-x: hidden"
       v-if="
         formProvide.formObj.interfaceType === 1 ||
         formProvide.formObj.interfaceType === 2 ||
-        formProvide.formObj.interfaceType === 3 
+        formProvide.formObj.interfaceType === 3
       "
     >
-      <div
-        v-for="(item, index) in formProvide.formObj.topicList"
-        style="display: flex;flex: 1;"
-        :key="index"
-      >
+      <div v-for="(item, index) in formProvide.formObj.topicList" style="display: flex; flex: 1" :key="index">
         <v-col cols="5" class="input-item">
           <v-text-field
             single-line
@@ -638,9 +548,7 @@
             height="32"
             class="dialogInput"
             v-model.trim="item.key"
-            :rules="[
-              ...h_validator.fieldKeyVilidata(formProvide.formObj.topicList),
-            ]"
+            :rules="[...h_validator.fieldKeyVilidata(formProvide.formObj.topicList)]"
             :error-messages="keyErrorMessages[index]"
             required
           >
@@ -682,7 +590,7 @@
             solo
             single-line
             outlined
-            style="min-height:32px"
+            style="min-height: 32px"
             label="字段类型"
           ></v-autocomplete>
         </v-col>
@@ -693,11 +601,7 @@
             small
             color="error"
             class="add-btn"
-            v-if="
-              (formProvide.formObj.topicList.length !== index + 1 ||
-                index != 0) &&
-                !item.disabled
-            "
+            v-if="(formProvide.formObj.topicList.length !== index + 1 || index != 0) && !item.disabled"
             @click="minus(index)"
           >
             <v-icon dark>mdi-minus</v-icon>
@@ -716,13 +620,7 @@
         </v-col>
       </div>
     </div>
-    <v-col
-      cols="9"
-      style="padding:0"
-      v-if="
-        onlineData && formProvide.formObj.interfaceType === 4
-      "
-    >
+    <v-col cols="9" style="padding: 0" v-if="onlineData && formProvide.formObj.interfaceType === 4">
       <v-radio-group
         v-model="formProvide.formObj.messageType"
         single-line
@@ -735,225 +633,218 @@
         required
       >
         <template v-slot:prepend>
-          <div class="text-label" style="margin-top:7px">
+          <div class="text-label" style="margin-top: 7px">
             <label><span class="require-span"></span>数据发送示例：</label>
           </div>
         </template>
-        <v-btn solo @click.native="showConstruction = true">
-          查看
-        </v-btn>
+        <v-btn solo @click.native="showConstruction = true"> 查看 </v-btn>
       </v-radio-group>
     </v-col>
-    
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Inject, Vue, Watch } from "vue-property-decorator";
-import http from "../../../../decorator/httpDecorator";
-import validator from "../../../../decorator/validatorDecorator";
-import { H_Vue } from "../../../../declaration/vue-prototype";
+import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
+import http from '../../../../decorator/httpDecorator'
+import validator from '../../../../decorator/validatorDecorator'
+import { H_Vue } from '../../../../declaration/vue-prototype'
 
 @Component
 @http
 @validator([
-  "fieldKeyVilidata",
-  "fieldDescriptionValidator",
-  "fieldTypeValidator",
-  "fieldNumVilidata",
-  "topicNameVilidata",
-  "dataBaseUrlVilidata",
-  "dataBaseTypeVilidata",
-  "urlVilidata",
-  "headerKeyVilidata",
-  "headerValueVilidata",
-  "messageTypeVilidata",
-  "writeEsVilidata",
-  "dataStructVilidata",
-  "typeVilidata",
-  "bodyVilidata",
-  "baseUrlVilidata",
-  "hostVilidata",
-  "portVilidata",
-  "ftpNameVilidata",
-  "ftpPasswordVilidata",
-  "fileInputVilidata"
+  'fieldKeyVilidata',
+  'fieldDescriptionValidator',
+  'fieldTypeValidator',
+  'fieldNumVilidata',
+  'topicNameVilidata',
+  'dataBaseUrlVilidata',
+  'dataBaseTypeVilidata',
+  'urlVilidata',
+  'headerKeyVilidata',
+  'headerValueVilidata',
+  'messageTypeVilidata',
+  'writeEsVilidata',
+  'dataStructVilidata',
+  'typeVilidata',
+  'bodyVilidata',
+  'baseUrlVilidata',
+  'hostVilidata',
+  'portVilidata',
+  'ftpNameVilidata',
+  'ftpPasswordVilidata',
+  'fileInputVilidata'
 ])
 export default class CreateTopicDialog extends Vue {
-  @Inject() private readonly formProvide!: H_Vue;
-  private topicName: string = "";
+  @Inject() private readonly formProvide!: H_Vue
+  private topicName = ''
   //   拉取ftp 新增字段
-  private port: string = "";
-  private host: string = "";
-  private baseUrl: string = "";
-  private userName: string = "";
-  private password: string = "";
+  private port = ''
+  private host = ''
+  private baseUrl = ''
+  private userName = ''
+  private password = ''
 
-  private messageType: number = 0;
-  private bool: boolean = false;
-  private showConstruction: boolean = false;
-  private topicBool: boolean = false;
-  private onlineData: boolean =
+  private messageType = 0
+  private bool = false
+  private showConstruction = false
+  private topicBool = false
+  private onlineData = !(
     this.formProvide.formObj.interfaceType === 2 ||
     this.formProvide.formObj.interfaceType === 3 ||
     this.formProvide.formObj.interfaceType === 5
-      ? false
-      : true;
+  )
   private items: Array<any> = [
-    { text: "Int", value: 1 },
-    { text: "String", value: "str" },
-    { text: "Date", value: "Date" },
-    { text: "TimeStamp", value: "TimeStamp" },
-  ];
-  private items2: Array<any> = ["Mysql", "Oracle", "Sql Server"];
-  private items3: Array<any> = ["get", "post"];
+    { text: 'Int', value: 1 },
+    { text: 'String', value: 'str' },
+    { text: 'Date', value: 'Date' },
+    { text: 'TimeStamp', value: 'TimeStamp' }
+  ]
+  private items2: Array<any> = ['Mysql', 'Oracle', 'Sql Server']
+  private items3: Array<any> = ['get', 'post']
   private types: Array<any> = [
-    { text: "数据量优先", value: 1 },
-    { text: "顺序优先", value: 2 },
-  ];
+    { text: '数据量优先', value: 1 },
+    { text: '顺序优先', value: 2 }
+  ]
   private esList: Array<any> = [
-    { text: "是", value: 1 },
-    { text: "否", value: 0 },
-  ];
-  private arr: Array<any> = ["", ""];
-  private topicRepeat: Function[] = [];
-  private keyErrorMessages: Array<string> = [];
-  private keyRepeat: Array<any> = [];
+    { text: '是', value: 1 },
+    { text: '否', value: 0 }
+  ]
+  private arr: Array<any> = ['', '']
+  private topicRepeat: Function[] = []
+  private keyErrorMessages: Array<string> = []
+  private keyRepeat: Array<any> = []
 
   private showonlineData(dataType: boolean) {
     if (dataType) {
-      this.formProvide.formObj.interfaceType = 1;
+      this.formProvide.formObj.interfaceType = 1
     } else {
       if (this.formProvide.formObj.interfaceType === 3) {
-        this.formProvide.formObj.interfaceType = 3;
+        this.formProvide.formObj.interfaceType = 3
       } else {
-        this.formProvide.formObj.interfaceType = 2;
+        this.formProvide.formObj.interfaceType = 2
       }
     }
-    this.onlineData = dataType;
+    this.onlineData = dataType
   }
   private add() {
     // 增加数据结构
-    (this.formProvide.formObj.topicList as Array<any>).push({
+    ;(this.formProvide.formObj.topicList as Array<any>).push({
       key: undefined,
-      type: "",
-      description: "", // 描述
-      disabled: false,
-    });
+      type: '',
+      description: '', // 描述
+      disabled: false
+    })
   }
   private minus(num: number) {
     // 删减数据结构
-    (this.formProvide.formObj.topicList as Array<any>).splice(num, 1);
+    ;(this.formProvide.formObj.topicList as Array<any>).splice(num, 1)
   }
   private add2() {
     // 增加数据结构
-    (this.formProvide.formObj.header as Array<any>).push({
-      key: "",
-      value: "",
-    });
+    ;(this.formProvide.formObj.header as Array<any>).push({
+      key: '',
+      value: ''
+    })
   }
   private minus2(num: number) {
     // 删减数据结构
-    (this.formProvide.formObj.header as Array<any>).splice(num, 1);
+    ;(this.formProvide.formObj.header as Array<any>).splice(num, 1)
   }
   private clearMethod() {
     this.formProvide.formObj = {
-      id: "", // 主题ID
+      id: '', // 主题ID
       canNotEdit: false, // 添加数据
       interfaceType: 1,
-      topicName: "", // 主题名称
+      topicName: '', // 主题名称
       messageType: 0, // 消息类型
-      dataBaseIp: "", // 数据库地址
-      databaseType: "", // 数据库类型
-      header: [{ key: "", value: "" }],
-      redisTimer: "",
-      dataStructSchema: "", //
+      dataBaseIp: '', // 数据库地址
+      databaseType: '', // 数据库类型
+      header: [{ key: '', value: '' }],
+      redisTimer: '',
+      dataStructSchema: '', //
       writeElasticsearch: 1, // 是否展示
-      url: "",
-      port: "", // ?拉取ftp 端口号
-      host: "", // ?拉取ftp
-      baseUrl: "", // ?拉取ftp 地址
-      userName: "", // ?拉取ftp 用户名
-      password: "", // ?拉取ftp 密码
+      url: '',
+      port: '', // ?拉取ftp 端口号
+      host: '', // ?拉取ftp
+      baseUrl: '', // ?拉取ftp 地址
+      userName: '', // ?拉取ftp 用户名
+      password: '', // ?拉取ftp 密码
       topicList: [
         {
           key: undefined,
-          type: "",
-          description: "", // 描述
-          disabled: false,
-        },
+          type: '',
+          description: '', // 描述
+          disabled: false
+        }
       ],
-      AuthorizationObj: {
-        key: "",
-        value: "",
-      },
-      type: "",
-      body: "",
-    };
+      // AuthorizationObj: {
+      //   key: '',
+      //   value: ''
+      // },
+      type: '',
+      body: ''
+    }
   }
 
   private get msgSendExample() {
-    const topicList = this.formProvide.formObj.topicList as any[];
-    let msg: any = {};
+    const topicList = this.formProvide.formObj.topicList as any[]
+    let msg: any = {}
     if (this.formProvide.formObj.interfaceType === 1) {
       // 通用rest接口
       topicList.forEach((element: any) => {
-        msg[element.number] = element.key;
-      });
+        msg[element.number] = element.key
+      })
     } else if (this.formProvide.formObj.interfaceType === 4) {
       // 多级嵌套免校验
-      msg = this.formProvide.formObj.dataStructSchema;
+      msg = this.formProvide.formObj.dataStructSchema
     }
     return JSON.stringify(
       {
         requestid: new Date().getTime(),
-        data: [msg],
+        data: [msg]
       },
       null,
-      "\t"
-    );
+      '\t'
+    )
   }
 
-  public async inputEvent(v: string) {
+  public async inputEvent(v: string): Promise<void> {
     if (v) {
-      const { success } = await this.h_request["httpGET"](
-        "GET_TOPICS_CHECKED",
-        {
-          topicName: v,
-        }
-      );
+      const { success } = await this.h_request['httpGET']('GET_TOPICS_CHECKED', {
+        topicName: v
+      })
       if (success) {
-        this.topicRepeat = [(v: string) => "主题名称已被注册"];
+        this.topicRepeat = [(v: string) => '主题名称已被注册']
       } else {
-        this.topicRepeat = [];
+        this.topicRepeat = []
       }
     } else {
-      this.topicRepeat = [];
+      this.topicRepeat = []
     }
   }
 
   // 读取文件
   private readFile(e: File) {
     if (!e) {
-      return;
+      return
     }
-      this.$emit('create-protobuf-file',e) 
+    this.$emit('create-protobuf-file', e)
   }
 
   // "字段名" 用js修改v-model不会触发rules校验，如果手动emit触发input事件，会导致v-model归空，原因未知。所以这里改成了watch方法
-  @Watch("formProvide.formObj.topicList", { deep: true })
-  keyInputEvent(newVal: Array<any>) {
-    this.keyErrorMessages.length = newVal.length;
-    this.keyRepeat.length = 0;
+  @Watch('formProvide.formObj.topicList', { deep: true })
+  keyInputEvent(newVal: Array<any>): void {
+    this.keyErrorMessages.length = newVal.length
+    this.keyRepeat.length = 0
     newVal.forEach((item, index: number) => {
-      if (item.key === "") {
-        this.keyErrorMessages[index] = "字段名不能为空";
+      if (item.key === '') {
+        this.keyErrorMessages[index] = '字段名不能为空'
       } else if (item.key && this.keyRepeat.includes(item.key)) {
-        this.keyErrorMessages[index] = "数据结构不能有重复的字段名";
+        this.keyErrorMessages[index] = '数据结构不能有重复的字段名'
       } else {
-        this.keyErrorMessages[index] = "";
+        this.keyErrorMessages[index] = ''
       }
-      this.keyRepeat.push(item.key);
-    });
+      this.keyRepeat.push(item.key)
+    })
   }
 }
 </script>

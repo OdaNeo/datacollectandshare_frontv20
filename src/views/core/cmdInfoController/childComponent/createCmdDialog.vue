@@ -1,10 +1,9 @@
 <template>
-  <v-row id="createCmdDialog">
+  <v-row id="createCmdDialog" no-gutters>
     <!-- 弹框 展示数据结 -->
     <v-dialog v-model="showConstruction" width="500">
       <v-card>
         <v-card-title class="headline grey lighten-2">Body示例</v-card-title>
-
         <v-card-text>
           <p style="padding-top: 20px; white-space: pre-wrap">
             <span
@@ -14,9 +13,7 @@
             </span>
           </p>
         </v-card-text>
-
         <v-divider></v-divider>
-
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" text @click="showConstruction = false">关闭</v-btn>
@@ -24,45 +21,41 @@
       </v-card>
     </v-dialog>
 
-    <v-col cols="9" style="padding: 0">
+    <v-col cols="11">
       <v-text-field
         single-line
         outlined
         clearable
         dense
-        height="32"
-        class="dialogInput"
         v-model="formProvide.formObj.cmdName"
-        :rules="[...h_validator.cmdNameVilidata(), ...cmdRepeat]"
+        :rules="[...h_validator.cmdNameValidate(), ...cmdRepeat]"
         :disabled="formProvide.formObj.canNotEdit"
         @input="inputEvent(formProvide.formObj.cmdName, formProvide.formObj.producer)"
         required
       >
         <template v-slot:prepend>
-          <div class="text-label">
-            <label><span class="require-span">*</span>命令名称：</label>
-          </div>
+          <label class="text-label"><span class="require-span">*</span>命令名称：</label>
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="9" style="padding: 0">
-      <v-text-field single-line outlined clearable dense height="32" class="dialogInput" v-model="formProvide.formObj.producer" disabled>
+    <v-col cols="11">
+      <v-text-field single-line outlined clearable dense v-model="formProvide.formObj.producer" disabled>
         <template v-slot:prepend>
-          <div class="text-label">
-            <label><span class="require-span">*</span>生产系统名：</label>
-          </div>
+          <label class="text-label"><span class="require-span">*</span>生产系统名：</label>
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="9" style="padding: 0">
-      <div class="text-label dialogInput" style="font-size: 16px; color: rgba(0, 0, 0, 0.87); margin-top: 8px; margin-right: 9px; vertical-align: top">
-        <label><span class="require-span">*</span>订阅系统名：</label>
-      </div>
+    <v-col cols="11">
+      <v-radio-group row>
+        <template v-slot:prepend>
+          <label class="text-label"><span class="require-span">*</span>订阅系统名：</label>
+        </template>
+      </v-radio-group>
       <v-row class="checkbox-container" justify="start">
         <v-checkbox
           required
           v-model="formProvide.formObj.consumers"
-          :rules="[...h_validator.cmdConsumersVilidata()]"
+          :rules="[...h_validator.cmdConsumersValidate()]"
           v-for="item in systemList"
           :key="item.id"
           class="mx-2 checkbox-item"
@@ -72,21 +65,17 @@
         </v-checkbox>
       </v-row>
     </v-col>
-    <v-col cols="9" style="padding: 0">
-      <v-text-field single-line outlined clearable dense height="32" class="dialogInput" v-model="formProvide.formObj.description">
+    <v-col cols="11">
+      <v-text-field single-line outlined clearable dense v-model="formProvide.formObj.description">
         <template v-slot:prepend>
-          <div class="text-label">
-            <label>描述：</label>
-          </div>
+          <label class="text-label">描述：</label>
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="9" style="padding: 0">
-      <v-radio-group single-line outlined dense class="dialogInput" height="32" row required>
+    <v-col cols="11">
+      <v-radio-group row>
         <template v-slot:prepend>
-          <div class="text-label" style="margin-top: 7px">
-            <label><span class="require-span"></span>Body示例：</label>
-          </div>
+          <label class="text-label"><span class="require-span"></span>Body示例：</label>
         </template>
         <v-btn solo @click.native="showConstruction = true">查看</v-btn>
       </v-radio-group>
@@ -95,29 +84,29 @@
 </template>
 <script lang="ts">
 import { Component, Inject, Vue } from 'vue-property-decorator'
-import http from '../../../../decorator/httpDecorator'
-import validator from '../../../../decorator/validatorDecorator'
-import { H_Vue } from '../../../../declaration/vue-prototype'
-import alertUtil from '../../../../utils/alertUtil'
+import http from '@/decorator/httpDecorator'
+import validator from '@/decorator/validatorDecorator'
+import { H_Vue } from '@/declaration/vue-prototype'
 
 @Component
 @http
-@validator(['cmdNameVilidata', 'cmdConsumersVilidata'])
+@validator(['cmdNameValidate', 'cmdConsumersValidate'])
 export default class CreateCmdDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
 
-  private showConstruction: boolean = false
+  private showConstruction = false
   private systemList: Array<{ name: string }> = []
   private cmdRepeat: Function[] = []
 
   private async inputEvent(v: string, p: string) {
     // producer cmdName都有，才发送数据
-    if (v && v != '' && p && p != '') {
+    if (v && p) {
       const { success } = await this.h_request['httpGET']('GET_CMD_CHECKED', {
         cmdName: v,
         producer: p
       })
       if (success) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         this.cmdRepeat = [(v: string) => '命令名称已被注册']
       } else {
         this.cmdRepeat = []
@@ -146,10 +135,9 @@ export default class CreateCmdDialog extends Vue {
       }
       return
     }
-
   }
 
-  created() {
+  created(): void {
     this.getProducerList()
   }
 }
@@ -158,46 +146,13 @@ export default class CreateCmdDialog extends Vue {
 <style scoped>
 .text-label {
   width: 130px;
-  display: inline-block;
   text-align: right;
 }
-.text-label p {
-  color: red;
-}
-.btn-line {
-  padding-bottom: 20px;
-}
-.btn-line .v-btn {
-  margin-right: 10px;
-}
-
 .checkbox-container {
-  width: 400px;
-  margin-left: 130px;
-  margin-top: -20px;
-  margin-right: -10px;
+  margin: -25px 0px 10px 130px;
 }
 .checkbox-item {
   min-width: 70px;
   height: 40px;
-}
-.text-label-line {
-  width: 130px;
-  display: inline-block;
-  box-sizing: border-box;
-  padding-right: 14px;
-  font-size: 16px;
-  text-align: right;
-  color: #000;
-}
-.text-label-line label {
-  font-size: 16px;
-}
-.require-span {
-  color: red;
-  margin-right: 4px;
-}
-.dialogInput .v-input__slot {
-  box-shadow: 2px 2px 10px #dddddd !important;
 }
 </style>

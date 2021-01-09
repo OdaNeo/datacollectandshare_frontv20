@@ -1,7 +1,7 @@
-import { alertStoreModule } from '../store/modules/alert';
+import { alertStoreModule } from '../store/modules/alert'
 
-class alertUtil{
-  public static open = (text: string, visible: boolean, color: string = "info", timeout: number = 3000) => {
+class alertUtil {
+  public static open = (text: string, visible: boolean, color = 'info', timeout = 3000): void => {
     alertStoreModule.openAlert({
       text,
       visible,
@@ -10,7 +10,7 @@ class alertUtil{
     })
   }
 
-  public static close = () => {
+  public static close = (): void => {
     alertStoreModule.closeAlert()
   }
 }

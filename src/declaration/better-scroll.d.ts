@@ -1,7 +1,4 @@
-
 declare module 'better-scroll' {
-
-  const BScroll:any
+  const BScroll: any
   export default BScroll
-
 }

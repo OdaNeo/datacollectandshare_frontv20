@@ -1,5 +1,3 @@
-
-
 export type FormStructure = {
   text: string
   reset: boolean
@@ -8,14 +6,13 @@ export type FormStructure = {
   show?: boolean
 }
 
-
 export type FormObj = {
-  title:string
+  title: string
   btnName: Array<string>
   methodName: string
   formObj: {
-    [key:string]:FormStructure|string|number|Array<any>|boolean|object
+    [key: string]: FormStructure | string | number | Array<any> | boolean
   }
 }
 
-export interface dialogForm extends FormObj{}
+export type dialogForm = FormObj
