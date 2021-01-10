@@ -83,9 +83,32 @@ export default class DialogForm extends Vue {
           url: '',
           producer: formObj.producer,
           consumers: [] as Array<string>,
+          loginPwd: {
+            text: '',
+            reset: false,
+            show: false
+          },
+          loginName: {
+            text: '',
+            reset: false,
+            disabled: false
+          },
+          userType: {
+            text: '',
+            reset: false
+          },
+          userState: {
+            text: '',
+            reset: false
+          },
           systemName: {
             text: '',
             value: '',
+            reset: false
+          },
+          userId: {
+            text: 1,
+            value: 1,
             reset: false
           },
           topicList: [
@@ -96,6 +119,10 @@ export default class DialogForm extends Vue {
               disabled: false
             }
           ],
+          AuthorizationObj: {
+            key: '',
+            value: ''
+          },
           type: '',
           body: ''
         }
@@ -141,9 +168,32 @@ export default class DialogForm extends Vue {
         producer: formObj.producer,
         consumers: [] as Array<string>,
         url: '',
+        loginPwd: {
+          text: '',
+          reset: false,
+          show: false
+        },
+        loginName: {
+          text: '',
+          reset: false,
+          disabled: false
+        },
+        userType: {
+          text: '',
+          reset: false
+        },
+        userState: {
+          text: '',
+          reset: false
+        },
         systemName: {
           text: '',
           value: '',
+          reset: false
+        },
+        userId: {
+          text: 1,
+          value: 1,
           reset: false
         },
         topicList: [
@@ -154,6 +204,10 @@ export default class DialogForm extends Vue {
             disabled: false
           }
         ],
+        AuthorizationObj: {
+          key: '',
+          value: ''
+        },
         type: '',
         body: ''
       }

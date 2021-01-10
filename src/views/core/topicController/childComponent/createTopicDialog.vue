@@ -1,30 +1,28 @@
 <template>
-  <v-row id="createTopicDialog">
+  <v-row no-gutters id="createTopicDialog">
     <!-- 弹框 展示数据结 -->
     <v-dialog v-model="showConstruction" width="500">
       <v-card>
         <v-card-title class="headline grey lighten-2"> 数据发送示例 </v-card-title>
-
         <v-card-text>
           <p style="padding-top: 20px; white-space: pre-wrap">
             {{ msgSendExample }}
           </p>
         </v-card-text>
-
         <v-divider></v-divider>
-
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" text @click="showConstruction = false"> 关闭 </v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-col cols="12" class="btn-line">
-      <div class="text-label-line" style="display: inline-block">
+    <v-col cols="11" class="btn-line">
+      <div class="text-label-line">
         <label>数据类型：</label>
       </div>
       <v-btn
         small
+        class="mx-2"
         :disabled="formProvide.formObj.canNotEdit && !onlineData"
         :color="onlineData ? 'primary' : ''"
         @click="showonlineData(true)"
@@ -32,26 +30,29 @@
       >
       <v-btn
         small
+        class="mx-2"
         :disabled="formProvide.formObj.canNotEdit && onlineData"
         :color="!onlineData ? 'primary' : ''"
         @click="showonlineData(false)"
         >离线</v-btn
       >
     </v-col>
-    <v-col cols="12" class="btn-line">
-      <div class="text-label-line" style="display: inline-block">
+    <v-col cols="11" class="btn-line">
+      <div class="text-label-line">
         <label>接口类型：</label>
       </div>
       <v-btn
         v-if="onlineData"
         :disabled="formProvide.formObj.canNotEdit && formProvide.formObj.interfaceType !== 1"
         small
+        class="mx-2"
         :color="formProvide.formObj.interfaceType === 1 ? 'primary' : ''"
         @click="formProvide.formObj.interfaceType = 1"
         >通用Rest接口</v-btn
       >
       <v-btn
         v-if="onlineData"
+        class="mx-2"
         :disabled="formProvide.formObj.canNotEdit && formProvide.formObj.interfaceType !== 4"
         small
         :color="formProvide.formObj.interfaceType === 4 ? 'primary' : ''"
@@ -60,6 +61,7 @@
       >
       <v-btn
         v-if="onlineData"
+        class="mx-2"
         :disabled="formProvide.formObj.canNotEdit && formProvide.formObj.interfaceType !== 6"
         small
         :color="formProvide.formObj.interfaceType === 6 ? 'primary' : ''"
@@ -68,6 +70,7 @@
       >
       <v-btn
         v-if="!onlineData"
+        class="mx-2"
         :disabled="formProvide.formObj.canNotEdit && formProvide.formObj.interfaceType !== 2"
         small
         :color="formProvide.formObj.interfaceType === 2 ? 'primary' : ''"
@@ -76,6 +79,7 @@
       >
       <v-btn
         v-if="!onlineData"
+        class="mx-2"
         :disabled="formProvide.formObj.canNotEdit && formProvide.formObj.interfaceType !== 3"
         small
         :color="formProvide.formObj.interfaceType === 3 ? 'primary' : ''"
@@ -84,6 +88,7 @@
       >
       <v-btn
         v-if="!onlineData"
+        class="mx-2"
         :disabled="formProvide.formObj.canNotEdit && formProvide.formObj.interfaceType !== 5"
         small
         :color="formProvide.formObj.interfaceType === 5 ? 'primary' : ''"
@@ -91,14 +96,14 @@
         >拉取FTP</v-btn
       >
     </v-col>
-    <v-col cols="9" style="padding: 0">
+    <v-col cols="11">
       <v-text-field
         single-line
         outlined
         clearable
         dense
+        solo
         :disabled="formProvide.formObj.canNotEdit"
-        height="32"
         class="dialogInput"
         v-model="formProvide.formObj.topicName"
         :rules="[...h_validator.topicNameVilidata(), ...topicRepeat]"
@@ -112,26 +117,26 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="9" style="padding: 0; margin-left: 7px" v-if="onlineData && formProvide.formObj.interfaceType === 6">
+    <v-col cols="11" v-if="onlineData && formProvide.formObj.interfaceType === 6">
       <v-file-input
+        class="pt-0 mt-0"
         accept=".proto"
         :rules="h_validator.fileInputVilidata()"
         @change="readFile"
         label="File input"
-        style="padding-top: 0px"
       >
         <template v-slot:prepend-inner>
           <span class="require-span">*</span>
         </template>
       </v-file-input>
     </v-col>
-    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 5">
+    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 5">
       <v-text-field
         single-line
         outlined
         clearable
         dense
-        height="32"
+        solo
         class="dialogInput"
         v-model="formProvide.formObj.baseUrl"
         :rules="h_validator.baseUrlVilidata()"
@@ -140,57 +145,56 @@
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <label><span class="require-span">*</span>baseUrl</label>
+            <label><span class="require-span">*</span>baseUrl：</label>
           </div>
         </template>
       </v-text-field>
     </v-col>
-    <div v-if="formProvide.formObj.interfaceType === 5" style="max-height: 200px; overflow-y: auto; overflow-x: hidden">
-      <div style="display: flex; width: 100%; flex-wrap: wrap">
-        <v-col cols="6" style="padding: 0; max-width: 70%">
-          <v-text-field
-            single-line
-            outlined
-            clearable
-            dense
-            :disabled="formProvide.formObj.canNotEdit"
-            :rules="h_validator.hostVilidata()"
-            label="host"
-            height="32"
-            class="dialogInput"
-            v-model="formProvide.formObj.host"
-          >
-            <template v-slot:prepend>
-              <div class="text-label">
-                <label><span class="require-span">*</span>FTP地址</label>
-              </div>
-            </template>
-          </v-text-field>
-        </v-col>
-        <v-col cols="6" style="padding: 0 0 0 6px; max-width: 40%">
-          <v-text-field
-            single-line
-            outlined
-            :disabled="formProvide.formObj.canNotEdit"
-            clearable
-            dense
-            label="port"
-            height="32"
-            class="dialogInput"
-            :rules="h_validator.portVilidata()"
-            v-model="formProvide.formObj.port"
-          >
-          </v-text-field>
-        </v-col>
-      </div>
-    </div>
-    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 5">
+    <v-row v-if="formProvide.formObj.interfaceType === 5" no-gutters>
+      <v-col cols="6">
+        <v-text-field
+          single-line
+          outlined
+          clearable
+          dense
+          solo
+          :disabled="formProvide.formObj.canNotEdit"
+          :rules="h_validator.hostVilidata()"
+          label="host"
+          class="dialogInput"
+          v-model="formProvide.formObj.host"
+        >
+          <template v-slot:prepend>
+            <div class="text-label">
+              <label><span class="require-span">*</span>FTP地址：</label>
+            </div>
+          </template>
+        </v-text-field>
+      </v-col>
+      <v-col cols="1" />
+      <v-col cols="4">
+        <v-text-field
+          single-line
+          outlined
+          :disabled="formProvide.formObj.canNotEdit"
+          clearable
+          dense
+          solo
+          label="port"
+          class="dialogInput"
+          :rules="h_validator.portVilidata()"
+          v-model="formProvide.formObj.port"
+        >
+        </v-text-field>
+      </v-col>
+    </v-row>
+    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 5">
       <v-text-field
         single-line
         outlined
         clearable
         dense
-        height="32"
+        solo
         class="dialogInput"
         v-model="formProvide.formObj.userName"
         :rules="h_validator.ftpNameVilidata()"
@@ -199,18 +203,18 @@
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <label><span class="require-span">*</span>FTP账号</label>
+            <label><span class="require-span">*</span>FTP账号：</label>
           </div>
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 5">
+    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 5">
       <v-text-field
         single-line
         outlined
         clearable
         dense
-        height="32"
+        solo
         class="dialogInput"
         v-model="formProvide.formObj.password"
         :rules="h_validator.ftpPasswordVilidata()"
@@ -219,18 +223,18 @@
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <label><span class="require-span">*</span>FTP密码</label>
+            <label><span class="require-span">*</span>FTP密码：</label>
           </div>
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 2">
+    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 2">
       <v-text-field
         single-line
         outlined
         clearable
         dense
-        height="32"
+        solo
         class="dialogInput"
         v-model="formProvide.formObj.dataBaseIp"
         :rules="h_validator.dataBaseUrlVilidata()"
@@ -244,12 +248,13 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 2">
+    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 2">
       <v-autocomplete
         v-model="formProvide.formObj.databaseType"
         :disabled="formProvide.formObj.canNotEdit"
         :items="items2"
         dense
+        solo
         :rules="h_validator.dataBaseTypeVilidata()"
         required
         single-line
@@ -262,54 +267,53 @@
         </template>
       </v-autocomplete>
     </v-col>
-    <div v-if="formProvide.formObj.interfaceType === 3" style="max-height: 200px; overflow-y: auto; overflow-x: hidden">
-      <div style="display: flex; width: 100%; flex-wrap: wrap">
-        <v-col cols="5" style="padding: 0; max-width: 53.8%">
-          <v-text-field
-            single-line
-            outlined
-            clearable
-            dense
-            :disabled="formProvide.formObj.canNotEdit"
-            label="用户名"
-            height="32"
-            class="dialogInput"
-            v-model="formProvide.formObj.AuthorizationObj.key"
-          >
-            <template v-slot:prepend>
-              <div class="text-label">
-                <label>Authorization：</label>
-              </div>
-            </template>
-          </v-text-field>
-        </v-col>
-        <v-col cols="5" style="padding: 0 0 0 6px; max-width: 34%">
-          <v-text-field
-            single-line
-            outlined
-            :disabled="formProvide.formObj.canNotEdit"
-            clearable
-            dense
-            label="密码"
-            height="32"
-            class="dialogInput"
-            v-model="formProvide.formObj.AuthorizationObj.value"
-          >
-          </v-text-field>
-        </v-col>
-        <v-col cols="2" style="padding: 0 0 0 6px; max-width: 34%">
-          <span>填写后不可修改</span>
-        </v-col>
-      </div>
-    </div>
-    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 3">
+    <v-row v-if="formProvide.formObj.interfaceType === 3" no-gutters>
+      <v-col cols="6">
+        <v-text-field
+          single-line
+          outlined
+          clearable
+          solo
+          dense
+          :disabled="formProvide.formObj.canNotEdit"
+          label="用户名"
+          class="dialogInput"
+          v-model="formProvide.formObj.AuthorizationObj.key"
+        >
+          <template v-slot:prepend>
+            <div class="text-label">
+              <label>Authorization：</label>
+            </div>
+          </template>
+        </v-text-field>
+      </v-col>
+      <v-col cols="1" />
+      <v-col cols="4">
+        <v-text-field
+          single-line
+          outlined
+          :disabled="formProvide.formObj.canNotEdit"
+          clearable
+          solo
+          dense
+          label="密码"
+          class="dialogInput"
+          v-model="formProvide.formObj.AuthorizationObj.value"
+        >
+        </v-text-field>
+      </v-col>
+      <v-col cols="1" class="mt-n1">
+        <span style="font-size: 12px">填写后不可修改</span>
+      </v-col>
+    </v-row>
+    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 3">
       <v-text-field
         single-line
         outlined
         clearable
         dense
+        solo
         :disabled="formProvide.formObj.canNotEdit"
-        height="32"
         class="dialogInput"
         v-model="formProvide.formObj.url"
         :rules="h_validator.urlVilidata()"
@@ -322,12 +326,13 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 3">
+    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 3">
       <v-autocomplete
         v-model="formProvide.formObj.type"
         :disabled="formProvide.formObj.canNotEdit"
         :items="items3"
         dense
+        solo
         :rules="h_validator.typeVilidata()"
         required
         single-line
@@ -340,11 +345,7 @@
         </template>
       </v-autocomplete>
     </v-col>
-    <v-col
-      cols="9"
-      style="padding: 0"
-      v-if="formProvide.formObj.interfaceType === 3 && formProvide.formObj.type === 'post'"
-    >
+    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 3 && formProvide.formObj.type === 'post'">
       <v-textarea
         outlined
         v-model="formProvide.formObj.body"
@@ -359,34 +360,32 @@
         </template>
       </v-textarea>
     </v-col>
-    <div v-if="formProvide.formObj.interfaceType === 3" style="max-height: 200px; overflow-y: auto; overflow-x: hidden">
-      <div
-        v-for="(item, index) in formProvide.formObj.header"
-        style="display: flex; width: 100%; flex-wrap: wrap"
-        :key="index"
-      >
-        <v-col cols="6" style="padding: 0">
+    <div class="col-over-flow" v-if="formProvide.formObj.interfaceType === 3">
+      <v-row v-for="(item, index) in formProvide.formObj.header" :key="index" no-gutters>
+        <v-col cols="6">
           <v-text-field
             single-line
             outlined
             clearable
             dense
+            solo
             label="键"
             :disabled="formProvide.formObj.canNotEdit"
-            height="32"
             class="dialogInput"
             v-model="item.key"
             required
             v-if="item.key !== 'Authorization'"
           >
             <template v-slot:prepend>
-              <div class="text-label">
+              <div v-if="index === 0" class="text-label">
                 <label v-if="item.key !== 'Authorization'">头信息：</label>
               </div>
+              <div v-else class="text-label"></div>
             </template>
           </v-text-field>
         </v-col>
-        <v-col cols="3" style="padding: 0 0 0 6px">
+        <v-col cols="1" />
+        <v-col cols="4">
           <v-text-field
             single-line
             outlined
@@ -394,7 +393,7 @@
             dense
             label="值"
             :disabled="formProvide.formObj.canNotEdit"
-            height="32"
+            solo
             class="dialogInput"
             v-model="item.value"
             required
@@ -402,7 +401,7 @@
           >
           </v-text-field>
         </v-col>
-        <v-col cols="2" class="input-item" v-if="!formProvide.formObj.canNotEdit" style="padding-left: 6px">
+        <v-col cols="1" v-if="!formProvide.formObj.canNotEdit">
           <v-btn
             fab
             dark
@@ -420,33 +419,26 @@
             small
             color="error"
             class="add-btn"
-            v-if="formProvide.formObj.header.length !== index + 1 && item.key !== 'Authorization'"
+            v-if="(formProvide.formObj.header.length !== index + 1 || index !== 0) && item.key !== 'Authorization'"
             @click="minus2(index)"
           >
             <v-icon dark>mdi-minus</v-icon>
           </v-btn>
         </v-col>
-      </div>
+      </v-row>
     </div>
-    <v-col
-      cols="9"
-      style="padding: 0"
-      v-if="formProvide.formObj.interfaceType === 1 || formProvide.formObj.interfaceType === 4"
-    >
+    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 1 || formProvide.formObj.interfaceType === 4">
       <v-radio-group
         v-model="formProvide.formObj.messageType"
-        single-line
-        outlined
         dense
         class="dialogInput"
-        height="32"
         :disabled="formProvide.formObj.canNotEdit"
         row
         :rules="h_validator.messageTypeVilidata()"
         required
       >
         <template v-slot:prepend>
-          <div class="text-label" style="margin-top: 7px">
+          <div class="text-label mt-1">
             <label><span class="require-span">*</span>消息类型：</label>
           </div>
         </template>
@@ -459,24 +451,17 @@
         ></v-radio>
       </v-radio-group>
     </v-col>
-    <v-col
-      cols="9"
-      style="padding: 0"
-      v-if="formProvide.formObj.interfaceType === 1 || formProvide.formObj.interfaceType === 4"
-    >
+    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 1 || formProvide.formObj.interfaceType === 4">
       <v-radio-group
         v-model="formProvide.formObj.writeElasticsearch"
-        single-line
-        outlined
         dense
         class="dialogInput"
-        height="32"
         :disabled="formProvide.formObj.canNotEdit"
         row
         required
       >
         <template v-slot:prepend>
-          <div class="text-label" style="margin-top: 7px">
+          <div class="text-label mt-1">
             <label><span class="require-span">*</span>是否写入ES：</label>
           </div>
         </template>
@@ -489,7 +474,7 @@
         ></v-radio>
       </v-radio-group>
     </v-col>
-    <v-col cols="9" style="padding: 0 0 18px 0" v-if="onlineData">
+    <v-col cols="11" v-if="onlineData">
       <v-slider
         v-model="formProvide.formObj.redisTimer"
         class="align-center"
@@ -510,12 +495,12 @@
             disabled
             hide-details
             single-line
-            style="width: 60px"
+            style="width: 30px"
           ></v-text-field>
         </template>
       </v-slider>
     </v-col>
-    <v-col cols="9" style="padding: 0" v-if="formProvide.formObj.interfaceType === 4">
+    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 4">
       <v-textarea
         outlined
         v-model="formProvide.formObj.dataStructSchema"
@@ -530,22 +515,22 @@
       </v-textarea>
     </v-col>
     <div
-      style="width: 100%; max-height: 200px; overflow-y: auto; overflow-x: hidden"
+      class="col-over-flow"
       v-if="
         formProvide.formObj.interfaceType === 1 ||
         formProvide.formObj.interfaceType === 2 ||
         formProvide.formObj.interfaceType === 3
       "
     >
-      <div v-for="(item, index) in formProvide.formObj.topicList" style="display: flex; flex: 1" :key="index">
-        <v-col cols="5" class="input-item">
+      <v-row v-for="(item, index) in formProvide.formObj.topicList" :key="index" no-gutters>
+        <v-col cols="5">
           <v-text-field
             single-line
             :disabled="item.disabled"
             outlined
             dense
+            solo
             label="字段名"
-            height="32"
             class="dialogInput"
             v-model.trim="item.key"
             :rules="[...h_validator.fieldKeyVilidata(formProvide.formObj.topicList)]"
@@ -563,13 +548,13 @@
             </template>
           </v-text-field>
         </v-col>
-        <v-col cols="3" class="input-item">
+        <v-col cols="3">
           <v-text-field
             single-line
             outlined
             :disabled="item.disabled"
             dense
-            height="32"
+            solo
             class="dialogInput"
             label="描述"
             v-model="item.description"
@@ -578,7 +563,7 @@
           >
           </v-text-field>
         </v-col>
-        <v-col cols="2" class="input-item">
+        <v-col cols="3">
           <v-autocomplete
             v-model="item.type"
             :items="items"
@@ -586,22 +571,20 @@
             :disabled="item.disabled"
             :rules="h_validator.fieldTypeValidator()"
             required
-            height="28"
             solo
             single-line
             outlined
-            style="min-height: 32px"
             label="字段类型"
           ></v-autocomplete>
         </v-col>
-        <v-col cols="2" class="input-item">
+        <v-col cols="1">
           <v-btn
             fab
             dark
             small
             color="error"
             class="add-btn"
-            v-if="(formProvide.formObj.topicList.length !== index + 1 || index != 0) && !item.disabled"
+            v-if="(formProvide.formObj.topicList.length !== index + 1 || index !== 0) && !item.disabled"
             @click="minus(index)"
           >
             <v-icon dark>mdi-minus</v-icon>
@@ -618,26 +601,16 @@
             <v-icon dark>mdi-plus</v-icon>
           </v-btn>
         </v-col>
-      </div>
+      </v-row>
     </div>
-    <v-col cols="9" style="padding: 0" v-if="onlineData && formProvide.formObj.interfaceType === 4">
-      <v-radio-group
-        v-model="formProvide.formObj.messageType"
-        single-line
-        outlined
-        dense
-        class="dialogInput"
-        height="32"
-        :disabled="formProvide.formObj.canNotEdit"
-        row
-        required
-      >
+    <v-col cols="11" v-if="onlineData && formProvide.formObj.interfaceType === 4">
+      <v-radio-group row>
         <template v-slot:prepend>
-          <div class="text-label" style="margin-top: 7px">
-            <label><span class="require-span"></span>数据发送示例：</label>
+          <div class="text-label">
+            <label>数据发送示例：</label>
           </div>
         </template>
-        <v-btn solo @click.native="showConstruction = true"> 查看 </v-btn>
+        <v-btn solo @click.native="showConstruction = true">查看</v-btn>
       </v-radio-group>
     </v-col>
   </v-row>
@@ -813,6 +786,7 @@ export default class CreateTopicDialog extends Vue {
         topicName: v
       })
       if (success) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         this.topicRepeat = [(v: string) => '主题名称已被注册']
       } else {
         this.topicRepeat = []
@@ -850,44 +824,34 @@ export default class CreateTopicDialog extends Vue {
 </script>
 
 <style scoped>
-.text-label {
-  width: 130px;
-  display: inline-block;
-  text-align: right;
-}
-.text-label p {
-  color: red;
-}
 .btn-line {
   padding-bottom: 20px;
 }
-.btn-line .v-btn {
-  margin-right: 10px;
-}
-.input-item {
+/* .input-item {
   margin-right: 6px;
-  padding: 0;
-}
+} */
 .add-btn {
-  width: 30px;
-  height: 30px;
-  margin-right: 4px;
+  width: 25px;
+  height: 25px;
+  margin-right: 2px;
+  margin-top: 4px;
+}
+.col-over-flow {
+  width: 100%;
+  max-height: 250px;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .text-label-line {
   width: 130px;
   display: inline-block;
   box-sizing: border-box;
-  padding-right: 14px;
   font-size: 16px;
   text-align: right;
   color: #000;
 }
 .text-label-line label {
   font-size: 16px;
-}
-.require-span {
-  color: red;
-  margin-right: 4px;
 }
 .dialogInput .v-input__slot {
   box-shadow: 2px 2px 10px #dddddd !important;

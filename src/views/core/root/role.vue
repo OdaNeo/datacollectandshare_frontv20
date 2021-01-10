@@ -14,26 +14,31 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn color="primary" dark @click.stop="addItem"> 添加 </v-btn>
+        <v-btn height="38" color="primary" dark @click.stop="addItem"> 添加 </v-btn>
       </v-col>
     </v-row>
-    <h-table
-      :headers="headers"
-      :desserts="desserts"
-      :height="450"
-      :pageNum="pageNum"
-      :paginationLength="paginationLength"
-    >
+    <h-table :headers="headers" :desserts="desserts" :pageNum="pageNum" :paginationLength="paginationLength">
       <template v-slot:buttons="{ item }">
         <v-btn small text color="success" class="my-2" @click="authItem(item)"> 授权 </v-btn>
         <v-btn small text color="primary" class="my-2" @click="editItem(item)"> 编辑 </v-btn>
-        <v-btn text color="orange" small class="my-2" @click="deleteItem(item)"> 删除 </v-btn>
+        <v-btn
+          text
+          color="orange"
+          small
+          class="my-2"
+          @click="
+            HConfirmShow = true
+            HConfirmItem = item
+          "
+          >删除
+        </v-btn>
       </template>
     </h-table>
     <h-dialog v-model="dialogFlag">
       <role-dialog slot="dialog-content" v-if="dialogShow"></role-dialog>
       <auth-dialog slot="dialog-content" v-else :roles="roles"></auth-dialog>
     </h-dialog>
+    <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="deleteItem" />
   </div>
 </template>
 <script lang="ts">
@@ -114,6 +119,8 @@ export default class Role extends Vue {
       slot: 'buttons'
     }
   ]
+  private HConfirmShow = false
+  private HConfirmItem = { id: '' }
 
   private async searchMethod(bool: boolean, params?: object) {
     const { data } = bool
@@ -148,8 +155,8 @@ export default class Role extends Vue {
     this.formObj.methodName = 'addRole'
   }
   // 删除角色
-  private async deleteItem(item: any) {
-    await this.h_request['httpGET']('GET_ROLE_DELETE', {}, item.id)
+  private async deleteItem() {
+    await this.h_request['httpGET']('GET_ROLE_DELETE', {}, this.HConfirmItem.id)
     this.searchMethod(false, {
       pageNum: 1,
       pageSize: this.pageSize

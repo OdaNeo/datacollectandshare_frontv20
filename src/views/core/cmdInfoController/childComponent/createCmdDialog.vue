@@ -27,6 +27,8 @@
         outlined
         clearable
         dense
+        solo
+        class="dialogInput"
         v-model="formProvide.formObj.cmdName"
         :rules="[...h_validator.cmdNameValidate(), ...cmdRepeat]"
         :disabled="formProvide.formObj.canNotEdit"
@@ -39,7 +41,7 @@
       </v-text-field>
     </v-col>
     <v-col cols="11">
-      <v-text-field single-line outlined clearable dense v-model="formProvide.formObj.producer" disabled>
+      <v-text-field class="dialogInput" single-line outlined dense solo v-model="formProvide.formObj.producer" disabled>
         <template v-slot:prepend>
           <label class="text-label"><span class="require-span">*</span>生产系统名：</label>
         </template>
@@ -66,7 +68,15 @@
       </v-row>
     </v-col>
     <v-col cols="11">
-      <v-text-field single-line outlined clearable dense v-model="formProvide.formObj.description">
+      <v-text-field
+        class="dialogInput"
+        solo
+        single-line
+        outlined
+        clearable
+        dense
+        v-model="formProvide.formObj.description"
+      >
         <template v-slot:prepend>
           <label class="text-label">描述：</label>
         </template>
@@ -144,12 +154,8 @@ export default class CreateCmdDialog extends Vue {
 </script>
 
 <style scoped>
-.text-label {
-  width: 130px;
-  text-align: right;
-}
 .checkbox-container {
-  margin: -25px 0px 10px 130px;
+  margin: -25px 0px 0px 130px;
 }
 .checkbox-item {
   min-width: 70px;

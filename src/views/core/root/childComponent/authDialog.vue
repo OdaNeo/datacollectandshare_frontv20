@@ -25,7 +25,7 @@ export default class AuthDialog extends Vue {
 
 <style scoped>
 #authDialog {
-  max-height: 400px;
+  max-height: 600px;
   overflow-y: auto;
 }
 </style>

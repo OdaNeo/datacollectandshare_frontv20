@@ -102,6 +102,7 @@ export default class Login extends Vue {
   color: #17a0df;
   text-align: center;
   margin-top: 30px;
+  margin-bottom: 15px;
 }
 .loginContent {
   width: 400px;
@@ -114,12 +115,6 @@ export default class Login extends Vue {
   bottom: 0;
   right: 0;
   margin: auto;
-}
-.loginContent h3 {
-  font-size: 43px;
-  font-weight: normal;
-  text-align: center;
-  color: #fff;
 }
 .loginInput {
   width: 100%;

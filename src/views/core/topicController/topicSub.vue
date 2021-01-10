@@ -21,17 +21,16 @@
     <h-table
       :headers="headers"
       :desserts="desserts"
-      :height="450"
       :pageNum="pageNum"
       @PaginationsNow="PaginationsNow"
       :paginationLength="paginationLength"
     >
       <template v-slot:buttons="{ item }">
-        <v-btn small text color="primary" class="my-2" @click="dataStructure(item)"> 数据结构详情 </v-btn>
+        <v-btn small text color="primary" class="my-2" @click="dataStructure(item)">数据结构详情</v-btn>
       </template>
       <template v-slot:operation="{ item }">
         <v-btn small text v-if="!item.status" color="primary" class="my-2" @click="subscribe(item)">订阅</v-btn>
-        <v-btn small text v-if="item.status" color="warning" class="my-2" @click="cancelScribe(item)"> 取消订阅 </v-btn>
+        <v-btn small text v-if="item.status" color="warning" class="my-2" @click="cancelScribe(item)">取消订阅</v-btn>
       </template>
     </h-table>
     <h-dialog v-model="dialogFlag">
@@ -80,7 +79,7 @@ export default class TopicSub extends Vue {
   private paginationLength = 0
   private dialogFlag = false
   private queryTopicID = ''
-  headers = [
+  private headers = [
     {
       text: '主题ID',
       align: 'center',
@@ -153,19 +152,20 @@ export default class TopicSub extends Vue {
     this.pageNum = 1
   }
 
-  private async subscribe(item: any) {
+  private async subscribe(item: { id: string }) {
     const { success } = await this.h_request['httpPOST']('POST_SUBMODERATIONS_INSERTSUBMODERATION', {
       topicId: item.id
     })
     if (success) {
       this.searchMethod(false, {
         pageSize: this.pageSize,
-        pageNum: this.pageNum
+        pageNum: 1
       })
+      this.pageNum = 1
     }
   }
 
-  private async cancelScribe(item: any) {
+  private async cancelScribe(item: { id: string; userID: string }) {
     const { success } = await this.h_request['httpPOST']('POST_TOPICS_DELSUBUSER', {
       topicID: item.id,
       subUserID: item.userID
@@ -173,8 +173,9 @@ export default class TopicSub extends Vue {
     if (success) {
       this.searchMethod(false, {
         pageSize: this.pageSize,
-        pageNum: this.pageNum
+        pageNum: 1
       })
+      this.pageNum = 1
     }
   }
 

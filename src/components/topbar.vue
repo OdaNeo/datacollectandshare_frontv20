@@ -101,7 +101,6 @@ export default class TopBar extends Vue {
   get usersysName(): string {
     const data = JSON.parse(sessionStorage.systemInfo)
     let name = ''
-
     for (let i = 0; i < data.length; i++) {
       if (data[i].id === rootStoreModule.UserState.userMessage.systemName) {
         name = data[i].name

@@ -2,9 +2,9 @@
   <div id="viewLog">
     <v-row>
       <v-col cols="2">
-        <v-text-field solo dense placeholder="请输入查找的用户名" clearable v-model="queryUserName"> </v-text-field>
+        <v-text-field solo dense placeholder="请输入查找的用户名" clearable v-model="queryUserName"></v-text-field>
       </v-col>
-      <v-col cols="2" style="max-width: 19%; flex: 0 0 19%">
+      <v-col cols="2">
         <h-date-picker
           placeholder="选择查询起始时间"
           :begin="true"
@@ -12,7 +12,7 @@
           @pickerDate="time => (beginDate = time)"
         ></h-date-picker>
       </v-col>
-      <v-col cols="2" style="max-width: 19%; flex: 0 0 19%">
+      <v-col cols="2">
         <h-date-picker
           placeholder="选择查询截止时间"
           :begin="false"
@@ -21,13 +21,12 @@
         ></h-date-picker>
       </v-col>
       <v-col cols="2">
-        <v-btn color="primary" dark @click="clickSearch"> 查询 </v-btn>
+        <v-btn :height="38" color="primary" dark @click="clickSearch">查询</v-btn>
       </v-col>
     </v-row>
     <h-table
       :headers="headers"
       :desserts="desserts"
-      :height="450"
       :pageNum="pageNum"
       :paginationLength="paginationLength"
       @PaginationsNow="PaginationsNow"
@@ -36,11 +35,11 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import HTable from '../../../components/h-table.vue'
+import HTable from '@/components/h-table.vue'
 import http from '@/decorator/httpDecorator'
-import { returnDataType } from '../../../type/http-request.type'
+import { returnDataType } from '@/type/http-request.type'
 import util from '@/decorator/utilsDecorator'
-import HDatePicker from '../../../components/h-date-picker.vue'
+import HDatePicker from '@/components/h-date-picker.vue'
 
 @Component({
   components: {

@@ -1,6 +1,6 @@
 <template>
-  <v-row>
-    <v-col cols="9" offset="1" style="padding: 0; display: flex">
+  <v-row no-gutters>
+    <v-col cols="11" class="d-flex">
       <v-select
         single-line
         outlined
@@ -8,7 +8,6 @@
         solo
         label="请选择配置类型"
         :items="types"
-        height="32"
         class="dialogInput"
         v-model="formProvide.formObj.type"
         :rules="typeRules"
@@ -17,7 +16,7 @@
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <p>*</p>
+            <p class="require-span">*</p>
             <label>配置类型：</label>
           </div>
         </template>
@@ -28,17 +27,15 @@
         clearable
         dense
         solo
-        height="32"
-        class="dialogInput"
-        v-if="formProvide.formObj.type == '其他'"
+        class="dialogInput ml-10"
+        v-if="formProvide.formObj.type === '其他'"
         v-model="formProvide.formObj.typeInput"
         :rules="typeInputRules"
         required
-        style="margin-left: 10px"
       >
       </v-text-field>
     </v-col>
-    <v-col cols="9" offset="1" style="padding: 0; display: flex">
+    <v-col cols="11" class="d-flex">
       <v-select
         single-line
         outlined
@@ -54,7 +51,7 @@
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <p>*</p>
+            <p class="require-span">*</p>
             <label>配置名称：</label>
           </div>
         </template>
@@ -65,24 +62,21 @@
         clearable
         dense
         solo
-        height="32"
-        class="dialogInput"
-        v-if="formProvide.formObj.name == '其他'"
+        class="dialogInput ml-10"
+        v-if="formProvide.formObj.name === '其他'"
         v-model="formProvide.formObj.nameInput"
         :rules="nameInputRules"
         required
-        style="margin-left: 10px"
       >
       </v-text-field>
     </v-col>
-    <v-col cols="9" offset="1" style="padding: 0">
+    <v-col cols="11">
       <v-text-field
         single-line
         outlined
         clearable
         dense
         solo
-        height="32"
         class="dialogInput"
         v-model="formProvide.formObj.value"
         :rules="valueRules"
@@ -90,7 +84,7 @@
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <p>*</p>
+            <p class="require-span">*</p>
             <label>配置属性：</label>
           </div>
         </template>
@@ -162,13 +156,3 @@ export default class CreateConfigureDialog extends Vue {
   }
 }
 </script>
-<style scoped>
-.text-label {
-  width: 100px;
-  display: flex;
-  justify-content: flex-end;
-}
-.text-label p {
-  color: red;
-}
-</style>

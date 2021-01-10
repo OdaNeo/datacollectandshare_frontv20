@@ -177,6 +177,12 @@ img {
 
 /* form */
 
+.text-label {
+    width: 130px;
+    display: flex;
+    justify-content: flex-end;
+}
+
 .require-span {
     color: red;
     margin-right: 4px;

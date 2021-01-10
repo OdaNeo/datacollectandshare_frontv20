@@ -1,13 +1,12 @@
 <template>
-  <v-row>
-    <v-col cols="9" offset="1" style="padding: 0">
+  <v-row no-gutters>
+    <v-col cols="11">
       <v-text-field
         single-line
         outlined
         clearable
         dense
         solo
-        height="32"
         class="dialogInput"
         v-model="formProvide.formObj.name"
         :rules="nameRules"
@@ -15,7 +14,7 @@
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <p>*</p>
+            <p class="require-span">*</p>
             <label>角色名称：</label>
           </div>
         </template>
@@ -34,14 +33,3 @@ export default class RoleDialog extends Vue {
   private nameRules: Array<Function> = [(v: string) => !!v || '请设置角色名称']
 }
 </script>
-
-<style scoped>
-.text-label {
-  width: 120px;
-  display: flex;
-  justify-content: flex-end;
-}
-.text-label p {
-  color: red;
-}
-</style>

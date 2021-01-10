@@ -27,13 +27,7 @@
         >
       </v-col>
     </v-row>
-    <h-table
-      :headers="headers"
-      :desserts="desserts"
-      :height="400"
-      :pageNum="pageNum"
-      :paginationLength="paginationLength"
-    >
+    <h-table :headers="headers" :desserts="desserts" :pageNum="pageNum" :paginationLength="paginationLength">
       <template v-slot:buttons="{ item }">
         <v-btn small text color="primary" class="my-2" @click="dataStructure(item)"> 数据结构详情 </v-btn>
       </template>
@@ -48,13 +42,13 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import { returnDataType } from '../../../type/http-request.type'
-import http from '../../../decorator/httpDecorator'
-import { topicTable } from '../../../type/topic.type'
-import HTable from '../../../components/h-table.vue'
+import { returnDataType } from '@/type/http-request.type'
+import http from '@/decorator/httpDecorator'
+import { topicTable } from '@/type/topic.type'
+import HTable from '@/components/h-table.vue'
 import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
-import HDialog from '../../../components/h-dialog.vue'
+import HDialog from '@/components/h-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 @Component({
   components: {
@@ -96,7 +90,7 @@ export default class TopicAuditRecords extends Vue {
   private paginationLength = 0
   private dialogFlag = false
   private queryTopicID = ''
-  headers = [
+  private headers = [
     {
       text: '主题ID',
       align: 'center',

@@ -1,13 +1,12 @@
 <template>
-  <v-row>
-    <v-col cols="9" offset="1" style="padding: 0">
+  <v-row no-gutters>
+    <v-col cols="11">
       <v-text-field
         single-line
         outlined
         clearable
         dense
         solo
-        height="32"
         class="dialogInput"
         v-model="formProvide.formObj.loginName.text"
         :rules="loginNameRules"
@@ -16,20 +15,19 @@
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <p>*</p>
+            <p class="require-span">*</p>
             <label>用户名：</label>
           </div>
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="9" offset="1" style="padding: 0" v-if="formProvide.formObj.loginPwd.show">
+    <v-col cols="11" v-if="formProvide.formObj.loginPwd.show">
       <v-text-field
         single-line
         outlined
         clearable
         dense
         solo
-        height="32"
         class="dialogInput"
         v-model="formProvide.formObj.loginPwd.text"
         :rules="loginPwdRules"
@@ -37,13 +35,13 @@
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <p>*</p>
+            <p class="require-span">*</p>
             <label>密码：</label>
           </div>
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="7" offset="1" style="padding: 0">
+    <v-col cols="11">
       <v-select
         single-line
         outlined
@@ -51,7 +49,6 @@
         solo
         label="请选择用户类型"
         :items="userRoots"
-        height="32"
         class="dialogInput"
         v-model="formProvide.formObj.userType.text"
         :rules="userTypeRules"
@@ -59,20 +56,19 @@
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <p>*</p>
+            <p class="require-span">*</p>
             <label>用户类型：</label>
           </div>
         </template>
       </v-select>
     </v-col>
-    <v-col cols="9" offset="1" style="padding: 0">
+    <v-col cols="11">
       <v-radio-group
         v-model="formProvide.formObj.userState.text"
         single-line
         outlined
         dense
         class="dialogInput"
-        height="32"
         solo
         row
         :rules="userStateRules"
@@ -80,14 +76,14 @@
       >
         <template v-slot:prepend>
           <div class="text-label" style="margin-top: 7px">
-            <p>*</p>
+            <p class="require-span">*</p>
             <label>用户状态：</label>
           </div>
         </template>
         <v-radio v-for="n in userStates" :key="n.value" :label="`${n.text}`" :value="n.value"></v-radio>
       </v-radio-group>
     </v-col>
-    <v-col cols="7" offset="1" style="padding: 0">
+    <v-col cols="11">
       <v-select
         single-line
         outlined
@@ -95,7 +91,6 @@
         solo
         label="请选择系统名称"
         :items="systemNames"
-        height="32"
         class="dialogInput"
         v-model="formProvide.formObj.systemName.value"
         :rules="systemNameRules"
@@ -103,7 +98,7 @@
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <p>*</p>
+            <p class="require-span">*</p>
             <label>系统名称：</label>
           </div>
         </template>
@@ -130,17 +125,13 @@ export default class UserDialog extends Vue {
   private systemNames: Array<userFormVar> = []
 
   private loginNameRules: Array<Function> = [(v: string) => !!v || '请设置用户名']
-
   private loginPwdRules: Array<Function> = [(v: string) => !!v || '请设置用户密码']
-
   private userTypeRules: Array<Function> = [(v: string) => !!v || '请选择用户类型']
-
   private userStateRules: Array<Function> = [(v: string) => !!v || '请选择用户状态']
-
   private systemNameRules: Array<Function> = [(v: string) => !!v || '请选择系统名称']
 
   private getUserRoot({ data }: returnDataType) {
-    this.userRoots = data.map((s: any) => {
+    this.userRoots = data.map((s: { name: string; id: number }) => {
       return {
         text: s.name,
         value: s.id.toString()
@@ -148,7 +139,7 @@ export default class UserDialog extends Vue {
     })
   }
   private getSystemName({ data }: returnDataType) {
-    this.systemNames = data.map((s: any) => {
+    this.systemNames = data.map((s: { name: string; id: number }) => {
       return {
         text: s.name,
         value: s.id.toString()
@@ -176,14 +167,3 @@ export default class UserDialog extends Vue {
   }
 }
 </script>
-
-<style scoped>
-.text-label {
-  width: 100px;
-  display: flex;
-  justify-content: flex-end;
-}
-.text-label p {
-  color: red;
-}
-</style>

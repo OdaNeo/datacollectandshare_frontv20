@@ -137,14 +137,13 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
-import http from '../../../decorator/httpDecorator'
-import util from '../../../decorator/utilsDecorator'
-import { returnDataType } from '../../../type/http-request.type'
-import echarts from '../../../decorator/echarsDecorator'
+import { Component, Vue, Watch } from 'vue-property-decorator'
+import http from '@/decorator/httpDecorator'
+import util from '@/decorator/utilsDecorator'
+import { returnDataType } from '@/type/http-request.type'
+import echarts from '@/decorator/echarsDecorator'
 import moment from 'moment'
-import rootStore from '../../../store/modules/root'
-@Component({})
+@Component
 @echarts
 @http
 @util
@@ -221,11 +220,11 @@ export default class DataStatistics extends Vue {
   }
   // 系统选择
   @Watch('beginDate')
-  private dessertsChanged(val: any, oldVal: any): void {
+  private dessertsChanged(val: any): void {
     this.afterDate = moment(val).add(this.currentSelectMonth, 'months').format('YYYY-MM-DD')
   }
   @Watch('currentSelectMonth')
-  private selectMonthChanged(val: any, oldVal: any): void {
+  private selectMonthChanged(): void {
     this.afterDate = moment(this.beginDate).add(this.currentSelectMonth, 'months').format('YYYY-MM-DD')
   }
   private judgStartTime() {

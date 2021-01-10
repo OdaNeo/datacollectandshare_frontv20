@@ -1,19 +1,17 @@
 <template>
   <div id="topicAncilaryInformationDialog">
-    <h-table :headers="tableHeader" :desserts="otherObj" :height="400" style="margin-bottom: 10px"></h-table>
+    <h-table :headers="tableHeader" :desserts="otherObj" class="mb-10"></h-table>
     <h-table
-      v-if="otherObj.topicInterFaceType == 3"
+      v-if="otherObj.topicInterFaceType === 3"
       :headers="headers"
       :desserts="headerValue"
-      :height="400"
-      style="margin-bottom: 10px"
-      title="header"
+      class="mb-10"
     ></h-table>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import HTable from '../../../../components/h-table.vue'
+import HTable from '@/components/h-table.vue'
 
 @Component({
   components: {

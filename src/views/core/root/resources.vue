@@ -14,18 +14,29 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn color="primary" dark @click.stop="addItem"> 添加权限 </v-btn>
+        <v-btn height="38" color="primary" dark @click.stop="addItem">添加权限</v-btn>
       </v-col>
     </v-row>
-    <h-table :max-height="500" :headers="headers" :desserts="desserts">
+    <h-table :headers="headers" :desserts="desserts">
       <template v-slot:buttons="{ item }">
-        <v-btn small text color="primary" class="my-2" @click="editItem(item)"> 编辑 </v-btn>
-        <v-btn text color="orange" small class="my-2" @click="deleteItem(item)"> 删除 </v-btn>
+        <v-btn small text color="primary" class="my-2" @click="editItem(item)">编辑</v-btn>
+        <v-btn
+          text
+          color="orange"
+          small
+          class="my-2"
+          @click="
+            HConfirmShow = true
+            HConfirmItem = item
+          "
+          >删除</v-btn
+        >
       </template>
     </h-table>
     <h-dialog v-model="dialogFlag">
       <resources-dialog slot="dialog-content" :desserts="desserts"></resources-dialog>
     </h-dialog>
+    <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="deleteItem" />
   </div>
 </template>
 <script lang="ts">
@@ -37,12 +48,14 @@ import HDialog from '@/components/h-dialog.vue'
 import ResourcesDialog from './childComponent/resourcesDialog.vue'
 import { ResourcesFormObj } from '@/type/resources.type'
 import util from '@/decorator/utilsDecorator'
+import HConfirm from '@/components/h-confirm.vue'
 
 @Component({
   components: {
     HTable,
     HDialog,
-    ResourcesDialog
+    ResourcesDialog,
+    HConfirm
   }
 })
 @http
@@ -66,7 +79,7 @@ export default class Resources extends Vue {
   })
 
   private queryResourcesName = ''
-  private desserts: Array<any> = []
+  private desserts: Array<unknown> = []
   private dialogFlag = false
 
   private headers = [
@@ -103,6 +116,8 @@ export default class Resources extends Vue {
       slot: 'buttons'
     }
   ]
+  private HConfirmShow = false
+  private HConfirmItem = { id: '' }
 
   private async searchMethod(bool: boolean, params?: object) {
     const { data }: returnDataType = bool
@@ -126,7 +141,7 @@ export default class Resources extends Vue {
     this.formObj.methodName = 'addResources'
   }
 
-  private editItem(item: any) {
+  private editItem(item: { name: string; url: string; type: string; id: string }) {
     this.dialogFlag = true
     this.formObj.title = '权限修改'
     this.formObj.btnName = ['立即修改', '取消']
@@ -140,9 +155,11 @@ export default class Resources extends Vue {
     }
   }
 
-  private async deleteItem(item: any) {
-    const { success } = await this.h_request['httpGET']('GET_PERMISSION_DELETE', {}, item.id)
+  private async deleteItem() {
+    const { success } = await this.h_request['httpGET']('GET_PERMISSION_DELETE', {}, this.HConfirmItem.id)
     if (success) {
+      this.HConfirmShow = false
+      this.h_utils.alertUtil.open('删除成功', true, 'success')
       this.searchMethod(false)
     }
   }

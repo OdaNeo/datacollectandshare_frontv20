@@ -18,10 +18,10 @@
         </v-text-field>
       </v-col>
       <v-col cols="1">
-        <v-btn color="primary" dark @click.stop="createTopic(false)"> 创建主题 </v-btn>
+        <v-btn color="primary" height="38" width="100%" dark @click.stop="createTopic(false)">创建主题</v-btn>
       </v-col>
       <v-col cols="1">
-        <v-btn color="primary" dark @click="openUpload($event)">通过文件创建</v-btn>
+        <v-btn color="primary" height="38" dark @click="openUpload($event)">通过文件创建</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -32,7 +32,6 @@
         <h-table
           :headers="headers"
           :desserts="desserts"
-          :height="500"
           :pageNum="pageNum"
           @PaginationsNow="PaginationsNow"
           :paginationLength="paginationLength"
@@ -378,7 +377,7 @@ export default class TopicList extends Vue {
     const dataStruct: any = {}
     const dataStructNumber: any = {}
 
-    formObj.topicList.forEach((val, index) => {
+    formObj.topicList.forEach(val => {
       dataStruct[val.key] = val.description
       dataStructNumber[val.key] = val.type === '1' ? Number(val.type) : val.type === 'TimeStamp' ? Date.now() : val.type
     })

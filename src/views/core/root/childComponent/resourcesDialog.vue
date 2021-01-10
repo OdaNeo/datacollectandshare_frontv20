@@ -1,13 +1,12 @@
 <template>
-  <v-row>
-    <v-col cols="9" offset="1" style="padding: 0">
+  <v-row no-gutters>
+    <v-col cols="11">
       <v-text-field
         single-line
         outlined
         clearable
         dense
         solo
-        height="32"
         class="dialogInput"
         v-model="formProvide.formObj.name"
         :rules="nameRules"
@@ -15,20 +14,19 @@
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <p>*</p>
+            <p class="require-span">*</p>
             <label>权限名称：</label>
           </div>
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="9" offset="1" style="padding: 0">
+    <v-col cols="11">
       <v-text-field
         single-line
         outlined
         clearable
         dense
         solo
-        height="32"
         class="dialogInput"
         v-model="formProvide.formObj.url"
         required
@@ -40,42 +38,40 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="9" offset="1" style="padding: 0">
+    <v-col cols="11">
       <v-radio-group
         v-model="formProvide.formObj.type"
         single-line
         outlined
         dense
         class="dialogInput"
-        height="32"
         solo
         row
         :rules="typeRules"
         required
       >
         <template v-slot:prepend>
-          <div class="text-label" style="margin-top: 7px">
-            <p>*</p>
+          <div class="text-label">
+            <p class="require-span">*</p>
             <label>权限类型：</label>
           </div>
         </template>
         <v-radio v-for="n in types" :key="n.value" :label="`${n.text}`" :value="n.value"></v-radio>
       </v-radio-group>
     </v-col>
-    <v-col cols="8" offset="1" style="padding: 0; position: relative" v-show="formProvide.formObj.type">
+    <v-col cols="6" style="position: relative" v-show="formProvide.formObj.type">
       <v-text-field
         single-line
         outlined
         :clearable="selectModel ? true : false"
         dense
         solo
-        height="32"
         class="dialogInput selectInput"
         required
         placeholder="请选择父节点"
         readonly
         v-model="selectModel"
-        :rules="formProvide.formObj.type == 'button' ? parentRules : []"
+        :rules="formProvide.formObj.type === 'button' ? parentRules : []"
         @click.stop="selectShow = !selectShow"
       >
         <template v-slot:append>
@@ -85,7 +81,7 @@
         </template>
         <template v-slot:prepend>
           <div class="text-label">
-            <p v-show="formProvide.formObj.type == 'button'">*</p>
+            <p class="require-span" v-show="formProvide.formObj.type === 'button'">*</p>
             <label>父节点名称：</label>
           </div>
         </template>
@@ -95,8 +91,8 @@
           <li
             v-for="(item, index) in desserts"
             :key="index"
-            @click.stop="formProvide.formObj.type == 'menu' ? choiceLi(item) : ''"
-            @mouseenter="formProvide.formObj.type == 'button' ? selectEnter(item, index) : ''"
+            @click.stop="formProvide.formObj.type === 'menu' ? choiceLi(item) : ''"
+            @mouseenter="formProvide.formObj.type === 'button' ? selectEnter(item, index) : ''"
             :class="actionSelect == index ? 'actionSelect' : ''"
           >
             {{ item.name }}
@@ -118,7 +114,7 @@ import { H_Vue } from '@/declaration/vue-prototype'
 
 @Component
 export default class ResourcesDialog extends Vue {
-  @Prop() private desserts!: any
+  @Prop() private desserts!: unknown
   @Inject() private readonly formProvide!: H_Vue
 
   private actionSelect = -1
@@ -127,15 +123,13 @@ export default class ResourcesDialog extends Vue {
   private selectChildShow = false
   private selectModel = null
 
-  private types: Array<any> = [
+  private types: Array<unknown> = [
     { text: '菜单', value: 'menu' },
     { text: '按钮', value: 'button' }
   ]
 
   private nameRules: Array<Function> = [(v: string) => !!v || '请设置权限名称']
-
   private typeRules: Array<Function> = [(v: string) => !!v || '请选择权限类型']
-
   private parentRules: Array<Function> = [(v: string) => !!v || '请选择父节点']
 
   private choiceLi(item: any, parent?: any) {
@@ -169,23 +163,15 @@ export default class ResourcesDialog extends Vue {
 </script>
 
 <style scoped>
-.text-label {
-  width: 120px;
-  display: flex;
-  justify-content: flex-end;
-}
-.text-label p {
-  color: red;
-}
-.selectInput {
+/* .selectInput {
   width: 330px;
   font-size: 14px;
-}
+} */
 .selectCon {
-  width: 193px;
+  width: 198px;
   background: #fff;
   position: absolute;
-  left: 128px;
+  left: 140px;
   top: 40px;
   z-index: 99;
   box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
@@ -217,7 +203,7 @@ export default class ResourcesDialog extends Vue {
   height: 100%;
   background: #fff;
   position: absolute;
-  left: 193px;
+  left: 198px;
   top: 0;
   z-index: 99;
   box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),

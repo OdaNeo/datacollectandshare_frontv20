@@ -14,7 +14,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn color="primary" dark @click.stop="addItem"> 添加用户 </v-btn>
+        <v-btn color="primary" height="38" dark @click.stop="addItem">添加用户</v-btn>
       </v-col>
     </v-row>
     <transition name="table" @after-leave="tableAfterEnter" style="background: #fff">
@@ -27,8 +27,6 @@
           item-key="name"
           dense
           :items-per-page="10"
-          :loading="loadState"
-          loading-text="努力加载中..."
           v-show="tableShow"
         >
           <template v-slot:[`item.gmtCreated`]="{ item }">
@@ -38,7 +36,7 @@
             {{ h_enum['userState'][item.userState] }}
           </template>
           <template [`v-slot:item.actions`]="{ item }">
-            <v-icon small class="mr-4" @click="editItem(item)">mdi-pencil</v-icon>
+            <v-icon small class="mr-4" @click="editItem(item)"> mdi-pencil </v-icon>
             <!--                        <v-icon-->
             <!--                        small-->
             <!--                        @click="deleteItem(item)"-->
@@ -134,15 +132,14 @@ export default class User extends Vue {
   })
   private dialogFlag = false
   private desserts: Array<userInfo> = []
-  private dessertsBF: Array<userInfo> = []
+  // private dessertsBF: Array<userInfo> = []
   private pageNum = 1
   private pageSize = 10
-  private paginationLength = 0
-  private paginationLengthBF = 0
+  private paginationLength = 1
+  // private paginationLengthBF = 0
   private queryUserName = ''
-  private loadState = false
   private tableShow = true
-  private tableFlag = true
+  // private tableFlag = true
   private headers = [
     {
       text: '账号ID',
@@ -264,7 +261,6 @@ export default class User extends Vue {
         reset: false
       },
       systemName: {
-        // text:item.systemName,
         text: item.systemName,
         value: item.email,
         reset: false
@@ -277,19 +273,12 @@ export default class User extends Vue {
     }
   }
 
-  private async searchMethod(first: boolean, bool: boolean, params: paramsType): Promise<void> {
+  private async searchMethod(bool: boolean, params: paramsType): Promise<void> {
     const { data }: returnDataType = bool
       ? await this.h_request['httpGET']<paramsType>('GET_USER_FIND_ALL_USER_BY_PARAM', params)
       : await this.h_request['httpGET']<paramsType>('GET_USER_FIND_ALL_USER', params)
-    this.loadState = false
-    if (first) {
-      this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
-      this.desserts = data['list']
-    } else {
-      this.tableShow = false
-      this.paginationLengthBF = Math.ceil(data['total'] / this.pageSize) || 1
-      this.dessertsBF = data['list']
-    }
+    this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
+    this.desserts = data['list']
   }
 
   private handleCurrentChange(nowPage: number): void {
@@ -298,12 +287,13 @@ export default class User extends Vue {
       pageSize: this.pageSize,
       pageNum: this.pageNum
     }
-    this.searchMethod(true, true, params)
+    this.searchMethod(true, params)
   }
+
   private tableAfterEnter(): void {
     this.tableShow = true
-    this.desserts = this.dessertsBF
-    this.paginationLength = this.paginationLengthBF
+    // this.desserts = this.dessertsBF
+    // this.paginationLength = this.paginationLengthBF
   }
 
   private searchUserList() {
@@ -312,7 +302,7 @@ export default class User extends Vue {
       pageNum: 1,
       loginName: this.queryUserName ? this.queryUserName : null
     }
-    this.searchMethod(true, true, params)
+    this.searchMethod(true, params)
     this.pageNum = 1
   }
 
@@ -326,14 +316,13 @@ export default class User extends Vue {
       systemName: systemName.value,
       id: userId.value
     })
-
     if (success) {
       const params: paramsType = {
         pageSize: this.pageSize,
         pageNum: 1
       }
       this.pageNum = 1
-      this.searchMethod(true, false, params)
+      this.searchMethod(false, params)
       return Promise.resolve(success)
     }
   }
@@ -353,19 +342,17 @@ export default class User extends Vue {
         pageNum: 1
       }
       this.pageNum = 1
-      this.searchMethod(true, false, params)
+      this.searchMethod(false, params)
+      return Promise.resolve(success)
     }
-    return Promise.resolve(success)
   }
-
   created(): void {
-    this.loadState = true
     const params: paramsType = {
       pageSize: this.pageSize,
       pageNum: 1
     }
     this.pageNum = 1
-    this.searchMethod(true, false, params)
+    this.searchMethod(false, params)
   }
 }
 </script>

@@ -14,13 +14,7 @@
         </v-text-field>
       </v-col>
     </v-row>
-    <h-table
-      :headers="headers"
-      :desserts="desserts"
-      :height="450"
-      :pageNum="pageNum"
-      :paginationLength="paginationLength"
-    >
+    <h-table :headers="headers" :desserts="desserts" :pageNum="pageNum" :paginationLength="paginationLength">
       <template v-slot:buttons="{ item }">
         <v-btn small text color="primary" class="my-2" @click="dataStructure(item)">数据结构详情</v-btn>
       </template>
@@ -78,7 +72,7 @@ export default class TopicSubExamine extends Vue {
   private dialogFlag = false
   private paginationLength = 0
   private queryExamineUser = ''
-  headers = [
+  private headers = [
     {
       text: '主题名称',
       align: 'center',
@@ -152,8 +146,9 @@ export default class TopicSubExamine extends Vue {
 
       this.searchMethod(false, {
         pageSize: this.pageSize,
-        pageNum: this.pageNum
+        pageNum: 1
       })
+      this.pageNum = 1
       this.queryExamineUser = ''
     }
   }

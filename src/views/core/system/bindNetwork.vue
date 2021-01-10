@@ -1,3 +1,4 @@
+// TODO :更新bind-net-dialog子组件
 <template>
   <div id="bindNetwork">
     <v-row>
@@ -14,43 +15,57 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn color="primary" dark @click.stop="bindNet"> 绑定网络 </v-btn>
+        <v-btn height="38" color="primary" dark @click.stop="bindNet">绑定网络</v-btn>
       </v-col>
     </v-row>
     <h-table
       :headers="headers"
       :desserts="desserts"
-      :height="450"
       :pageNum="pageNum"
       @PaginationsNow="PaginationsNow"
       :paginationLength="paginationLength"
     >
       <template v-slot:operation="{ item }">
-        <v-btn small text color="primary" class="my-2" @click="relieveNetWork(item)"> 解绑网络 </v-btn>
+        <v-btn
+          small
+          text
+          color="primary"
+          class="my-2"
+          @click="
+            HConfirmShow = true
+            HConfirmItem = item
+          "
+          >解绑网络</v-btn
+        >
       </template>
     </h-table>
     <h-dialog v-model="dialogFlag">
       <bind-net-dialog slot="dialog-content"></bind-net-dialog>
     </h-dialog>
+    <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="relieveNetWork" />
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import HTable from '../../../components/h-table.vue'
-import { returnDataType } from '../../../type/http-request.type'
+import HTable from '@/components/h-table.vue'
+import { returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
-import HDialog from '../../../components/h-dialog.vue'
+import HDialog from '@/components/h-dialog.vue'
 import BindNetDialog from './childComponent/bindNetDialog.vue'
 import { BindNetworkObj } from '@/type/bindNetwork'
+import HConfirm from '@/components/h-confirm.vue'
+import util from '@/decorator/utilsDecorator'
 
 @Component({
   components: {
     HTable,
     HDialog,
-    BindNetDialog
+    BindNetDialog,
+    HConfirm
   }
 })
 @http
+@util
 export default class BindNetwork extends Vue {
   @Provide('formProvide') private formObj = new Vue({
     data() {
@@ -70,7 +85,7 @@ export default class BindNetwork extends Vue {
 
   private pageSize = 20
   private pageNum = 1
-  private desserts: Array<any> = []
+  private desserts: Array<unknown> = []
   private paginationLength = 0
   private dialogFlag = false
   private querySystemName = null
@@ -101,6 +116,9 @@ export default class BindNetwork extends Vue {
       slot: 'operation'
     }
   ]
+  // confirm popup
+  private HConfirmShow = false
+  private HConfirmItem: BindNetworkObj = { systemId: '', systemName: '', networkId: '', networkName: '' }
 
   async searchMethod(bool: boolean, params: object): Promise<void> {
     const { data }: returnDataType = bool
@@ -134,8 +152,8 @@ export default class BindNetwork extends Vue {
     this.formObj.methodName = 'bindNetCallBack'
   }
 
-  private async bindNetCallBack(formObj: any) {
-    const { success } = await this.h_request['httpPOST']<BindNetworkObj>('GET_SYSNET_ADDBINDINFO', {
+  private async bindNetCallBack(formObj: BindNetworkObj) {
+    const { success } = await this.h_request['httpPOST']('GET_SYSNET_ADDBINDINFO', {
       systemId: formObj.systemId,
       systemName: formObj.systemName,
       networkId: formObj.networkId,
@@ -151,18 +169,25 @@ export default class BindNetwork extends Vue {
     }
   }
 
-  private async relieveNetWork(formObj: any) {
-    await this.h_request['httpPOST']('POST_SYSNET_DELETEBINDINFO', {
-      systemId: formObj.systemId,
-      systemName: formObj.systemName,
-      networkId: formObj.networkId,
-      networkName: formObj.networkName
+  private async relieveNetWork() {
+    if (!this.HConfirmItem.systemId) {
+      return
+    }
+    const { success } = await this.h_request['httpPOST']('POST_SYSNET_DELETEBINDINFO', {
+      systemId: this.HConfirmItem.systemId,
+      systemName: this.HConfirmItem.systemName,
+      networkId: this.HConfirmItem.networkId,
+      networkName: this.HConfirmItem.networkName
     })
-    this.searchMethod(false, {
-      pageSize: this.pageSize,
-      pageNum: 1
-    })
-    this.pageNum = 1
+    if (success) {
+      this.HConfirmShow = false
+      this.h_utils.alertUtil.open('解绑成功', true, 'success')
+      this.searchMethod(false, {
+        pageSize: this.pageSize,
+        pageNum: 1
+      })
+      this.pageNum = 1
+    }
   }
 
   private PaginationsNow(page: number) {

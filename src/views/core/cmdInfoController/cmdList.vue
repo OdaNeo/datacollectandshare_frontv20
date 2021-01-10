@@ -18,7 +18,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn color="primary" dark @click.stop="createCommend(false)">创建命令</v-btn>
+        <v-btn height="38" color="primary" dark @click.stop="createCommend(false)">创建命令</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -29,7 +29,6 @@
         <h-table
           :headers="headers"
           :desserts="desserts"
-          :height="500"
           :pageNum="pageNum"
           @PaginationsNow="PaginationsNow"
           :paginationLength="paginationLength"
@@ -329,7 +328,7 @@ export default class CmdList extends Vue {
   }
 
   private async deleteCmd() {
-    if (this.HConfirmItem.id === undefined) {
+    if (!this.HConfirmItem.id) {
       return
     }
     const { success } = await this.h_request.httpGET('GET_CMD_DELETE', {

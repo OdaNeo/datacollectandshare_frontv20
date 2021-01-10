@@ -93,11 +93,6 @@ export default class CreateVideoTopicDialog extends Vue {
 </script>
 
 <style scoped>
-.text-label {
-  width: 130px;
-  display: inline-block;
-  text-align: right;
-}
 .text-label p {
   color: red;
 }

@@ -32,17 +32,15 @@
 import { Component, Vue } from 'vue-property-decorator'
 import NavBar from '../../components/navbar.vue'
 import TopBar from '../../components/topbar.vue'
-// import NavBar1 from '../../components/navbar1.vue'
 import DevicePixelRatio from '@/utils/windowResize'
 @Component({
   components: {
     NavBar,
     TopBar
-    // NavBar1
   }
 })
 export default class Login extends Vue {
-  get items(): any {
+  get items(): Array<{ text: string; disabled?: boolean; link?: boolean; to?: string }> {
     if (this.$route.matched[0].meta.title === 'tct') {
       return [
         { text: '首页', disabled: false },

@@ -1,10 +1,10 @@
 <template>
   <div id="h-table">
-    <div class="simple-table" :style="maxHeight ? 'max-height:' + maxHeight + 'px' : ''">
-      <p style="margin-bottom: 0" class="table-title" v-show="title">
+    <div class="simple-table">
+      <p class="table-title mb-0" v-if="title">
         {{ title }}
       </p>
-      <v-simple-table fixed-header :height="height ? height + 'px' : undefined" dense>
+      <v-simple-table fixed-header dense>
         <template v-slot:default>
           <thead>
             <tr>
@@ -62,8 +62,6 @@ export default class HTable extends Vue {
   private desserts2: Array<unknown> = []
   private expanded: Array<any> = []
 
-  @Prop() private maxHeight!: number
-  @Prop() private height!: number
   @Prop() private paginationLength!: number
   @Prop() private pageNum!: number
   @Prop() private headers!: any
