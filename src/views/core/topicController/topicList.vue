@@ -130,6 +130,7 @@
           <v-spacer></v-spacer>
           <v-btn class="mr-4" solo :disabled="!canUpLoad" @click="upLoadFileConfirm">确定上传</v-btn>
           <v-btn class="mr-4" solo @click="upLoadFileCancel">取消上传</v-btn>
+          <v-spacer></v-spacer>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -802,19 +803,5 @@ export default class TopicList extends Vue {
 .dialog-title {
   text-align: center;
   display: block;
-}
-.table-leave-to {
-  opacity: 0;
-  transform: translate3d(800px, 0, 0);
-}
-.table-enter {
-  opacity: 0;
-  transform: translate3d(800px, 0, 0);
-}
-.table-leave-active {
-  transition: 0.5s all ease;
-}
-.table-enter-active {
-  transition: 0.5s all ease;
 }
 </style>

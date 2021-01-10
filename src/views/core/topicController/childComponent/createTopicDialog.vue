@@ -171,8 +171,7 @@
           </template>
         </v-text-field>
       </v-col>
-      <v-col cols="1" />
-      <v-col cols="4">
+      <v-col cols="5">
         <v-text-field
           single-line
           outlined
@@ -287,8 +286,7 @@
           </template>
         </v-text-field>
       </v-col>
-      <v-col cols="1" />
-      <v-col cols="4">
+      <v-col cols="5">
         <v-text-field
           single-line
           outlined
@@ -384,8 +382,7 @@
             </template>
           </v-text-field>
         </v-col>
-        <v-col cols="1" />
-        <v-col cols="4">
+        <v-col cols="5">
           <v-text-field
             single-line
             outlined
@@ -474,7 +471,7 @@
         ></v-radio>
       </v-radio-group>
     </v-col>
-    <v-col cols="11" v-if="onlineData">
+    <v-col cols="11" class="mt-n3 mb-2" v-if="onlineData">
       <v-slider
         v-model="formProvide.formObj.redisTimer"
         class="align-center"

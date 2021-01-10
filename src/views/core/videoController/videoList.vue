@@ -18,7 +18,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn color="primary" dark @click.stop="createTopicVideo()">创建主题</v-btn>
+        <v-btn color="primary" dark @click.stop="createTopicVideo">创建主题</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -29,7 +29,6 @@
         <h-table
           :headers="headers"
           :desserts="desserts"
-          :height="500"
           :pageNum="pageNum"
           @PaginationsNow="PaginationsNow"
           :paginationLength="paginationLength"
@@ -322,19 +321,3 @@ export default class CmdList extends Vue {
   }
 }
 </script>
-<style scoped>
-.table-leave-to {
-  opacity: 0;
-  transform: translate3d(800px, 0, 0);
-}
-.table-enter {
-  opacity: 0;
-  transform: translate3d(800px, 0, 0);
-}
-.table-leave-active {
-  transition: 0.5s all ease;
-}
-.table-enter-active {
-  transition: 0.5s all ease;
-}
-</style>

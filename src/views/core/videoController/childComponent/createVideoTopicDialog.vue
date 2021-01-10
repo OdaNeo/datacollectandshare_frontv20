@@ -1,13 +1,13 @@
 <template>
-  <v-row id="createCmdDialog">
+  <v-row id="createCmdDialog" no-gutters>
     <!-- 弹框 展示数据结 -->
-    <v-col cols="9" style="padding: 0">
+    <v-col cols="11">
       <v-text-field
         single-line
         outlined
         clearable
         dense
-        height="32"
+        solo
         class="dialogInput"
         v-model="formProvide.formObj.videoTopicName"
         :rules="[...h_validator.videoTopicNameValidate(), ...topicRepeat]"
@@ -21,13 +21,13 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="9" style="padding: 0">
+    <v-col cols="11">
       <v-text-field
         single-line
         outlined
         clearable
         dense
-        height="32"
+        solo
         class="dialogInput"
         v-model="formProvide.formObj.dataSource"
         :rules="[...h_validator.videoDataSourceValidate()]"
@@ -39,13 +39,13 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="9" style="padding: 0">
+    <v-col cols="11">
       <v-text-field
         single-line
         outlined
         clearable
         dense
-        height="32"
+        solo
         class="dialogInput"
         v-model="formProvide.formObj.cameraPosition"
         :rules="[...h_validator.videoCameraPositionValidate()]"
@@ -61,9 +61,9 @@
 </template>
 <script lang="ts">
 import { Component, Inject, Vue } from 'vue-property-decorator'
-import http from '../../../../decorator/httpDecorator'
-import validator from '../../../../decorator/validatorDecorator'
-import { H_Vue } from '../../../../declaration/vue-prototype'
+import http from '@/decorator/httpDecorator'
+import validator from '@/decorator/validatorDecorator'
+import { H_Vue } from '@/declaration/vue-prototype'
 
 @Component
 @http
@@ -91,45 +91,3 @@ export default class CreateVideoTopicDialog extends Vue {
   }
 }
 </script>
-
-<style scoped>
-.text-label p {
-  color: red;
-}
-.btn-line {
-  padding-bottom: 20px;
-}
-.btn-line .v-btn {
-  margin-right: 10px;
-}
-
-.checkbox-container {
-  width: 400px;
-  margin-left: 130px;
-  margin-top: -20px;
-  margin-right: -10px;
-}
-.checkbox-item {
-  min-width: 70px;
-  height: 40px;
-}
-.text-label-line {
-  width: 130px;
-  display: inline-block;
-  box-sizing: border-box;
-  padding-right: 14px;
-  font-size: 16px;
-  text-align: right;
-  color: #000;
-}
-.text-label-line label {
-  font-size: 16px;
-}
-.require-span {
-  color: red;
-  margin-right: 4px;
-}
-.dialogInput .v-input__slot {
-  box-shadow: 2px 2px 10px #dddddd !important;
-}
-</style>
