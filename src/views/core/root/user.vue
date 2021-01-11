@@ -18,7 +18,7 @@
       </v-col>
     </v-row>
     <transition name="table" @after-leave="tableAfterEnter" style="background: #fff">
-      <div style="height: 448px">
+      <div>
         <v-data-table
           :headers="headers"
           :items="desserts"
@@ -36,7 +36,7 @@
             {{ h_enum['userState'][item.userState] }}
           </template>
           <template [`v-slot:item.actions`]="{ item }">
-            <v-icon small class="mr-4" @click="editItem(item)"> mdi-pencil </v-icon>
+            <v-icon small class="mr-4" @click="editItem(item)">mdi-pencil</v-icon>
             <!--                        <v-icon-->
             <!--                        small-->
             <!--                        @click="deleteItem(item)"-->

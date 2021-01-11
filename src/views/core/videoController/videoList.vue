@@ -5,7 +5,7 @@
         <v-text-field
           solo
           dense
-          placeholder="请输入查找的主题ID"
+          placeholder="请输入查找的非结构化主题ID"
           clearable
           append-icon="mdi-magnify"
           @click:append="searchVideoTopic"
@@ -18,7 +18,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn color="primary" dark @click.stop="createTopicVideo">创建主题</v-btn>
+        <v-btn color="primary" height="38" dark @click.stop="createTopicVideo">创建非结构化主题</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -34,9 +34,7 @@
           :paginationLength="paginationLength"
         >
           <template v-slot:dataSourceList="{ item }">
-            <v-btn small text color="primary" class="my-2" @click.stop="showVideoPopup(item.dataSourceList)">{{
-              item.dataSourceList
-            }}</v-btn>
+            <v-btn small text color="primary" @click.stop="showVideoPopup(item.dataSourceList)">输入日期</v-btn>
           </template>
           <template v-slot:buttons2="{ item }">
             <v-btn
@@ -57,21 +55,22 @@
     </v-tabs-items>
     <h-dialog v-if="dialogFlag" v-model="dialogFlag">
       <create-video-topic-dialog slot="dialog-content" v-if="dialogShow === 1" />
-      <video-popup slot="dialog-content" v-if="dialogShow === 2" />
+      <!-- <video-popup slot="dialog-content" :videoList="videoList" v-if="dialogShow === 2" /> -->
     </h-dialog>
+    <!-- <video-popup style="width: 600px" :videoList="videoList" v-if="dialogShow === 2" /> -->
     <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="deleteVideoTopic" />
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import http from '../../../decorator/httpDecorator'
-import HTable from '../../../components/h-table.vue'
-import HConfirm from '../../../components/h-confirm.vue'
-import HDialog from '../../../components/h-dialog.vue'
+import http from '@/decorator/httpDecorator'
+import HTable from '@/components/h-table.vue'
+import HConfirm from '@/components/h-confirm.vue'
+import HDialog from '@/components/h-dialog.vue'
 import CreateVideoTopicDialog from './childComponent/createVideoTopicDialog.vue'
 import VideoPopup from './childComponent/videoPopup.vue'
-import { VideoTopicAdd } from '../../../type/video-add.type'
-import util from '../../../decorator/utilsDecorator'
+import { VideoTopicAdd } from '@/type/video-add.type'
+import util from '@/decorator/utilsDecorator'
 
 @Component({
   components: {
@@ -154,13 +153,13 @@ export default class CmdList extends Vue {
       slot: 'buttons2'
     }
   ]
-  // 添加主题调用方法
+  private videoList: Array<string> = []
   //  创建主题
   private createTopicVideo() {
     this.dialogFlag = true
     this.dialogShow = 1
     this.formObj.btnName = ['立即提交']
-    this.formObj.title = '创建主题'
+    this.formObj.title = '创建非结构化主题'
     this.formObj.methodName = 'addVideoTopic' // 立即提交
     this.formObj.formObj = {
       videoTopicName: '', // 视频主题名
@@ -200,13 +199,13 @@ export default class CmdList extends Vue {
     return Promise.resolve()
   }
   // 视频弹窗
-  private showVideoPopup(list: string) {
+  private showVideoPopup(list: Array<string>) {
     this.dialogFlag = true
     this.dialogShow = 2
-    this.formObj.title = '视频'
+    this.formObj.title = '视频地址列表'
     this.formObj.btnName = []
     this.formObj.methodName = ''
-    console.log(list)
+    this.videoList = list
   }
 
   // 查询通用调用方法
@@ -219,7 +218,11 @@ export default class CmdList extends Vue {
           userName: 'user2',
           dataSource: 'ATS',
           cameraPosition: 'Position1',
-          dataSourceList: 'dataSourceList'
+          dataSourceList: [
+            'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+            'http://172.51.216.106:8080/live/test.m3u8',
+            'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
+          ]
         }
       ],
       total: 1

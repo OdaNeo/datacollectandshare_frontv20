@@ -16,7 +16,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <v-col cols="11" class="btn-line">
+    <v-col cols="10" class="btn-line">
       <div class="text-label-line">
         <label>数据类型：</label>
       </div>
@@ -37,7 +37,7 @@
         >离线</v-btn
       >
     </v-col>
-    <v-col cols="11" class="btn-line">
+    <v-col cols="10" class="btn-line">
       <div class="text-label-line">
         <label>接口类型：</label>
       </div>
@@ -96,7 +96,7 @@
         >拉取FTP</v-btn
       >
     </v-col>
-    <v-col cols="11">
+    <v-col cols="10">
       <v-text-field
         single-line
         outlined
@@ -117,7 +117,7 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="11" v-if="onlineData && formProvide.formObj.interfaceType === 6">
+    <v-col cols="10" v-if="onlineData && formProvide.formObj.interfaceType === 6">
       <v-file-input
         class="pt-0 mt-0"
         accept=".proto"
@@ -130,7 +130,7 @@
         </template>
       </v-file-input>
     </v-col>
-    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 5">
+    <v-col cols="10" v-if="formProvide.formObj.interfaceType === 5">
       <v-text-field
         single-line
         outlined
@@ -171,7 +171,7 @@
           </template>
         </v-text-field>
       </v-col>
-      <v-col cols="5">
+      <v-col cols="4">
         <v-text-field
           single-line
           outlined
@@ -187,7 +187,7 @@
         </v-text-field>
       </v-col>
     </v-row>
-    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 5">
+    <v-col cols="10" v-if="formProvide.formObj.interfaceType === 5">
       <v-text-field
         single-line
         outlined
@@ -207,7 +207,7 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 5">
+    <v-col cols="10" v-if="formProvide.formObj.interfaceType === 5">
       <v-text-field
         single-line
         outlined
@@ -227,7 +227,7 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 2">
+    <v-col cols="10" v-if="formProvide.formObj.interfaceType === 2">
       <v-text-field
         single-line
         outlined
@@ -247,7 +247,7 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 2">
+    <v-col cols="10" v-if="formProvide.formObj.interfaceType === 2">
       <v-autocomplete
         v-model="formProvide.formObj.databaseType"
         :disabled="formProvide.formObj.canNotEdit"
@@ -286,7 +286,7 @@
           </template>
         </v-text-field>
       </v-col>
-      <v-col cols="5">
+      <v-col cols="4">
         <v-text-field
           single-line
           outlined
@@ -300,11 +300,11 @@
         >
         </v-text-field>
       </v-col>
-      <v-col cols="1" class="mt-n1">
+      <v-col cols="2" class="mt-1">
         <span style="font-size: 12px">填写后不可修改</span>
       </v-col>
     </v-row>
-    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 3">
+    <v-col cols="10" v-if="formProvide.formObj.interfaceType === 3">
       <v-text-field
         single-line
         outlined
@@ -324,7 +324,7 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 3">
+    <v-col cols="10" v-if="formProvide.formObj.interfaceType === 3">
       <v-autocomplete
         v-model="formProvide.formObj.type"
         :disabled="formProvide.formObj.canNotEdit"
@@ -343,7 +343,7 @@
         </template>
       </v-autocomplete>
     </v-col>
-    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 3 && formProvide.formObj.type === 'post'">
+    <v-col cols="10" v-if="formProvide.formObj.interfaceType === 3 && formProvide.formObj.type === 'post'">
       <v-textarea
         outlined
         v-model="formProvide.formObj.body"
@@ -382,7 +382,7 @@
             </template>
           </v-text-field>
         </v-col>
-        <v-col cols="5">
+        <v-col cols="4">
           <v-text-field
             single-line
             outlined
@@ -398,7 +398,7 @@
           >
           </v-text-field>
         </v-col>
-        <v-col cols="1" v-if="!formProvide.formObj.canNotEdit">
+        <v-col cols="2" v-if="!formProvide.formObj.canNotEdit">
           <v-btn
             fab
             dark
@@ -424,7 +424,7 @@
         </v-col>
       </v-row>
     </div>
-    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 1 || formProvide.formObj.interfaceType === 4">
+    <v-col cols="10" v-if="formProvide.formObj.interfaceType === 1 || formProvide.formObj.interfaceType === 4">
       <v-radio-group
         v-model="formProvide.formObj.messageType"
         dense
@@ -448,7 +448,7 @@
         ></v-radio>
       </v-radio-group>
     </v-col>
-    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 1 || formProvide.formObj.interfaceType === 4">
+    <v-col cols="10" v-if="formProvide.formObj.interfaceType === 1 || formProvide.formObj.interfaceType === 4">
       <v-radio-group
         v-model="formProvide.formObj.writeElasticsearch"
         dense
@@ -471,7 +471,7 @@
         ></v-radio>
       </v-radio-group>
     </v-col>
-    <v-col cols="11" class="mt-n3 mb-2" v-if="onlineData">
+    <v-col cols="10" class="mt-n3 mb-2" v-if="onlineData">
       <v-slider
         v-model="formProvide.formObj.redisTimer"
         class="align-center"
@@ -497,7 +497,7 @@
         </template>
       </v-slider>
     </v-col>
-    <v-col cols="11" v-if="formProvide.formObj.interfaceType === 4">
+    <v-col cols="10" v-if="formProvide.formObj.interfaceType === 4">
       <v-textarea
         outlined
         v-model="formProvide.formObj.dataStructSchema"
@@ -560,7 +560,7 @@
           >
           </v-text-field>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="2">
           <v-autocomplete
             v-model="item.type"
             :items="items"
@@ -600,7 +600,7 @@
         </v-col>
       </v-row>
     </div>
-    <v-col cols="11" v-if="onlineData && formProvide.formObj.interfaceType === 4">
+    <v-col cols="10" v-if="onlineData && formProvide.formObj.interfaceType === 4">
       <v-radio-group row>
         <template v-slot:prepend>
           <div class="text-label">
