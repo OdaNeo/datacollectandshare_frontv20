@@ -254,7 +254,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/videoController/videoList',
     meta: {
       title: '视频数据管理',
-      icon: 'mdi-video-box ',
+      icon: 'mdi-video-box',
       access: true
     },
     children: [
@@ -264,7 +264,7 @@ const routes: Array<RouteConfig> = [
         name: '视频列表',
         meta: {
           title: '视频列表',
-          icon: 'mdi-file-video ',
+          icon: 'mdi-file-video',
           access: true
         }
       }

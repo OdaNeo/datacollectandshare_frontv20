@@ -55,7 +55,7 @@
     </v-tabs-items>
     <h-dialog v-if="dialogFlag" v-model="dialogFlag">
       <create-video-topic-dialog slot="dialog-content" v-if="dialogShow === 1" />
-      <!-- <video-popup slot="dialog-content" :videoList="videoList" v-if="dialogShow === 2" /> -->
+      <set-date-range slot="dialog-content" v-else-if="dialogShow === 2" />
     </h-dialog>
     <!-- <video-popup style="width: 600px" :videoList="videoList" v-if="dialogShow === 2" /> -->
     <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="deleteVideoTopic" />
@@ -68,6 +68,7 @@ import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
 import HDialog from '@/components/h-dialog.vue'
 import CreateVideoTopicDialog from './childComponent/createVideoTopicDialog.vue'
+import SetDateRange from './childComponent/setDateRange.vue'
 import VideoPopup from './childComponent/videoPopup.vue'
 import { VideoTopicAdd } from '@/type/video-add.type'
 import util from '@/decorator/utilsDecorator'
@@ -78,7 +79,8 @@ import util from '@/decorator/utilsDecorator'
     HDialog,
     HConfirm,
     CreateVideoTopicDialog,
-    VideoPopup
+    VideoPopup,
+    SetDateRange
   }
 })
 @http
@@ -93,7 +95,9 @@ export default class CmdList extends Vue {
         formObj: {
           videoTopicName: '', // 视频主题名
           dataSource: '', // 数据源地址
-          cameraPosition: '' // 摄像头位置
+          cameraPosition: '', // 摄像头位置
+          startTime: '',
+          endTime: ''
         }
       }
     }
@@ -102,7 +106,7 @@ export default class CmdList extends Vue {
   private tab = null
   private items = ['所有主题', '我的主题']
   private dialogFlag = false // 弹窗展示
-  private dialogShow = 0 // 展示哪个弹窗 1.创建主题 2.视频弹窗
+  private dialogShow = 0 // 展示哪个弹窗 1.创建主题 2.日期选择
   private otherObj: any = {} // 描述
 
   private HConfirmShow = false
@@ -164,7 +168,9 @@ export default class CmdList extends Vue {
     this.formObj.formObj = {
       videoTopicName: '', // 视频主题名
       dataSource: '', // 数据源地址
-      cameraPosition: '' // 摄像头位置
+      cameraPosition: '', // 摄像头位置
+      startTime: '',
+      endTime: ''
     }
   }
 
@@ -196,15 +202,21 @@ export default class CmdList extends Vue {
       )
       this.pageNum = 1
     }
-    return Promise.resolve()
   }
   // 视频弹窗
   private showVideoPopup(list: Array<string>) {
     this.dialogFlag = true
     this.dialogShow = 2
-    this.formObj.title = '视频地址列表'
-    this.formObj.btnName = []
-    this.formObj.methodName = ''
+    this.formObj.title = '选择日期范围'
+    this.formObj.btnName = ['查看视频']
+    this.formObj.methodName = 'addVideoTopic'
+    this.formObj.formObj = {
+      videoTopicName: '',
+      dataSource: '',
+      cameraPosition: '',
+      startTime: '',
+      endTime: ''
+    }
     this.videoList = list
   }
 

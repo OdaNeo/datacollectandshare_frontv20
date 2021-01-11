@@ -36,3 +36,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 6. eslint（代码风格、缩进校验）添加 0.5 天
 
 dataType '0:结构化 1:非结构化 video' 字符串 发请求的时候传数字
+
+拆分 formobj

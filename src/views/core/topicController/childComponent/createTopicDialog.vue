@@ -545,7 +545,7 @@
             </template>
           </v-text-field>
         </v-col>
-        <v-col cols="3">
+        <v-col cols="2">
           <v-text-field
             single-line
             outlined
@@ -560,7 +560,7 @@
           >
           </v-text-field>
         </v-col>
-        <v-col cols="2">
+        <v-col cols="3">
           <v-autocomplete
             v-model="item.type"
             :items="items"
