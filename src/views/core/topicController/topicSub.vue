@@ -40,7 +40,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import { returnDataType } from '@/type/http-request.type'
+import { paramsType, returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
@@ -122,7 +122,9 @@ export default class TopicSub extends Vue {
       slot: 'operation'
     }
   ]
-  async searchMethod(bool: boolean, params: object): Promise<void> {
+
+  async searchMethod(bool: boolean, params: paramsType): Promise<void> {
+    params.dataType = 1
     const { data }: returnDataType = bool
       ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTTOPICBYTIDTNAME', params)
       : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL_TOPIC', params)
@@ -191,6 +193,7 @@ export default class TopicSub extends Vue {
       pageSize: this.pageSize,
       pageNum: 1
     })
+    this.pageNum = 1
   }
 }
 </script>

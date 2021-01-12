@@ -33,10 +33,8 @@
           @PaginationsNow="PaginationsNow"
           :paginationLength="paginationLength"
         >
-          <template v-slot:dataSourceList>
-            <v-btn small text color="primary" @click.stop="showDateRangePopup">输入日期</v-btn>
-          </template>
           <template v-slot:buttons2="{ item }">
+            <v-btn small text color="primary" @click.stop="showDateRangePopup">输入日期</v-btn>
             <v-btn
               small
               v-if="tab"
@@ -57,12 +55,13 @@
       <create-video-topic-dialog slot="dialog-content" v-if="dialogShow === 1" />
       <set-date-range slot="dialog-content" v-else-if="dialogShow === 2" />
     </h-dialog>
-    <video-popup :videoList="videoList" v-if="showVideoPopup" />
+    <video-popup style="background-color: #fff" :videoList="videoList" v-if="showVideoPopup" v-model="showVideoPopup" />
     <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="deleteVideoTopic" />
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
+import { paramsType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
@@ -72,6 +71,7 @@ import SetDateRange from './childComponent/setDateRange.vue'
 import VideoPopup from './childComponent/videoPopup.vue'
 import { VideoTopicAdd, VideoTimeRange } from '@/type/video-add.type'
 import util from '@/decorator/utilsDecorator'
+import { dataType, topicInterFaceType } from '@/enum/topic-enum.ts'
 
 @Component({
   components: {
@@ -93,9 +93,12 @@ export default class CmdList extends Vue {
         btnName: [] as string[],
         methodName: '',
         formObj: {
-          videoTopicName: '', // 视频主题名
-          dataSource: '', // 数据源地址
-          cameraPosition: '', // 摄像头位置
+          topicName: '', // 视频主题名
+          serverUrl: '', // '本系统rtmp地址',
+          address: '', // '摄像头物理地址',
+          sourceUrl: '', // topic所属摄像头rtsp/rtmp地址',
+          m3u8Url: '', // '视频流m3u8地址',
+          bucketName: '', // 'minio桶名称',
           startTime: '',
           startHour: 0,
           endTime: '',
@@ -108,8 +111,7 @@ export default class CmdList extends Vue {
   private items = ['所有主题', '我的主题']
   private dialogFlag = false // 弹窗展示
   private dialogShow = 0 // 展示哪个弹窗 1.创建主题 2.日期选择
-  private otherObj: any = {} // 描述
-
+  // 删除确认
   private HConfirmShow = false
   private HConfirmItem = {
     id: ''
@@ -121,6 +123,7 @@ export default class CmdList extends Vue {
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
+
   private headers = [
     // 表头内容 所有主题
     {
@@ -139,19 +142,29 @@ export default class CmdList extends Vue {
       value: 'userName'
     },
     {
-      text: '数据源地址',
+      text: '视频流m3u8地址',
       align: 'center',
-      value: 'dataSource'
+      value: 'm3u8Url'
     },
     {
-      text: '摄像头位置',
+      text: '本系统rtmp地址',
       align: 'center',
-      value: 'cameraPosition'
+      value: 'serverUrl'
     },
     {
-      text: '数据存储目录',
+      text: '摄像头物理地址',
       align: 'center',
-      slot: 'dataSourceList'
+      value: 'address'
+    },
+    {
+      text: '摄像头rtsp/rtmp地址',
+      align: 'center',
+      value: 'sourceUrl'
+    },
+    {
+      text: 'minio桶名称',
+      align: 'center',
+      value: 'bucketName'
     },
     {
       text: '操作',
@@ -168,9 +181,12 @@ export default class CmdList extends Vue {
     this.formObj.title = '创建非结构化主题'
     this.formObj.methodName = 'addVideoTopic' // 立即提交
     this.formObj.formObj = {
-      videoTopicName: '', // 视频主题名
-      dataSource: '', // 数据源地址
-      cameraPosition: '', // 摄像头位置
+      topicName: '', // 视频主题名
+      serverUrl: '', // '本系统rtmp地址',
+      address: '', // '摄像头物理地址',
+      sourceUrl: '', // 摄像头rtsp/rtmp地址,
+      m3u8Url: '', // '视频流m3u8地址',
+      bucketName: '', // 'minio桶名称',
       startTime: '',
       startHour: 0,
       endTime: '',
@@ -180,25 +196,21 @@ export default class CmdList extends Vue {
 
   //  提交创建 非结构化数据
   private async addVideoTopic(formObj: VideoTopicAdd) {
-    console.log(formObj)
-
     const params: any = {}
-    //  ADD 不提交id，UPDATE提交id
-    // formObj.canNotEdit && (params['id'] = formObj.id)
-    // params['cmdName'] = formObj.cmdName
-    // params['consumers'] = formObj.consumers.join(',')
-    // params['producer'] = formObj.producer
-    // params['description'] = formObj.description
-    params['dataType'] = 1
 
-    const { success } = await this.h_request['httpPOST'](
-      !formObj.canNotEdit ? 'POST_CMD_ADD' : 'POST_CMD_UPDATE',
-      params
-    )
+    params['topicName'] = formObj.topicName
+    params['serverUrl'] = formObj.serverUrl
+    params['address'] = formObj.address
+    params['sourceUrl'] = formObj.sourceUrl
+    params['m3u8Url'] = formObj.m3u8Url
+    params['bucketName'] = formObj.bucketName
+    params['topicInterFaceType'] = topicInterFaceType['VIDEO']
+    params['dataType'] = dataType['非结构化']
 
+    console.log(params)
+    const { success } = await this.h_request['httpPOST']('POST_TOPICS_ADD', params)
     if (success) {
-      this.h_utils['alertUtil'].open(!formObj.canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
-
+      this.h_utils['alertUtil'].open('主题创建成功', true, 'success')
       this.searchMethod(
         false,
         {
@@ -220,9 +232,12 @@ export default class CmdList extends Vue {
     this.formObj.btnName = ['查看视频']
     this.formObj.methodName = 'getVideoList'
     this.formObj.formObj = {
-      videoTopicName: '', // 视频主题名
-      dataSource: '', // 数据源地址
-      cameraPosition: '', // 摄像头位置
+      topicName: '',
+      serverUrl: '',
+      address: '',
+      sourceUrl: '',
+      m3u8Url: '',
+      bucketName: '',
       startTime: '',
       startHour: 0,
       endTime: new Date().toISOString().substr(0, 10),
@@ -233,36 +248,21 @@ export default class CmdList extends Vue {
   // 获得视频列表
   private getVideoList(formObj: VideoTimeRange) {
     console.log(formObj)
-    this.showVideoPopup = true
+
     this.videoList = [
       'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
       'http://172.51.216.106:8080/live/test.m3u8',
       'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
     ]
+    this.showVideoPopup = true
     return Promise.resolve(true)
   }
 
   // 查询通用调用方法
-  private async searchMethod(bool: boolean, params: any, tab?: boolean) {
+  private async searchMethod(bool: boolean, params: paramsType, tab?: boolean) {
     // 非结构化数据
-    params.dataType = 2
-    // const data = {
-    //   list: [
-    //     {
-    //       id: 123123,
-    //       topicName: 1231,
-    //       userName: 'user2',
-    //       dataSource: 'ATS',
-    //       cameraPosition: 'Position1',
-    //       dataSourceList: [
-    //         'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-    //         'http://172.51.216.106:8080/live/test.m3u8',
-    //         'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
-    //       ]
-    //     }
-    //   ],
-    //   total: 1
-    // }
+    params.dataType = dataType['非结构化']
+
     if (tab) {
       const { data } = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
@@ -301,6 +301,8 @@ export default class CmdList extends Vue {
       this.searchMethod(
         true,
         {
+          pageNum: 1,
+          pageSize: this.pageSize,
           topicID: this.queryVideoTopicID
         },
         !!this.tab
@@ -324,7 +326,7 @@ export default class CmdList extends Vue {
 
   // 删除主题
   private async deleteVideoTopic() {
-    if (this.HConfirmItem.id === undefined) {
+    if (this.HConfirmItem.id) {
       return
     }
     // const { success } = await this.h_request["httpGET"]("GET_CMD_DELETE", {

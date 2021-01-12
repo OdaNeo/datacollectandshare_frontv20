@@ -18,7 +18,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="1">
-        <v-btn color="primary" height="38" width="100%" dark @click.stop="createTopic(false)">创建主题</v-btn>
+        <v-btn color="primary" height="38" width="100%" dark @click.stop="createTopic(false)">创建结构化主题</v-btn>
       </v-col>
       <v-col cols="1">
         <v-btn color="primary" height="38" dark @click="openUpload($event)">通过文件创建</v-btn>
@@ -139,7 +139,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import { returnDataType } from '@/type/http-request.type'
+import { paramsType, returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
@@ -152,7 +152,7 @@ import { TopicAdd } from '@/type/topic-add.type'
 import TopicAncilaryInformationDialog from './childComponent/topicAncilaryInformationDialog.vue'
 import util from '@/decorator/utilsDecorator'
 import alertUtil from '@/utils/alertUtil'
-
+import { dataType, topicInterFaceType } from '@/enum/topic-enum.ts'
 import axios from 'axios'
 import { rootStoreModule } from '@/store/modules/root'
 
@@ -247,7 +247,7 @@ export default class TopicList extends Vue {
   private forms = new FormData()
 
   private desserts: Array<topicTable> = [] // 数据列表
-  private queryTopicID = null // 查询主题ID input框内容
+  private queryTopicID = '' // 查询主题ID input框内容
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
@@ -281,20 +281,21 @@ export default class TopicList extends Vue {
       align: 'center',
       value: 'topicInterFaceType',
       format: (val: number) => {
-        switch (val) {
-          case 1:
-            return '通用Rest接口'
-          case 2:
-            return '数据库采集'
-          case 3:
-            return '服务主动拉取'
-          case 4:
-            return '多级嵌套免校验'
-          case 5:
-            return '拉取FTP'
-          case 6:
-            return 'PROTOBUF'
-        }
+        return topicInterFaceType[val]
+        // switch (val) {
+        //   case 1:
+        //     return '通用Rest接口'
+        //   case 2:
+        //     return '数据库采集'
+        //   case 3:
+        //     return '服务主动拉取'
+        //   case 4:
+        //     return '多级嵌套免校验'
+        //   case 5:
+        //     return '拉取FTP'
+        //   case 6:
+        //     return 'PROTOBUF'
+        // }
       }
     },
     {
@@ -388,7 +389,7 @@ export default class TopicList extends Vue {
       dataStruct: _keyS,
       structMapping: '',
       dsAnnotation: _numberS,
-      dataType: 1
+      dataType: dataType['结构化']
     }
 
     if (!formObj.canNotEdit) {
@@ -519,8 +520,8 @@ export default class TopicList extends Vue {
     }
   }
   // 查询通用调用方法 非结构化数据
-  private async searchMethod(bool: boolean, params: any, tab?: boolean) {
-    params.dataType = 1
+  private async searchMethod(bool: boolean, params: paramsType, tab?: boolean) {
+    params.dataType = dataType['结构化']
     if (tab) {
       const { data }: returnDataType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
@@ -555,7 +556,7 @@ export default class TopicList extends Vue {
       this.searchMethod(
         true,
         {
-          topicID: this.queryTopicID ? this.queryTopicID : 0,
+          topicID: this.queryTopicID,
           pageNum: 1,
           pageSize: this.pageSize
         },

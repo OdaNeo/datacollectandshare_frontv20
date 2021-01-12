@@ -8,9 +8,9 @@
         dense
         solo
         class="dialogInput"
-        v-model="formProvide.formObj.videoTopicName"
+        v-model="formProvide.formObj.topicName"
         :rules="[...h_validator.videoTopicNameValidate(), ...topicRepeat]"
-        @input="inputEvent(formProvide.formObj.videoTopicName)"
+        @input="inputEvent(formProvide.formObj.topicName)"
         required
       >
         <template v-slot:prepend>
@@ -28,12 +28,12 @@
         dense
         solo
         class="dialogInput"
-        v-model="formProvide.formObj.dataSource"
+        v-model="formProvide.formObj.serverUrl"
         :rules="[...h_validator.videoDataSourceValidate()]"
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <label><span class="require-span">*</span>数据源地址：</label>
+            <label><span class="require-span">*</span>rtmp地址：</label>
           </div>
         </template>
       </v-text-field>
@@ -46,12 +46,66 @@
         dense
         solo
         class="dialogInput"
-        v-model="formProvide.formObj.cameraPosition"
+        v-model="formProvide.formObj.address"
         :rules="[...h_validator.videoCameraPositionValidate()]"
       >
         <template v-slot:prepend>
           <div class="text-label">
-            <label><span class="require-span">*</span>摄像头位置：</label>
+            <label><span class="require-span">*</span>摄像头地址：</label>
+          </div>
+        </template>
+      </v-text-field>
+    </v-col>
+    <v-col cols="11">
+      <v-text-field
+        single-line
+        outlined
+        clearable
+        dense
+        solo
+        class="dialogInput"
+        v-model="formProvide.formObj.sourceUrl"
+        :rules="[...h_validator.videoCameraPositionValidate()]"
+      >
+        <template v-slot:prepend>
+          <div class="text-label">
+            <label><span class="require-span">*</span>rtsp/rtmp地址：</label>
+          </div>
+        </template>
+      </v-text-field>
+    </v-col>
+    <v-col cols="11">
+      <v-text-field
+        single-line
+        outlined
+        clearable
+        dense
+        solo
+        class="dialogInput"
+        v-model="formProvide.formObj.m3u8Url"
+        :rules="[...h_validator.videoCameraPositionValidate()]"
+      >
+        <template v-slot:prepend>
+          <div class="text-label">
+            <label><span class="require-span">*</span>视频流m3u8地址：</label>
+          </div>
+        </template>
+      </v-text-field>
+    </v-col>
+    <v-col cols="11">
+      <v-text-field
+        single-line
+        outlined
+        clearable
+        dense
+        solo
+        class="dialogInput"
+        v-model="formProvide.formObj.bucketName"
+        :rules="[...h_validator.videoCameraPositionValidate()]"
+      >
+        <template v-slot:prepend>
+          <div class="text-label">
+            <label><span class="require-span">*</span>minio桶名称：</label>
           </div>
         </template>
       </v-text-field>
@@ -74,19 +128,19 @@ export default class CreateVideoTopicDialog extends Vue {
   private topicRepeat: Function[] = []
 
   private async inputEvent(v: string) {
-    console.log(v)
-    // if (v && v != '') {
-    //   const { success } = await this.h_request['httpGET']('GET_CMD_CHECKED', {
-    //     cmdName: v,
-    //   })
-    //   if (success) {
-    //     this.topicRepeat = [(v: string) => '命令名称已被注册']
-    //   } else {
-    //     this.topicRepeat = []
-    //   }
-    // } else {
-    //   this.topicRepeat = []
-    // }
+    if (v) {
+      const { success } = await this.h_request['httpGET']('GET_TOPICS_CHECKED', {
+        topicName: v
+      })
+      if (success) {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        this.topicRepeat = [(v: string) => '主题名称已被注册']
+      } else {
+        this.topicRepeat = []
+      }
+    } else {
+      this.topicRepeat = []
+    }
   }
 }
 </script>

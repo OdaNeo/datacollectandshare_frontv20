@@ -1,7 +1,12 @@
 export type paramsType = {
   pageSize: number
   pageNum: number
+  dataType?: number
+  userName?: string
+  id?: string
   status?: number
+  topicId?: string
+  topicID?: string
 }
 
 export type returnDataType = {

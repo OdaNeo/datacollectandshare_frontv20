@@ -155,7 +155,7 @@ export default class CreateCmdDialog extends Vue {
 
 <style scoped>
 .checkbox-container {
-  margin: -25px 0px 0px 130px;
+  margin: -25px 0px 0px 150px;
 }
 .checkbox-item {
   min-width: 70px;

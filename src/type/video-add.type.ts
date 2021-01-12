@@ -1,10 +1,10 @@
 export type VideoTopicAdd = {
-  id: number
-  cmdName: string
-  consumers: Array<string>
-  description: string
-  producer: string
-  canNotEdit: boolean
+  topicName: string
+  serverUrl: string
+  address: string
+  sourceUrl: string
+  m3u8Url: string
+  bucketName: string
 }
 export type VideoTimeRange = {
   startTime: string

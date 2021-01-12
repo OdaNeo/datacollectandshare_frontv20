@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <v-dialog v-model="dialog" persistent max-width="900">
     <v-slide-group v-model="model" class="pa-4" mandatory center-active show-arrows>
       <v-slide-item
         v-for="(item, index) in videoNameList"
@@ -13,7 +13,7 @@
       </v-slide-item>
     </v-slide-group>
     <div ref="video" />
-  </div>
+  </v-dialog>
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
@@ -27,6 +27,8 @@ export default class VideoPopup extends Vue {
   private curIndex = 0
   private video: HTMLVideoElement | undefined
   private dp: DPlayer | undefined
+
+  private dialog = true
 
   get videoNameList(): Array<string> {
     const _l: Array<string> = []

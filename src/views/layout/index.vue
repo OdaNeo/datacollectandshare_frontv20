@@ -14,7 +14,7 @@
       </transition>
     </v-navigation-drawer>
     <v-app-bar app height="57" color="rgb(0,21,41)" class="animated bounceInDown">
-      <TopBar></TopBar>
+      <TopBar />
     </v-app-bar>
     <v-main style="background: rgb(246, 248, 251)">
       <v-container fluid style="height: 100%">
@@ -30,8 +30,8 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import NavBar from '../../components/navbar.vue'
-import TopBar from '../../components/topbar.vue'
+import NavBar from '@/components/navbar.vue'
+import TopBar from '@/components/topbar.vue'
 import DevicePixelRatio from '@/utils/windowResize'
 @Component({
   components: {

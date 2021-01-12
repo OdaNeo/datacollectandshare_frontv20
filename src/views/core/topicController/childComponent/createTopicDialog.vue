@@ -840,7 +840,7 @@ export default class CreateTopicDialog extends Vue {
   overflow-x: hidden;
 }
 .text-label-line {
-  width: 130px;
+  width: 150px;
   display: inline-block;
   box-sizing: border-box;
   font-size: 16px;

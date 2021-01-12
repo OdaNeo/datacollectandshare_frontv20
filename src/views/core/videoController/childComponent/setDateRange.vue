@@ -4,7 +4,7 @@
       <v-col cols="2">
         <label class="dateRangeLabel"><span class="require-span">*</span>起始时间：</label>
       </v-col>
-      <v-col cols="6">
+      <v-col cols="5">
         <v-menu
           v-model="menuStart"
           :close-on-content-click="false"
@@ -31,7 +31,7 @@
           ></v-date-picker>
         </v-menu>
       </v-col>
-      <v-col cols="3" style="margin-top: 6px">
+      <v-col cols="2" style="margin-top: 6px">
         <v-autocomplete
           v-model="formProvide.formObj.startHour"
           height="40"
@@ -41,12 +41,13 @@
           dense
         ></v-autocomplete>
       </v-col>
+      <v-col cols="1"></v-col>
     </v-row>
     <v-row justify="space-around" no-gutters>
       <v-col cols="2">
         <label class="dateRangeLabel"><span class="require-span">*</span>截止时间：</label>
       </v-col>
-      <v-col cols="6">
+      <v-col cols="5">
         <v-menu
           v-model="menuEnd"
           :close-on-content-click="false"
@@ -73,7 +74,7 @@
           ></v-date-picker>
         </v-menu>
       </v-col>
-      <v-col cols="3" style="margin-top: 6px">
+      <v-col cols="2" style="margin-top: 6px">
         <v-autocomplete
           v-model="formProvide.formObj.endHour"
           height="40"
@@ -83,6 +84,7 @@
           dense
         ></v-autocomplete>
       </v-col>
+      <v-col cols="1"></v-col>
     </v-row>
   </div>
 </template>

@@ -30,7 +30,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import { returnDataType } from '@/type/http-request.type'
+import { paramsType, returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
@@ -116,7 +116,7 @@ export default class TopicSubExamine extends Vue {
     }
   ]
 
-  async searchMethod(bool: boolean, params: object): Promise<void> {
+  async searchMethod(bool: boolean, params: paramsType): Promise<void> {
     const { data }: returnDataType = bool
       ? await this.h_request['httpGET']<object>('GET_SUBMODERATIONS_SELECTBYUSERNAMESTATUS', params)
       : await this.h_request['httpGET']<object>('GET_SUB_MODERATIONS_SELECT_STATUS', params)
