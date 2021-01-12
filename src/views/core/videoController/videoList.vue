@@ -55,7 +55,7 @@
       <create-video-topic-dialog slot="dialog-content" v-if="dialogShow === 1" />
       <set-date-range slot="dialog-content" v-else-if="dialogShow === 2" />
     </h-dialog>
-    <video-popup style="background-color: #fff" :videoList="videoList" v-if="showVideoPopup" v-model="showVideoPopup" />
+    <video-popup :videoList="videoList" v-if="showVideoPopup" v-model="showVideoPopup" />
     <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="deleteVideoTopic" />
   </div>
 </template>

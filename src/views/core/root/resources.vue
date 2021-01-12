@@ -33,7 +33,7 @@
         >
       </template>
     </h-table>
-    <h-dialog v-model="dialogFlag">
+    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
       <resources-dialog slot="dialog-content" :desserts="desserts"></resources-dialog>
     </h-dialog>
     <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="deleteItem" />

@@ -39,7 +39,7 @@
         >
       </template>
     </h-table>
-    <h-dialog v-model="dialogFlag">
+    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
       <bind-net-dialog slot="dialog-content"></bind-net-dialog>
     </h-dialog>
     <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="relieveNetWork" />

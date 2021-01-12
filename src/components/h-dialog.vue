@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="closeDialog" max-width="750px" persistent content-class="roleDialog">
+  <v-dialog v-model="closeDialog" max-width="750px" persistent>
     <v-card>
       <v-card-title class="dialog-title">
         <p class="mb-0">{{ formProvide.title }}</p>
@@ -33,9 +33,7 @@ export default class HDialog extends Vue {
   get closeDialog(): boolean {
     return this.checked
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  set closeDialog(newValue: boolean) {}
+  // set closeDialog(newValue: boolean) {}
 
   public closeMethod(): void {
     this.$emit('hdialog')
