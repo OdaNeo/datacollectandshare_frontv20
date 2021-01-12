@@ -33,8 +33,8 @@
           @PaginationsNow="PaginationsNow"
           :paginationLength="paginationLength"
         >
-          <template v-slot:dataSourceList="{ item }">
-            <v-btn small text color="primary" @click.stop="showVideoPopup(item.dataSourceList)">输入日期</v-btn>
+          <template v-slot:dataSourceList>
+            <v-btn small text color="primary" @click.stop="showDateRangePopup">输入日期</v-btn>
           </template>
           <template v-slot:buttons2="{ item }">
             <v-btn
@@ -57,7 +57,7 @@
       <create-video-topic-dialog slot="dialog-content" v-if="dialogShow === 1" />
       <set-date-range slot="dialog-content" v-else-if="dialogShow === 2" />
     </h-dialog>
-    <!-- <video-popup style="width: 600px" :videoList="videoList" v-if="dialogShow === 2" /> -->
+    <video-popup :videoList="videoList" v-if="showVideoPopup" />
     <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="deleteVideoTopic" />
   </div>
 </template>
@@ -70,7 +70,7 @@ import HDialog from '@/components/h-dialog.vue'
 import CreateVideoTopicDialog from './childComponent/createVideoTopicDialog.vue'
 import SetDateRange from './childComponent/setDateRange.vue'
 import VideoPopup from './childComponent/videoPopup.vue'
-import { VideoTopicAdd } from '@/type/video-add.type'
+import { VideoTopicAdd, VideoTimeRange } from '@/type/video-add.type'
 import util from '@/decorator/utilsDecorator'
 
 @Component({
@@ -97,12 +97,13 @@ export default class CmdList extends Vue {
           dataSource: '', // 数据源地址
           cameraPosition: '', // 摄像头位置
           startTime: '',
-          endTime: ''
+          startHour: 0,
+          endTime: '',
+          endHour: 0
         }
       }
     }
   })
-
   private tab = null
   private items = ['所有主题', '我的主题']
   private dialogFlag = false // 弹窗展示
@@ -113,9 +114,10 @@ export default class CmdList extends Vue {
   private HConfirmItem = {
     id: ''
   }
+  private showVideoPopup = false
 
   private desserts: Array<any> = [] // 数据列表
-  private queryVideoTopicID = null // 查询主题ID input框内容
+  private queryVideoTopicID = '' // 查询主题ID input框内容
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
@@ -170,19 +172,24 @@ export default class CmdList extends Vue {
       dataSource: '', // 数据源地址
       cameraPosition: '', // 摄像头位置
       startTime: '',
-      endTime: ''
+      startHour: 0,
+      endTime: '',
+      endHour: 0
     }
   }
 
-  //  提交创建
+  //  提交创建 非结构化数据
   private async addVideoTopic(formObj: VideoTopicAdd) {
+    console.log(formObj)
+
     const params: any = {}
     //  ADD 不提交id，UPDATE提交id
-    // formObj.canNotEdit && (params["id"] = formObj.id);
-    // params["cmdName"] = formObj.cmdName;
-    // params["consumers"] = formObj.consumers.join(",");
-    // params["producer"] = formObj.producer;
-    // params["description"] = formObj.description;
+    // formObj.canNotEdit && (params['id'] = formObj.id)
+    // params['cmdName'] = formObj.cmdName
+    // params['consumers'] = formObj.consumers.join(',')
+    // params['producer'] = formObj.producer
+    // params['description'] = formObj.description
+    params['dataType'] = 1
 
     const { success } = await this.h_request['httpPOST'](
       !formObj.canNotEdit ? 'POST_CMD_ADD' : 'POST_CMD_UPDATE',
@@ -201,48 +208,65 @@ export default class CmdList extends Vue {
         !!this.tab
       )
       this.pageNum = 1
+      return Promise.resolve(true)
     }
   }
-  // 视频弹窗
-  private showVideoPopup(list: Array<string>) {
+
+  // 时间选择弹窗
+  private showDateRangePopup() {
     this.dialogFlag = true
     this.dialogShow = 2
     this.formObj.title = '选择日期范围'
     this.formObj.btnName = ['查看视频']
-    this.formObj.methodName = 'addVideoTopic'
+    this.formObj.methodName = 'getVideoList'
     this.formObj.formObj = {
-      videoTopicName: '',
-      dataSource: '',
-      cameraPosition: '',
+      videoTopicName: '', // 视频主题名
+      dataSource: '', // 数据源地址
+      cameraPosition: '', // 摄像头位置
       startTime: '',
-      endTime: ''
+      startHour: 0,
+      endTime: new Date().toISOString().substr(0, 10),
+      endHour: 0
     }
-    this.videoList = list
+  }
+
+  // 获得视频列表
+  private getVideoList(formObj: VideoTimeRange) {
+    console.log(formObj)
+    this.showVideoPopup = true
+    this.videoList = [
+      'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+      'http://172.51.216.106:8080/live/test.m3u8',
+      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
+    ]
+    return Promise.resolve(true)
   }
 
   // 查询通用调用方法
-  private async searchMethod(bool: boolean, params: object, tab?: boolean) {
-    const data = {
-      list: [
-        {
-          id: 123123,
-          topicName: 1231,
-          userName: 'user2',
-          dataSource: 'ATS',
-          cameraPosition: 'Position1',
-          dataSourceList: [
-            'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-            'http://172.51.216.106:8080/live/test.m3u8',
-            'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
-          ]
-        }
-      ],
-      total: 1
-    }
+  private async searchMethod(bool: boolean, params: any, tab?: boolean) {
+    // 非结构化数据
+    params.dataType = 2
+    // const data = {
+    //   list: [
+    //     {
+    //       id: 123123,
+    //       topicName: 1231,
+    //       userName: 'user2',
+    //       dataSource: 'ATS',
+    //       cameraPosition: 'Position1',
+    //       dataSourceList: [
+    //         'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+    //         'http://172.51.216.106:8080/live/test.m3u8',
+    //         'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
+    //       ]
+    //     }
+    //   ],
+    //   total: 1
+    // }
     if (tab) {
-      // const { data }: returnDataType = bool
-      //   ? await this.h_request["httpGET"]<object>("GET_CMD_MYCMDBYID", params)
-      //   : await this.h_request["httpGET"]<object>("GET_CMD_MYCMD", params);
+      const { data } = bool
+        ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
+        : await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICS', params)
       data.list &&
         (this.desserts = data.list.map((item: any) => {
           return { ...item, flag: false }
@@ -250,10 +274,9 @@ export default class CmdList extends Vue {
 
       this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     } else {
-      // const { data }: returnDataType = bool
-      //   ? await this.h_request["httpGET"]<object>("GET_CMD_SELECTCMD", params)
-      //   : await this.h_request["httpGET"]<object>("GET_CMD_FIND_ALL", params);
-
+      const { data } = bool
+        ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTTOPIC', params)
+        : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL', params)
       data.list &&
         (this.desserts = data.list.map((item: any) => {
           return { ...item, flag: false }
@@ -263,7 +286,7 @@ export default class CmdList extends Vue {
     }
   }
 
-  // 主题查询
+  // 非结构化主题查询
   private searchVideoTopic() {
     if (!this.queryVideoTopicID) {
       this.searchMethod(
@@ -278,7 +301,7 @@ export default class CmdList extends Vue {
       this.searchMethod(
         true,
         {
-          id: this.queryVideoTopicID
+          topicID: this.queryVideoTopicID
         },
         !!this.tab
       )

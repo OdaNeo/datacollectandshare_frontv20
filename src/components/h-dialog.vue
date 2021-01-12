@@ -19,7 +19,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Prop, Model, Inject } from 'vue-property-decorator'
-import HForm from '../components/h-form.vue'
+import HForm from './h-form.vue'
 import { H_Vue } from '../declaration/vue-prototype'
 @Component({
   components: {

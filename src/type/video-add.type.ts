@@ -6,3 +6,9 @@ export type VideoTopicAdd = {
   producer: string
   canNotEdit: boolean
 }
+export type VideoTimeRange = {
+  startTime: string
+  startHour: number
+  endTime: string
+  endHour: number
+}

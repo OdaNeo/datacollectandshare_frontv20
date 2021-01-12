@@ -1,6 +1,5 @@
 <template>
   <v-row no-gutters>
-    <!-- 弹框 展示数据结 -->
     <v-col cols="11">
       <v-text-field
         single-line

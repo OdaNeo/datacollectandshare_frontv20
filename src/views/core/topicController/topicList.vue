@@ -387,7 +387,8 @@ export default class TopicList extends Vue {
     const params: any = {
       dataStruct: _keyS,
       structMapping: '',
-      dsAnnotation: _numberS
+      dsAnnotation: _numberS,
+      dataType: 1
     }
 
     if (!formObj.canNotEdit) {
@@ -469,8 +470,8 @@ export default class TopicList extends Vue {
           !!this.tab
         )
         this.pageNum = 1
+        return Promise.resolve(success)
       }
-      return Promise.resolve(success)
     } else {
       // protobuf文件上传
       // 如果此处vetur报错，请将工程文件放在vscode根目录下 https://github.com/vuejs/vetur/issues/2602
@@ -517,8 +518,9 @@ export default class TopicList extends Vue {
       value: 'Basic ' + window.btoa(obj.key + ':' + obj.value + '')
     }
   }
-  // 查询通用调用方法
-  private async searchMethod(bool: boolean, params: object, tab?: boolean) {
+  // 查询通用调用方法 非结构化数据
+  private async searchMethod(bool: boolean, params: any, tab?: boolean) {
+    params.dataType = 1
     if (tab) {
       const { data }: returnDataType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)

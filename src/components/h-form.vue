@@ -124,7 +124,11 @@ export default class DialogForm extends Vue {
             value: ''
           },
           type: '',
-          body: ''
+          body: '',
+          startTime: '',
+          startHour: 0,
+          endTime: '',
+          endHour: 0
         }
         this.udf.resetValidation()
       }
@@ -209,7 +213,11 @@ export default class DialogForm extends Vue {
           value: ''
         },
         type: '',
-        body: ''
+        body: '',
+        startTime: '',
+        startHour: 0,
+        endTime: '',
+        endHour: 0
       }
       this.udf.resetValidation()
     }

@@ -12,7 +12,6 @@
         </v-btn>
       </v-slide-item>
     </v-slide-group>
-    <!-- <video ref="video" width="100%" autoplay controls></video> -->
     <div ref="video" />
   </div>
 </template>
@@ -42,7 +41,7 @@ export default class VideoPopup extends Vue {
     if (Hls.isSupported()) {
       this.dp = new DPlayer({
         container: this.video,
-        live: true,
+        // live: true,
         autoplay: true,
         video: {
           url: this.videoList[n],
