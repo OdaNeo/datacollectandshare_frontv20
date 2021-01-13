@@ -21,7 +21,7 @@
       </v-slide-group>
       <!-- iframe 为了解决播放列表切换时，产生的多余的.ts文件请求 -->
       <iframe
-        :src="`/streamVideo?video=${videoList[curIndex]}`"
+        :src="`/streamVideo?video=${videoList[curIndex]}&id=${curIndex}`"
         allowfullscreen="allowfullscreen"
         mozallowfullscreen="mozallowfullscreen"
         msallowfullscreen="msallowfullscreen"
@@ -73,6 +73,9 @@ export default class VideoPopup extends Vue {
 
   private toggleCurrentPlay(index: number) {
     videoStoreModule.setPlayListCurIndex(index)
+    const iframe = this.$refs.iframe as HTMLIFrameElement
+    const iframeWindow = iframe.contentWindow
+    iframeWindow && iframeWindow.addEventListener('videoPlayEnd', this.addPlayList)
   }
   private addPlayList() {
     videoStoreModule.addPlayListCurIndex()
