@@ -34,7 +34,7 @@
         </v-btn>
       </template>
     </h-table>
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <h-dialog v-model="dialogFlag">
       <role-dialog slot="dialog-content" v-if="dialogShow"></role-dialog>
       <auth-dialog slot="dialog-content" v-else :roles="roles"></auth-dialog>
     </h-dialog>

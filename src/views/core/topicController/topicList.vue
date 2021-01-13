@@ -99,7 +99,7 @@
       </v-tab-item>
     </v-tabs-items>
 
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag" ref="HDialog">
+    <h-dialog v-model="dialogFlag" ref="HDialog">
       <data-structure-dialog slot="dialog-content" :rowObj="rowObj" v-if="dialogShow === 2"></data-structure-dialog>
       <create-topic-dialog
         slot="dialog-content"
@@ -394,20 +394,20 @@ export default class TopicList extends Vue {
 
     if (!formObj.canNotEdit) {
       switch (formObj.interfaceType) {
-        case 1:
+        case topicInterFaceType['通用Rest接口']:
           params.topicInterFaceType = formObj.interfaceType
           params.topicName = formObj.topicName
           params.queneType = formObj.messageType
           params.redisTimer = formObj.redisTimer
           params.writeElasticsearch = formObj.writeElasticsearch
           break
-        case 2:
+        case topicInterFaceType['数据库采集']:
           params.topicInterFaceType = formObj.interfaceType
           params.topicName = formObj.topicName
           params.dataBaseType = formObj.databaseType
           params.dataBaseIp = formObj.dataBaseIp
           break
-        case 3:
+        case topicInterFaceType['服务主动拉取']:
           // 只在添加的时候 转base64
           if (formObj.AuthorizationObj.key !== '' && formObj.AuthorizationObj.value !== '') {
             formObj.header.unshift(this.authorizationBase64(formObj.AuthorizationObj))
@@ -419,7 +419,7 @@ export default class TopicList extends Vue {
           params.type = formObj.type
           params.body = formObj.body.replace(/\s+/g, '')
           break
-        case 4:
+        case topicInterFaceType['多级嵌套免校验']:
           params.topicInterFaceType = formObj.interfaceType
           params.topicName = formObj.topicName
           params.queneType = formObj.messageType
@@ -430,7 +430,7 @@ export default class TopicList extends Vue {
           delete params.structMapping
           delete params.dsAnnotation
           break
-        case 5:
+        case topicInterFaceType['拉取FTP']:
           params.topicInterFaceType = formObj.interfaceType
           params.topicName = formObj.topicName
           params.port = formObj.port
@@ -442,7 +442,7 @@ export default class TopicList extends Vue {
           delete params.structMapping
           delete params.dsAnnotation
           break
-        case 6:
+        case topicInterFaceType['PROTOBUF']:
           if (!this.file) {
             break
           }
@@ -455,7 +455,7 @@ export default class TopicList extends Vue {
       params.id = formObj.id
     }
     // protobuf情况下需要formData文件上传，与现有axios拦截逻辑不同
-    if (formObj.interfaceType !== 6) {
+    if (formObj.interfaceType !== topicInterFaceType['PROTOBUF']) {
       const { success } = await this.h_request['httpPOST'](
         !formObj.canNotEdit ? 'POST_TOPICS_ADD' : 'POST_TOPICS_UPDATE',
         params

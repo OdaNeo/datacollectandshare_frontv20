@@ -23,7 +23,7 @@
         <v-btn text color="red" small class="my-2" @click="examine(item, 2)">审核拒绝</v-btn>
       </template>
     </h-table>
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <h-dialog v-model="dialogFlag">
       <data-structure-dialog slot="dialog-content" :rowObj="rowObj"></data-structure-dialog>
     </h-dialog>
   </div>

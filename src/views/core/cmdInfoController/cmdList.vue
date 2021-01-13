@@ -57,7 +57,7 @@
         </h-table>
       </v-tab-item>
     </v-tabs-items>
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <h-dialog v-model="dialogFlag">
       <create-cmd-dialog slot="dialog-content" v-if="dialogShow === 1" />
       <data-structure-dialog slot="dialog-content" :rowObj="rowObj" v-else-if="dialogShow === 2" />
       <cmd-ancilary-information-dialog slot="dialog-content" :otherObj="otherObj" v-else-if="dialogShow === 3" />

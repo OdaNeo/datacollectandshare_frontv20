@@ -55,7 +55,7 @@
       </div>
     </transition>
 
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <h-dialog v-model="dialogFlag">
       <user-dialog slot="dialog-content"></user-dialog>
     </h-dialog>
   </div>

@@ -34,7 +34,7 @@
           :paginationLength="paginationLength"
         >
           <template v-slot:buttons2="{ item }">
-            <v-btn small text color="primary" @click.stop="showDateRangePopup">输入日期</v-btn>
+            <v-btn small text color="primary" @click.stop="showDateRangePopup(item)">查看视频</v-btn>
             <v-btn
               small
               v-if="tab"
@@ -51,7 +51,7 @@
         </h-table>
       </v-tab-item>
     </v-tabs-items>
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <h-dialog v-model="dialogFlag">
       <create-video-topic-dialog slot="dialog-content" v-if="dialogShow === 1" />
       <set-date-range slot="dialog-content" v-else-if="dialogShow === 2" />
     </h-dialog>
@@ -173,6 +173,7 @@ export default class CmdList extends Vue {
     }
   ]
   private videoList: Array<string> = []
+  private curItem: any
   //  创建主题
   private createTopicVideo() {
     this.dialogFlag = true
@@ -225,7 +226,8 @@ export default class CmdList extends Vue {
   }
 
   // 时间选择弹窗
-  private showDateRangePopup() {
+  private showDateRangePopup(item: any) {
+    this.curItem = item
     this.dialogFlag = true
     this.dialogShow = 2
     this.formObj.title = '选择日期范围'
@@ -248,7 +250,7 @@ export default class CmdList extends Vue {
   // 获得视频列表
   private getVideoList(formObj: VideoTimeRange) {
     console.log(formObj)
-
+    console.log(this.curItem.id)
     this.videoList = [
       'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
       'http://172.51.216.106:8080/live/test.m3u8',

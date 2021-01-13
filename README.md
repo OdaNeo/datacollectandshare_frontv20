@@ -32,8 +32,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 2. cmdList videoList 页面创建主题代码重构 1 天 !
 3. http 接口是否可用 1 天 !
 4. 所有删除按钮添加弹框提示 1 天
-5. eslint（代码风格、缩进校验）、打包加速、自动部署、版本控制、线上查看版本添加 1 天
+5. eslint（代码风格、缩进校验）、打包加速、自动部署、版本控制、线上查看版本添加 ? 天
+6. 解耦 formobj
+7. form 结构
 
-dataType 1:结构化 2:非结构化
-
-拆分 formobj
+dialog(v-modal, prop(title,btn), form-slots(for headers-form), auto renew provider/reject, dynamic create form/provider)

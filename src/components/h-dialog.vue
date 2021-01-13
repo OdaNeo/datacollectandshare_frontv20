@@ -33,7 +33,8 @@ export default class HDialog extends Vue {
   get closeDialog(): boolean {
     return this.checked
   }
-  // set closeDialog(newValue: boolean) {}
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  set closeDialog(val: boolean) {}
 
   public closeMethod(): void {
     this.$emit('hdialog')
