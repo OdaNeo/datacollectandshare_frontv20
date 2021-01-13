@@ -51,12 +51,12 @@
         </h-table>
       </v-tab-item>
     </v-tabs-items>
-    <h-dialog v-model="dialogFlag">
+    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
       <create-video-topic-dialog slot="dialog-content" v-if="dialogShow === 1" />
       <set-date-range slot="dialog-content" v-else-if="dialogShow === 2" />
     </h-dialog>
     <video-popup :videoList="videoList" v-if="showVideoPopup" v-model="showVideoPopup" />
-    <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="deleteVideoTopic" />
+    <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteVideoTopic" />
   </div>
 </template>
 <script lang="ts">
@@ -69,9 +69,11 @@ import HDialog from '@/components/h-dialog.vue'
 import CreateVideoTopicDialog from './childComponent/createVideoTopicDialog.vue'
 import SetDateRange from './childComponent/setDateRange.vue'
 import VideoPopup from './childComponent/videoPopup.vue'
-import { VideoTopicAdd, VideoTimeRange } from '@/type/video-add.type'
+import { VideoTopicAdd } from '@/type/video-add.type'
 import util from '@/decorator/utilsDecorator'
-import { dataType, topicInterFaceType } from '@/enum/topic-enum.ts'
+import Enum from '@/decorator/enumDecorator'
+import { dataType } from '@/enum/topic-datatype-enum.ts'
+import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
 
 @Component({
   components: {
@@ -85,6 +87,12 @@ import { dataType, topicInterFaceType } from '@/enum/topic-enum.ts'
 })
 @http
 @util
+@Enum([
+  {
+    tsFileName: 'topic-datatype-enum',
+    enumName: 'dataType'
+  }
+])
 export default class CmdList extends Vue {
   @Provide('formProvide') private formObj = new Vue({
     data() {
@@ -114,7 +122,9 @@ export default class CmdList extends Vue {
   // 删除确认
   private HConfirmShow = false
   private HConfirmItem = {
-    id: ''
+    id: '',
+    topicName: '',
+    topicInterFaceType: 0
   }
   private showVideoPopup = false
 
@@ -208,7 +218,6 @@ export default class CmdList extends Vue {
     params['topicInterFaceType'] = topicInterFaceType['VIDEO']
     params['dataType'] = dataType['非结构化']
 
-    console.log(params)
     const { success } = await this.h_request['httpPOST']('POST_TOPICS_ADD', params)
     if (success) {
       this.h_utils['alertUtil'].open('主题创建成功', true, 'success')
@@ -248,10 +257,11 @@ export default class CmdList extends Vue {
   }
 
   // 获得视频列表
-  private getVideoList(formObj: VideoTimeRange) {
-    console.log(formObj)
-    console.log(this.curItem.id)
+  private getVideoList() {
+    console.log(this.formObj.formObj)
     this.videoList = [
+      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
+      'http://172.51.216.106:8080/live/push/push.m3u8',
       'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
       'http://172.51.216.106:8080/live/test.m3u8',
       'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
@@ -328,25 +338,28 @@ export default class CmdList extends Vue {
 
   // 删除主题
   private async deleteVideoTopic() {
-    if (this.HConfirmItem.id) {
+    if (!this.HConfirmItem.id) {
       return
     }
-    // const { success } = await this.h_request["httpGET"]("GET_CMD_DELETE", {
-    //   id: this.HConfirmItem.id,
-    // });
-    // if (success) {
-    //   this.HConfirmShow = false;
-    //   this.h_utils["alertUtil"].open("主题删除成功", true, "success");
-    //   this.searchMethod(
-    //     false,
-    //     {
-    //       pageSize: this.pageSize,
-    //       pageNum: 1,
-    //     },
-    //     true
-    //   );
-    //   this.pageNum=1
-    // }
+
+    const { success } = await this.h_request['httpGET']('GET_TOPICS_DELETE', {
+      topicID: this.HConfirmItem.id,
+      topicName: this.HConfirmItem.topicName,
+      topicInterFaceType: this.HConfirmItem.topicInterFaceType
+    })
+    if (success) {
+      this.HConfirmShow = false
+      this.h_utils['alertUtil'].open('主题删除成功', true, 'success')
+      this.searchMethod(
+        false,
+        {
+          pageSize: this.pageSize,
+          pageNum: 1
+        },
+        true
+      )
+      this.pageNum = 1
+    }
   }
 
   // 分页

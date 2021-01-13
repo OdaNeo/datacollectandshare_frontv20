@@ -21,7 +21,7 @@ export const GET_PERMISSION_AUTHORIZATION_FINDPERMISSIONLISTBYROLEID =
   '/permission/authorization/findPermissionListByRoleId'
 export const POST_PERMISSION_AUTHORIZATION_ADDROLEIDPERMISSIONID = '/permission/authorization/addRoleIdPermissionId'
 
-export const GET_TOPICS_SELECTTOPICBYTIDTNAME = '/topics/selectTopicByTIdTName'
+// export const GET_TOPICS_SELECTTOPICBYTIDTNAME = '/topics/selectTopicByTIdTName'
 export const POST_SUBMODERATIONS_INSERTSUBMODERATION = '/subModerations/insertSubModeration'
 export const POST_TOPICS_DELSUBUSER = '/topics/delSubUser'
 
@@ -49,6 +49,8 @@ export const GET_TOPICS_CHECKED = '/topics/findTopicByTopicName'
 export const GET_TOPICS_PROTOBUFDOWNLOAD = '/topics/protobufDownload'
 
 // ---------------- 主题订阅审核 ------------------
+export const GET_TOPICS_FINDALLSUBTOPIC = '/topics/findAllSubTopic' // 查询可订阅的主题
+export const GET_TOPICS_SELECTSUBTOPICBYID = '/topics/selectSubTopicById' // 通过id查询主题
 export const GET_SUB_MODERATIONS_SELECT_STATUS = '/subModerations/selectStatus' // 获取审核列表
 export const GET_SUBMODERATIONS_SELECTBYUSERNAMESTATUS = '/subModerations/selectByUserNameStatus' // 通过订阅用户获取审核列表
 export const POST_SUBMODERATIONS_UPDATESUBMODERATION = '/subModerations/updateSubModeration' // 审核操作
@@ -84,7 +86,7 @@ export const GET_SYSTEM_GETSYSTEMINFO = '/system/getSystemInfo'
 // -------------------命令管理——————————————————————————————
 export const GET_CMD_FIND_ALL = '/cmd/findAll'
 export const GET_CMD_MYCMD = '/cmd/findCmdInfoByUserId'
-export const GET_CMD_MYCMDBYID = '/cmd/findCmdInfoById'
+export const GET_CMD_MYCMDBYID = '/cmd/findCmdInfoById' // 此接口与GET_CMD_SELECTCMD重复
 
 // 校验cmd是否存在
 export const GET_CMD_CHECKED = '/cmd/isRepeat'
@@ -94,7 +96,8 @@ export const GET_CMD_SELECTCMD = '/cmd/findCmdInfoById'
 export const POST_CMD_ADD = '/cmd/addCmdInfo'
 export const POST_CMD_UPDATE = '/cmd/updateCmdInfo'
 export const GET_CMD_DELETE = '/cmd/delCmdInfo'
-//
+
+// 视频流
 
 type REQUEST_NAME_TYPE = {
   [key: string]: string
@@ -129,7 +132,7 @@ const REQUEST_NAME: REQUEST_NAME_TYPE = {
   GET_TOPICS_MYTOPICSBYID,
   GET_TOPICS_SELECTTOPIC,
   GET_TOPICS_FINDTOPICBYTOPICNAME,
-  GET_TOPICS_SELECTTOPICBYTIDTNAME,
+  // GET_TOPICS_SELECTTOPICBYTIDTNAME,
   POST_SUBMODERATIONS_INSERTSUBMODERATION,
   POST_TOPICS_DELSUBUSER,
   POST_SUBMODERATIONS_UPDATESUBMODERATION,
@@ -164,7 +167,9 @@ const REQUEST_NAME: REQUEST_NAME_TYPE = {
   GET_CMD_DELETE,
   GET_TRANSMISSION_REALTIME,
   GET_TRANSMISSION_HISTORY,
-  GET_TOPICS_PROTOBUFDOWNLOAD
+  GET_TOPICS_PROTOBUFDOWNLOAD,
+  GET_TOPICS_FINDALLSUBTOPIC,
+  GET_TOPICS_SELECTSUBTOPICBYID
 }
 
 export default REQUEST_NAME

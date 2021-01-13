@@ -39,10 +39,10 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { rootStoreModule } from '../../store/modules/root'
-import http from '../../decorator/httpDecorator'
-import { returnDataType } from '../../type/http-request.type'
-import { userAndPassType } from '../../type/login.type'
+import { rootStoreModule } from '@/store/modules/root'
+import http from '@/decorator/httpDecorator'
+import { returnDataType } from '@/type/http-request.type'
+import { userAndPassType } from '@/type/login.type'
 
 @Component
 @http

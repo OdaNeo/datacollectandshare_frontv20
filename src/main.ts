@@ -98,9 +98,7 @@ router.beforeEach(
       if (['/login'].indexOf(toPath) !== -1) {
         next()
       } else {
-        next({
-          path: '/login'
-        })
+        next({ path: '/login' })
       }
     }
   }

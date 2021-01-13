@@ -41,10 +41,10 @@
         >
       </template>
     </h-table>
-    <h-dialog v-model="dialogFlag">
+    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
       <create-configure-dialog slot="dialog-content"></create-configure-dialog>
     </h-dialog>
-    <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="deleteConfigure" />
+    <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteConfigure" />
   </div>
 </template>
 <script lang="ts">

@@ -1,9 +1,9 @@
 <template>
-  <v-dialog v-model="closeDialog" max-width="750px" persistent>
+  <v-dialog v-model="closeDialog" max-width="750" persistent>
     <v-card>
       <v-card-title class="dialog-title">
         <p class="mb-0">{{ formProvide.title }}</p>
-        <v-btn icon class="close-btn" @click="closeMethod($event)">
+        <v-btn icon class="close-btn" @click="closeMethod">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -18,7 +18,7 @@
   </v-dialog>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop, Model, Inject } from 'vue-property-decorator'
+import { Component, Vue, Model, Inject } from 'vue-property-decorator'
 import HForm from './h-form.vue'
 import { H_Vue } from '../declaration/vue-prototype'
 @Component({
@@ -27,14 +27,12 @@ import { H_Vue } from '../declaration/vue-prototype'
   }
 })
 export default class HDialog extends Vue {
-  @Prop() private title!: string
   @Model('hdialog', { type: Boolean }) private checked!: boolean
   @Inject() private readonly formProvide!: H_Vue
   get closeDialog(): boolean {
     return this.checked
   }
-  // eslint-disable-next-line @typescript-eslint/no-empty-function
-  set closeDialog(val: boolean) {}
+  // set closeDialog(val: boolean) {}
 
   public closeMethod(): void {
     this.$emit('hdialog')

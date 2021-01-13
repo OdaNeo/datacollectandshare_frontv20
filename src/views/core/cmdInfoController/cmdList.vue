@@ -57,12 +57,12 @@
         </h-table>
       </v-tab-item>
     </v-tabs-items>
-    <h-dialog v-model="dialogFlag">
+    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
       <create-cmd-dialog slot="dialog-content" v-if="dialogShow === 1" />
       <data-structure-dialog slot="dialog-content" :rowObj="rowObj" v-else-if="dialogShow === 2" />
       <cmd-ancilary-information-dialog slot="dialog-content" :otherObj="otherObj" v-else-if="dialogShow === 3" />
     </h-dialog>
-    <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="deleteCmd" />
+    <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteCmd" />
   </div>
 </template>
 <script lang="ts">
@@ -247,7 +247,7 @@ export default class CmdList extends Vue {
       const { data }: returnDataType = bool
         ? await this.h_request.httpGET<object>('GET_CMD_SELECTCMD', params)
         : await this.h_request.httpGET<object>('GET_CMD_FIND_ALL', params)
-
+      console.log(data)
       data.list &&
         (this.desserts = data.list.map((item: any) => {
           return { ...item, flag: false }

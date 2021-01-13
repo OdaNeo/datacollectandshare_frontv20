@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="dialog" persistent max-width="900">
+  <v-dialog v-model="dialog" persistent width="800">
     <v-card>
       <v-card-title class="dialog-title">
         <p class="mb-0">视频列表</p>
@@ -10,7 +10,7 @@
       <v-slide-group v-model="model" class="pa-4" mandatory center-active show-arrows>
         <v-slide-item
           v-for="(item, index) in videoNameList"
-          :key="item"
+          :key="item.id"
           v-slot="{ active, toggle }"
           @change="toggleCurrentPlay(index)"
         >
@@ -19,14 +19,28 @@
           </v-btn>
         </v-slide-item>
       </v-slide-group>
-      <div ref="video" />
+      <!-- iframe 为了解决播放列表切换时，产生的多余的.ts文件请求 -->
+      <iframe
+        :src="`/streamVideo?video=${videoList[curIndex]}`"
+        allowfullscreen="allowfullscreen"
+        mozallowfullscreen="mozallowfullscreen"
+        msallowfullscreen="msallowfullscreen"
+        oallowfullscreen="oallowfullscreen"
+        webkitallowfullscreen="webkitallowfullscreen"
+        frameborder="0"
+        width="100%"
+        height="450"
+        border="0"
+        style="display: block"
+        scrolling="no"
+        ref="iframe"
+      ></iframe>
     </v-card>
   </v-dialog>
 </template>
 <script lang="ts">
 import { Component, Vue, Prop, Model } from 'vue-property-decorator'
-import Hls from 'hls.js'
-import DPlayer from 'dplayer'
+import { videoStoreModule } from '@/store/modules/video'
 
 @Component
 export default class VideoPopup extends Vue {
@@ -35,15 +49,19 @@ export default class VideoPopup extends Vue {
   get dialog(): boolean {
     return this.checked
   }
-  // set dialog(val: boolean) {}
   private closeMethod() {
     this.$emit('closeDialog')
   }
-
   private model = null
-  private curIndex = 0
-  private video: HTMLVideoElement | undefined
-  private dp: DPlayer | undefined
+
+  private get curIndex() {
+    if (videoStoreModule.VideoStore.playListCurIndex < this.videoList.length) {
+      return videoStoreModule.VideoStore.playListCurIndex
+    } else {
+      return this.videoList.length - 1
+    }
+  }
+
   get videoNameList(): Array<string> {
     const _l: Array<string> = []
     this.videoList.forEach(item => {
@@ -53,30 +71,19 @@ export default class VideoPopup extends Vue {
     return _l
   }
 
-  private toggleCurrentPlay(n: number) {
-    this.video = this.$refs.video as HTMLVideoElement
-    if (Hls.isSupported()) {
-      this.dp = new DPlayer({
-        container: this.video,
-        live: true,
-        autoplay: true,
-        video: {
-          url: this.videoList[n],
-          type: 'customHls',
-          customType: {
-            customHls: function (video: HTMLVideoElement) {
-              const hls = new Hls()
-              hls.loadSource(video.src)
-              hls.attachMedia(video)
-            }
-          }
-        }
-      })
-    }
+  private toggleCurrentPlay(index: number) {
+    videoStoreModule.setPlayListCurIndex(index)
+  }
+  private addPlayList() {
+    videoStoreModule.addPlayListCurIndex()
   }
 
   mounted(): void {
     this.toggleCurrentPlay(0)
+    // 访问irame的window对象
+    const iframe = this.$refs.iframe as HTMLIFrameElement
+    const iframeWindow = iframe.contentWindow
+    iframeWindow && iframeWindow.addEventListener('videoPlayEnd', this.addPlayList)
   }
 }
 </script>

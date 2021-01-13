@@ -33,14 +33,14 @@
         <v-btn small text v-if="item.status" color="warning" class="my-2" @click="cancelScribe(item)">取消订阅</v-btn>
       </template>
     </h-table>
-    <h-dialog v-model="dialogFlag">
+    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
       <data-structure-dialog slot="dialog-content" :rowObj="rowObj"></data-structure-dialog>
     </h-dialog>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import { paramsType, returnDataType } from '@/type/http-request.type'
+import { returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
@@ -123,11 +123,10 @@ export default class TopicSub extends Vue {
     }
   ]
 
-  async searchMethod(bool: boolean, params: paramsType): Promise<void> {
-    params.dataType = 1
+  async searchMethod(bool: boolean, params: object): Promise<void> {
     const { data }: returnDataType = bool
-      ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTTOPICBYTIDTNAME', params)
-      : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL_TOPIC', params)
+      ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTSUBTOPICBYID', params)
+      : await this.h_request['httpGET']<object>('GET_TOPICS_FINDALLSUBTOPIC', params)
     this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     this.desserts = data['list']
   }
@@ -146,9 +145,7 @@ export default class TopicSub extends Vue {
       })
     } else {
       this.searchMethod(true, {
-        id: this.queryTopicID,
-        pageSize: this.pageSize,
-        pageNum: 1
+        id: this.queryTopicID
       })
     }
     this.pageNum = 1

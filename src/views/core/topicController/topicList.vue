@@ -99,7 +99,7 @@
       </v-tab-item>
     </v-tabs-items>
 
-    <h-dialog v-model="dialogFlag" ref="HDialog">
+    <h-dialog v-if="dialogFlag" v-model="dialogFlag" ref="HDialog">
       <data-structure-dialog slot="dialog-content" :rowObj="rowObj" v-if="dialogShow === 2"></data-structure-dialog>
       <create-topic-dialog
         slot="dialog-content"
@@ -134,7 +134,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-    <h-confirm v-if="HConfirmShow" @hcancel="HConfirmShow = false" @hconfirm="deleteTopic" />
+    <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteTopic" />
   </div>
 </template>
 <script lang="ts">
@@ -152,10 +152,10 @@ import { TopicAdd } from '@/type/topic-add.type'
 import TopicAncilaryInformationDialog from './childComponent/topicAncilaryInformationDialog.vue'
 import util from '@/decorator/utilsDecorator'
 import alertUtil from '@/utils/alertUtil'
-import { dataType, topicInterFaceType } from '@/enum/topic-enum.ts'
+import { dataType } from '@/enum/topic-datatype-enum.ts'
+import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
 import axios from 'axios'
 import { rootStoreModule } from '@/store/modules/root'
-
 import XLSX from 'xlsx'
 
 @Component({

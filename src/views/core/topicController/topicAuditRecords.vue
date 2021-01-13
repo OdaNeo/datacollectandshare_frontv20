@@ -35,7 +35,7 @@
         <span :style="'color:' + colors[btnAction]">{{ h_enum['examineType'][btnAction] }}</span>
       </template>
     </h-table>
-    <h-dialog v-model="dialogFlag">
+    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
       <data-structure-dialog slot="dialog-content" :rowObj="rowObj"></data-structure-dialog>
     </h-dialog>
   </div>

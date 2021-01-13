@@ -2,7 +2,7 @@
   <div id="topbar">
     <v-row align="center" no-gutters justify="center">
       <v-col cols="12" align-self="center">
-        <h1 style="color: #fff; text-align: center" class="titleshadow">交控科技天枢平台元数据管理中心</h1>
+        <h1 style="color: #fff; text-align: center" class="titleshadow">交控科技天枢平台元数据配置管理中心</h1>
         <div class="userMenu" v-show="userMenuState">
           <v-menu offset-y transition="slide-x-transition">
             <template v-slot:activator="{ on, attrs }">
@@ -65,6 +65,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { rootStoreModule } from '../store/modules/root'
 import http from '../decorator/httpDecorator'
+import { userState } from '@/enum/user-enum'
 
 @Component
 @http
@@ -86,15 +87,10 @@ export default class TopBar extends Vue {
   }
 
   get userStatus(): string {
-    switch (rootStoreModule.UserState.userMessage.userState) {
-      case 0:
-        return '用户状态：' + '删除'
-      case 1:
-        return '用户状态：' + '正常'
-      case 2:
-        return '用户状态：' + '锁定'
-      default:
-        return '用户状态：' + '无'
+    if (rootStoreModule.UserState.userMessage.userState) {
+      return `用户状态：${userState[rootStoreModule.UserState.userMessage.userState]}`
+    } else {
+      return '用户状态：' + '无'
     }
   }
 

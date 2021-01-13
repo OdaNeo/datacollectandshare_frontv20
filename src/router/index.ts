@@ -271,6 +271,14 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
+    path: '/streamVideo',
+    name: 'm3u8视频流',
+    meta: {
+      access: false
+    },
+    component: () => import('@/views/video/streamVideo.vue')
+  },
+  {
     path: '/private',
     name: '内部调试页面',
     component: StatePage,

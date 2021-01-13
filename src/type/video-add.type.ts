@@ -6,9 +6,9 @@ export type VideoTopicAdd = {
   m3u8Url: string
   bucketName: string
 }
-export type VideoTimeRange = {
-  startTime: string
-  startHour: number
-  endTime: string
-  endHour: number
-}
+// export type VideoTimeRange = {
+//   startTime: string
+//   startHour: number
+//   endTime: string
+//   endHour: number
+// }
