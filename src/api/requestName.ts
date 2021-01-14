@@ -98,6 +98,7 @@ export const POST_CMD_UPDATE = '/cmd/updateCmdInfo'
 export const GET_CMD_DELETE = '/cmd/delCmdInfo'
 
 // 视频流
+export const GET_VIDEO_ADDRESS = 'getVideoAddress'
 
 type REQUEST_NAME_TYPE = {
   [key: string]: string
@@ -169,7 +170,8 @@ const REQUEST_NAME: REQUEST_NAME_TYPE = {
   GET_TRANSMISSION_HISTORY,
   GET_TOPICS_PROTOBUFDOWNLOAD,
   GET_TOPICS_FINDALLSUBTOPIC,
-  GET_TOPICS_SELECTSUBTOPICBYID
+  GET_TOPICS_SELECTSUBTOPICBYID,
+  GET_VIDEO_ADDRESS
 }
 
 export default REQUEST_NAME

@@ -20,7 +20,7 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="11">
+    <!-- <v-col cols="11">
       <v-text-field
         single-line
         outlined
@@ -37,7 +37,7 @@
           </div>
         </template>
       </v-text-field>
-    </v-col>
+    </v-col> -->
     <v-col cols="11">
       <v-text-field
         single-line
@@ -74,7 +74,7 @@
         </template>
       </v-text-field>
     </v-col>
-    <v-col cols="11">
+    <!-- <v-col cols="11">
       <v-text-field
         single-line
         outlined
@@ -91,8 +91,8 @@
           </div>
         </template>
       </v-text-field>
-    </v-col>
-    <v-col cols="11">
+    </v-col> -->
+    <!-- <v-col cols="11">
       <v-text-field
         single-line
         outlined
@@ -109,7 +109,7 @@
           </div>
         </template>
       </v-text-field>
-    </v-col>
+    </v-col> -->
   </v-row>
 </template>
 <script lang="ts">

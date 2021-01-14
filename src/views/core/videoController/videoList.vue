@@ -55,7 +55,7 @@
       <create-video-topic-dialog slot="dialog-content" v-if="dialogShow === 1" />
       <set-date-range slot="dialog-content" v-else-if="dialogShow === 2" />
     </h-dialog>
-    <video-popup :videoList="videoList" v-if="showVideoPopup" v-model="showVideoPopup" />
+    <video-popup v-if="showVideoPopup" v-model="showVideoPopup" />
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteVideoTopic" />
   </div>
 </template>
@@ -74,6 +74,7 @@ import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
 import { dataType } from '@/enum/topic-datatype-enum.ts'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
+import { videoStoreModule } from '@/store/modules/video'
 
 @Component({
   components: {
@@ -210,13 +211,13 @@ export default class CmdList extends Vue {
     const params: any = {}
 
     params['topicName'] = formObj.topicName
-    params['serverUrl'] = formObj.serverUrl
     params['address'] = formObj.address
     params['sourceUrl'] = formObj.sourceUrl
-    params['m3u8Url'] = formObj.m3u8Url
-    params['bucketName'] = formObj.bucketName
     params['topicInterFaceType'] = topicInterFaceType['VIDEO']
     params['dataType'] = dataType['非结构化']
+    // params['serverUrl'] = formObj.serverUrl
+    // params['m3u8Url'] = formObj.m3u8Url
+    // params['bucketName'] = formObj.bucketName
 
     const { success } = await this.h_request['httpPOST']('POST_TOPICS_ADD', params)
     if (success) {
@@ -257,15 +258,33 @@ export default class CmdList extends Vue {
   }
 
   // 获得视频列表
-  private getVideoList() {
-    console.log(this.formObj.formObj)
+  private async getVideoList(formObj: any) {
+    const params: any = {}
+    // 起始时间
+    params.startTime =
+      this.h_utils.timeutil.timeToStamp(formObj.startTime, '-') + Number(formObj.startHour) * 60 * 60 * 1000
+    params.endTime = this.h_utils.timeutil.timeToStamp(formObj.endTime, '-') + Number(formObj.endHour) * 60 * 60 * 1000
+    params.topicId = this.curItem.id
+    params.bucketName = this.curItem.bucketName
+
+    // const data = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
+    console.log(params)
+
     this.videoList = [
       'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
-      'http://172.51.216.106:8080/live/push/push.m3u8',
-      'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-      'http://172.51.216.106:8080/live/test.m3u8',
+      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
+      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
+      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
       'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
+      // 'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
+      // 'http://172.51.216.106:8080/live/push/push.m3u8',
+      // 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
+      // 'http://172.51.216.106:8080/live/test.m3u8',
+      // 'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
     ]
+
+    // vuex 保存播放列表
+    videoStoreModule.addPlayList(this.videoList)
     this.showVideoPopup = true
     return Promise.resolve(true)
   }

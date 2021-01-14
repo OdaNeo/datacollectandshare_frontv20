@@ -1,5 +1,5 @@
 <template>
-  <div ref="video" />
+  <div ref="video" id="video" />
 </template>
 
 <script lang="ts">
@@ -10,9 +10,15 @@ import DPlayer, { DPlayerEvents } from 'dplayer'
 @Component
 export default class streamVideo extends Vue {
   private video: HTMLVideoElement | undefined
-  private dp: DPlayer | undefined
+  public dp: DPlayer | undefined
 
-  private playVideo(n: string) {
+  get videoList(): Array<string> {
+    const str = this.$route.query.videoList as string
+    return str.split(',')
+  }
+  private curIndex = 0
+
+  private playVideo() {
     this.video = this.$refs.video as HTMLVideoElement
     if (Hls.isSupported()) {
       this.dp = new DPlayer({
@@ -20,7 +26,7 @@ export default class streamVideo extends Vue {
         // live: true,
         autoplay: true,
         video: {
-          url: n,
+          url: this.videoList[this.curIndex],
           type: 'customHls',
           customType: {
             customHls: function (video: HTMLVideoElement) {
@@ -34,18 +40,14 @@ export default class streamVideo extends Vue {
 
       this.dp.on('ended' as DPlayerEvents, () => {
         // 播放下一视频
-        const vEvent = new CustomEvent('videoPlayEnd', {
-          bubbles: true, // 是否冒泡
-          cancelable: true // 是否可以取消事件的默认行为
-        })
-        window.dispatchEvent(vEvent)
+        console.log('ended')
       })
     }
   }
 
   mounted(): void {
-    if (typeof this.$route.query.video === 'string') {
-      this.playVideo(this.$route.query.video)
+    if (typeof this.$route.query.videoList === 'string') {
+      this.playVideo()
     }
   }
 }
