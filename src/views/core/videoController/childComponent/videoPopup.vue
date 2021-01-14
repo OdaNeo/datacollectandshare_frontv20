@@ -14,7 +14,6 @@
           </v-btn>
         </v-slide-item>
       </v-slide-group>
-      <!-- iframe 为了解决播放列表切换时，产生的多余的.ts文件请求 -->
       <iframe
         :src="`/streamVideo?videoList=${videoListFrag}`"
         allowfullscreen="allowfullscreen"
