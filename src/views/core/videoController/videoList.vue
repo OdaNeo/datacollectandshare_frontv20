@@ -267,8 +267,8 @@ export default class CmdList extends Vue {
     params.topicId = this.curItem.id
     params.bucketName = this.curItem.bucketName
 
-    const data = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
-    console.log(data)
+    // const data = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
+    // console.log(data)
 
     this.videoList = [
       'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',

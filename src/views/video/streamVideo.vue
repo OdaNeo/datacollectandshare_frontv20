@@ -12,13 +12,7 @@ export default class streamVideo extends Vue {
   private video: HTMLVideoElement | undefined
   public dp: DPlayer | undefined
 
-  get videoList(): Array<string> {
-    const str = this.$route.query.videoList as string
-    return str.split(',')
-  }
-  private curIndex = 0
-
-  private playVideo() {
+  private playVideo(str: string) {
     this.video = this.$refs.video as HTMLVideoElement
     if (Hls.isSupported()) {
       this.dp = new DPlayer({
@@ -26,7 +20,7 @@ export default class streamVideo extends Vue {
         // live: true,
         autoplay: true,
         video: {
-          url: this.videoList[this.curIndex],
+          url: str,
           type: 'customHls',
           customType: {
             customHls: function (video: HTMLVideoElement) {
@@ -40,14 +34,18 @@ export default class streamVideo extends Vue {
 
       this.dp.on('ended' as DPlayerEvents, () => {
         // 播放下一视频
-        console.log('ended')
+        var vEvent = new CustomEvent('videoPlayEnd', {
+          bubbles: true, // 是否冒泡
+          cancelable: true // 是否可以取消事件的默认行为
+        })
+        window.dispatchEvent(vEvent)
       })
     }
   }
 
   mounted(): void {
-    if (typeof this.$route.query.videoList === 'string') {
-      this.playVideo()
+    if (typeof this.$route.query.video === 'string') {
+      this.playVideo(this.$route.query.video)
     }
   }
 }

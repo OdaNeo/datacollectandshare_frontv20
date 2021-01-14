@@ -9,13 +9,19 @@
       </v-card-title>
       <v-slide-group v-model="model" class="pa-4" mandatory center-active show-arrows>
         <v-slide-item v-for="(item, index) in videoNameList" :key="item.id">
-          <v-btn class="mx-2" active-class="primary" small depressed rounded @click="toggleCurrentPlay(index)">
+          <v-btn
+            class="mx-2"
+            :class="{ 'primary': curIndex === index }"
+            small
+            depressed
+            rounded
+            @click="toggleCurrentPlay(index)"
+          >
             {{ item }}
           </v-btn>
         </v-slide-item>
       </v-slide-group>
       <iframe
-        :src="`/streamVideo?videoList=${videoListFrag}`"
         allowfullscreen="allowfullscreen"
         mozallowfullscreen="mozallowfullscreen"
         msallowfullscreen="msallowfullscreen"
@@ -46,19 +52,13 @@ export default class VideoPopup extends Vue {
     this.$emit('closeDialog')
   }
   private model = null
-  private curIndexFrag = 0
+  private iframeDom = this.$refs.iframe
 
   private get videoList(): Array<string> {
     return videoStoreModule.VideoStore.playList
   }
 
-  private get videoListFrag(): Array<string> {
-    return this.videoList.slice(this.curIndexFrag)
-  }
-
-  private get curIndex() {
-    return videoStoreModule.VideoStore.playListCurIndex
-  }
+  private curIndex = 0
 
   private get videoNameList(): Array<string> {
     const _l: Array<string> = []
@@ -70,8 +70,17 @@ export default class VideoPopup extends Vue {
   }
 
   private toggleCurrentPlay(index: number) {
-    this.curIndexFrag = index
-    videoStoreModule.setPlayListCurIndex(index)
+    const iframe = this.$refs.iframe as HTMLIFrameElement
+    const iframeWindow = iframe.contentWindow as Window
+    this.curIndex = index
+    // force refresh
+    iframeWindow.location.reload(true)
+    iframe.src = `/streamVideo?video=${this.videoList[index]}`
+    iframeWindow.addEventListener('videoPlayEnd', () => {
+      if (this.curIndex + 1 < this.videoList.length) {
+        this.toggleCurrentPlay(this.curIndex + 1)
+      }
+    })
   }
 
   mounted(): void {
