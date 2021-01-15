@@ -111,8 +111,7 @@ export default class CmdList extends Vue {
           startTime: '',
           startHour: 0,
           endTime: '',
-          endHour: 0,
-          disableTime: undefined // 事件时间选择范围限制
+          endHour: 1
         }
       }
     }
@@ -203,8 +202,7 @@ export default class CmdList extends Vue {
       startTime: '',
       startHour: 0,
       endTime: '',
-      endHour: 0,
-      disableTime: undefined
+      endHour: 1
     }
   }
 
@@ -255,8 +253,7 @@ export default class CmdList extends Vue {
       startTime: '',
       startHour: 0,
       endTime: '',
-      endHour: 0,
-      disableTime: undefined
+      endHour: 1
     }
   }
 
@@ -267,7 +264,7 @@ export default class CmdList extends Vue {
     params.beginTime =
       this.h_utils.timeutil.timeToStamp(formObj.startTime, '-') + (Number(formObj.startHour) - 8) * 3600 * 1000
     params.overTime =
-      this.h_utils.timeutil.timeToStamp(formObj.endTime, '-') + (Number(formObj.endHour) - 8 - 1) * 3600 * 1000
+      this.h_utils.timeutil.timeToStamp(formObj.endTime, '-') + (Number(formObj.endHour) - 1 - 8) * 3600 * 1000
     params.topicId = this.curItem.id
     params.bucketName = this.curItem.bucketName
 

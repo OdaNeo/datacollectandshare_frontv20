@@ -80,7 +80,7 @@
           height="40"
           @change="dateChange"
           label="截止时间（时）"
-          :items="hours"
+          :items="hours2"
           dense
         ></v-autocomplete>
       </v-col>
@@ -102,6 +102,7 @@ export default class SetDateRange extends Vue {
   private menuStart = false
   private menuEnd = false
   private hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+  private hours2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24]
   private startEndDateValidator: Function[] = []
   private dateChange() {
     if (!this.formProvide.formObj.startTime || !this.formProvide.formObj.endTime) {
