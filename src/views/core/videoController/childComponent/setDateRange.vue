@@ -27,6 +27,7 @@
           <v-date-picker
             v-model="formProvide.formObj.startTime"
             @change="dateChange"
+            :allowed-dates="formProvide.formObj.disableTime"
             @input="menuStart = false"
           ></v-date-picker>
         </v-menu>
@@ -114,7 +115,6 @@ export default class SetDateRange extends Vue {
       this.h_utils.timeutil.timeToStamp(this.formProvide.formObj.endTime, '-') +
       Number(this.formProvide.formObj.endHour) * 60 * 60 * 1000
 
-    // console.log(beginTime, afterTime, afterTime > beginTime)
     if (beginTime >= afterTime) {
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
       this.startEndDateValidator = [(v: string) => '起始日期大于截止日期']

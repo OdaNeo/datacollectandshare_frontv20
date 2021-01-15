@@ -183,6 +183,17 @@ img {
     justify-content: flex-end;
 }
 
+.v-dialog>.v-card>.dialog-title {
+    text-align: center;
+    display: block;
+}
+
+.v-dialog>.v-card>.dialog-title>.close-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
 .require-span {
     color: red;
     margin-right: 4px;

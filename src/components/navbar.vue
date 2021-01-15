@@ -21,7 +21,13 @@
                     no-action
                     :value="$route.matched[0].name==item.name"
                 > -->
-        <v-list-group v-for="item in navMenu" :key="item.id" :prepend-icon="parentIcon(item.name)" no-action>
+        <v-list-group
+          :value="$route.matched[0].name === item.name"
+          v-for="item in navMenu"
+          :key="item.id"
+          :prepend-icon="parentIcon(item.name)"
+          no-action
+        >
           <template v-slot:activator>
             <v-list-item-content>
               <v-list-item-title v-text="item.name"></v-list-item-title>

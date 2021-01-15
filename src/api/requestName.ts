@@ -98,7 +98,7 @@ export const POST_CMD_UPDATE = '/cmd/updateCmdInfo'
 export const GET_CMD_DELETE = '/cmd/delCmdInfo'
 
 // 视频流
-export const GET_VIDEO_ADDRESS = 'getVideoAddress'
+export const GET_VIDEO_ADDRESS = '/topics/getVideoAddress'
 
 type REQUEST_NAME_TYPE = {
   [key: string]: string
