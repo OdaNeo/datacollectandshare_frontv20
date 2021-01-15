@@ -3,6 +3,13 @@
     <v-card>
       <v-card-title class="dialog-title">
         <p class="mb-0">视频列表</p>
+        <!-- <span style="font-size: 12px"
+          >该时间段（{{ formProvide.formObj.startTime }}{{ formProvide.formObj.startHour }}时到{{
+            formProvide.formObj.endTime
+          }}{{ formProvide.formObj.endHour + 1 }}时），应有{{ videoCounts }}个视频，已查询到{{
+            videoList.length
+          }}个视频，正在播放第{{ curIndex + 1 }}个视频</span
+        > -->
         <v-btn icon class="close-btn" @click.stop="closeMethod">
           <v-icon>mdi-close</v-icon>
         </v-btn>
@@ -26,13 +33,16 @@
   </v-dialog>
 </template>
 <script lang="ts">
-import { Component, Vue, Model } from 'vue-property-decorator'
+import { Component, Vue, Model, Prop, Inject } from 'vue-property-decorator'
 import { videoStoreModule } from '@/store/modules/video'
 import Hls from 'hls.js'
 import DPlayer, { DPlayerEvents } from 'dplayer'
+import { H_Vue } from '@/declaration/vue-prototype'
 
 @Component
 export default class VideoPopup extends Vue {
+  @Inject() private readonly formProvide!: H_Vue
+  @Prop() private videoCounts!: number
   @Model('closeDialog', { type: Boolean }) private checked!: boolean
 
   private video: HTMLVideoElement | undefined
@@ -110,6 +120,8 @@ export default class VideoPopup extends Vue {
   }
 
   mounted(): void {
+    console.log(this.formProvide.formObj.startTime)
+    console.log(this.formProvide.formObj.endTime)
     this.toggleCurrentPlay(0)
   }
 }

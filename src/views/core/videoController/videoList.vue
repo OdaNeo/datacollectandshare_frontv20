@@ -55,7 +55,7 @@
       <create-video-topic-dialog slot="dialog-content" v-if="dialogShow === 1" />
       <set-date-range slot="dialog-content" v-else-if="dialogShow === 2" />
     </h-dialog>
-    <video-popup v-if="showVideoPopup" v-model="showVideoPopup" />
+    <video-popup :videoCounts="videoCounts" v-if="showVideoPopup" v-model="showVideoPopup" />
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteVideoTopic" />
   </div>
 </template>
@@ -205,6 +205,7 @@ export default class CmdList extends Vue {
       endHour: 1
     }
   }
+  private videoCounts = 0 // 总共应该显示多少视频
 
   //  提交创建 非结构化数据
   private async addVideoTopic(formObj: VideoTopicAdd) {
@@ -261,15 +262,14 @@ export default class CmdList extends Vue {
   private async getVideoList(formObj: any) {
     const params: any = {}
     // -8小时时差
-    params.beginTime =
-      this.h_utils.timeutil.timeToStamp(formObj.startTime, '-') + (Number(formObj.startHour) - 8) * 3600 * 1000
-    params.overTime =
-      this.h_utils.timeutil.timeToStamp(formObj.endTime, '-') + (Number(formObj.endHour) - 1 - 8) * 3600 * 1000
+    // 2020-1-1-0时 ~ 2020-1-1-1时 视频文件数：1，overTime - beginTime=0ms
+    params.beginTime = this.h_utils.timeutil.timeToStamp(formObj.startTime, '-') + (formObj.startHour - 8) * 3600 * 1000
+    params.overTime = this.h_utils.timeutil.timeToStamp(formObj.endTime, '-') + (formObj.endHour - 8 - 1) * 3600 * 1000
     params.topicId = this.curItem.id
     params.bucketName = this.curItem.bucketName
-
+    // 总共显示的视频数
+    this.videoCounts = (params.overTime - params.beginTime) / (3600 * 1000) + 1
     // const data = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
-    console.log(params)
 
     this.videoList = [
       'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
