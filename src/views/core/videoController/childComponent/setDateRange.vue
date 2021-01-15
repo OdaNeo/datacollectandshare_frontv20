@@ -27,7 +27,6 @@
           <v-date-picker
             v-model="formProvide.formObj.startTime"
             @change="dateChange"
-            :allowed-dates="formProvide.formObj.disableTime"
             @input="menuStart = false"
           ></v-date-picker>
         </v-menu>
