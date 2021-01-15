@@ -254,7 +254,7 @@ export default class CmdList extends Vue {
       bucketName: '',
       startTime: '',
       startHour: 0,
-      endTime: new Date().toISOString().substr(0, 10),
+      endTime: '',
       endHour: 0,
       disableTime: undefined
     }
@@ -263,24 +263,16 @@ export default class CmdList extends Vue {
   // 获得视频列表
   private async getVideoList(formObj: any) {
     const params: any = {}
-    // 起始时间
-    console.log(formObj.startTime)
-    console.log(formObj.startHour)
-    console.log(formObj.endTime)
-    console.log(formObj.endHour)
+    // -8小时时差
     params.beginTime =
-      this.h_utils.timeutil.timeToStamp(formObj.startTime, '-') +
-      Number(formObj.startHour) * 60 * 60 * 1000 -
-      8 * 3600 * 1000
+      this.h_utils.timeutil.timeToStamp(formObj.startTime, '-') + (Number(formObj.startHour) - 8) * 3600 * 1000
     params.overTime =
-      this.h_utils.timeutil.timeToStamp(formObj.endTime, '-') +
-      Number(formObj.endHour) * 60 * 60 * 1000 -
-      8 * 3600 * 1000
+      this.h_utils.timeutil.timeToStamp(formObj.endTime, '-') + (Number(formObj.endHour) - 8 - 1) * 3600 * 1000
     params.topicId = this.curItem.id
     params.bucketName = this.curItem.bucketName
-    console.log(params)
+
     // const data = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
-    // console.log(data)
+    console.log(params)
 
     this.videoList = [
       'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',

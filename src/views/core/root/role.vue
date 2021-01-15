@@ -51,13 +51,15 @@ import HDialog from '@/components/h-dialog.vue'
 import RoleDialog from './childComponent/roleDialog.vue'
 import { RoleFormObj } from '@/type/role.type'
 import AuthDialog from './childComponent/authDialog.vue'
+import HConfirm from '@/components/h-confirm.vue'
 
 @Component({
   components: {
     HTable,
     HDialog,
     RoleDialog,
-    AuthDialog
+    AuthDialog,
+    HConfirm
   }
 })
 @http
@@ -156,12 +158,16 @@ export default class Role extends Vue {
   }
   // 删除角色
   private async deleteItem() {
-    await this.h_request['httpGET']('GET_ROLE_DELETE', {}, this.HConfirmItem.id)
-    this.searchMethod(false, {
-      pageNum: 1,
-      pageSize: this.pageSize
-    })
-    this.pageNum = 1
+    const { success } = await this.h_request['httpGET']('GET_ROLE_DELETE', {}, this.HConfirmItem.id)
+    if (success) {
+      this.HConfirmShow = false
+      this.h_utils.alertUtil.open('删除成功', true, 'success')
+      this.searchMethod(false, {
+        pageNum: 1,
+        pageSize: this.pageSize
+      })
+      this.pageNum = 1
+    }
   }
 
   private editItem(item: any) {
