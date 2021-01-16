@@ -51,11 +51,12 @@
         </h-table>
       </v-tab-item>
     </v-tabs-items>
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <create-video-topic-dialog slot="dialog-content" v-if="dialogShow === 1" />
-      <set-date-range slot="dialog-content" v-else-if="dialogShow === 2" />
-    </h-dialog>
-    <video-popup :videoCounts="videoCounts" v-if="showVideoPopup" v-model="showVideoPopup" />
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+      <create-video-topic-dialog v-if="dialogShow === 1" />
+      <set-date-range v-else-if="dialogShow === 2" />
+    </t-dialog>
+    <video-popup :videoCounts="videoCounts" :videoList="videoList" v-if="showVideoPopup" v-model="showVideoPopup" />
+
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteVideoTopic" />
   </div>
 </template>
@@ -74,7 +75,9 @@ import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
 import { dataType } from '@/enum/topic-datatype-enum.ts'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
-import { videoStoreModule } from '@/store/modules/video'
+
+import TDialog from '@/components/t-dialog.vue'
+import { FormObj } from '@/type/dialog-form.type'
 
 @Component({
   components: {
@@ -83,7 +86,8 @@ import { videoStoreModule } from '@/store/modules/video'
     HConfirm,
     CreateVideoTopicDialog,
     VideoPopup,
-    SetDateRange
+    SetDateRange,
+    TDialog
   }
 })
 @http
@@ -95,27 +99,13 @@ import { videoStoreModule } from '@/store/modules/video'
   }
 ])
 export default class CmdList extends Vue {
-  @Provide('formProvide') private formObj = new Vue({
-    data() {
-      return {
-        title: '',
-        btnName: [] as string[],
-        methodName: '',
-        formObj: {
-          topicName: '', // 视频主题名
-          serverUrl: '', // '本系统rtmp地址',
-          address: '', // '摄像头物理地址',
-          sourceUrl: '', // topic所属摄像头rtsp/rtmp地址',
-          m3u8Url: '', // '视频流m3u8地址',
-          bucketName: '', // 'minio桶名称',
-          startTime: '',
-          startHour: 0,
-          endTime: '',
-          endHour: 1
-        }
-      }
-    }
-  })
+  @Provide('formProvide') private formProvide: FormObj = {
+    title: '' as string,
+    btnName: [] as Array<string>,
+    methodName: '' as string,
+    formObj: {}
+  }
+
   private tab = null
   private items = ['所有主题', '我的主题']
   private dialogFlag = false // 弹窗展示
@@ -185,27 +175,30 @@ export default class CmdList extends Vue {
   ]
   private videoList: Array<string> = []
   private curItem: any
+  private videoCounts = 0 // 总共应该显示多少视频
+
   //  创建主题
   private createTopicVideo() {
     this.dialogFlag = true
     this.dialogShow = 1
-    this.formObj.btnName = ['立即提交']
-    this.formObj.title = '创建非结构化主题'
-    this.formObj.methodName = 'addVideoTopic' // 立即提交
-    this.formObj.formObj = {
-      topicName: '', // 视频主题名
-      serverUrl: '', // '本系统rtmp地址',
-      address: '', // '摄像头物理地址',
-      sourceUrl: '', // 摄像头rtsp/rtmp地址,
-      m3u8Url: '', // '视频流m3u8地址',
-      bucketName: '', // 'minio桶名称',
-      startTime: '',
+    this.formProvide.title = '创建非结构化主题'
+    this.formProvide.btnName = ['立即提交']
+    this.formProvide.methodName = 'addVideoTopic'
+    this.formProvide.formObj = {}
+  }
+  // 时间选择弹窗
+  private showDateRangePopup(item: any) {
+    this.curItem = item
+    this.dialogFlag = true
+    this.dialogShow = 2
+    this.formProvide.title = '选择日期范围'
+    this.formProvide.btnName = ['查看视频']
+    this.formProvide.methodName = 'getVideoList'
+    this.formProvide.formObj = {
       startHour: 0,
-      endTime: '',
       endHour: 1
     }
   }
-  private videoCounts = 0 // 总共应该显示多少视频
 
   //  提交创建 非结构化数据
   private async addVideoTopic(formObj: VideoTopicAdd) {
@@ -216,9 +209,6 @@ export default class CmdList extends Vue {
     params['sourceUrl'] = formObj.sourceUrl
     params['topicInterFaceType'] = topicInterFaceType['VIDEO']
     params['dataType'] = dataType['非结构化']
-    // params['serverUrl'] = formObj.serverUrl
-    // params['m3u8Url'] = formObj.m3u8Url
-    // params['bucketName'] = formObj.bucketName
 
     const { success } = await this.h_request['httpPOST']('POST_TOPICS_ADD', params)
     if (success) {
@@ -236,28 +226,6 @@ export default class CmdList extends Vue {
     }
   }
 
-  // 时间选择弹窗
-  private showDateRangePopup(item: any) {
-    this.curItem = item
-    this.dialogFlag = true
-    this.dialogShow = 2
-    this.formObj.title = '选择日期范围'
-    this.formObj.btnName = ['查看视频']
-    this.formObj.methodName = 'getVideoList'
-    this.formObj.formObj = {
-      topicName: '',
-      serverUrl: '',
-      address: '',
-      sourceUrl: '',
-      m3u8Url: '',
-      bucketName: '',
-      startTime: '',
-      startHour: 0,
-      endTime: '',
-      endHour: 1
-    }
-  }
-
   // 获得视频列表
   private async getVideoList(formObj: any) {
     const params: any = {}
@@ -267,6 +235,7 @@ export default class CmdList extends Vue {
     params.overTime = this.h_utils.timeutil.timeToStamp(formObj.endTime, '-') + (formObj.endHour - 8 - 1) * 3600 * 1000
     params.topicId = this.curItem.id
     params.bucketName = this.curItem.bucketName
+    console.log(params)
     // 总共显示的视频数
     this.videoCounts = (params.overTime - params.beginTime) / (3600 * 1000) + 1
     // const data = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
@@ -289,8 +258,6 @@ export default class CmdList extends Vue {
       // 'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
     ]
 
-    // vuex 保存播放列表
-    videoStoreModule.addPlayList(this.videoList)
     this.showVideoPopup = true
     return Promise.resolve(true)
   }

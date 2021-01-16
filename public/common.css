@@ -177,21 +177,16 @@ img {
 
 /* form */
 
+.v-dialog>.v-card>.v-card__title>.v-btn {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+}
+
 .text-label {
     width: 150px;
     display: flex;
     justify-content: flex-end;
-}
-
-.v-dialog>.v-card>.dialog-title {
-    text-align: center;
-    display: block;
-}
-
-.v-dialog>.v-card>.dialog-title>.close-btn {
-    position: absolute;
-    right: 10px;
-    top: 10px;
 }
 
 .require-span {

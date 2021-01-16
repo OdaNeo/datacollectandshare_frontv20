@@ -100,9 +100,9 @@
           </li>
         </ul>
         <ul class="selectChildCon" v-show="selectChildShow">
-          <li v-for="(child, index) in selectChild.childrenList" :key="index" @click="choiceLi(child, selectChild)">{{
-            child.name
-          }}</li>
+          <li v-for="(child, index) in selectChild.childrenList" :key="index" @click="choiceLi(child, selectChild)">
+            {{ child.name }}
+          </li>
         </ul>
       </div>
     </v-col>

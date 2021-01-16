@@ -13,8 +13,9 @@
                 :key="index"
                 :class="'text-' + header.align"
                 :style="header.divider ? 'border:1px solid rgba(0, 0, 0, 0.12)' : ''"
-                >{{ header.text }}</th
               >
+                {{ header.text }}
+              </th>
             </tr>
           </thead>
           <tbody>

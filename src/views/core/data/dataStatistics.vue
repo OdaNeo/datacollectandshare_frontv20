@@ -79,7 +79,7 @@
               <div class="chart-box">
                 <div v-show="haveData" id="canvasPackRelease" class="canvasPack echartsBox"></div>
                 <div v-show="!haveData">
-                  <p> {{ beginDate }}至{{ afterDate }}时间内{{ getSystemName() }}系统暂无主题消息发布</p>
+                  <p>{{ beginDate }}至{{ afterDate }}时间内{{ getSystemName() }}系统暂无主题消息发布</p>
                   <div class="bg-box">
                     <img src="../../../assets/image/kong.png" alt="" />
                   </div>
@@ -108,7 +108,7 @@
               <div class="chart-box">
                 <div v-show="haveData" id="canvasPackSubscribe" class="canvasPack echartsBox"></div>
                 <div v-show="!haveData">
-                  <p> {{ beginDate }}至{{ afterDate }}时间内{{ getSystemName() }}系统暂无主题订阅信息</p>
+                  <p>{{ beginDate }}至{{ afterDate }}时间内{{ getSystemName() }}系统暂无主题订阅信息</p>
                   <div class="bg-box">
                     <img src="../../../assets/image/kong.png" alt="" />
                   </div>
@@ -131,7 +131,7 @@
             </div>
           </v-tab-item>
         </v-tabs>
-        <div> </div>
+        <div></div>
       </v-row>
     </div>
   </div>

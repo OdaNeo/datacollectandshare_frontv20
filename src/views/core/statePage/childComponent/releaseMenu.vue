@@ -77,9 +77,9 @@
     </div>
     <div id="release" style="height: 91%" v-if="releaseTopicExist"></div>
     <div v-else>
-      <p style="margin-top: 150px">{{
-        `主题${releaseSystemName}在${releaseStartTime}至${releaseEndTime}没有发布主题`
-      }}</p>
+      <p style="margin-top: 150px">
+        {{ `主题${releaseSystemName}在${releaseStartTime}至${releaseEndTime}没有发布主题` }}
+      </p>
     </div>
   </div>
 </template>

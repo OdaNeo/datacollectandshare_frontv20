@@ -83,9 +83,9 @@
     </div>
     <div id="subscribe" style="height: 91%" v-if="subscribeTopicExist"></div>
     <div v-else>
-      <p style="margin-top: 150px">{{
-        `主题${subscribeSystemName}在${subscribeStartTime}至${subscribeEndTime}没有发布主题`
-      }}</p>
+      <p style="margin-top: 150px">
+        {{ `主题${subscribeSystemName}在${subscribeStartTime}至${subscribeEndTime}没有发布主题` }}
+      </p>
     </div>
   </div>
 </template>
