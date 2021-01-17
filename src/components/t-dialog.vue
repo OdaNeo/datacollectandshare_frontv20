@@ -7,7 +7,7 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-      <v-card-text class="py-0">
+      <v-card-text class="pb-0 mt-3">
         <v-container>
           <v-form ref="userDialogForm" v-model="userDialogValid">
             <slot />
@@ -27,7 +27,7 @@
         <v-btn color="blue darken-1" text v-if="formProvide.btnName[1]" @click.stop="closeMethod">
           {{ formProvide.btnName[1] }}</v-btn
         >
-        <v-btn color="blue darken-1" text v-else>重置</v-btn>
+        <v-btn color="blue darken-1" text v-else @click.stop="reset">重置</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -40,6 +40,8 @@ export default class TDialog extends Vue {
   @Ref('userDialogForm') readonly udf!: HTMLFormElement
   @Inject() private readonly formProvide!: H_Vue
   @Model('closedialog', { type: Boolean }) private checked!: boolean
+
+  private defaultFormObj: any = {}
 
   get dialog(): boolean {
     return this.checked
@@ -56,6 +58,20 @@ export default class TDialog extends Vue {
       if (bool) {
         this.closeMethod()
       }
+    }
+  }
+
+  private reset() {
+    this.udf.resetValidation()
+    for (let p in this.formProvide.formObj) {
+      this.formProvide.formObj[p] = this.defaultFormObj[p]
+    }
+  }
+
+  created(): void {
+    // 记录默认值
+    for (let p in this.formProvide.formObj) {
+      this.defaultFormObj[p] = this.formProvide.formObj[p]
     }
   }
 }

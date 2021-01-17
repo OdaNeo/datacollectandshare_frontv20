@@ -1,7 +1,7 @@
 export type FormStructure = {
   text: string
-  reset: boolean
   value: string
+  reset?: boolean
   disabled?: boolean
   show?: boolean
 }
@@ -15,11 +15,13 @@ export type FormObj = {
   }
 }
 export type InputType = {
-  label: string
+  label?: string
+  type: string
   valueName: string
   require: boolean
-  rules: Array<any>
-  type?: string
+  disabled?: boolean
+  rules?: Array<string>
+  items?: Array<{ [key: string]: string }>
 }
 
 export type dialogForm = FormObj

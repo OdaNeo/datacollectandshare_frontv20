@@ -1,35 +1,26 @@
 <template>
   <v-row no-gutters>
-    <v-col cols="11">
-      <v-text-field
-        single-line
-        outlined
-        clearable
-        dense
-        solo
-        class="dialogInput"
-        v-model="formProvide.formObj.name"
-        :rules="nameRules"
-        required
-      >
-        <template v-slot:prepend>
-          <div class="text-label">
-            <p class="require-span">*</p>
-            <label>角色名称：</label>
-          </div>
-        </template>
-      </v-text-field>
-    </v-col>
+    <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Vue, Inject } from 'vue-property-decorator'
-import { H_Vue } from '@/declaration/vue-prototype'
+import { Component, Vue } from 'vue-property-decorator'
+import HInput from '@/components/h-input.vue'
+import { InputType } from '@/type/dialog-form.type'
 
-@Component
+@Component({
+  components: {
+    HInput
+  }
+})
 export default class RoleDialog extends Vue {
-  @Inject() private readonly formProvide!: H_Vue
-
-  private nameRules: Array<Function> = [(v: string) => !!v || '请设置角色名称']
+  private formTypeObj: Array<InputType> = [
+    {
+      label: '角色名称',
+      valueName: 'name',
+      type: 'input',
+      require: true
+    }
+  ]
 }
 </script>

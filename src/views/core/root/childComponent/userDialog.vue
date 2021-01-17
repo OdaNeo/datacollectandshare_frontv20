@@ -1,120 +1,24 @@
 <template>
   <v-row no-gutters>
-    <v-col cols="11">
-      <v-text-field
-        single-line
-        outlined
-        clearable
-        dense
-        solo
-        class="dialogInput"
-        v-model="formProvide.formObj.loginName.text"
-        :rules="loginNameRules"
-        required
-        :disabled="formProvide.formObj.loginName.disabled"
-      >
-        <template v-slot:prepend>
-          <div class="text-label">
-            <p class="require-span">*</p>
-            <label>用户名：</label>
-          </div>
-        </template>
-      </v-text-field>
-    </v-col>
-    <v-col cols="11" v-if="formProvide.formObj.loginPwd.show">
-      <v-text-field
-        single-line
-        outlined
-        clearable
-        dense
-        solo
-        class="dialogInput"
-        v-model="formProvide.formObj.loginPwd.text"
-        :rules="loginPwdRules"
-        required
-      >
-        <template v-slot:prepend>
-          <div class="text-label">
-            <p class="require-span">*</p>
-            <label>密码：</label>
-          </div>
-        </template>
-      </v-text-field>
-    </v-col>
-    <v-col cols="11">
-      <v-select
-        single-line
-        outlined
-        dense
-        solo
-        label="请选择用户类型"
-        :items="userRoots"
-        class="dialogInput"
-        v-model="formProvide.formObj.userType.text"
-        :rules="userTypeRules"
-        required
-      >
-        <template v-slot:prepend>
-          <div class="text-label">
-            <p class="require-span">*</p>
-            <label>用户类型：</label>
-          </div>
-        </template>
-      </v-select>
-    </v-col>
-    <v-col cols="11">
-      <v-radio-group
-        v-model="formProvide.formObj.userState.text"
-        single-line
-        outlined
-        dense
-        class="dialogInput"
-        solo
-        row
-        :rules="userStateRules"
-        required
-      >
-        <template v-slot:prepend>
-          <div class="text-label" style="margin-top: 7px">
-            <p class="require-span">*</p>
-            <label>用户状态：</label>
-          </div>
-        </template>
-        <v-radio v-for="n in userStates" :key="n.value" :label="`${n.text}`" :value="n.value"></v-radio>
-      </v-radio-group>
-    </v-col>
-    <v-col cols="11">
-      <v-select
-        single-line
-        outlined
-        dense
-        solo
-        label="请选择系统名称"
-        :items="systemNames"
-        class="dialogInput"
-        v-model="formProvide.formObj.systemName.value"
-        :rules="systemNameRules"
-        required
-      >
-        <template v-slot:prepend>
-          <div class="text-label">
-            <p class="require-span">*</p>
-            <label>系统名称：</label>
-          </div>
-        </template>
-      </v-select>
-    </v-col>
+    <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
   </v-row>
 </template>
 <script lang="ts">
 import { Component, Vue, Inject } from 'vue-property-decorator'
+import HInput from '@/components/h-input.vue'
+import { InputType } from '@/type/dialog-form.type'
+import { userFormVar } from '@/type/user.type'
 import http from '@/decorator/httpDecorator'
 import { returnDataType, httpAllParams } from '@/type/http-request.type'
 import { H_Vue } from '@/declaration/vue-prototype'
-import { userFormVar } from '@/type/user.type'
-@Component
+
 @http
-export default class UserDialog extends Vue {
+@Component({
+  components: {
+    HInput
+  }
+})
+export default class userDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private userStates: Array<userFormVar> = [
     { text: '正常', value: '1' },
@@ -124,11 +28,41 @@ export default class UserDialog extends Vue {
   private userRoots: Array<userFormVar> = []
   private systemNames: Array<userFormVar> = []
 
-  private loginNameRules: Array<Function> = [(v: string) => !!v || '请设置用户名']
-  private loginPwdRules: Array<Function> = [(v: string) => !!v || '请设置用户密码']
-  private userTypeRules: Array<Function> = [(v: string) => !!v || '请选择用户类型']
-  private userStateRules: Array<Function> = [(v: string) => !!v || '请选择用户状态']
-  private systemNameRules: Array<Function> = [(v: string) => !!v || '请选择系统名称']
+  private formTypeObj: Array<InputType> = [
+    {
+      label: '用户名',
+      valueName: 'loginName',
+      type: 'input',
+      require: true
+    },
+    {
+      label: '密码',
+      valueName: 'loginPwd',
+      type: 'input',
+      require: true
+    },
+    {
+      label: '用户类型',
+      valueName: 'userType',
+      type: 'select',
+      items: [],
+      require: true
+    },
+    {
+      label: '用户状态',
+      valueName: 'userState',
+      type: 'radioGroup',
+      items: this.userStates,
+      require: true
+    },
+    {
+      label: '系统名称',
+      valueName: 'systemName',
+      type: 'select',
+      items: [],
+      require: true
+    }
+  ]
 
   private getUserRoot({ data }: returnDataType) {
     this.userRoots = data.map((s: { name: string; id: number }) => {
@@ -137,6 +71,8 @@ export default class UserDialog extends Vue {
         value: s.id.toString()
       }
     })
+    // 响应式更新
+    this.formTypeObj[2].items = this.userRoots.concat([])
   }
   private getSystemName({ data }: returnDataType) {
     this.systemNames = data.map((s: { name: string; id: number }) => {
@@ -145,7 +81,10 @@ export default class UserDialog extends Vue {
         value: s.id.toString()
       }
     })
+    // 响应式更新
+    this.formTypeObj[4].items = this.systemNames.concat([])
   }
+
   private async httpAll() {
     const results = await this.h_request['httpAll']<httpAllParams>([
       {
@@ -164,6 +103,11 @@ export default class UserDialog extends Vue {
   }
   created(): void {
     this.httpAll()
+    // 编辑页面没有密码项，不能编辑用户名
+    if (this.formProvide.formObj.loginName) {
+      this.formTypeObj[0].disabled = true
+      this.$set(this.formTypeObj, 1, {})
+    }
   }
 }
 </script>

@@ -14,13 +14,13 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn height="38" color="primary" dark @click.stop="addItem"> 添加 </v-btn>
+        <v-btn height="38" color="primary" dark @click.stop="addItem">添加</v-btn>
       </v-col>
     </v-row>
     <h-table :headers="headers" :desserts="desserts" :pageNum="pageNum" :paginationLength="paginationLength">
       <template v-slot:buttons="{ item }">
-        <v-btn small text color="success" class="my-2" @click="authItem(item)"> 授权 </v-btn>
-        <v-btn small text color="primary" class="my-2" @click="editItem(item)"> 编辑 </v-btn>
+        <v-btn small text color="success" class="my-2" @click="authItem(item)">授权</v-btn>
+        <v-btn small text color="primary" class="my-2" @click="editItem(item)">编辑</v-btn>
         <v-btn
           text
           color="orange"
@@ -34,10 +34,10 @@
         </v-btn>
       </template>
     </h-table>
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <role-dialog slot="dialog-content" v-if="dialogShow"></role-dialog>
-      <auth-dialog slot="dialog-content" v-else :roles="roles"></auth-dialog>
-    </h-dialog>
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+      <role-dialog v-if="dialogShow"></role-dialog>
+      <auth-dialog v-else :roles="roles"></auth-dialog>
+    </t-dialog>
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteItem" />
   </div>
 </template>
@@ -47,16 +47,17 @@ import HTable from '@/components/h-table.vue'
 import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
 import { httpAllParams } from '@/type/http-request.type'
-import HDialog from '@/components/h-dialog.vue'
+import TDialog from '@/components/t-dialog.vue'
 import RoleDialog from './childComponent/roleDialog.vue'
 import { RoleFormObj } from '@/type/role.type'
 import AuthDialog from './childComponent/authDialog.vue'
 import HConfirm from '@/components/h-confirm.vue'
+import { FormObj } from '@/type/dialog-form.type'
 
 @Component({
   components: {
     HTable,
-    HDialog,
+    TDialog,
     RoleDialog,
     AuthDialog,
     HConfirm
@@ -65,20 +66,12 @@ import HConfirm from '@/components/h-confirm.vue'
 @http
 @util
 export default class Role extends Vue {
-  @Provide('formProvide') private formObj = new Vue({
-    data() {
-      return {
-        title: '',
-        btnName: [] as string[],
-        methodName: '',
-        formObj: {
-          name: '',
-          id: '',
-          roles: [] as number[]
-        }
-      }
-    }
-  })
+  @Provide('formProvide') private formProvide: FormObj = {
+    title: '' as string,
+    btnName: [] as Array<string>,
+    methodName: '' as string,
+    formObj: {}
+  }
 
   private dialogFlag = false
   private dialogShow = true
@@ -148,36 +141,26 @@ export default class Role extends Vue {
     }
     this.pageNum = 1
   }
-
+  // 添加角色
   private addItem() {
     this.dialogFlag = true
     this.dialogShow = true
-    this.formObj.title = '新建角色'
-    this.formObj.btnName = ['立即创建']
-    this.formObj.methodName = 'addRole'
-  }
-  // 删除角色
-  private async deleteItem() {
-    const { success } = await this.h_request['httpGET']('GET_ROLE_DELETE', {}, this.HConfirmItem.id)
-    if (success) {
-      this.HConfirmShow = false
-      this.h_utils.alertUtil.open('删除成功', true, 'success')
-      this.searchMethod(false, {
-        pageNum: 1,
-        pageSize: this.pageSize
-      })
-      this.pageNum = 1
-    }
+    this.formProvide.title = '新建角色'
+    this.formProvide.btnName = ['立即创建']
+    this.formProvide.methodName = 'addRole'
+    this.formProvide.formObj = {}
   }
 
   private editItem(item: any) {
     this.dialogFlag = true
     this.dialogShow = true
-    this.formObj.title = '编辑角色'
-    this.formObj.btnName = ['立即修改']
-    this.formObj.methodName = 'editRole'
-    this.formObj.formObj.name = item.name
-    this.formObj.formObj.id = item.id
+    this.formProvide.title = '编辑角色'
+    this.formProvide.btnName = ['立即修改']
+    this.formProvide.methodName = 'editRole'
+    this.formProvide.formObj = {
+      id: item.id,
+      name: item.name
+    }
   }
 
   private getActionRoles(data: Array<any>): Array<number> {
@@ -186,6 +169,7 @@ export default class Role extends Vue {
     })
   }
 
+  // 权限页面
   private async authItem(item: any) {
     const { data } = await this.h_request['httpGET'](
       'GET_PERMISSION_AUTHORIZATION_FINDPERMISSIONLISTBYROLEID',
@@ -194,11 +178,11 @@ export default class Role extends Vue {
     )
     this.dialogFlag = true
     this.dialogShow = false
-    this.formObj.title = '角色授权'
-    this.formObj.btnName = ['提交授权', '取消']
-    this.formObj.methodName = 'authRole'
-    this.formObj.formObj.id = item.id
-    this.formObj.formObj.roles = this.getActionRoles(data)
+    this.formProvide.title = '角色授权'
+    this.formProvide.btnName = ['提交授权', '取消']
+    this.formProvide.methodName = 'authRole'
+    this.formProvide.formObj.id = item.id
+    this.formProvide.formObj.roles = this.getActionRoles(data)
   }
 
   private async addRole(formObj: RoleFormObj) {
@@ -218,6 +202,7 @@ export default class Role extends Vue {
 
   private async editRole(formObj: RoleFormObj) {
     const { name, id } = formObj
+    console.log(formObj)
     const { success } = await this.h_request['httpPUT']<RoleFormObj>('PUT_ROLE_UPDATEROLE', {
       name,
       id
@@ -261,6 +246,20 @@ export default class Role extends Vue {
       }
     })
     return arr
+  }
+
+  // 删除角色
+  private async deleteItem() {
+    const { success } = await this.h_request['httpGET']('GET_ROLE_DELETE', {}, this.HConfirmItem.id)
+    if (success) {
+      this.HConfirmShow = false
+      this.h_utils.alertUtil.open('删除成功', true, 'success')
+      this.searchMethod(false, {
+        pageNum: 1,
+        pageSize: this.pageSize
+      })
+      this.pageNum = 1
+    }
   }
 
   async created(): Promise<void> {

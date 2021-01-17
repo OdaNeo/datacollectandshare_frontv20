@@ -125,8 +125,8 @@ export default class CmdList extends Vue {
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
 
+  // 表头内容 所有主题
   private headers = [
-    // 表头内容 所有主题
     {
       text: '主题ID',
       align: 'center',

@@ -33,9 +33,12 @@
         >
       </template>
     </h-table>
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <!-- <h-dialog v-if="dialogFlag" v-model="dialogFlag">
       <resources-dialog slot="dialog-content" :desserts="desserts"></resources-dialog>
-    </h-dialog>
+    </h-dialog> -->
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+      <resources-dialog :desserts="desserts"></resources-dialog>
+    </t-dialog>
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteItem" />
   </div>
 </template>
@@ -44,16 +47,17 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import { returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import HTable from '@/components/h-table.vue'
-import HDialog from '@/components/h-dialog.vue'
+import TDialog from '@/components/t-dialog.vue'
 import ResourcesDialog from './childComponent/resourcesDialog.vue'
 import { ResourcesFormObj } from '@/type/resources.type'
 import util from '@/decorator/utilsDecorator'
 import HConfirm from '@/components/h-confirm.vue'
+import { FormObj } from '@/type/dialog-form.type'
 
 @Component({
   components: {
     HTable,
-    HDialog,
+    TDialog,
     ResourcesDialog,
     HConfirm
   }
@@ -61,22 +65,12 @@ import HConfirm from '@/components/h-confirm.vue'
 @http
 @util
 export default class Resources extends Vue {
-  @Provide('formProvide') private formObj = new Vue({
-    data() {
-      return {
-        title: '',
-        btnName: [''],
-        methodName: '',
-        formObj: {
-          name: '',
-          url: '',
-          parentid: null,
-          type: '',
-          id: ''
-        }
-      }
-    }
-  })
+  @Provide('formProvide') private formProvide: FormObj = {
+    title: '' as string,
+    btnName: [] as Array<string>,
+    methodName: '' as string,
+    formObj: {}
+  }
 
   private queryResourcesName = ''
   private desserts: Array<unknown> = []
@@ -136,20 +130,21 @@ export default class Resources extends Vue {
 
   private addItem() {
     this.dialogFlag = true
-    this.formObj.title = '' + '添加权限'
-    this.formObj.btnName = ['立即创建', '取消']
-    this.formObj.methodName = 'addResources'
+    this.formProvide.title = '添加权限'
+    this.formProvide.btnName = ['立即创建', '取消']
+    this.formProvide.methodName = 'addResources'
+    this.formProvide.formObj = {}
   }
 
-  private editItem(item: { name: string; url: string; type: string; id: string }) {
+  private editItem(item: { name: string; url: string; type: string; id: string; parentid: number | null }) {
     this.dialogFlag = true
-    this.formObj.title = '权限修改'
-    this.formObj.btnName = ['立即修改', '取消']
-    this.formObj.methodName = 'updataResources'
-    this.formObj.formObj = {
+    this.formProvide.title = '权限修改'
+    this.formProvide.btnName = ['立即修改', '取消']
+    this.formProvide.methodName = 'updataResources'
+    this.formProvide.formObj = {
       name: item.name,
       url: item.url,
-      parentid: null,
+      parentid: item.parentid,
       type: item.type,
       id: item.id
     }

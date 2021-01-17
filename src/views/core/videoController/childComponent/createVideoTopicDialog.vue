@@ -18,16 +18,17 @@ export default class CreateVideoTopicDialog extends Vue {
     {
       label: '主题名称',
       valueName: 'topicName',
+      type: 'input',
       require: true,
       rules: ['topicNameNoRepeat', 'topicNameFormatter']
     },
     {
       label: 'rtsp/rtmp地址',
       valueName: 'sourceUrl',
-      require: true,
-      rules: []
+      type: 'input',
+      require: true
     },
-    { label: '摄像头地址', valueName: 'address', require: true, rules: [] }
+    { label: '摄像头地址', valueName: 'address', type: 'input', require: true }
   ]
 }
 </script>

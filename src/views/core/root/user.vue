@@ -35,14 +35,9 @@
           <template v-slot:[`item.userState`]="{ item }">
             {{ h_enum['userState'][item.userState] }}
           </template>
-          <template [`v-slot:item.actions`]="{ item }">
-            <v-icon small class="mr-4" @click="editItem(item)">mdi-pencil</v-icon>
-            <!--                        <v-icon-->
-            <!--                        small-->
-            <!--                        @click="deleteItem(item)"-->
-            <!--                        >-->
-            <!--                            mdi-delete-->
-            <!--                        </v-icon>-->
+          <template v-slot:[`item.actions`]="{ item }">
+            <v-icon small @click="editItem(item)">mdi-pencil</v-icon>
+            <!-- <v-icon small @click="deleteItem(item)">mdi-delete</v-icon> -->
           </template>
         </v-data-table>
         <v-pagination
@@ -54,10 +49,9 @@
         ></v-pagination>
       </div>
     </transition>
-
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <user-dialog slot="dialog-content"></user-dialog>
-    </h-dialog>
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+      <user-dialog />
+    </t-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -73,12 +67,14 @@ import {
 } from '@/type/user.type'
 import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
-import HDialog from '@/components/h-dialog.vue'
 import UserDialog from './childComponent/userDialog.vue'
+import TDialog from '@/components/t-dialog.vue'
+import { FormObj } from '@/type/dialog-form.type'
+
 @Component({
   components: {
-    HDialog,
-    UserDialog
+    UserDialog,
+    TDialog
   }
 })
 @http
@@ -90,56 +86,21 @@ import UserDialog from './childComponent/userDialog.vue'
   }
 ])
 export default class User extends Vue {
-  @Provide('formProvide') private formObj = new Vue({
-    data() {
-      return {
-        title: '',
-        btnName: [''],
-        methodName: '',
-        formObj: {
-          loginPwd: {
-            text: '',
-            reset: false,
-            show: false
-          },
-          loginName: {
-            text: '',
-            reset: false,
-            disabled: false
-          },
-          userType: {
-            text: '',
-            reset: false
-          },
-          userState: {
-            text: '',
-            reset: false
-          },
-          systemName: {
-            text: '',
-            value: '',
-            reset: false
-          },
-          userId: {
-            text: 1,
-            value: 1,
-            reset: false
-          }
-        },
-        userId: ''
-      }
-    }
-  })
+  @Provide('formProvide') private formProvide: FormObj = {
+    title: '' as string,
+    btnName: [] as Array<string>,
+    methodName: '' as string,
+    formObj: {}
+  }
+
   private dialogFlag = false
   private desserts: Array<userInfo> = []
-  // private dessertsBF: Array<userInfo> = []
   private pageNum = 1
   private pageSize = 10
   private paginationLength = 1
-  // private paginationLengthBF = 0
   private queryUserName = ''
   private tableShow = true
-  // private tableFlag = true
+
   private headers = [
     {
       text: '账号ID',
@@ -201,75 +162,23 @@ export default class User extends Vue {
 
   private addItem() {
     this.dialogFlag = true
-    this.formObj.title = '创建用户'
-    this.formObj.btnName = ['立即创建', '取消']
-    this.formObj.methodName = 'addUser'
-    this.formObj.formObj = {
-      loginName: {
-        text: '',
-        reset: false,
-        disabled: false
-      },
-      loginPwd: {
-        text: '',
-        reset: false,
-        show: true
-      },
-      userType: {
-        text: '',
-        reset: false
-      },
-      userState: {
-        text: '',
-        reset: false
-      },
-      systemName: {
-        text: '',
-        value: '',
-        reset: false
-      },
-      userId: {
-        text: 1,
-        value: 1,
-        reset: false
-      }
-    }
+    this.formProvide.title = '创建用户'
+    this.formProvide.btnName = ['立即创建', '取消']
+    this.formProvide.methodName = 'addUser'
+    this.formProvide.formObj = {}
   }
 
   private editItem(item: userInfo) {
     this.dialogFlag = true
-    this.formObj.title = '用户信息编辑'
-    this.formObj.btnName = ['立即修改', '取消']
-    this.formObj.methodName = 'editUser'
-    this.formObj.formObj = {
-      loginName: {
-        text: item.loginName,
-        reset: true,
-        disabled: true
-      },
-      loginPwd: {
-        text: '',
-        reset: false,
-        show: false
-      },
-      userType: {
-        text: item.userType.toString(),
-        reset: false
-      },
-      userState: {
-        text: item.userState.toString(),
-        reset: false
-      },
-      systemName: {
-        text: item.systemName,
-        value: item.email,
-        reset: false
-      },
-      userId: {
-        text: item.id,
-        value: item.id,
-        reset: false
-      }
+    this.formProvide.title = '用户信息编辑'
+    this.formProvide.btnName = ['立即修改', '取消']
+    this.formProvide.methodName = 'editUser'
+    this.formProvide.formObj = {
+      loginName: item.loginName,
+      userType: { text: item.phone, value: item.userType.toString() },
+      userState: item.userState.toString(),
+      systemName: { text: item.systemName.toString(), value: item.email },
+      userId: item.id
     }
   }
 
@@ -292,8 +201,6 @@ export default class User extends Vue {
 
   private tableAfterEnter(): void {
     this.tableShow = true
-    // this.desserts = this.dessertsBF
-    // this.paginationLength = this.paginationLengthBF
   }
 
   private searchUserList() {
@@ -306,15 +213,35 @@ export default class User extends Vue {
     this.pageNum = 1
   }
 
+  // 添加用户
+  private async addUser(formObj: userFormObj) {
+    const { loginName, loginPwd, userType, userState, systemName } = formObj
+    const { success } = await this.h_request['httpPOST']<dialogRequestStructure>('POST_USER_ADD_USER', {
+      loginName,
+      loginPwd,
+      userType: userType.value || userType.toString(),
+      userState,
+      systemName: systemName.value || systemName.toString()
+    })
+    if (success) {
+      const params: paramsType = {
+        pageSize: this.pageSize,
+        pageNum: 1
+      }
+      this.pageNum = 1
+      this.searchMethod(false, params)
+      return Promise.resolve(success)
+    }
+  }
   // 修改用户
-  private async editUser(childObj: userFormObj) {
-    const { loginName, userType, userState, systemName, userId } = childObj
+  private async editUser(formObj: userFormObj) {
+    const { loginName, userType, userState, systemName, userId } = formObj
     const { success } = await this.h_request['httpPUT']<dialogRequestStructure2>('POST_USER_UPDATE_USER', {
-      loginName: loginName.text,
-      userType: userType.text,
-      userState: userState.text,
-      systemName: systemName.value,
-      id: userId.value
+      loginName: loginName,
+      userType: userType.value || userType.toString(),
+      userState: userState,
+      systemName: systemName.value || systemName.toString(),
+      id: userId
     })
     if (success) {
       const params: paramsType = {
@@ -327,25 +254,6 @@ export default class User extends Vue {
     }
   }
 
-  private async addUser(childObj: userFormObj) {
-    const { loginName, loginPwd, userType, userState, systemName } = childObj
-    const { success } = await this.h_request['httpPOST']<dialogRequestStructure>('POST_USER_ADD_USER', {
-      loginName: loginName.text,
-      loginPwd: loginPwd.text,
-      userType: userType.text,
-      userState: userState.text,
-      systemName: systemName.value
-    })
-    if (success) {
-      const params: paramsType = {
-        pageSize: this.pageSize,
-        pageNum: 1
-      }
-      this.pageNum = 1
-      this.searchMethod(false, params)
-      return Promise.resolve(success)
-    }
-  }
   created(): void {
     const params: paramsType = {
       pageSize: this.pageSize,

@@ -1,5 +1,5 @@
 <template>
-  <v-row no-gutters>
+  <!-- <v-row no-gutters>
     <v-col cols="11">
       <v-text-field
         single-line
@@ -106,58 +106,147 @@
         </ul>
       </div>
     </v-col>
+  </v-row> -->
+  <v-row no-gutters>
+    <h-input
+      v-for="item in formTypeObj"
+      :key="item.id"
+      :formTypeItem="item"
+      @radio-group-change="typesChange"
+      @select-change="selectChange"
+    />
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Vue, Inject, Prop } from 'vue-property-decorator'
+import { Component, Vue, Prop, Inject } from 'vue-property-decorator'
+import HInput from '@/components/h-input.vue'
+import { InputType } from '@/type/dialog-form.type'
+import { userFormVar, userFormVarDo } from '@/type/user.type'
 import { H_Vue } from '@/declaration/vue-prototype'
 
-@Component
+@Component({
+  components: {
+    HInput
+  }
+})
 export default class ResourcesDialog extends Vue {
-  @Prop() private desserts!: unknown
   @Inject() private readonly formProvide!: H_Vue
+  @Prop() private desserts!: any
 
-  private actionSelect = -1
-  private selectChild: Array<any> = []
-  private selectShow = false
-  private selectChildShow = false
-  private selectModel = null
+  private dessertsList: Array<userFormVarDo> = []
 
-  private types: Array<unknown> = [
+  private types: Array<userFormVar> = [
     { text: '菜单', value: 'menu' },
     { text: '按钮', value: 'button' }
   ]
 
-  private nameRules: Array<Function> = [(v: string) => !!v || '请设置权限名称']
-  private typeRules: Array<Function> = [(v: string) => !!v || '请选择权限类型']
-  private parentRules: Array<Function> = [(v: string) => !!v || '请选择父节点']
-
-  private choiceLi(item: any, parent?: any) {
-    this.selectModel = parent ? parent.name + '/' + item.name : item.name
-    this.formProvide.formObj.parentid = item.id
-    this.selectShow = false
+  private formTypeObj: Array<InputType> = [
+    {
+      label: '权限名称',
+      valueName: 'name',
+      type: 'input',
+      require: true
+    },
+    {
+      label: '权限地址',
+      valueName: 'url',
+      type: 'input',
+      require: false
+    },
+    {
+      label: '权限类型',
+      valueName: 'type',
+      type: 'radioGroup',
+      items: this.types,
+      require: true
+    }
+  ]
+  // toggle 下拉框
+  private selectChange(formObj: any) {
+    if (formObj.type === 'button') {
+      this.dessertsList.forEach(item => {
+        if (formObj.grandparentid === item.value) {
+          item.childrenList && (this.formTypeObj[4].items = item.childrenList)
+        }
+      })
+    }
   }
 
-  private selectEnter(item: any, index: number) {
-    this.actionSelect = index
-    this.selectChild = item
-    this.selectChildShow = true
+  // 渲染不同的下拉框
+  private typesChange(formObj: any) {
+    if (formObj.type === 'menu') {
+      this.$set(this.formTypeObj, 3, {
+        label: '父节点名称',
+        valueName: 'parentid',
+        type: 'select',
+        items: this.dessertsList,
+        require: false
+      })
+      this.$delete(this.formTypeObj, 4)
+    } else if (formObj.type === 'button') {
+      this.$set(this.formTypeObj, 3, {
+        label: '父节点名称',
+        valueName: 'grandparentid',
+        type: 'select',
+        items: this.dessertsList,
+        require: true
+      })
+      this.$set(this.formTypeObj, 4, {
+        valueName: 'parentid',
+        type: 'select',
+        items: [],
+        require: true
+      })
+    }
+    // 重新获取下拉框内容
+    this.selectChange(formObj)
   }
 
-  private clearMethod() {
-    this.selectModel = null
-    this.actionSelect = -1
-    this.selectShow = false
-    this.selectChildShow = false
-  }
-
-  created(): void {
-    document.addEventListener('click', () => {
-      if (this.selectShow) {
-        this.selectShow = false
-        this.selectChildShow = false
+  private getDessertsList(items: Array<any>): Array<any> {
+    return items.map((item: { name: string; id: number; childrenList?: Array<{ name: string; id: number }> }) => {
+      if (!item.childrenList) {
+        return {
+          text: item.name,
+          value: item.id
+        }
+      } else {
+        return {
+          text: item.name,
+          value: item.id,
+          childrenList: this.getDessertsList(item.childrenList)
+        }
       }
     })
+  }
+  // private parentItem: any = {}
+  // private getParentId(n: number, list: Array<any>): any {
+  //   list.forEach(item => {
+  //     if (Number(item.value) !== n && !item.childrenList) {
+  //       this.parentItem = {}
+  //       return
+  //     } else if (Number(item.value) !== n && item.childrenList) {
+  //       this.getParentId(n, item.childrenList)
+  //     } else if (Number(item.value) === n) {
+  //       this.parentItem = list
+  //       return
+  //     }
+  //   })
+  // }
+
+  created(): void {
+    // 获得嵌套列表
+    this.dessertsList = this.getDessertsList(this.desserts)
+    // 编辑页面填充
+    if (this.formProvide.formObj.type) {
+      this.typesChange(this.formProvide.formObj)
+    }
+    // if (this.formProvide.formObj.type === 'button') {
+    //   // this.getParentId(this.formProvide.formObj.parentid, this.dessertsList)
+    //   this.formProvide.formObj.grandparentid = this.parentItem.text
+    // }
+    // this.getParentId(54, this.dessertsList)
+    // console.log(this.dessertsList)
+    // console.log(this.parentItem)
   }
 }
 </script>
@@ -167,7 +256,7 @@ export default class ResourcesDialog extends Vue {
   width: 330px;
   font-size: 14px;
 } */
-.selectCon {
+/* .selectCon {
   width: 198px;
   background: #fff;
   position: absolute;
@@ -211,5 +300,5 @@ export default class ResourcesDialog extends Vue {
 }
 .selectChildCon li:hover {
   color: #409eff;
-}
+} */
 </style>

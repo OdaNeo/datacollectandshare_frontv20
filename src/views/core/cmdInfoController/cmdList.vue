@@ -247,7 +247,6 @@ export default class CmdList extends Vue {
       const { data }: returnDataType = bool
         ? await this.h_request.httpGET<object>('GET_CMD_SELECTCMD', params)
         : await this.h_request.httpGET<object>('GET_CMD_FIND_ALL', params)
-      console.log(data)
       data.list &&
         (this.desserts = data.list.map((item: any) => {
           return { ...item, flag: false }

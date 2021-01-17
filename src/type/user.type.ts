@@ -40,15 +40,18 @@ export type userFormVar = {
   text: string
   value: string
 }
+export interface userFormVarDo extends userFormVar {
+  childrenList?: Array<userFormVar>
+}
 
 export type userFormObj = {
-  loginName: FormStructure
-  loginPwd: FormStructure
+  loginName: string
+  loginPwd: string
   userType: FormStructure
-  userState: FormStructure
+  userState: string
   systemName: FormStructure
   userId?: any
-  [key: string]: FormStructure
+  [key: string]: string | FormStructure
   id: any
 }
 
