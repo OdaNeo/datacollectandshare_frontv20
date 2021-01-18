@@ -160,22 +160,13 @@ export default class CmdList extends Vue {
     this.formProvide.formObj = {
       producer: this.producer
     }
-    // id: '', // 命令ID
-    // canNotEdit: false, // 添加数据
-    // cmdName: '', // 命令名称
-    // userName: '', // 所属用户
-    // producer: this.producer, // 系统名称不可修改
-    // consumers: [] as Array<string>, // 订阅系统名
-    // description: '' // 描述（描述）
 
     // 修改
     if (item) {
       this.formProvide.title = '修改命令'
       this.formProvide.formObj = {
         id: item.id, // 命令ID
-        canNotEdit: true, // 添加数据
         cmdName: item.cmdName, // 命令名称
-        userName: '', // 所属用户
         producer: item.producer, // 系统名称
         consumers: item.consumers.split(','), // 订阅系统名
         description: item.description // 描述（描述）
@@ -187,13 +178,14 @@ export default class CmdList extends Vue {
   private async addCmd(formObj: CmdAdd) {
     const params: any = {}
     //  ADD 不提交id，UPDATE提交id
-    formObj.canNotEdit && (params.id = formObj.id)
+    formObj.id && (params.id = formObj.id)
+
     params.cmdName = formObj.cmdName
-    params.consumers = formObj.consumers.join(',')
     params.producer = formObj.producer
     params.description = formObj.description
+    params.consumers = formObj.consumers.join(',')
 
-    const { success } = await this.h_request.httpPOST(!formObj.canNotEdit ? 'POST_CMD_ADD' : 'POST_CMD_UPDATE', params)
+    const { success } = await this.h_request.httpPOST(!formObj.id ? 'POST_CMD_ADD' : 'POST_CMD_UPDATE', params)
 
     if (success) {
       this.h_utils.alertUtil.open(!formObj.canNotEdit ? '命令创建成功' : '命令修改成功', true, 'success')

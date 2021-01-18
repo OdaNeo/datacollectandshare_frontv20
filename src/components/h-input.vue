@@ -13,7 +13,7 @@
       dense
       clearable
       :disabled="formTypeItem.disabled && formTypeItem.disabled"
-      :rules="[...getRules(formTypeItem.label), ...topicRepeat]"
+      :rules="[...getRules(formTypeItem.label), ...noRepeat]"
       class="mx-4 my-0"
       @input="inputEvent(formProvide.formObj[formTypeItem.valueName])"
     ></v-text-field>
@@ -25,6 +25,7 @@
       outlined
       dense
       clearable
+      :multiple="!!formTypeItem.multiple"
       :label="formTypeItem.label ? `请选择${formTypeItem.label}` : '请选择'"
       :items="formTypeItem.items"
       :rules="[...getRules(formTypeItem.label)]"
@@ -44,18 +45,6 @@
     >
       <v-radio v-for="n in formTypeItem.items" :key="n.value" :label="`${n.text}`" :value="n.value"></v-radio>
     </v-radio-group>
-
-    <!-- checkbox -->
-    <v-chip-group
-      v-if="formTypeItem.type === 'chipGroup'"
-      v-model="formProvide.formObj[formTypeItem.valueName]"
-      column
-      multiple
-      active-class="primary--text"
-      class="mx-4 mb-4 mt-0"
-    >
-      <v-chip class="mr-5" v-for="item in formTypeItem.items" :key="item.index" filter outlined>{{ item.name }}</v-chip>
-    </v-chip-group>
   </v-col>
 </template>
 <script lang="ts">
@@ -72,30 +61,52 @@ export default class HInput extends Vue {
   @Prop() private formTypeItem!: InputType
 
   private menuStart = false
-  private topicRepeat: Function[] = []
+  private noRepeat: Function[] = []
 
-  // rule: topicNameNoRepeat
+  // rule: topicNameNoRepeat, cmdNameNoRepeat
   private async inputEvent(v: string) {
-    if (this.formTypeItem.rules && this.formTypeItem.rules.includes('topicNameNoRepeat') && v) {
+    if (!this.formTypeItem.rules) {
+      return
+    }
+    if (this.formTypeItem.rules.includes('topicNameNoRepeat') && v) {
       const { success } = await this.h_request['httpGET']('GET_TOPICS_CHECKED', {
         topicName: v
       })
       if (success) {
-        this.topicRepeat = [(v: string) => !v || '主题名称已被注册']
+        this.noRepeat = [(v: string) => !v || '主题名称已被注册']
       } else {
-        this.topicRepeat = []
+        this.noRepeat = []
+      }
+    } else if (
+      this.formTypeItem.rules.includes('cmdNameNoRepeat') &&
+      this.formProvide.formObj.cmdName &&
+      this.formProvide.formObj.producer
+    ) {
+      const { success } = await this.h_request['httpGET']('GET_CMD_CHECKED', {
+        cmdName: this.formProvide.formObj.cmdName,
+        producer: this.formProvide.formObj.producer
+      })
+      if (success) {
+        this.noRepeat = [(v: string) => !v || '命令名称已被注册']
+      } else {
+        this.noRepeat = []
       }
     } else {
-      this.topicRepeat = []
+      this.noRepeat = []
     }
   }
-  // rule: topicNameFormatter
+  // rule: topicNameFormatter cmdNameFormatter
   private rulesType(str: string) {
     switch (str) {
       case 'topicNameFormatter':
         return [
           (v: string) => (v && v.length <= 40) || '主题名称最长可设置40个字符',
           (v: string) => /^[\w@.]*$/.test(v) || '内容只能为数字、字母、下划线、.、@的组合'
+        ]
+      case 'cmdNameFormatter':
+        return [
+          (v: string) => (v && v.length <= 20) || '命令名称最长可设置20个字符',
+          (v: string) => /^\w*$/.test(v) || '内容只能为数字、字母、下划线的组合'
         ]
       default:
         return []
@@ -107,7 +118,7 @@ export default class HInput extends Vue {
     let arr: Array<any> = []
     // require 非空校验
     if (this.formTypeItem.require) {
-      arr.push((v: string) => !!v || (str ? `${str}不能为空` : `此项不能为空`))
+      arr.push((v: string | Array<any>) => !!(v && v.length) || (str ? `${str}不能为空` : `此项不能为空`))
     }
     // 其他规则
     if (this.formTypeItem.rules) {

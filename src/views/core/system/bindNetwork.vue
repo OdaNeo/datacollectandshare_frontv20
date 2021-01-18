@@ -39,9 +39,9 @@
         >
       </template>
     </h-table>
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <bind-net-dialog slot="dialog-content"></bind-net-dialog>
-    </h-dialog>
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+      <bind-net-dialog :networks="networks" :systems="systems" />
+    </t-dialog>
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="relieveNetWork" />
   </div>
 </template>
@@ -50,16 +50,17 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
 import { returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
-import HDialog from '@/components/h-dialog.vue'
+import TDialog from '@/components/t-dialog.vue'
 import BindNetDialog from './childComponent/bindNetDialog.vue'
 import { BindNetworkObj } from '@/type/bindNetwork'
 import HConfirm from '@/components/h-confirm.vue'
 import util from '@/decorator/utilsDecorator'
+import { FormObj } from '@/type/dialog-form.type'
 
 @Component({
   components: {
     HTable,
-    HDialog,
+    TDialog,
     BindNetDialog,
     HConfirm
   }
@@ -67,21 +68,14 @@ import util from '@/decorator/utilsDecorator'
 @http
 @util
 export default class BindNetwork extends Vue {
-  @Provide('formProvide') private formObj = new Vue({
-    data() {
-      return {
-        title: '',
-        btnName: [] as string[],
-        methodName: '',
-        formObj: {
-          networkId: '',
-          networkName: '',
-          systemId: '',
-          systemName: ''
-        }
-      }
-    }
-  })
+  @Provide('formProvide') private formProvide: FormObj = {
+    title: '' as string,
+    btnName: [] as Array<string>,
+    methodName: '' as string,
+    formObj: {}
+  }
+  private networks: Array<{ value: string; text: string }> = []
+  private systems: Array<{ value: string; text: string }> = []
 
   private pageSize = 20
   private pageNum = 1
@@ -147,12 +141,23 @@ export default class BindNetwork extends Vue {
 
   private bindNet() {
     this.dialogFlag = true
-    this.formObj.btnName = ['立即绑定']
-    this.formObj.title = '绑定网络'
-    this.formObj.methodName = 'bindNetCallBack'
+    this.formProvide.btnName = ['立即绑定']
+    this.formProvide.title = '绑定网络'
+    this.formProvide.methodName = 'bindNetCallBack'
+    this.formProvide.formObj = {}
   }
-
+  // 绑定网络
   private async bindNetCallBack(formObj: BindNetworkObj) {
+    this.networks.forEach((item: { value: string; text: string }) => {
+      if (formObj.networkId && item.value === formObj.networkId) {
+        formObj.networkName = item.text
+      }
+    })
+    this.systems.forEach((item: { value: string; text: string }) => {
+      if (formObj.systemId && item.value === formObj.systemId) {
+        formObj.systemName = item.text
+      }
+    })
     const { success } = await this.h_request['httpPOST']('GET_SYSNET_ADDBINDINFO', {
       systemId: formObj.systemId,
       systemName: formObj.systemName,
@@ -167,8 +172,12 @@ export default class BindNetwork extends Vue {
       this.pageNum = 1
       return Promise.resolve(success)
     }
+
+    // 重置networks systems
+    this.getNetworksAndSystems()
   }
 
+  // 解绑网络
   private async relieveNetWork() {
     if (!this.HConfirmItem.systemId) {
       return
@@ -188,6 +197,8 @@ export default class BindNetwork extends Vue {
       })
       this.pageNum = 1
     }
+    // 重置networks systems
+    this.getNetworksAndSystems()
   }
 
   private PaginationsNow(page: number) {
@@ -198,12 +209,29 @@ export default class BindNetwork extends Vue {
     })
   }
 
+  public async getNetworksAndSystems(): Promise<void> {
+    const { data } = await this.h_request['httpGET']('GET_SYSNET_GETSYSNETLIST', {})
+    this.networks = data.network.map((n: { name: string; id: string }) => {
+      return {
+        text: n.name,
+        value: n.id
+      }
+    })
+    this.systems = data.system.map((n: { name: string; id: string }) => {
+      return {
+        text: n.name,
+        value: n.id
+      }
+    })
+  }
+
   created(): void {
     this.searchMethod(false, {
       pageSize: this.pageSize,
       pageNum: 1
     })
     this.pageNum = 1
+    this.getNetworksAndSystems()
   }
 }
 </script>

@@ -108,7 +108,7 @@ import { InputType } from '@/type/dialog-form.type'
 @validator(['cmdNameValidate'])
 export default class CreateCmdDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
-  private systemList: Array<{ name: string; index: number }> = []
+  private systemList: Array<{ text: string; value: string }> = []
 
   private formTypeObj: Array<InputType> = [
     {
@@ -116,7 +116,8 @@ export default class CreateCmdDialog extends Vue {
       valueName: 'cmdName',
       type: 'input',
       require: true,
-      disabled: !!this.formProvide.formObj.cmdName
+      disabled: !!this.formProvide.formObj.cmdName,
+      rules: ['cmdNameNoRepeat', 'cmdNameFormatter']
     },
     {
       label: '生产系统名',
@@ -128,7 +129,8 @@ export default class CreateCmdDialog extends Vue {
     {
       label: '订阅系统名',
       valueName: 'consumers',
-      type: 'checkBox',
+      type: 'select',
+      multiple: true,
       items: this.systemList,
       require: true
     },
@@ -141,27 +143,27 @@ export default class CreateCmdDialog extends Vue {
   ]
 
   private showConstruction = false
-  private cmdRepeat: Function[] = []
+  // private cmdRepeat: Function[] = []
 
-  private async inputEvent(v: string, p: string) {
-    // producer cmdName都有，才发送数据
-    if (v && p) {
-      const { success } = await this.h_request['httpGET']('GET_CMD_CHECKED', {
-        cmdName: v,
-        producer: p
-      })
-      if (success) {
-        this.cmdRepeat = [(v: string) => !!v || '命令名称已被注册']
-      } else {
-        this.cmdRepeat = []
-      }
-    } else {
-      this.cmdRepeat = []
-    }
-  }
+  // private async inputEvent(v: string, p: string) {
+  //   // producer cmdName都有，才发送数据
+  //   if (v && p) {
+  //     const { success } = await this.h_request['httpGET']('GET_CMD_CHECKED', {
+  //       cmdName: v,
+  //       producer: p
+  //     })
+  //     if (success) {
+  //       this.cmdRepeat = [(v: string) => !!v || '命令名称已被注册']
+  //     } else {
+  //       this.cmdRepeat = []
+  //     }
+  //   } else {
+  //     this.cmdRepeat = []
+  //   }
+  // }
 
   private async getProducerList() {
-    let data: Array<{ name: string }>
+    let data: Array<{ name: string; id: string }>
     this.systemList.length = 0
 
     if (sessionStorage.systemInfo) {
@@ -172,7 +174,7 @@ export default class CreateCmdDialog extends Vue {
       sessionStorage.systemInfo = JSON.stringify(data)
     }
     for (let i = 0; i < data.length; i++) {
-      this.systemList.push({ name: data[i].name, index: i })
+      this.systemList.push({ text: data[i].name, value: data[i].name })
     }
   }
 

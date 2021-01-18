@@ -1,5 +1,5 @@
 <template>
-  <v-row no-gutters>
+  <!-- <v-row no-gutters>
     <v-col cols="11">
       <v-select
         single-line
@@ -44,62 +44,44 @@
         </template>
       </v-select>
     </v-col>
+  </v-row> -->
+  <v-row no-gutters>
+    <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Vue, Inject } from 'vue-property-decorator'
+import { Component, Vue, Inject, Prop } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
+import HInput from '@/components/h-input.vue'
+import { InputType } from '@/type/dialog-form.type'
 import { H_Vue } from '@/declaration/vue-prototype'
 
-@Component
+@Component({
+  components: {
+    HInput
+  }
+})
 @http
 export default class BindNetDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
-  private networks: Array<{ value: string; text: string }> = []
-  private systems: Array<{ value: string; text: string }> = []
+  @Prop() private networks!: any
+  @Prop() private systems!: any
 
-  private systemRules = [(v: string) => !!v || '请选择系统名称']
-  private netWorkRules = [(v: string) => !!v || '请选择网络名称']
-
-  private netWorkChange(value: string) {
-    this.networks.forEach((item: { value: string; text: string }) => {
-      if (item.value === value) {
-        this.formProvide.formObj.networkName = item.text
-      }
-    })
-  }
-
-  private systemChange(value: string) {
-    this.systems.forEach((item: { value: string; text: string }) => {
-      if (item.value === value) {
-        this.formProvide.formObj.systemName = item.text
-      }
-    })
-  }
-
-  private clearMethod() {
-    this.formProvide.formObj.networkName = ''
-    this.formProvide.formObj.systemName = ''
-  }
-
-  public async getNetworksAndSystems(): Promise<void> {
-    const { data } = await this.h_request['httpGET']('GET_SYSNET_GETSYSNETLIST', {})
-    this.networks = data.network.map((n: { name: string; id: string }) => {
-      return {
-        text: n.name,
-        value: n.id
-      }
-    })
-    this.systems = data.system.map((n: { name: string; id: string }) => {
-      return {
-        text: n.name,
-        value: n.id
-      }
-    })
-  }
-
-  async created(): Promise<void> {
-    this.getNetworksAndSystems()
-  }
+  private formTypeObj: Array<InputType> = [
+    {
+      label: '系统名称',
+      valueName: 'systemId',
+      type: 'select',
+      items: this.systems,
+      require: true
+    },
+    {
+      label: '网络名称',
+      valueName: 'networkId',
+      type: 'select',
+      items: this.networks,
+      require: true
+    }
+  ]
 }
 </script>

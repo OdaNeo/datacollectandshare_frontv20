@@ -21,7 +21,8 @@ export type InputType = {
   require: boolean
   disabled?: boolean
   rules?: Array<string>
-  items?: Array<{ [key: string]: string | number }>
+  multiple?: boolean
+  items?: Array<{ [key: string]: string | number } | string>
 }
 
 export type dialogForm = FormObj
