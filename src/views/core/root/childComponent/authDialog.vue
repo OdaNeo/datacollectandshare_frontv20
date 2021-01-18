@@ -7,6 +7,7 @@
     item-key="id"
     v-model="formProvide.formObj.roles"
     activatable
+    selection-type="independent"
   ></v-treeview>
 </template>
 <script lang="ts">

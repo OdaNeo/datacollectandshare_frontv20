@@ -34,12 +34,10 @@
           :paginationLength="paginationLength"
         >
           <template v-slot:buttons="{ item }">
-            <v-btn small text color="primary" class="my-2" @click="consumersSystemDetails(item)"
-              >订阅系统信息详情</v-btn
-            >
+            <v-btn small text color="primary" class="my-2" @click="consumersSystem(item)">订阅系统信息详情</v-btn>
           </template>
-          <template v-slot:buttons2="{ item, index }">
-            <v-btn v-if="tab" small text color="primary" class="my-2" @click.stop="addFileds(item)">修改</v-btn>
+          <template v-slot:buttons2="{ item }">
+            <v-btn v-if="tab" small text color="primary" class="my-2" @click.stop="createCommend(item)">修改</v-btn>
             <v-btn
               small
               v-if="tab"
@@ -52,16 +50,15 @@
               "
               >删除</v-btn
             >
-            <v-btn small text color="primary" class="my-2" @click="getCmdDescription(item, index)">查看描述</v-btn>
+            <v-btn small text color="primary" class="my-2" @click="getCmdDescription(item)">查看描述</v-btn>
           </template>
         </h-table>
       </v-tab-item>
     </v-tabs-items>
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <create-cmd-dialog slot="dialog-content" v-if="dialogShow === 1" />
-      <data-structure-dialog slot="dialog-content" :rowObj="rowObj" v-else-if="dialogShow === 2" />
-      <cmd-ancilary-information-dialog slot="dialog-content" :otherObj="otherObj" v-else-if="dialogShow === 3" />
-    </h-dialog>
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+      <create-cmd-dialog v-if="dialogShow === 1" />
+      <h-table :headers="headersObj" :desserts="dessertsObj" class="mb-6" v-else-if="dialogShow === 2"></h-table>
+    </t-dialog>
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteCmd" />
   </div>
 </template>
@@ -69,54 +66,41 @@
 import { Component, Vue, Provide } from 'vue-property-decorator'
 import { returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
-import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
-import HDialog from '@/components/h-dialog.vue'
+import TDialog from '@/components/t-dialog.vue'
 import CreateCmdDialog from './childComponent/createCmdDialog.vue'
-import DataStructureDialog from './childComponent/dataStructureDialog.vue'
-import CmdAncilaryInformationDialog from './childComponent/cmdAncilaryInformationDialog.vue'
 import { CmdAdd } from '@/type/cmd-add.type'
 import util from '@/decorator/utilsDecorator'
 import { rootStoreModule } from '@/store/modules/root'
+import HTable from '@/components/h-table.vue'
+import { FormObj } from '@/type/dialog-form.type'
 
 @Component({
   components: {
     HTable,
-    HDialog,
+    TDialog,
     HConfirm,
-    CreateCmdDialog,
-    DataStructureDialog,
-    CmdAncilaryInformationDialog
+    CreateCmdDialog
   }
 })
 @http
 @util
 export default class CmdList extends Vue {
-  @Provide('formProvide') private formObj = new Vue({
-    data() {
-      return {
-        title: '',
-        btnName: [] as string[],
-        methodName: '',
-        formObj: {
-          id: '', // 命令ID
-          canNotEdit: false, // 添加数据
-          cmdName: '', // 命令名称
-          userName: '', // 所属用户
-          producer: '', // 源系统名称
-          consumers: [] as Array<string>, // 订阅系统名
-          description: '' // 描述（描述）
-        }
-      }
-    }
-  })
+  @Provide('formProvide') private formProvide: FormObj = {
+    title: '' as string,
+    btnName: [] as Array<string>,
+    methodName: '' as string,
+    formObj: {}
+  }
 
   private tab = null
   private items = ['所有命令', '我的命令']
   private dialogFlag = false // 弹窗展示
   private dialogShow = 0 // 展示哪个弹窗 1.是添加和修改弹窗 2.是订阅系统详情和查看描述
-  private rowObj: any = {}
-  private otherObj: any = {} // 描述
+
+  private dessertsObj: Array<any> = []
+  private headersObj: Array<any> = []
+
   private onlyShowOther = false // 只显示补充信息
 
   private systemName = rootStoreModule.UserState.userMessage.systemName
@@ -166,31 +150,28 @@ export default class CmdList extends Vue {
     }
   ]
 
-  // dialog表头及数据
-  private dialogHeaders: Array<{ text: string; align: string; value?: string; slot?: string }> = []
-  private dialogDesserts: Array<{}> = []
   //  创建命令
-
   private createCommend(item: any) {
     this.dialogFlag = true
     this.dialogShow = 1
-    this.formObj.btnName = ['立即提交']
-    this.formObj.title = '创建命令'
-    this.formObj.methodName = 'addCmd' // 立即提交
-    this.formObj.formObj = {
-      id: '', // 命令ID
-      canNotEdit: false, // 添加数据
-      cmdName: '', // 命令名称
-      userName: '', // 所属用户
-      producer: this.producer, // 系统名称不可修改
-      consumers: [] as Array<string>, // 订阅系统名
-      description: '' // 描述（描述）
+    this.formProvide.btnName = ['立即提交']
+    this.formProvide.title = '创建命令'
+    this.formProvide.methodName = 'addCmd' // 立即提交
+    this.formProvide.formObj = {
+      producer: this.producer
     }
+    // id: '', // 命令ID
+    // canNotEdit: false, // 添加数据
+    // cmdName: '', // 命令名称
+    // userName: '', // 所属用户
+    // producer: this.producer, // 系统名称不可修改
+    // consumers: [] as Array<string>, // 订阅系统名
+    // description: '' // 描述（描述）
 
-    // if 增加字段
+    // 修改
     if (item) {
-      this.formObj.title = '修改命令'
-      this.formObj.formObj = {
+      this.formProvide.title = '修改命令'
+      this.formProvide.formObj = {
         id: item.id, // 命令ID
         canNotEdit: true, // 添加数据
         cmdName: item.cmdName, // 命令名称
@@ -291,39 +272,60 @@ export default class CmdList extends Vue {
     )
     this.pageNum = 1
   }
+
   // 数据结构展示方法
-  private consumersSystem(item: any, str: string) {
+  private consumersSystem(item: any) {
     this.dialogFlag = true
     this.dialogShow = 2
-    this.rowObj = item
-    this.formObj.title = str
-    this.formObj.btnName = []
-    this.formObj.methodName = ''
-  }
-
-  private ancillaryInformation(info: any, str: string) {
-    this.dialogFlag = true
-    this.dialogShow = 3
-    this.otherObj = info
-    this.formObj.title = str
-    this.formObj.btnName = []
-    this.formObj.methodName = ''
-  }
-
-  private consumersSystemDetails(item: any) {
-    this.consumersSystem(item, '订阅系统信息详情')
-  }
-
-  private addFileds(item: any) {
-    this.createCommend(item)
-  }
-
-  private async getCmdDescription(item: any, index: number) {
-    // 查看描述
-    if (!this.desserts[index].flag) {
-      this.desserts[index].flag = true
+    this.headersObj = [
+      {
+        text: '数据编码',
+        align: 'center',
+        value: 'id'
+      },
+      {
+        text: '订阅系统名称',
+        align: 'center',
+        value: 'key'
+      },
+      {
+        text: '队列名',
+        align: 'center',
+        value: 'value'
+      }
+    ]
+    this.dessertsObj = []
+    const _consumers = item.consumers.split(',')
+    const _queueNames = item.queueNames.split(',')
+    for (let i = 0; i < _consumers.length; i++) {
+      this.dessertsObj.push({
+        id: i + 1,
+        key: _consumers[i],
+        value: _queueNames[i]
+      })
     }
-    this.ancillaryInformation(this.desserts[index], '描述')
+    this.formProvide.title = '订阅系统信息详情'
+    this.formProvide.btnName = []
+    this.formProvide.methodName = ''
+    this.formProvide.formObj = {}
+  }
+
+  // 详情展示
+  private getCmdDescription(info: any) {
+    this.dialogFlag = true
+    this.dialogShow = 2
+    this.dessertsObj = info
+    this.headersObj = [
+      {
+        text: '描述',
+        align: 'center',
+        value: 'description'
+      }
+    ]
+    this.formProvide.title = '描述'
+    this.formProvide.btnName = []
+    this.formProvide.methodName = ''
+    this.formProvide.formObj = {}
   }
 
   private async deleteCmd() {

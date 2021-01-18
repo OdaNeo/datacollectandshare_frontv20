@@ -235,11 +235,12 @@ export default class CmdList extends Vue {
     params.overTime = this.h_utils.timeutil.timeToStamp(formObj.endTime, '-') + (formObj.endHour - 8 - 1) * 3600 * 1000
     params.topicId = this.curItem.id
     params.bucketName = this.curItem.bucketName
-    console.log(params)
+    // console.log(params)
     // 总共显示的视频数
-    this.videoCounts = (params.overTime - params.beginTime) / (3600 * 1000) + 1
-    // const data = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
-
+    this.videoCounts = ((params.overTime - params.beginTime) / (3600 * 1000) + 1) * 3
+    const { data } = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
+    // console.log(data[14].url[0])
+    console.log(data)
     this.videoList = [
       'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
       'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',

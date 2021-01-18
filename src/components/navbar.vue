@@ -9,7 +9,7 @@
                     <v-img src="https://randomuser.me/api/portraits/women/85.jpg"></v-img>
                 </v-list-item-avatar> -->
         <v-list-item-content>
-          <v-list-item-title>天枢平台元数据管理中心</v-list-item-title>
+          <v-list-item-title>天枢平台元数据配置管理中心</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
       <v-divider></v-divider>
@@ -19,7 +19,7 @@
                     :key="item.id"
                     :prepend-icon="parentIcon(item.name)"
                     no-action
-                    :value="$route.matched[0].name==item.name"
+                    :value="$route.matched[0].name===item.name"
                 > -->
         <v-list-group
           :value="$route.matched[0].name === item.name"

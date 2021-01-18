@@ -7,7 +7,7 @@
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-      <div style="font-size: 14px; text-align: center">
+      <div style="font-size: 12px; text-align: center">
         该时间段（{{ formProvide.formObj.startTime }}日{{ formProvide.formObj.startHour }}时到{{
           formProvide.formObj.endTime
         }}日{{ formProvide.formObj.endHour }}时），应有{{ videoCounts }}个视频，已查询到{{
@@ -34,7 +34,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Model, Prop, Inject } from 'vue-property-decorator'
-import Hls from 'hls.js'
+// import Hls from 'hls.js'
 import DPlayer, { DPlayerEvents } from 'dplayer'
 import { H_Vue } from '@/declaration/vue-prototype'
 
@@ -70,29 +70,29 @@ export default class VideoPopup extends Vue {
 
   private playVideo(str: string) {
     this.video = this.$refs.video as HTMLVideoElement
-    if (Hls.isSupported()) {
-      this.dp = new DPlayer({
-        container: this.video,
-        autoplay: true,
-        video: {
-          url: str,
-          type: 'customHls',
-          customType: {
-            customHls: function (video: HTMLVideoElement) {
-              const hls = new Hls()
-              hls.loadSource(video.src)
-              hls.attachMedia(video)
-            }
-          }
-        }
-      })
+    // if (Hls.isSupported()) {
+    this.dp = new DPlayer({
+      container: this.video,
+      autoplay: true,
+      video: {
+        url: str
+        // type: 'customHls',
+        // customType: {
+        //   customHls: function (video: HTMLVideoElement) {
+        //     const hls = new Hls()
+        //     hls.loadSource(video.src)
+        //     hls.attachMedia(video)
+        //   }
+        // }
+      }
+    })
 
-      this.dp.on('ended' as DPlayerEvents, () => {
-        if (this.curIndex + 1 < this.videoList.length) {
-          this.toggleCurrentPlay(this.curIndex + 1)
-        }
-      })
-    }
+    this.dp.on('ended' as DPlayerEvents, () => {
+      if (this.curIndex + 1 < this.videoList.length) {
+        this.toggleCurrentPlay(this.curIndex + 1)
+      }
+    })
+    // }
   }
 
   private toggleCurrentPlay(index: number) {

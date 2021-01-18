@@ -2,7 +2,7 @@
   <v-app id="tct">
     <v-navigation-drawer
       app
-      width="200"
+      width="240"
       color="rgb(0,21,41)"
       v-show="navBar"
       style="overflow-x: visible; overflow-y: visible; animation-duration: 1s; animation-delay: 1.5s"

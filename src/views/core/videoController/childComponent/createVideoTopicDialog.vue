@@ -28,7 +28,12 @@ export default class CreateVideoTopicDialog extends Vue {
       type: 'input',
       require: true
     },
-    { label: '摄像头地址', valueName: 'address', type: 'input', require: true }
+    {
+      label: '摄像头地址',
+      valueName: 'address',
+      type: 'input',
+      require: true
+    }
   ]
 }
 </script>

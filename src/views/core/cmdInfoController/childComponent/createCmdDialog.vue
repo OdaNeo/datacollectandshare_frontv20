@@ -1,27 +1,6 @@
 <template>
-  <v-row id="createCmdDialog" no-gutters>
-    <!-- 弹框 展示数据结 -->
-    <v-dialog v-model="showConstruction" width="500">
-      <v-card>
-        <v-card-title class="headline grey lighten-2">Body示例</v-card-title>
-        <v-card-text>
-          <p style="padding-top: 20px; white-space: pre-wrap">
-            <span
-              >{<br />
-              "cmddata": "{/"cmdId/":/"900001/",/"cmdContent/":/"这是一条测试信息/"}"
-              <br />}
-            </span>
-          </p>
-        </v-card-text>
-        <v-divider></v-divider>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="showConstruction = false">关闭</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
-
-    <v-col cols="11">
+  <v-row no-gutters>
+    <!-- <v-col cols="11">
       <v-text-field
         single-line
         outlined
@@ -89,7 +68,27 @@
         </template>
         <v-btn solo @click.native="showConstruction = true">查看</v-btn>
       </v-radio-group>
-    </v-col>
+    </v-col> -->
+
+    <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
+    <!-- body示例及弹窗 -->
+    <label class="label mr-4">Body示例：</label>
+    <v-btn color="blue darken-1" text outlined @click="showConstruction = true">查看</v-btn>
+    <v-dialog v-model="showConstruction" width="500">
+      <v-card>
+        <v-card-title class="headline grey lighten-2">Body示例</v-card-title>
+        <v-card-text class="mt-5">
+          {<br />
+          "cmddata": "{/"cmdId/":/"900001/",/"cmdContent/":/"这是一条测试信息/"}"
+          <br />}
+        </v-card-text>
+        <v-divider></v-divider>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="primary" text @click="showConstruction = false">关闭</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
   </v-row>
 </template>
 <script lang="ts">
@@ -97,15 +96,51 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import validator from '@/decorator/validatorDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
+import HInput from '@/components/h-input.vue'
+import { InputType } from '@/type/dialog-form.type'
 
-@Component
+@Component({
+  components: {
+    HInput
+  }
+})
 @http
-@validator(['cmdNameValidate', 'cmdConsumersValidate'])
+@validator(['cmdNameValidate'])
 export default class CreateCmdDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
+  private systemList: Array<{ name: string; index: number }> = []
+
+  private formTypeObj: Array<InputType> = [
+    {
+      label: '命令名称',
+      valueName: 'cmdName',
+      type: 'input',
+      require: true,
+      disabled: !!this.formProvide.formObj.cmdName
+    },
+    {
+      label: '生产系统名',
+      valueName: 'producer',
+      type: 'input',
+      require: true,
+      disabled: !!this.formProvide.formObj.producer
+    },
+    {
+      label: '订阅系统名',
+      valueName: 'consumers',
+      type: 'checkBox',
+      items: this.systemList,
+      require: true
+    },
+    {
+      label: '描述',
+      valueName: 'description',
+      type: 'input',
+      require: false
+    }
+  ]
 
   private showConstruction = false
-  private systemList: Array<{ name: string }> = []
   private cmdRepeat: Function[] = []
 
   private async inputEvent(v: string, p: string) {
@@ -116,8 +151,7 @@ export default class CreateCmdDialog extends Vue {
         producer: p
       })
       if (success) {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        this.cmdRepeat = [(v: string) => '命令名称已被注册']
+        this.cmdRepeat = [(v: string) => !!v || '命令名称已被注册']
       } else {
         this.cmdRepeat = []
       }
@@ -127,23 +161,18 @@ export default class CreateCmdDialog extends Vue {
   }
 
   private async getProducerList() {
-    let data: Array<{ id: string; name: string }>
+    let data: Array<{ name: string }>
     this.systemList.length = 0
 
     if (sessionStorage.systemInfo) {
       data = JSON.parse(sessionStorage.systemInfo)
-      for (let i = 0; i < data.length; i++) {
-        this.systemList.push({ name: data[i].name })
-      }
-      return
     } else {
       const res = await this.h_request['httpGET']('GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER', {})
       data = res.data
       sessionStorage.systemInfo = JSON.stringify(data)
-      for (let i = 0; i < data.length; i++) {
-        this.systemList.push({ name: data[i].name })
-      }
-      return
+    }
+    for (let i = 0; i < data.length; i++) {
+      this.systemList.push({ name: data[i].name, index: i })
     }
   }
 
@@ -154,11 +183,12 @@ export default class CreateCmdDialog extends Vue {
 </script>
 
 <style scoped>
-.checkbox-container {
-  margin: -25px 0px 0px 150px;
-}
-.checkbox-item {
-  min-width: 70px;
-  height: 40px;
+.label {
+  min-width: 125px;
+  display: flex;
+  justify-content: flex-end;
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 16px;
+  line-height: 42px;
 }
 </style>

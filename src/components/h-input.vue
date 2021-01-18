@@ -18,7 +18,7 @@
       @input="inputEvent(formProvide.formObj[formTypeItem.valueName])"
     ></v-text-field>
 
-    <!-- select，emit select-change 事件 -->
+    <!-- select emit select-change 事件 -->
     <v-select
       v-if="formTypeItem.type === 'select'"
       v-model="formProvide.formObj[formTypeItem.valueName]"
@@ -44,6 +44,18 @@
     >
       <v-radio v-for="n in formTypeItem.items" :key="n.value" :label="`${n.text}`" :value="n.value"></v-radio>
     </v-radio-group>
+
+    <!-- checkbox -->
+    <v-chip-group
+      v-if="formTypeItem.type === 'chipGroup'"
+      v-model="formProvide.formObj[formTypeItem.valueName]"
+      column
+      multiple
+      active-class="primary--text"
+      class="mx-4 mb-4 mt-0"
+    >
+      <v-chip class="mr-5" v-for="item in formTypeItem.items" :key="item.index" filter outlined>{{ item.name }}</v-chip>
+    </v-chip-group>
   </v-col>
 </template>
 <script lang="ts">
@@ -77,7 +89,7 @@ export default class HInput extends Vue {
       this.topicRepeat = []
     }
   }
-
+  // rule: topicNameFormatter
   private rulesType(str: string) {
     switch (str) {
       case 'topicNameFormatter':
@@ -95,7 +107,7 @@ export default class HInput extends Vue {
     let arr: Array<any> = []
     // require 非空校验
     if (this.formTypeItem.require) {
-      arr.push((v: string) => !!v || (str ? `${str}不能为空` : `不能为空`))
+      arr.push((v: string) => !!v || (str ? `${str}不能为空` : `此项不能为空`))
     }
     // 其他规则
     if (this.formTypeItem.rules) {
