@@ -15,16 +15,16 @@
         }}个视频，正在播放第{{ curIndex + 1 }}个视频。
       </div>
       <v-slide-group v-model="model" class="pa-4" show-arrows>
-        <v-slide-item v-for="(item, index) in videoNameList" :key="item.id">
+        <v-slide-item v-for="(item, index) in videoList" :key="item.id">
           <v-btn
             class="mx-2"
-            :class="{ 'primary': curIndex === index }"
+            :class="{ primary: curIndex === index }"
             small
             depressed
             rounded
             @click="toggleCurrentPlay(index)"
           >
-            {{ item }}
+            {{ item.timer }}
           </v-btn>
         </v-slide-item>
       </v-slide-group>
@@ -42,7 +42,8 @@ import { H_Vue } from '@/declaration/vue-prototype'
 export default class VideoPopup extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   @Prop() private videoCounts!: number
-  @Prop() private videoList!: Array<string>
+  @Prop() private videoList!: Array<any>
+
   @Model('closeDialog', { type: Boolean }) private checked!: boolean
 
   private video: HTMLVideoElement | undefined
@@ -59,15 +60,6 @@ export default class VideoPopup extends Vue {
 
   private curIndex = 0
 
-  private get videoNameList(): Array<string> {
-    const _l: Array<string> = []
-    this.videoList.forEach(item => {
-      const i = item.split('?')[0].split('/')
-      _l.push(i[i.length - 1])
-    })
-    return _l
-  }
-
   private playVideo(str: string) {
     this.video = this.$refs.video as HTMLVideoElement
     // if (Hls.isSupported()) {
@@ -76,14 +68,6 @@ export default class VideoPopup extends Vue {
       autoplay: true,
       video: {
         url: str
-        // type: 'customHls',
-        // customType: {
-        //   customHls: function (video: HTMLVideoElement) {
-        //     const hls = new Hls()
-        //     hls.loadSource(video.src)
-        //     hls.attachMedia(video)
-        //   }
-        // }
       }
     })
 
@@ -97,7 +81,7 @@ export default class VideoPopup extends Vue {
 
   private toggleCurrentPlay(index: number) {
     this.curIndex = index
-    this.playVideo(this.videoList[index])
+    this.playVideo(this.videoList[index].url)
   }
 
   mounted(): void {

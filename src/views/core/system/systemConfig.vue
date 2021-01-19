@@ -41,9 +41,9 @@
         >
       </template>
     </h-table>
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <create-configure-dialog slot="dialog-content"></create-configure-dialog>
-    </h-dialog>
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+      <create-configure-dialog></create-configure-dialog>
+    </t-dialog>
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteConfigure" />
   </div>
 </template>
@@ -52,16 +52,17 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
 import { returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
-import HDialog from '@/components/h-dialog.vue'
+import TDialog from '@/components/t-dialog.vue'
 import CreateConfigureDialog from './childComponent/createConfigureDialog.vue'
 import { SystemConfigFormObj } from '@/type/system-config.type'
 import HConfirm from '@/components/h-confirm.vue'
 import util from '@/decorator/utilsDecorator'
+import { FormObj } from '@/type/dialog-form.type'
 
 @Component({
   components: {
     HTable,
-    HDialog,
+    TDialog,
     CreateConfigureDialog,
     HConfirm
   }
@@ -69,25 +70,15 @@ import util from '@/decorator/utilsDecorator'
 @http
 @util
 export default class SystemConfig extends Vue {
-  @Provide('formProvide') private formObj = new Vue({
-    data() {
-      return {
-        title: '',
-        btnName: [] as string[],
-        methodName: '',
-        formObj: {
-          type: '',
-          typeInput: '',
-          name: '',
-          nameInput: '',
-          value: ''
-        }
-      }
-    }
-  })
+  @Provide('formProvide') private formProvide: FormObj = {
+    title: '' as string,
+    btnName: [] as Array<string>,
+    methodName: '' as string,
+    formObj: {}
+  }
   private pageSize = 20
   private pageNum = 1
-  private desserts: Array<unknown> = []
+  private desserts: Array<any> = []
   private paginationLength = 0
   private querySystemName = ''
   private dialogFlag = false
@@ -141,9 +132,10 @@ export default class SystemConfig extends Vue {
 
   private addConfigure() {
     this.dialogFlag = true
-    this.formObj.btnName = ['立即创建']
-    this.formObj.title = '添加配置'
-    this.formObj.methodName = 'addConfigureCallBack'
+    this.formProvide.btnName = ['立即创建']
+    this.formProvide.title = '添加配置'
+    this.formProvide.methodName = 'addConfigureCallBack'
+    this.formProvide.formObj = {}
   }
 
   private async addConfigureCallBack(formObj: SystemConfigFormObj) {

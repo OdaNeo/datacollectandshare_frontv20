@@ -1,5 +1,6 @@
 <template>
-  <v-col cols="12" class="d-flex justify-space-around">
+  <!-- 如果不指明 type 则不显示 -->
+  <v-col v-if="formTypeItem.type" cols="12" class="d-flex justify-space-around">
     <label class="label">
       <div v-if="formTypeItem.label">
         <span v-if="formTypeItem.require" class="require-span">*</span>{{ formTypeItem.label }}：
@@ -13,7 +14,11 @@
       dense
       clearable
       :disabled="formTypeItem.disabled && formTypeItem.disabled"
-      :rules="[...getRules(formTypeItem.label), ...noRepeat]"
+      :rules="
+        formTypeItem.rules
+          ? [...noEmptyRules(formTypeItem.label), ...noRepeat, ...formTypeItem.rules]
+          : [...noEmptyRules(formTypeItem.label), ...noRepeat]
+      "
       class="mx-4 my-0"
       @input="inputEvent(formProvide.formObj[formTypeItem.valueName])"
     ></v-text-field>
@@ -28,7 +33,11 @@
       :multiple="!!formTypeItem.multiple"
       :label="formTypeItem.label ? `请选择${formTypeItem.label}` : '请选择'"
       :items="formTypeItem.items"
-      :rules="[...getRules(formTypeItem.label)]"
+      :rules="
+        formTypeItem.rules
+          ? [...noEmptyRules(formTypeItem.label), ...formTypeItem.rules]
+          : [...noEmptyRules(formTypeItem.label)]
+      "
       @change="$emit('select-change', formProvide.formObj)"
       class="mx-4 my-0"
     ></v-select>
@@ -39,11 +48,21 @@
       v-model="formProvide.formObj[formTypeItem.valueName]"
       row
       dense
-      :rules="[...getRules(formTypeItem.label)]"
+      :rules="
+        formTypeItem.rules
+          ? [...noEmptyRules(formTypeItem.label), ...formTypeItem.rules]
+          : [...noEmptyRules(formTypeItem.label)]
+      "
       class="mx-4 my-2 flex-grow-1"
       @change="$emit('radio-group-change', formProvide.formObj)"
     >
-      <v-radio v-for="n in formTypeItem.items" :key="n.value" :label="`${n.text}`" :value="n.value"></v-radio>
+      <v-radio
+        v-for="n in formTypeItem.items"
+        :key="n.value"
+        :label="`${n.text}`"
+        :value="n.value"
+        :disabled="!!n.disabled"
+      ></v-radio>
     </v-radio-group>
   </v-col>
 </template>
@@ -60,15 +79,10 @@ export default class HInput extends Vue {
   @Prop() private index!: any
   @Prop() private formTypeItem!: InputType
 
-  private menuStart = false
   private noRepeat: Function[] = []
-
   // rule: topicNameNoRepeat, cmdNameNoRepeat
   private async inputEvent(v: string) {
-    if (!this.formTypeItem.rules) {
-      return
-    }
-    if (this.formTypeItem.rules.includes('topicNameNoRepeat') && v) {
+    if (this.formTypeItem.valueName === 'topicName' && v) {
       const { success } = await this.h_request['httpGET']('GET_TOPICS_CHECKED', {
         topicName: v
       })
@@ -78,7 +92,7 @@ export default class HInput extends Vue {
         this.noRepeat = []
       }
     } else if (
-      this.formTypeItem.rules.includes('cmdNameNoRepeat') &&
+      this.formTypeItem.valueName === 'cmdName' &&
       this.formProvide.formObj.cmdName &&
       this.formProvide.formObj.producer
     ) {
@@ -95,38 +109,13 @@ export default class HInput extends Vue {
       this.noRepeat = []
     }
   }
-  // rule: topicNameFormatter cmdNameFormatter
-  private rulesType(str: string) {
-    switch (str) {
-      case 'topicNameFormatter':
-        return [
-          (v: string) => (v && v.length <= 40) || '主题名称最长可设置40个字符',
-          (v: string) => /^[\w@.]*$/.test(v) || '内容只能为数字、字母、下划线、.、@的组合'
-        ]
-      case 'cmdNameFormatter':
-        return [
-          (v: string) => (v && v.length <= 20) || '命令名称最长可设置20个字符',
-          (v: string) => /^\w*$/.test(v) || '内容只能为数字、字母、下划线的组合'
-        ]
-      default:
-        return []
-    }
-  }
-
-  // 校验
-  private getRules(str?: string) {
+  // 非空校验
+  private noEmptyRules(str?: string) {
     let arr: Array<any> = []
-    // require 非空校验
+    // require
     if (this.formTypeItem.require) {
       arr.push((v: string | Array<any>) => !!(v && v.length) || (str ? `${str}不能为空` : `此项不能为空`))
     }
-    // 其他规则
-    if (this.formTypeItem.rules) {
-      for (let i = 0; i < this.formTypeItem.rules.length; i++) {
-        arr = arr.concat(this.rulesType(this.formTypeItem.rules[i]))
-      }
-    }
-
     return arr
   }
 }

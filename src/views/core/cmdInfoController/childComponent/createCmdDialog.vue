@@ -94,10 +94,10 @@
 <script lang="ts">
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
-import validator from '@/decorator/validatorDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import HInput from '@/components/h-input.vue'
 import { InputType } from '@/type/dialog-form.type'
+import Validator from '@/validator2/t-validator'
 
 @Component({
   components: {
@@ -105,7 +105,6 @@ import { InputType } from '@/type/dialog-form.type'
   }
 })
 @http
-@validator(['cmdNameValidate'])
 export default class CreateCmdDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private systemList: Array<{ text: string; value: string }> = []
@@ -117,7 +116,7 @@ export default class CreateCmdDialog extends Vue {
       type: 'input',
       require: true,
       disabled: !!this.formProvide.formObj.cmdName,
-      rules: ['cmdNameNoRepeat', 'cmdNameFormatter']
+      rules: Validator['cmd-validator'].cmdNameFormatter
     },
     {
       label: '生产系统名',
@@ -143,24 +142,6 @@ export default class CreateCmdDialog extends Vue {
   ]
 
   private showConstruction = false
-  // private cmdRepeat: Function[] = []
-
-  // private async inputEvent(v: string, p: string) {
-  //   // producer cmdName都有，才发送数据
-  //   if (v && p) {
-  //     const { success } = await this.h_request['httpGET']('GET_CMD_CHECKED', {
-  //       cmdName: v,
-  //       producer: p
-  //     })
-  //     if (success) {
-  //       this.cmdRepeat = [(v: string) => !!v || '命令名称已被注册']
-  //     } else {
-  //       this.cmdRepeat = []
-  //     }
-  //   } else {
-  //     this.cmdRepeat = []
-  //   }
-  // }
 
   private async getProducerList() {
     let data: Array<{ name: string; id: string }>

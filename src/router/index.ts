@@ -290,6 +290,14 @@ const routes: Array<RouteConfig> = [
         }
       }
     ]
+  },
+  {
+    path: '/bulkCreateTopic',
+    name: '批量创建主题',
+    meta: {
+      access: false
+    },
+    component: () => import('@/views/private/bulkCreateTopic.vue')
   }
 ]
 

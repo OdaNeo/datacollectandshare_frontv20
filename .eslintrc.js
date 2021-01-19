@@ -26,8 +26,8 @@ module.exports = {
     'no-unused-vars': [
       1,
       {
-        'vars': 'all', // 禁止未使用过的变量
-        'args': 'none' // 不检查参数，参数可以声名但不使用
+        vars: 'all', // 禁止未使用过的变量
+        args: 'none' // 不检查参数，参数可以声名但不使用
       }
     ]
   }

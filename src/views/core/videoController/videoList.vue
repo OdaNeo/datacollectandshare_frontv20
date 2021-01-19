@@ -66,7 +66,6 @@ import { paramsType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
-import HDialog from '@/components/h-dialog.vue'
 import CreateVideoTopicDialog from './childComponent/createVideoTopicDialog.vue'
 import SetDateRange from './childComponent/setDateRange.vue'
 import VideoPopup from './childComponent/videoPopup.vue'
@@ -82,7 +81,6 @@ import { FormObj } from '@/type/dialog-form.type'
 @Component({
   components: {
     HTable,
-    HDialog,
     HConfirm,
     CreateVideoTopicDialog,
     VideoPopup,
@@ -173,7 +171,7 @@ export default class CmdList extends Vue {
       slot: 'buttons2'
     }
   ]
-  private videoList: Array<string> = []
+  private videoList: Array<{ timer: string; url: string }> = []
   private curItem: any
   private videoCounts = 0 // 总共应该显示多少视频
 
@@ -228,6 +226,7 @@ export default class CmdList extends Vue {
 
   // 获得视频列表
   private async getVideoList(formObj: any) {
+    this.videoList = []
     const params: any = {}
     // -8小时时差
     // 2020-1-1-0时 ~ 2020-1-1-1时 视频文件数：1，overTime - beginTime=0ms
@@ -238,26 +237,22 @@ export default class CmdList extends Vue {
     // console.log(params)
     // 总共显示的视频数
     this.videoCounts = ((params.overTime - params.beginTime) / (3600 * 1000) + 1) * 3
-    const { data } = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
-    // console.log(data[14].url[0])
-    console.log(data)
-    this.videoList = [
-      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
-      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
-      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
-      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
-      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
-      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
-      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
-      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
-      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type',
-      'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
-      // 'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
-      // 'http://172.51.216.106:8080/live/push/push.m3u8',
-      // 'https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8',
-      // 'http://172.51.216.106:8080/live/test.m3u8',
-      // 'http://172.51.216.118:9000/topic31/03u8.m3u8?x-OSS-process=hls/type'
+    // const { data } = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
+    // console.log(data)
+    const data = [
+      { timer: '2021-01-01 02', url: ['1', '2'] },
+      { timer: '2021-01-01 03', url: ['1', '2', '3'] },
+      { timer: '2021-01-01 04', url: [] }
     ]
+    data.forEach((item: { timer: string; url: Array<string> }) => {
+      if (item.url.length === 0) {
+        this.videoList.push({ timer: item.timer + '时', url: '' })
+      } else {
+        item.url.forEach((_, index) => {
+          this.videoList.push({ timer: item.timer + '时' + '-' + (index + 1), url: item.url[index] })
+        })
+      }
+    })
 
     this.showVideoPopup = true
     return Promise.resolve(true)

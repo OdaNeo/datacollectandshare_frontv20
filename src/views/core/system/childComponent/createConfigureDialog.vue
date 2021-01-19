@@ -1,5 +1,5 @@
 <template>
-  <v-row no-gutters>
+  <!-- <v-row no-gutters>
     <v-col cols="11" class="d-flex">
       <v-select
         single-line
@@ -90,13 +90,23 @@
         </template>
       </v-text-field>
     </v-col>
+  </v-row> -->
+  <v-row no-gutters>
+    <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Vue, Inject } from 'vue-property-decorator'
+import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
+import HInput from '@/components/h-input.vue'
+import { InputType } from '@/type/dialog-form.type'
+import Validator from '@/validator2/t-validator'
 
-@Component
+@Component({
+  components: {
+    HInput
+  }
+})
 export default class CreateConfigureDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
 
@@ -112,47 +122,95 @@ export default class CreateConfigureDialog extends Vue {
     { text: '其他', value: '其他', disabled: false }
   ]
 
-  private typeRules = [(v: string) => !!v || '请选择配置类型']
-
-  private typeInputRules = [
-    (v: string) => !!v || '请设置配置类型',
-    (v: string) => (v && v.length <= 10) || '长度最大为10个字符',
-    (v: string) => (v && v !== 'network') || '不能填写network',
-    (v: string) => (v && v !== 'system') || '不能填写system'
+  private formTypeObj: Array<InputType> = [
+    {
+      label: '配置类型',
+      valueName: 'type',
+      type: 'radioGroup',
+      items: this.types,
+      require: true
+    },
+    {
+      label: '',
+      valueName: 'typeInput',
+      type: '',
+      rules: Validator['system-validator'].typeInputRules,
+      require: false
+    },
+    {
+      label: '配置名称',
+      valueName: 'name',
+      type: 'radioGroup',
+      items: this.names,
+      require: true
+    },
+    {
+      label: '',
+      valueName: 'nameInput',
+      type: '',
+      rules: Validator['system-validator'].nameInputRules,
+      require: false
+    },
+    {
+      label: '配置属性',
+      valueName: 'value',
+      type: 'input',
+      rules: Validator['system-validator'].valueRules,
+      require: true
+    }
   ]
 
-  private nameRules = [(v: string) => !!v || '请选择配置名称']
-
-  private nameInputRules = [
-    (v: string) => !!v || '请设置配置名称',
-    (v: string) => (v && v.length <= 10) || '长度最大为10个字符',
-    (v: string) => (v && v !== 'kafka') || '不能填写kafka',
-    (v: string) => (v && v !== 'redis') || '不能填写redis'
-  ]
-
-  private valueRules = [
-    (v: string) => !!v || '请设置配置属性',
-    (v: string) => (v && v.length <= 120) || '长度最大为120个字符'
-  ]
-
-  private typeChange(value: string) {
-    if (value === '其他') {
-      this.names[0].disabled = false
-      this.names[1].disabled = false
-      this.names[2].disabled = true
-      this.formProvide.formObj.name = ''
-    } else {
+  // 配置类型
+  @Watch('formProvide.formObj.type')
+  private getTypeInput(newVal: string) {
+    if (newVal === 'network' || newVal === 'system') {
       this.names[0].disabled = true
       this.names[1].disabled = true
       this.names[2].disabled = false
+
       this.formProvide.formObj.name = '其他'
+      this.formProvide.formObj.typeInput = undefined
+
+      this.formTypeObj[1].type = ''
+      this.formTypeObj[1].require = false
+      this.formTypeObj[3].type = 'input'
+      this.formTypeObj[3].require = true
+    } else if (newVal === '其他') {
+      this.names[0].disabled = false
+      this.names[1].disabled = false
+      this.names[2].disabled = true
+
+      this.formProvide.formObj.name = 'kafka'
+      this.formProvide.formObj.nameInput = undefined
+
+      this.formTypeObj[1].type = 'input'
+      this.formTypeObj[1].require = true
+      this.formTypeObj[3].type = ''
+      this.formTypeObj[3].require = false
+    } else {
+      // 恢复默认
+      this.names[0].disabled = false
+      this.names[1].disabled = false
+      this.names[2].disabled = false
+      this.formProvide.formObj = {}
+
+      this.formTypeObj[1].type = ''
+      this.formTypeObj[1].require = false
+      this.formTypeObj[3].type = ''
+      this.formTypeObj[3].require = false
     }
   }
 
-  private clearMethod() {
-    this.names[0].disabled = false
-    this.names[1].disabled = false
-    this.names[2].disabled = false
+  // 配置名称
+  @Watch('formProvide.formObj.name')
+  private getNameInput(newVal: string) {
+    if (newVal === '其他') {
+      this.formTypeObj[3].type = 'input'
+      this.formTypeObj[3].require = true
+    } else if (newVal !== '其他') {
+      this.formTypeObj[3].type = ''
+      this.formTypeObj[3].require = false
+    }
   }
 }
 </script>
