@@ -37,13 +37,14 @@ import { Component, Vue, Model, Prop, Inject } from 'vue-property-decorator'
 // import Hls from 'hls.js'
 import DPlayer, { DPlayerEvents } from 'dplayer'
 import { H_Vue } from '@/declaration/vue-prototype'
+import util from '@/decorator/utilsDecorator'
 
 @Component
+@util
 export default class VideoPopup extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   @Prop() private videoCounts!: number
   @Prop() private videoList!: Array<any>
-
   @Model('closeDialog', { type: Boolean }) private checked!: boolean
 
   private video: HTMLVideoElement | undefined
@@ -61,8 +62,16 @@ export default class VideoPopup extends Vue {
   private curIndex = 0
 
   private playVideo(str: string) {
+    if (!str) {
+      this.h_utils['alertUtil'].open('该时间段视频不存在', true, 'error', 1000)
+      if (this.curIndex + 1 < this.videoList.length) {
+        setTimeout(() => {
+          this.toggleCurrentPlay(this.curIndex + 1)
+        }, 1000)
+      }
+    }
+
     this.video = this.$refs.video as HTMLVideoElement
-    // if (Hls.isSupported()) {
     this.dp = new DPlayer({
       container: this.video,
       autoplay: true,
@@ -70,13 +79,11 @@ export default class VideoPopup extends Vue {
         url: str
       }
     })
-
     this.dp.on('ended' as DPlayerEvents, () => {
       if (this.curIndex + 1 < this.videoList.length) {
         this.toggleCurrentPlay(this.curIndex + 1)
       }
     })
-    // }
   }
 
   private toggleCurrentPlay(index: number) {

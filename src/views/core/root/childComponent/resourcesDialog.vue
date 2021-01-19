@@ -174,6 +174,7 @@ export default class ResourcesDialog extends Vue {
 
   // 渲染不同的下拉框
   private typesChange(formObj: any) {
+    console.log(formObj)
     if (formObj.type === 'menu') {
       this.$set(this.formTypeObj, 3, {
         label: '父节点名称',
@@ -188,14 +189,14 @@ export default class ResourcesDialog extends Vue {
         label: '父节点名称',
         valueName: 'grandparentid',
         type: 'select',
-        items: this.dessertsList
-        // require: true
+        items: this.dessertsList,
+        require: true
       })
       this.$set(this.formTypeObj, 4, {
         valueName: 'parentid',
         type: 'select',
-        items: []
-        // require: true
+        items: [],
+        require: true
       })
     }
     // 重新获取下拉框内容

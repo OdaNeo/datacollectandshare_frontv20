@@ -114,7 +114,7 @@ export default class HInput extends Vue {
     let arr: Array<any> = []
     // require
     if (this.formTypeItem.require) {
-      arr.push((v: string | Array<any>) => !!(v && v.length) || (str ? `${str}不能为空` : `此项不能为空`))
+      arr.push((v: string | Array<string>) => !!(v && v.toString()) || (str ? `${str}不能为空` : `此项不能为空`))
     }
     return arr
   }
