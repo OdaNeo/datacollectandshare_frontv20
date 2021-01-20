@@ -45,7 +45,7 @@ export default class CreateVideoTopicDialog extends Vue {
     this.count++
     this.timer = setTimeout(() => {
       this.count = 0
-    }, 700)
+    }, 800)
     if (this.count === 10) {
       clearTimeout(this.timer)
       this.$router.push('/bulkCreateTopic')

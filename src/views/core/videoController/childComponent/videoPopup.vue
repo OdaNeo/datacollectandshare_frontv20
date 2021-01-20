@@ -57,7 +57,6 @@ export default class VideoPopup extends Vue {
     this.$emit('closeDialog')
   }
   private model = null
-  private iframeDom = this.$refs.iframe
 
   private curIndex = 0
 
@@ -72,6 +71,7 @@ export default class VideoPopup extends Vue {
     }
 
     this.video = this.$refs.video as HTMLVideoElement
+    // TODO:destroy
     this.dp = new DPlayer({
       container: this.video,
       autoplay: true,

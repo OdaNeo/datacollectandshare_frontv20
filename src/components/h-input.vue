@@ -6,7 +6,7 @@
         <span v-if="formTypeItem.require" class="require-span">*</span>{{ formTypeItem.label }}：
       </div>
     </label>
-    <!-- input类型，input-change 事件 -->
+    <!-- input类型 -->
     <v-text-field
       v-if="formTypeItem.type === 'input'"
       v-model="formProvide.formObj[formTypeItem.valueName]"
@@ -87,7 +87,7 @@ export default class HInput extends Vue {
         topicName: v
       })
       if (success) {
-        this.noRepeat = [(v: string) => !v || '主题名称已被注册']
+        this.noRepeat = [() => '主题名称已被注册']
       } else {
         this.noRepeat = []
       }
@@ -101,7 +101,7 @@ export default class HInput extends Vue {
         producer: this.formProvide.formObj.producer
       })
       if (success) {
-        this.noRepeat = [(v: string) => !v || '命令名称已被注册']
+        this.noRepeat = [() => '命令名称已被注册']
       } else {
         this.noRepeat = []
       }
@@ -114,7 +114,9 @@ export default class HInput extends Vue {
     let arr: Array<any> = []
     // require
     if (this.formTypeItem.require) {
-      arr.push((v: string | Array<string>) => !!(v && v.toString()) || (str ? `${str}不能为空` : `此项不能为空`))
+      arr.push(
+        (v: string | number | Array<string>) => !!(v && v.toString()) || (str ? `${str}不能为空` : `此项不能为空`)
+      )
     }
     return arr
   }

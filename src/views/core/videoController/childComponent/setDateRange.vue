@@ -109,7 +109,7 @@ export default class SetDateRange extends Vue {
       Number(this.formProvide.formObj.endHour) * 60 * 60 * 1000
 
     if (beginTime >= afterTime) {
-      this.startEndDateValidator = [(v: string) => !!v && '起始日期不能大于等于截止日期']
+      this.startEndDateValidator = [() => '起始日期不能大于等于截止日期']
     } else {
       this.startEndDateValidator = []
     }

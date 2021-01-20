@@ -161,6 +161,7 @@ export default class ResourcesDialog extends Vue {
       require: true
     }
   ]
+  // TODO: change to watch formObj
   // toggle 下拉框
   private selectChange(formObj: any) {
     if (formObj.type === 'button') {
@@ -171,7 +172,7 @@ export default class ResourcesDialog extends Vue {
       })
     }
   }
-
+  // TODO: change to watch formObj
   // 渲染不同的下拉框
   private typesChange(formObj: any) {
     console.log(formObj)
