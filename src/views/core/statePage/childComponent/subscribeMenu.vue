@@ -1,12 +1,13 @@
 <template>
-  <div
+  <!-- <div
     class="viewBox rightBtmView animated"
     style="animation-duration: 2s; animation-delay: 1s"
     :class="`${fristFlag ? 'bounceInRight' : ''} ${enterFlag ? 'enter' : ''}`"
     @mouseenter="mouseEnterMethod()"
     @mouseleave="mouseLeaveMethod()"
     ref="rightBtmView"
-  >
+  > -->
+  <div class="viewBox rightBtmView" ref="rightBtmView">
     <v-overlay :absolute="true" :value="subscribeOverlay">
       <v-progress-circular indeterminate size="60">加载中</v-progress-circular>
     </v-overlay>
@@ -102,8 +103,8 @@ import util from '@/decorator/utilsDecorator'
 @util
 export default class SubscribeMenu extends Vue {
   @Prop() private systemItems!: unknown[]
-  private fristFlag = true
-  private enterFlag = false
+  // private fristFlag = true
+  // private enterFlag = false
   private subscribeOverlay = false
   private subscribeTopicExist = true
   private subscribeStartTime: string = Moment(Moment().subtract(11, 'months').calendar(), 'MM-DD-YYYY').format(
@@ -117,15 +118,15 @@ export default class SubscribeMenu extends Vue {
   private subscribeDate: string = new Date().toISOString().substr(0, 10)
   private subscribeTime = false
 
-  private mouseEnterMethod(): void {
-    if (!this.fristFlag) {
-      this.enterFlag = true
-    }
-  }
+  // private mouseEnterMethod(): void {
+  //   if (!this.fristFlag) {
+  //     this.enterFlag = true
+  //   }
+  // }
 
-  private mouseLeaveMethod(): void {
-    this.enterFlag = false
-  }
+  // private mouseLeaveMethod(): void {
+  //   this.enterFlag = false
+  // }
 
   // eslint-disable-next-line @typescript-eslint/ban-types
   private async getSubscribe(params: unknown, callback: Function) {
@@ -232,12 +233,12 @@ export default class SubscribeMenu extends Vue {
       (result: returnDataType) => {
         this.subscribeOverlay = false
         this.drawSubscribe(result)
-        const el = this.$refs.rightBtmView as HTMLElement
-        el.addEventListener('animationend', () => {
-          if (this.fristFlag) {
-            this.fristFlag = false
-          }
-        })
+        // const el = this.$refs.rightBtmView as HTMLElement
+        // el.addEventListener('animationend', () => {
+        //   if (this.fristFlag) {
+        //     this.fristFlag = false
+        //   }
+        // })
       }
     )
   }

@@ -1,12 +1,13 @@
 <template>
-  <div
+  <!-- <div
     class="viewBox leftBtmView animated"
     :class="`${firstFlag ? 'bounceInUp' : ''} ${enterFlag ? 'enter' : ''}`"
     style="animation-duration: 2s; animation-delay: 1s"
     @mouseenter="mouseEnterMethod"
     @mouseleave="mouseLeaveMethod"
     ref="leftBtmView"
-  >
+  > -->
+  <div class="viewBox leftBtmView" ref="leftBtmView">
     <v-overlay :absolute="true" :value="releaseOverlay">
       <v-progress-circular indeterminate size="60">加载中</v-progress-circular>
     </v-overlay>
@@ -97,8 +98,8 @@ import util from '@/decorator/utilsDecorator'
 @util
 export default class ReleaseMenu extends Vue {
   @Prop() private systemItems!: unknown[]
-  private firstFlag = true
-  private enterFlag = false
+  // private firstFlag = true
+  // private enterFlag = false
   private releaseOverlay = false
   private releaseTopicExist = true
   private releaseStartTime: string = Moment(Moment().subtract(11, 'months').calendar(), 'MM-DD-YYYY').format(
@@ -112,21 +113,20 @@ export default class ReleaseMenu extends Vue {
   private releaseDate: string = new Date().toISOString().substr(0, 10)
   private releaseTime = false
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  private async getRelease(params: unknown, callback: Function) {
+  private async getRelease(params: any, callback: Function) {
     const result: returnDataType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
     callback(result)
   }
 
-  private mouseEnterMethod(): void {
-    if (!this.firstFlag) {
-      this.enterFlag = true
-    }
-  }
+  // private mouseEnterMethod(): void {
+  //   if (!this.firstFlag) {
+  //     this.enterFlag = true
+  //   }
+  // }
 
-  private mouseLeaveMethod(): void {
-    this.enterFlag = false
-  }
+  // private mouseLeaveMethod(): void {
+  //   this.enterFlag = false
+  // }
 
   private selectReleaseSystem(system: { name: string; id: number }) {
     this.releaseSystemName = system.name
@@ -227,12 +227,12 @@ export default class ReleaseMenu extends Vue {
       (result: returnDataType) => {
         this.releaseOverlay = false
         this.drawRelease(result)
-        const el = this.$refs.leftBtmView as HTMLElement
-        el.addEventListener('animationend', () => {
-          if (this.firstFlag) {
-            this.firstFlag = false
-          }
-        })
+        // const el = this.$refs.leftBtmView as HTMLElement
+        // el.addEventListener('animationend', () => {
+        //   if (this.firstFlag) {
+        //     this.firstFlag = false
+        //   }
+        // })
       }
     )
   }

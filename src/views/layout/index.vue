@@ -1,29 +1,36 @@
 <template>
   <v-app id="tct">
-    <v-navigation-drawer
+    <!-- <v-navigation-drawer
       app
       width="240"
       color="rgb(0,21,41)"
       v-show="navBar"
       style="overflow-x: visible; overflow-y: visible; animation-duration: 1s; animation-delay: 1.5s"
       class="animated bounceInLeft"
+    > -->
+    <v-navigation-drawer
+      app
+      width="240"
+      color="rgb(0,21,41)"
+      v-show="navBar"
+      style="overflow-x: visible; overflow-y: visible"
     >
-      <transition name="navbar">
-        <!-- <NavBar1 v-show="navBar"></NavBar1> -->
-        <nav-bar v-show="navBar"></nav-bar>
-      </transition>
+      <!-- <transition name="navbar"> -->
+      <!-- <NavBar1 v-show="navBar"></NavBar1> -->
+      <nav-bar v-show="navBar"></nav-bar>
+      <!-- </transition> -->
     </v-navigation-drawer>
-    <v-app-bar app height="57" color="rgb(0,21,41)" class="animated bounceInDown">
+    <v-app-bar app height="57" color="rgb(0,21,41)">
       <TopBar />
     </v-app-bar>
     <v-main style="background: rgb(246, 248, 251)">
       <v-container fluid style="height: 100%">
-        <transition name="fade">
-          <v-breadcrumbs :items="items" v-show="bread"></v-breadcrumbs>
-        </transition>
-        <transition name="out">
-          <router-view v-show="bread"></router-view>
-        </transition>
+        <!-- <transition name="fade"> -->
+        <v-breadcrumbs :items="items" v-show="bread"></v-breadcrumbs>
+        <!-- </transition>
+        <transition name="out"> -->
+        <router-view v-show="bread"></router-view>
+        <!-- </transition> -->
       </v-container>
     </v-main>
   </v-app>
@@ -61,19 +68,19 @@ export default class Login extends Vue {
 
   created(): void {
     new DevicePixelRatio().init()
-    setTimeout(() => {
-      this.bread = true
-      this.navBar = true
-    }, 0)
-    setTimeout(() => {
-      this.content = true
-    }, 1000)
+    // setTimeout(() => {
+    this.bread = true
+    this.navBar = true
+    // }, 0)
+    // setTimeout(() => {
+    this.content = true
+    // }, 1000)
   }
 }
 </script>
 
 <style>
-.out-leave-to {
+/* .out-leave-to {
   opacity: 0;
   transform: translate3d(-1000px, 0, 0);
 }
@@ -126,5 +133,5 @@ export default class Login extends Vue {
 }
 .navbar-enter-active {
   transition: 0.5s all ease;
-}
+} */
 </style>

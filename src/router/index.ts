@@ -146,6 +146,151 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
+    path: '/offlineTopicController',
+    name: '离线主题管理',
+    component: StatePage,
+    redirect: '/offlineTopicController/topicList',
+    meta: {
+      title: '离线主题管理',
+      icon: 'mdi-video-box',
+      access: false
+    },
+    children: [
+      {
+        path: 'topicList',
+        component: () => import('@/views/core/offlineTopicController/topicList.vue'),
+        name: '离线主题列表',
+        meta: {
+          title: '离线主题列表',
+          icon: 'mdi-file-video',
+          access: false
+        }
+      },
+      {
+        path: 'dataStatistics',
+        component: () => import('@/views/core/offlineTopicController/dataStatistics.vue'),
+        name: '数据统计',
+        meta: {
+          title: '数据统计',
+          icon: 'mdi-file-video',
+          access: false
+        }
+      }
+    ]
+  },
+  {
+    path: '/logController',
+    name: '日志数据管理',
+    component: StatePage,
+    redirect: '/logController/dataList',
+    meta: {
+      title: '日志数据管理',
+      icon: 'mdi-video-box',
+      access: false
+    },
+    children: [
+      {
+        path: 'dataList',
+        component: () => import('@/views/core/logController/dataList.vue'),
+        name: '日志数据采集',
+        meta: {
+          title: '日志数据采集',
+          icon: 'mdi-file-video',
+          access: false
+        }
+      },
+      {
+        path: 'dataStatistics',
+        component: () => import('@/views/core/logController/dataStatistics.vue'),
+        name: '数据统计',
+        meta: {
+          title: '数据统计',
+          icon: 'mdi-file-video',
+          access: false
+        }
+      }
+    ]
+  },
+  {
+    path: '/bizController',
+    name: '事务数据管理',
+    component: StatePage,
+    redirect: '/bizController/dataList',
+    meta: {
+      title: '事务数据管理',
+      icon: 'mdi-video-box',
+      access: false
+    },
+    children: [
+      {
+        path: 'dataList',
+        component: () => import('@/views/core/bizController/dataList.vue'),
+        name: '数据库采集',
+        meta: {
+          title: '数据库采集',
+          icon: 'mdi-file-video',
+          access: false
+        }
+      },
+      {
+        path: 'dataStatistics',
+        component: () => import('@/views/core/bizController/dataStatistics.vue'),
+        name: '数据统计',
+        meta: {
+          title: '数据统计',
+          icon: 'mdi-file-video',
+          access: false
+        }
+      }
+    ]
+  },
+  {
+    path: '/cmdInfoController',
+    name: '命令管理',
+    component: StatePage,
+    redirect: '/cmdInfoController/cmdList',
+    meta: {
+      title: '命令管理',
+      icon: 'mdi-console',
+      access: true
+    },
+    children: [
+      {
+        path: 'cmdList',
+        component: () => import('@/views/core/cmdInfoController/cmdList.vue'),
+        name: '命令列表',
+        meta: {
+          title: '命令列表',
+          icon: 'mdi-console-line ',
+          access: true
+        }
+      }
+    ]
+  },
+  {
+    path: '/videoController',
+    name: '视频数据管理',
+    component: StatePage,
+    redirect: '/videoController/videoList',
+    meta: {
+      title: '视频数据管理',
+      icon: 'mdi-video-box',
+      access: true
+    },
+    children: [
+      {
+        path: 'videoList',
+        component: () => import('@/views/core/videoController/videoList.vue'),
+        name: '视频列表',
+        meta: {
+          title: '视频列表',
+          icon: 'mdi-file-video',
+          access: true
+        }
+      }
+    ]
+  },
+  {
     path: '/systemMGT',
     name: '系统管理',
     component: StatePage,
@@ -219,52 +364,6 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '数据统计',
           icon: 'mdi-database-clock',
-          access: true
-        }
-      }
-    ]
-  },
-  {
-    path: '/cmdInfoController',
-    name: '命令管理',
-    component: StatePage,
-    redirect: '/cmdInfoController/cmdList',
-    meta: {
-      title: '命令管理',
-      icon: 'mdi-console',
-      access: true
-    },
-    children: [
-      {
-        path: 'cmdList',
-        component: () => import('@/views/core/cmdInfoController/cmdList.vue'),
-        name: '命令列表',
-        meta: {
-          title: '命令列表',
-          icon: 'mdi-console-line ',
-          access: true
-        }
-      }
-    ]
-  },
-  {
-    path: '/videoController',
-    name: '视频数据管理',
-    component: StatePage,
-    redirect: '/videoController/videoList',
-    meta: {
-      title: '视频数据管理',
-      icon: 'mdi-video-box',
-      access: true
-    },
-    children: [
-      {
-        path: 'videoList',
-        component: () => import('@/views/core/videoController/videoList.vue'),
-        name: '视频列表',
-        meta: {
-          title: '视频列表',
-          icon: 'mdi-file-video',
           access: true
         }
       }

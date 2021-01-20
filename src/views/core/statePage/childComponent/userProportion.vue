@@ -1,11 +1,12 @@
 <template>
-  <div
+  <div class="viewBox rightTopView" ref="rightTopView">
+    <!-- <div
     class="viewBox animated rightTopView"
     :class="`${fristFlag ? 'bounceInDown' : ''} ${enterFlag ? 'enter' : ''}`"
     @mouseenter="mouseEnterMethod()"
     @mouseleave="mouseLeaveMethod()"
     ref="rightTopView"
-  >
+  > -->
     <v-overlay :absolute="true" :value="userOverlay">
       <v-progress-circular indeterminate size="60">加载中</v-progress-circular>
     </v-overlay>
@@ -36,19 +37,19 @@ import Enum from '@/decorator/enumDecorator'
   }
 ])
 export default class UserProportion extends Vue {
-  private fristFlag = true
-  private enterFlag = false
+  // private fristFlag = true
+  // private enterFlag = false
   private userOverlay = false
 
-  private mouseEnterMethod(): void {
-    if (!this.fristFlag) {
-      this.enterFlag = true
-    }
-  }
+  // private mouseEnterMethod(): void {
+  //   if (!this.fristFlag) {
+  //     this.enterFlag = true
+  //   }
+  // }
 
-  private mouseLeaveMethod(): void {
-    this.enterFlag = false
-  }
+  // private mouseLeaveMethod(): void {
+  //   this.enterFlag = false
+  // }
 
   private getUserProportionList(data: topicRankingInfo, str: string): Array<userProportion> {
     const roolList: Array<userProportion> = []
@@ -140,12 +141,12 @@ export default class UserProportion extends Vue {
       this.userProportion('userSystemProportion', this.getUserProportionList(data, 'systemName'), '系统占比')
       this.userProportion('userStateProportion', this.getUserProportionList(data, 'userState'), '状态占比')
     })
-    const el = this.$refs.rightTopView as HTMLElement
-    el.addEventListener('animationend', () => {
-      if (this.fristFlag) {
-        this.fristFlag = false
-      }
-    })
+    // const el = this.$refs.rightTopView as HTMLElement
+    // el.addEventListener('animationend', () => {
+    //   if (this.fristFlag) {
+    //     this.fristFlag = false
+    //   }
+    // })
   }
 }
 </script>
