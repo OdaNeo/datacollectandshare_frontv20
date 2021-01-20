@@ -2,7 +2,7 @@
   <div id="login">
     <div class="bgImg">
       <div class="loginContent">
-        <div class="loginTitle">交控科技天枢平台元数据管理中心</div>
+        <div class="loginTitle">{{ PROJECT_TITLE }}</div>
         <v-row justify="center">
           <v-col cols="11">
             <div class="loginInput">
@@ -43,10 +43,11 @@ import { rootStoreModule } from '@/store/modules/root'
 import http from '@/decorator/httpDecorator'
 import { returnDataType } from '@/type/http-request.type'
 import { userAndPassType } from '@/type/login.type'
-
+import { PROJECT_TITLE } from '@/config'
 @Component
 @http
 export default class Login extends Vue {
+  PROJECT_TITLE = PROJECT_TITLE
   valid = false
   username = ''
   showPass = false

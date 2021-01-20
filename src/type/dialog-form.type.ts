@@ -1,3 +1,5 @@
+import { userFormVarDo } from '@/type/user.type'
+
 export type FormStructure = {
   text: string
   value: string
@@ -22,7 +24,7 @@ export type InputType = {
   disabled?: boolean
   rules?: Array<boolean | string>
   multiple?: boolean
-  items?: Array<{ [key: string]: string | number | boolean } | string>
+  items?: Array<{ [key: string]: string | number | boolean } | string | userFormVarDo>
 }
 
 export type dialogForm = FormObj

@@ -2,7 +2,7 @@
   <div id="topbar">
     <v-row align="center" no-gutters justify="center">
       <v-col cols="12" align-self="center">
-        <h1 style="color: #fff; text-align: center" class="titleshadow">交控科技天枢平台元数据配置管理中心</h1>
+        <h1 style="color: #fff; text-align: center" class="titleshadow">{{ PROJECT_TITLE }}</h1>
         <div class="userMenu" v-show="userMenuState">
           <v-menu offset-y transition="slide-x-transition">
             <template v-slot:activator="{ on, attrs }">
@@ -66,6 +66,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { rootStoreModule } from '../store/modules/root'
 import http from '../decorator/httpDecorator'
 import { userState } from '@/enum/user-enum'
+import { PROJECT_TITLE } from '@/config'
 
 @Component
 @http
@@ -74,6 +75,8 @@ export default class TopBar extends Vue {
   private titleState = false
   private userMenuState = false
   private userInfoObj = rootStoreModule.UserState
+  private PROJECT_TITLE = PROJECT_TITLE
+
   get username(): string {
     return '用户：' + rootStoreModule.UserState.username
   }

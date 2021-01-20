@@ -108,17 +108,11 @@
     </v-col>
   </v-row> -->
   <v-row no-gutters>
-    <h-input
-      v-for="item in formTypeObj"
-      :key="item.id"
-      :formTypeItem="item"
-      @radio-group-change="typesChange"
-      @select-change="selectChange"
-    />
+    <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop, Inject } from 'vue-property-decorator'
+import { Component, Vue, Prop, Inject, Watch } from 'vue-property-decorator'
 import HInput from '@/components/h-input.vue'
 import { InputType } from '@/type/dialog-form.type'
 import { userFormVar, userFormVarDo } from '@/type/user.type'
@@ -159,49 +153,60 @@ export default class ResourcesDialog extends Vue {
       type: 'radioGroup',
       items: this.types,
       require: true
+    },
+    {
+      label: '父节点名称',
+      valueName: '',
+      type: '',
+      items: this.dessertsList,
+      require: false
+    },
+    {
+      valueName: '',
+      type: '',
+      items: [],
+      require: false
     }
   ]
-  // TODO: change to watch formObj
-  // toggle 下拉框
-  private selectChange(formObj: any) {
-    if (formObj.type === 'button') {
-      this.dessertsList.forEach(item => {
-        if (formObj.grandparentid === item.value) {
-          item.childrenList && (this.formTypeObj[4].items = item.childrenList)
-        }
-      })
+
+  @Watch('formProvide.formObj.type')
+  private typesChange(val: any) {
+    if (val === 'menu') {
+      this.formTypeObj[3].valueName = 'parentid'
+      this.formTypeObj[3].type = 'select'
+      this.formTypeObj[3].items = this.dessertsList
+      this.formTypeObj[3].require = false
+
+      this.formTypeObj[4].valueName = ''
+      this.formTypeObj[4].type = ''
+      this.formTypeObj[4].items = []
+      this.formTypeObj[4].require = false
+
+      this.formProvide.formObj.parentid = null
+    } else if (val === 'button') {
+      this.formTypeObj[3].valueName = 'grandparentid'
+      this.formTypeObj[3].type = 'select'
+      this.formTypeObj[3].items = this.dessertsList
+      this.formTypeObj[3].require = true
+
+      this.formTypeObj[4].valueName = 'parentid'
+      this.formTypeObj[4].type = 'select'
+      this.formTypeObj[4].items = []
+      this.formTypeObj[4].require = true
+
+      // 解决切换type后 this.formTypeObj[4].items为空的bug
+      this.selectChange(this.formProvide.formObj.grandparentid)
     }
   }
-  // TODO: change to watch formObj
-  // 渲染不同的下拉框
-  private typesChange(formObj: any) {
-    console.log(formObj)
-    if (formObj.type === 'menu') {
-      this.$set(this.formTypeObj, 3, {
-        label: '父节点名称',
-        valueName: 'parentid',
-        type: 'select',
-        items: this.dessertsList,
-        require: false
-      })
-      this.$delete(this.formTypeObj, 4)
-    } else if (formObj.type === 'button') {
-      this.$set(this.formTypeObj, 3, {
-        label: '父节点名称',
-        valueName: 'grandparentid',
-        type: 'select',
-        items: this.dessertsList,
-        require: true
-      })
-      this.$set(this.formTypeObj, 4, {
-        valueName: 'parentid',
-        type: 'select',
-        items: [],
-        require: true
-      })
-    }
-    // 重新获取下拉框内容
-    this.selectChange(formObj)
+
+  // toggle 下拉框
+  @Watch('formProvide.formObj.grandparentid')
+  private selectChange(val: any) {
+    this.dessertsList.forEach(item => {
+      if (val === item.value) {
+        item.childrenList && (this.formTypeObj[4].items = item.childrenList)
+      }
+    })
   }
 
   private getDessertsList(items: Array<any>): Array<any> {
@@ -240,7 +245,7 @@ export default class ResourcesDialog extends Vue {
     this.dessertsList = this.getDessertsList(this.desserts)
     // 编辑页面填充
     if (this.formProvide.formObj.type) {
-      this.typesChange(this.formProvide.formObj)
+      this.typesChange(this.formProvide.formObj.type)
     }
     // if (this.formProvide.formObj.type === 'button') {
     //   // this.getParentId(this.formProvide.formObj.parentid, this.dessertsList)

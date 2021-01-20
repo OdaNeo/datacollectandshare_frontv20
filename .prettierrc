@@ -4,5 +4,6 @@
     "quoteProps": "preserve",
     "semi": false,
     "trailingComma": "none",
+    "endOfLine": "auto",
     "arrowParens": "avoid"
 }

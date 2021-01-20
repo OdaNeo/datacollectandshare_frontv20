@@ -4,10 +4,11 @@ import { rootStoreModule } from '../store/modules/root'
 import { httpAllParams, returnDataType, headerObj } from '../type/http-request.type'
 import alertUtil from '../utils/alertUtil'
 import REQUEST_NAME from './requestName'
+import { VUE_APP_BASE_API } from '@/config'
 
 class HttpRequest {
   private axiosIns: AxiosInstance = axios.create({
-    baseURL: process.env.VUE_APP_BASE_API,
+    baseURL: VUE_APP_BASE_API,
     timeout: 500000,
     headers: {
       post: {

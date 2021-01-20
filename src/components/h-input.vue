@@ -23,7 +23,7 @@
       @input="inputEvent(formProvide.formObj[formTypeItem.valueName])"
     ></v-text-field>
 
-    <!-- select emit select-change 事件 -->
+    <!-- select-->
     <v-select
       v-if="formTypeItem.type === 'select'"
       v-model="formProvide.formObj[formTypeItem.valueName]"
@@ -38,11 +38,10 @@
           ? [...noEmptyRules(formTypeItem.label), ...formTypeItem.rules]
           : [...noEmptyRules(formTypeItem.label)]
       "
-      @change="$emit('select-change', formProvide.formObj)"
       class="mx-4 my-0"
     ></v-select>
 
-    <!-- radio-group emit radio-group-change 事件-->
+    <!-- radio-group-->
     <v-radio-group
       v-if="formTypeItem.type === 'radioGroup'"
       v-model="formProvide.formObj[formTypeItem.valueName]"
@@ -54,7 +53,6 @@
           : [...noEmptyRules(formTypeItem.label)]
       "
       class="mx-4 my-2 flex-grow-1"
-      @change="$emit('radio-group-change', formProvide.formObj)"
     >
       <v-radio
         v-for="n in formTypeItem.items"

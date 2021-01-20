@@ -157,6 +157,7 @@ import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
 import axios from 'axios'
 import { rootStoreModule } from '@/store/modules/root'
 import XLSX from 'xlsx'
+import { VUE_APP_BASE_API } from '@/config'
 
 @Component({
   components: {
@@ -478,7 +479,7 @@ export default class TopicList extends Vue {
       // 如果此处vetur报错，请将工程文件放在vscode根目录下 https://github.com/vuejs/vetur/issues/2602
       axios({
         method: 'post',
-        url: process.env.VUE_APP_BASE_API + '/topics/addProtobufTopic',
+        url: VUE_APP_BASE_API + '/topics/addProtobufTopic',
         data: this.forms,
         timeout: 500000,
         headers: {
@@ -765,7 +766,7 @@ export default class TopicList extends Vue {
   private async downloadFile(item: any) {
     axios({
       method: 'get',
-      url: process.env.VUE_APP_BASE_API + '/topics/protobufDownload',
+      url: VUE_APP_BASE_API + '/topics/protobufDownload',
       params: { id: item.id },
       timeout: 500000,
       responseType: 'blob',
