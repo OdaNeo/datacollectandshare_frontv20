@@ -1,5 +1,11 @@
 <template>
-  <div class="viewBox rightTopView" ref="rightTopView">
+  <div
+    class="viewBox rightTopView"
+    :class="`${enterFlag ? 'enter' : ''}`"
+    ref="rightTopView"
+    @mouseenter="mouseEnterMethod()"
+    @mouseleave="mouseLeaveMethod()"
+  >
     <!-- <div
     class="viewBox animated rightTopView"
     :class="`${fristFlag ? 'bounceInDown' : ''} ${enterFlag ? 'enter' : ''}`"
@@ -7,9 +13,9 @@
     @mouseleave="mouseLeaveMethod()"
     ref="rightTopView"
   > -->
-    <v-overlay :absolute="true" :value="userOverlay">
+    <!-- <v-overlay :absolute="true" :value="userOverlay">
       <v-progress-circular indeterminate size="60">加载中</v-progress-circular>
-    </v-overlay>
+    </v-overlay> -->
     <p>用户占比</p>
     <div id="rightTopView">
       <div id="userRoolProportion" :style="{ width: '180px', height: '180px' }"></div>
@@ -38,18 +44,18 @@ import Enum from '@/decorator/enumDecorator'
 ])
 export default class UserProportion extends Vue {
   // private fristFlag = true
-  // private enterFlag = false
+  private enterFlag = false
   private userOverlay = false
 
-  // private mouseEnterMethod(): void {
-  //   if (!this.fristFlag) {
-  //     this.enterFlag = true
-  //   }
-  // }
+  private mouseEnterMethod(): void {
+    // if (!this.fristFlag) {
+    this.enterFlag = true
+    // }
+  }
 
-  // private mouseLeaveMethod(): void {
-  //   this.enterFlag = false
-  // }
+  private mouseLeaveMethod(): void {
+    this.enterFlag = false
+  }
 
   private getUserProportionList(data: topicRankingInfo, str: string): Array<userProportion> {
     const roolList: Array<userProportion> = []
@@ -160,7 +166,7 @@ export default class UserProportion extends Vue {
         margin-top:-10px
 
     p
-        color:#FFF
+        color:#000
         text-align:center
         margin-top:10px
         margin-bottom:0px

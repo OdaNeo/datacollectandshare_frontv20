@@ -6,10 +6,16 @@
     @mouseleave="mouseLeaveMethod()"
     ref="leftTopView"
   > -->
-  <div class="viewBox leftTopView" ref="leftTopView">
-    <v-overlay :absolute="true" :value="systemOverlay">
+  <div
+    class="viewBox leftTopView"
+    :class="`${enterFlag ? 'enter' : ''}`"
+    @mouseenter="mouseEnterMethod()"
+    @mouseleave="mouseLeaveMethod()"
+    ref="leftTopView"
+  >
+    <!-- <v-overlay :absolute="true" :value="systemOverlay">
       <v-progress-circular indeterminate size="60">加载中</v-progress-circular>
-    </v-overlay>
+    </v-overlay> -->
     <p>系统主题占比</p>
     <div id="leftTopView">
       <div class="view-box-con" ref="viewBoxCon">
@@ -40,20 +46,20 @@ import BScroll from '@better-scroll/core'
 @http
 export default class SystemTopicProportion extends Vue {
   // private fristFlag = true
-  // private enterFlag = false
+  private enterFlag = false
   private systemOverlay = false
   private topicMsgList: Array<topicMsg> = []
   private colors: Array<string> = ['#884046', '#8a7e4e', '#749f83', '#a8d8ea']
 
-  // private mouseEnterMethod(): void {
-  //   if (!this.fristFlag) {
-  //     this.enterFlag = true
-  //   }
-  // }
+  private mouseEnterMethod(): void {
+    // if (!this.fristFlag) {
+    this.enterFlag = true
+    // }
+  }
 
-  // private mouseLeaveMethod(): void {
-  //   this.enterFlag = false
-  // }
+  private mouseLeaveMethod(): void {
+    this.enterFlag = false
+  }
 
   private topicProportion(elementName: string, opt: topicProportionOpt): void {
     const element = document.getElementById(elementName)
@@ -200,11 +206,11 @@ export default class SystemTopicProportion extends Vue {
 <style lang="stylus" scoped>
 .leftTopView
     overflow-y: hidden
-    overflow-x:scroll
-    white-space:nowrap
+    overflow-x: scroll
+    white-space: nowrap
     p
         text-align: center
-        color:#FFF
+        color:#000
         margin-top:10px
         margin-bottom:0px
     .view-box-con
@@ -246,7 +252,7 @@ export default class SystemTopicProportion extends Vue {
                 border-radius:50% 50%
                 border:2px solid rgb(23,137,251)
                 z-index:999
-                color:#FFF
+                color:#000
                 text-align:center
                 transform-style: preserve-3d
                 backface-visibility:hidden

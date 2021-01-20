@@ -3,18 +3,19 @@
     <v-card>
       <v-card-title>
         <span class="headline">{{ formProvide.title }}</span>
-        <v-btn icon @click="closeMethod">
+        <v-btn style="position: absolute; right: 14px; top: 14px" icon @click="closeMethod">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-      <v-card-text class="pb-0 mt-3">
+      <v-divider></v-divider>
+      <v-card-text class="pb-0 mt-6">
         <v-container>
           <v-form ref="userDialogForm" v-model="userDialogValid">
             <slot />
           </v-form>
         </v-container>
       </v-card-text>
-      <v-card-actions v-if="formProvide.btnName && formProvide.btnName.length > 0">
+      <v-card-actions class="pt-0" v-if="formProvide.btnName && formProvide.btnName.length > 0">
         <v-spacer></v-spacer>
         <v-btn
           color="blue darken-1"

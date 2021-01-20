@@ -7,10 +7,16 @@
     @mouseleave="mouseLeaveMethod()"
     ref="rightBtmView"
   > -->
-  <div class="viewBox rightBtmView" ref="rightBtmView">
-    <v-overlay :absolute="true" :value="subscribeOverlay">
+  <div
+    class="viewBox rightBtmView"
+    :class="`${enterFlag ? 'enter' : ''}`"
+    ref="rightBtmView"
+    @mouseenter="mouseEnterMethod()"
+    @mouseleave="mouseLeaveMethod()"
+  >
+    <!-- <v-overlay :absolute="true" :value="subscribeOverlay">
       <v-progress-circular indeterminate size="60">加载中</v-progress-circular>
-    </v-overlay>
+    </v-overlay> -->
     <div style="width: 100%; height: 8%; padding-top: 10px">
       <p>{{ `${subscribeStartTime}至${subscribeEndTime}主题${subscribeSystemName}订阅情况` }}</p>
       <div class="iconCon">
@@ -19,7 +25,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                  <v-icon color="#FFF">mdi-shield-lock</v-icon>
+                  <v-icon>mdi-shield-lock</v-icon>
                 </v-btn>
               </template>
               <span>系统名称选项</span>
@@ -36,7 +42,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                  <v-icon color="#FFF">mdi-shield-lock</v-icon>
+                  <v-icon>mdi-shield-lock</v-icon>
                 </v-btn>
               </template>
               <span>分页选项</span>
@@ -62,7 +68,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                  <v-icon color="#FFF">mdi-shield-lock</v-icon>
+                  <v-icon>mdi-shield-lock</v-icon>
                 </v-btn>
               </template>
               <span>时间选项</span>
@@ -104,7 +110,7 @@ import util from '@/decorator/utilsDecorator'
 export default class SubscribeMenu extends Vue {
   @Prop() private systemItems!: unknown[]
   // private fristFlag = true
-  // private enterFlag = false
+  private enterFlag = false
   private subscribeOverlay = false
   private subscribeTopicExist = true
   private subscribeStartTime: string = Moment(Moment().subtract(11, 'months').calendar(), 'MM-DD-YYYY').format(
@@ -118,18 +124,17 @@ export default class SubscribeMenu extends Vue {
   private subscribeDate: string = new Date().toISOString().substr(0, 10)
   private subscribeTime = false
 
-  // private mouseEnterMethod(): void {
-  //   if (!this.fristFlag) {
-  //     this.enterFlag = true
-  //   }
-  // }
+  private mouseEnterMethod(): void {
+    // if (!this.fristFlag) {
+    this.enterFlag = true
+    // }
+  }
 
-  // private mouseLeaveMethod(): void {
-  //   this.enterFlag = false
-  // }
+  private mouseLeaveMethod(): void {
+    this.enterFlag = false
+  }
 
-  // eslint-disable-next-line @typescript-eslint/ban-types
-  private async getSubscribe(params: unknown, callback: Function) {
+  private async getSubscribe(params: any, callback: Function) {
     const result: returnDataType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
     callback(result)
   }
@@ -256,6 +261,6 @@ export default class SubscribeMenu extends Vue {
 .rightBtmView
     p
         text-align: center
-        color:#FFF
+        color:#000
         margin-bottom:0px
 </style>

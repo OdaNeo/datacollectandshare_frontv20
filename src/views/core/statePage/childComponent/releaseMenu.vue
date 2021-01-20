@@ -7,10 +7,16 @@
     @mouseleave="mouseLeaveMethod"
     ref="leftBtmView"
   > -->
-  <div class="viewBox leftBtmView" ref="leftBtmView">
-    <v-overlay :absolute="true" :value="releaseOverlay">
+  <div
+    class="viewBox leftBtmView"
+    :class="`${enterFlag ? 'enter' : ''}`"
+    ref="leftBtmView"
+    @mouseenter="mouseEnterMethod"
+    @mouseleave="mouseLeaveMethod"
+  >
+    <!-- <v-overlay :absolute="true" :value="releaseOverlay">
       <v-progress-circular indeterminate size="60">加载中</v-progress-circular>
-    </v-overlay>
+    </v-overlay> -->
     <div style="width: 100%; height: 8%; padding-top: 10px">
       <p>{{ `${releaseStartTime}至${releaseEndTime}主题${releaseSystemName}发布情况` }}</p>
       <div class="iconCon">
@@ -19,7 +25,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                  <v-icon color="#FFF">mdi-shield-lock</v-icon>
+                  <v-icon>mdi-shield-lock</v-icon>
                 </v-btn>
               </template>
               <span>系统名称选项</span>
@@ -36,7 +42,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                  <v-icon color="#FFF">mdi-shield-lock</v-icon>
+                  <v-icon>mdi-shield-lock</v-icon>
                 </v-btn>
               </template>
               <span>分页选项</span>
@@ -62,7 +68,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                  <v-icon color="#FFF">mdi-shield-lock</v-icon>
+                  <v-icon>mdi-shield-lock</v-icon>
                 </v-btn>
               </template>
               <span>时间选项</span>
@@ -99,8 +105,8 @@ import util from '@/decorator/utilsDecorator'
 export default class ReleaseMenu extends Vue {
   @Prop() private systemItems!: unknown[]
   // private firstFlag = true
-  // private enterFlag = false
-  private releaseOverlay = false
+  private enterFlag = false
+  // private releaseOverlay = false
   private releaseTopicExist = true
   private releaseStartTime: string = Moment(Moment().subtract(11, 'months').calendar(), 'MM-DD-YYYY').format(
     'YYYY-MM-DD'
@@ -118,20 +124,20 @@ export default class ReleaseMenu extends Vue {
     callback(result)
   }
 
-  // private mouseEnterMethod(): void {
-  //   if (!this.firstFlag) {
-  //     this.enterFlag = true
-  //   }
-  // }
+  private mouseEnterMethod(): void {
+    // if (!this.firstFlag) {
+    this.enterFlag = true
+    // }
+  }
 
-  // private mouseLeaveMethod(): void {
-  //   this.enterFlag = false
-  // }
+  private mouseLeaveMethod(): void {
+    this.enterFlag = false
+  }
 
   private selectReleaseSystem(system: { name: string; id: number }) {
     this.releaseSystemName = system.name
     this.releaseSystemId = system.id
-    this.releaseOverlay = true
+    // this.releaseOverlay = true
     this.getRelease(
       {
         startTime: this.releaseStartTime,
@@ -142,7 +148,7 @@ export default class ReleaseMenu extends Vue {
         pageSize: 10
       },
       (result: returnDataType) => {
-        this.releaseOverlay = false
+        // this.releaseOverlay = false
         if (result.data.list.length > 0) {
           this.drawRelease(result)
         } else {
@@ -154,7 +160,7 @@ export default class ReleaseMenu extends Vue {
 
   private selectReleasePage(pageNum: number) {
     this.releasePageNum = pageNum
-    this.releaseOverlay = true
+    // this.releaseOverlay = true
     this.getRelease(
       {
         startTime: this.releaseStartTime,
@@ -165,7 +171,7 @@ export default class ReleaseMenu extends Vue {
         pageSize: 10
       },
       (result: returnDataType) => {
-        this.releaseOverlay = false
+        // this.releaseOverlay = false
         if (result.data.list.length > 0) {
           this.drawRelease(result)
         } else {
@@ -179,7 +185,7 @@ export default class ReleaseMenu extends Vue {
     this.releaseTime = false
     this.releaseStartTime = Moment(this.releaseDate).subtract(11, 'months').format('YYYY-MM-DD')
     this.releaseEndTime = this.releaseDate
-    this.releaseOverlay = true
+    // this.releaseOverlay = true
     this.getRelease(
       {
         startTime: this.releaseStartTime,
@@ -190,7 +196,7 @@ export default class ReleaseMenu extends Vue {
         pageSize: 10
       },
       (result: returnDataType) => {
-        this.releaseOverlay = false
+        // this.releaseOverlay = false
         if (result.data.list.length > 0) {
           this.drawRelease(result)
         } else {
@@ -214,7 +220,7 @@ export default class ReleaseMenu extends Vue {
   }
 
   mounted(): void {
-    this.releaseOverlay = true
+    // this.releaseOverlay = true
     this.getRelease(
       {
         startTime: this.releaseStartTime,
@@ -225,7 +231,7 @@ export default class ReleaseMenu extends Vue {
         pageSize: 10
       },
       (result: returnDataType) => {
-        this.releaseOverlay = false
+        // this.releaseOverlay = false
         this.drawRelease(result)
         // const el = this.$refs.leftBtmView as HTMLElement
         // el.addEventListener('animationend', () => {
@@ -245,10 +251,9 @@ export default class ReleaseMenu extends Vue {
     top:5px
     width:20%
     display:flex
-    z-index:999
 .leftBtmView
     p
         text-align: center
-        color:#FFF
+        color:#000
         margin-bottom:0px
 </style>

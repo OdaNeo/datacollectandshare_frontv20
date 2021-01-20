@@ -455,13 +455,14 @@ export default class Welcome extends Vue {
         .viewBox
             width:49%
             height:100%
-            background:rgb(30,31,67)
+            // background:rgb(30,31,67)
+            border: 1px solid rgb(30,31,67)
             box-shadow: 2px 6px 15px 0 rgba(69,65,78,.1)
             border-radius: 4px
             transition: .5s all ease
             position: relative
-            animation-duration:2s
-            animation-delay:1s
+            // animation-duration:2s
+            // animation-delay:1s
         .enter
             transform: scale(1.03)
 ::-webkit-scrollbar

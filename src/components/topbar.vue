@@ -1,28 +1,27 @@
 <template>
   <div id="topbar">
-    <v-row align="center" no-gutters justify="center">
+    <v-row align="center" no-gutters>
       <v-col cols="12" align-self="center">
-        <h1 style="color: #fff; text-align: center" class="titleshadow">{{ PROJECT_TITLE }}</h1>
+        <h1 class="titleshadow">{{ PROJECT_TITLE }}</h1>
+
         <div class="userMenu" v-show="userMenuState">
           <v-menu offset-y transition="slide-x-transition">
             <template v-slot:activator="{ on, attrs }">
-              <v-btn
-                small
-                retain-focus-on-click
-                color="teal darken-1"
-                v-bind="attrs"
-                v-on="on"
-                class="white--text ma-8"
-              >
-                {{ username }}
-              </v-btn>
+              <v-container v-bind="attrs" v-on="on" class="mt-4">
+                <v-avatar color="white" size="30" class="userAvatar">
+                  <v-icon>mdi-account</v-icon>
+                </v-avatar>
+                <v-btn text retain-focus-on-click class="white--text">
+                  {{ username }}
+                </v-btn>
+              </v-container>
             </template>
             <v-list subheader>
               <v-list-item>
                 <v-list-item-title>
                   <v-dialog v-model="dialog" width="500">
                     <template v-slot:activator="{ on, attrs }">
-                      <span color="red lighten-2" dark v-bind="attrs" v-on="on">个人信息</span>
+                      <div dark v-bind="attrs" v-on="on">个人信息</div>
                     </template>
                     <v-card>
                       <v-card-title class="headline grey lighten-2">个人信息</v-card-title>
@@ -44,7 +43,7 @@
                       <v-divider></v-divider>
                       <v-card-actions>
                         <v-spacer></v-spacer>
-                        <v-btn color="primary" text @click="dialog = false"> 确定 </v-btn>
+                        <v-btn color="primary" text @click="dialog = false">确定</v-btn>
                       </v-card-actions>
                     </v-card>
                   </v-dialog>
@@ -78,7 +77,7 @@ export default class TopBar extends Vue {
   private PROJECT_TITLE = PROJECT_TITLE
 
   get username(): string {
-    return '用户：' + rootStoreModule.UserState.username
+    return rootStoreModule.UserState.username
   }
 
   get userName(): string {
@@ -136,15 +135,20 @@ export default class TopBar extends Vue {
 #topbar {
   width: 100%;
 }
+.userAvatar {
+  cursor: pointer;
+  /* position: absolute;
+  right: 150px;
+  top: 14px; */
+}
 .userMenu {
   position: absolute;
   right: 50px;
-  top: -15px;
+  top: -17px;
 }
 .titleshadow {
   width: 100%;
   height: 50px;
-  text-align: center;
   background: -webkit-gradient(
     linear,
     left top,

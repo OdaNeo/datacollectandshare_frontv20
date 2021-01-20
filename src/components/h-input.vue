@@ -19,7 +19,7 @@
           ? [...noEmptyRules(formTypeItem.label), ...noRepeat, ...formTypeItem.rules]
           : [...noEmptyRules(formTypeItem.label), ...noRepeat]
       "
-      class="mx-4 my-0"
+      class="ml-4 mr-8 my-0"
       @input="inputEvent(formProvide.formObj[formTypeItem.valueName])"
     ></v-text-field>
 
@@ -38,7 +38,7 @@
           ? [...noEmptyRules(formTypeItem.label), ...formTypeItem.rules]
           : [...noEmptyRules(formTypeItem.label)]
       "
-      class="mx-4 my-0"
+      class="ml-4 mr-8 my-0"
     ></v-select>
 
     <!-- radio-group-->
@@ -52,7 +52,7 @@
           ? [...noEmptyRules(formTypeItem.label), ...formTypeItem.rules]
           : [...noEmptyRules(formTypeItem.label)]
       "
-      class="mx-4 my-2 flex-grow-1"
+      class="ml-4 mr-8 my-2 flex-grow-1"
     >
       <v-radio
         v-for="n in formTypeItem.items"

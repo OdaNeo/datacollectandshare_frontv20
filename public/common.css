@@ -177,12 +177,6 @@ img {
 
 /* form */
 
-.v-dialog>.v-card>.v-card__title>.v-btn {
-    position: absolute;
-    right: 10px;
-    top: 10px;
-}
-
 .text-label {
     width: 150px;
     display: flex;

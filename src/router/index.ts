@@ -169,9 +169,9 @@ const routes: Array<RouteConfig> = [
       {
         path: 'dataStatistics',
         component: () => import('@/views/core/offlineTopicController/dataStatistics.vue'),
-        name: '数据统计',
+        name: '离线主题统计',
         meta: {
-          title: '数据统计',
+          title: '离线主题统计',
           icon: 'mdi-file-video',
           access: false
         }
@@ -202,9 +202,9 @@ const routes: Array<RouteConfig> = [
       {
         path: 'dataStatistics',
         component: () => import('@/views/core/logController/dataStatistics.vue'),
-        name: '数据统计',
+        name: '日志数据统计',
         meta: {
-          title: '数据统计',
+          title: '日志数据统计',
           icon: 'mdi-file-video',
           access: false
         }
@@ -235,9 +235,9 @@ const routes: Array<RouteConfig> = [
       {
         path: 'dataStatistics',
         component: () => import('@/views/core/bizController/dataStatistics.vue'),
-        name: '数据统计',
+        name: '事务数据统计',
         meta: {
-          title: '数据统计',
+          title: '事务数据统计',
           icon: 'mdi-file-video',
           access: false
         }
