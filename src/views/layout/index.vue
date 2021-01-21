@@ -8,13 +8,7 @@
       style="overflow-x: visible; overflow-y: visible; animation-duration: 1s; animation-delay: 1.5s"
       class="animated bounceInLeft"
     > -->
-    <v-navigation-drawer
-      app
-      width="240"
-      color="rgb(0,21,41)"
-      v-show="navBar"
-      style="overflow-x: visible; overflow-y: visible"
-    >
+    <v-navigation-drawer app width="240" color="rgb(0,21,41)" v-show="navBar">
       <!-- <transition name="navbar"> -->
       <!-- <NavBar1 v-show="navBar"></NavBar1> -->
       <nav-bar v-show="navBar"></nav-bar>
@@ -79,7 +73,7 @@ export default class Login extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 /* .out-leave-to {
   opacity: 0;
   transform: translate3d(-1000px, 0, 0);

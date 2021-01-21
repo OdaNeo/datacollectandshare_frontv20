@@ -7,13 +7,10 @@
         <div class="userMenu" v-show="userMenuState">
           <v-menu offset-y transition="slide-x-transition">
             <template v-slot:activator="{ on, attrs }">
-              <v-container v-bind="attrs" v-on="on" class="mt-4">
-                <v-avatar color="white" size="30" class="userAvatar">
+              <v-container class="mt-1 userAvatar">
+                <v-avatar v-bind="attrs" v-on="on" color="white" size="30">
                   <v-icon>mdi-account</v-icon>
                 </v-avatar>
-                <v-btn text retain-focus-on-click class="white--text">
-                  {{ username }}
-                </v-btn>
               </v-container>
             </template>
             <v-list subheader>
@@ -54,6 +51,9 @@
               </v-list-item>
             </v-list>
           </v-menu>
+        </div>
+        <div class="userName">
+          {{ username }}
         </div>
       </v-col>
     </v-row>
@@ -123,10 +123,10 @@ export default class TopBar extends Vue {
   userMenu = [{ title: '注销', clickMethod: this.clicklLogout }]
 
   created(): void {
-    setTimeout(() => {
-      this.titleState = true
-      this.userMenuState = true
-    }, 1000)
+    // setTimeout(() => {
+    this.titleState = true
+    this.userMenuState = true
+    // }, 1000)
   }
 }
 </script>
@@ -137,19 +137,32 @@ export default class TopBar extends Vue {
 }
 .userAvatar {
   cursor: pointer;
+  width: 100px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   /* position: absolute;
   right: 150px;
   top: 14px; */
 }
 .userMenu {
   position: absolute;
-  right: 50px;
-  top: -17px;
+  right: 150px;
+  top: -2px;
+}
+.userName {
+  position: absolute;
+  width: 100px;
+  right: 70px;
+  top: 17px;
+  color: #fff;
 }
 .titleshadow {
   width: 100%;
-  height: 50px;
-  background: -webkit-gradient(
+  line-height: 50px;
+  color: #fff;
+  font-size: 30px;
+  /* background: -webkit-gradient(
     linear,
     left top,
     right top,
@@ -161,14 +174,14 @@ export default class TopBar extends Vue {
   );
   background-clip: text;
   -webkit-text-fill-color: transparent;
-  animation: animate 3s infinite;
+  animation: animate 3s infinite; */
 }
-@keyframes animate {
+/* @keyframes animate {
   from {
     background-position: -500px;
   }
   to {
     background-position: 500px;
   }
-}
+} */
 </style>
