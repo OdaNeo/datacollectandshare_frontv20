@@ -18,7 +18,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn height="38" color="primary" dark @click.stop="createCommend(false)">创建命令</v-btn>
+        <v-btn height="39" color="primary" dark @click.stop="createCommend(false)">创建命令</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -30,27 +30,25 @@
           :headers="headers"
           :desserts="desserts"
           :pageNum="pageNum"
-          @PaginationsNow="PaginationsNow"
+          @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
           <template v-slot:buttons="{ item }">
-            <v-btn small text color="primary" class="my-2" @click="consumersSystem(item)">订阅系统信息详情</v-btn>
+            <v-btn text color="primary" @click="consumersSystem(item)">订阅系统信息详情</v-btn>
           </template>
           <template v-slot:buttons2="{ item }">
-            <v-btn v-if="tab" small text color="primary" class="my-2" @click.stop="createCommend(item)">修改</v-btn>
+            <v-btn v-if="tab" text color="primary" @click.stop="createCommend(item)">修改</v-btn>
             <v-btn
-              small
               v-if="tab"
               text
-              color="primary"
-              class="my-2"
+              color="error"
               @click="
                 HConfirmShow = true
                 HConfirmItem = item
               "
               >删除</v-btn
             >
-            <v-btn small text color="primary" class="my-2" @click="getCmdDescription(item)">查看描述</v-btn>
+            <v-btn text color="primary" @click="getCmdDescription(item)">查看描述</v-btn>
           </template>
         </h-table>
       </v-tab-item>
@@ -342,7 +340,7 @@ export default class CmdList extends Vue {
     }
   }
 
-  private PaginationsNow(page: number) {
+  private PaginationNow(page: number) {
     this.pageNum = page
     this.searchMethod(
       false,

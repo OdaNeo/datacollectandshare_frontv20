@@ -94,11 +94,11 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/topicController',
-    name: '主题管理',
+    name: '实时主题',
     component: StatePage,
     redirect: '/topicController/topicList',
     meta: {
-      title: '主题管理',
+      title: '实时主题',
       icon: 'mdi-folder-cog-outline',
       access: true
     },
@@ -106,9 +106,9 @@ const routes: Array<RouteConfig> = [
       {
         path: 'topicList',
         component: () => import('@/views/core/topicController/topicList.vue'),
-        name: '主题列表',
+        name: '实时主题列表',
         meta: {
-          title: '主题列表',
+          title: '实时主题列表',
           icon: 'mdi-folder-multiple',
           access: true
         }
@@ -147,11 +147,11 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/offlineTopicController',
-    name: '离线主题管理',
+    name: '离线主题',
     component: StatePage,
     redirect: '/offlineTopicController/topicList',
     meta: {
-      title: '离线主题管理',
+      title: '离线主题',
       icon: 'mdi-video-box',
       access: false
     },
@@ -180,11 +180,11 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/logController',
-    name: '日志数据管理',
+    name: '日志管理',
     component: StatePage,
     redirect: '/logController/dataList',
     meta: {
-      title: '日志数据管理',
+      title: '日志管理',
       icon: 'mdi-video-box',
       access: false
     },
@@ -192,9 +192,9 @@ const routes: Array<RouteConfig> = [
       {
         path: 'dataList',
         component: () => import('@/views/core/logController/dataList.vue'),
-        name: '日志数据采集',
+        name: '日志数据配置',
         meta: {
-          title: '日志数据采集',
+          title: '日志数据配置',
           icon: 'mdi-file-video',
           access: false
         }
@@ -213,11 +213,11 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/bizController',
-    name: '事务数据管理',
+    name: '事务数据',
     component: StatePage,
     redirect: '/bizController/dataList',
     meta: {
-      title: '事务数据管理',
+      title: '事务数据',
       icon: 'mdi-video-box',
       access: false
     },
@@ -246,11 +246,11 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/cmdInfoController',
-    name: '命令管理',
+    name: '可靠通道',
     component: StatePage,
     redirect: '/cmdInfoController/cmdList',
     meta: {
-      title: '命令管理',
+      title: '可靠通道',
       icon: 'mdi-console',
       access: true
     },
@@ -258,9 +258,9 @@ const routes: Array<RouteConfig> = [
       {
         path: 'cmdList',
         component: () => import('@/views/core/cmdInfoController/cmdList.vue'),
-        name: '命令列表',
+        name: '可靠通道列表',
         meta: {
-          title: '命令列表',
+          title: '可靠通道列表',
           icon: 'mdi-console-line ',
           access: true
         }
@@ -269,11 +269,11 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/videoController',
-    name: '视频数据管理',
+    name: '视频管理',
     component: StatePage,
     redirect: '/videoController/videoList',
     meta: {
-      title: '视频数据管理',
+      title: '视频管理',
       icon: 'mdi-video-box',
       access: true
     },
@@ -325,11 +325,11 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/logMGT',
-    name: '日志管理',
+    name: '操作日志',
     component: StatePage,
     redirect: '/logMGT/viewLog',
     meta: {
-      title: '日志管理',
+      title: '操作日志',
       icon: 'mdi-clipboard-text-multiple',
       access: true
     },
@@ -348,11 +348,11 @@ const routes: Array<RouteConfig> = [
   },
   {
     path: '/dataMGT',
-    name: '数据管理',
+    name: '系统统计',
     component: StatePage,
     redirect: '/dataMGT/dataStatistics',
     meta: {
-      title: '数据管理',
+      title: '系统统计',
       icon: 'mdi-database-cog',
       access: true
     },

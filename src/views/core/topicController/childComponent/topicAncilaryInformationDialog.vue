@@ -1,6 +1,6 @@
 <template>
   <div id="topicAncilaryInformationDialog">
-    <h-table :headers="tableHeader" :desserts="otherObj" class="mb-10"></h-table>
+    <h-table :headers="tableHeader" :desserts="otherObj" class="mb-5"></h-table>
     <h-table
       v-if="otherObj.topicInterFaceType === 3"
       :headers="headers"

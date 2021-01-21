@@ -53,18 +53,20 @@ export default class VideoPopup extends Vue {
   get dialog(): boolean {
     return this.checked
   }
+  private timer = 0
+
   private closeMethod() {
+    clearTimeout(this.timer)
     this.$emit('closeDialog')
   }
   private model = null
-
   private curIndex = 0
 
   private playVideo(str: string) {
     if (!str) {
       this.h_utils['alertUtil'].open('该时间段视频不存在', true, 'error', 1000)
       if (this.curIndex + 1 < this.videoList.length) {
-        setTimeout(() => {
+        this.timer = setTimeout(() => {
           this.toggleCurrentPlay(this.curIndex + 1)
         }, 1000)
       }
@@ -96,3 +98,10 @@ export default class VideoPopup extends Vue {
   }
 }
 </script>
+<style scoped>
+.close-btn {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+}
+</style>

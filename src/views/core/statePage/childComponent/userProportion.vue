@@ -1,11 +1,5 @@
 <template>
-  <div
-    class="viewBox rightTopView"
-    :class="`${enterFlag ? 'enter' : ''}`"
-    ref="rightTopView"
-    @mouseenter="mouseEnterMethod()"
-    @mouseleave="mouseLeaveMethod()"
-  >
+  <div class="viewBox rightTopView" ref="rightTopView">
     <!-- <div
     class="viewBox animated rightTopView"
     :class="`${fristFlag ? 'bounceInDown' : ''} ${enterFlag ? 'enter' : ''}`"
@@ -44,18 +38,18 @@ import Enum from '@/decorator/enumDecorator'
 ])
 export default class UserProportion extends Vue {
   // private fristFlag = true
-  private enterFlag = false
+  // private enterFlag = false
   private userOverlay = false
 
-  private mouseEnterMethod(): void {
-    // if (!this.fristFlag) {
-    this.enterFlag = true
-    // }
-  }
+  // private mouseEnterMethod(): void {
+  //   // if (!this.fristFlag) {
+  //   this.enterFlag = true
+  //   // }
+  // }
 
-  private mouseLeaveMethod(): void {
-    this.enterFlag = false
-  }
+  // private mouseLeaveMethod(): void {
+  //   this.enterFlag = false
+  // }
 
   private getUserProportionList(data: topicRankingInfo, str: string): Array<userProportion> {
     const roolList: Array<userProportion> = []

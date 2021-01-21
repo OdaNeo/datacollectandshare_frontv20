@@ -14,17 +14,15 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn height="38" color="primary" dark @click.stop="addItem">添加权限</v-btn>
+        <v-btn height="39" color="primary" dark @click.stop="addItem">添加权限</v-btn>
       </v-col>
     </v-row>
     <h-table :headers="headers" :desserts="desserts">
       <template v-slot:buttons="{ item }">
-        <v-btn small text color="primary" class="my-2" @click="editItem(item)">编辑</v-btn>
+        <v-btn text color="primary" @click="editItem(item)">编辑</v-btn>
         <v-btn
           text
-          color="orange"
-          small
-          class="my-2"
+          color="error"
           @click="
             HConfirmShow = true
             HConfirmItem = item

@@ -402,7 +402,6 @@
           <v-btn
             fab
             dark
-            small
             color="indigo"
             class="add-btn"
             v-if="formProvide.formObj.header.length === index + 1"
@@ -413,7 +412,6 @@
           <v-btn
             fab
             dark
-            small
             color="error"
             class="add-btn"
             v-if="(formProvide.formObj.header.length !== index + 1 || index !== 0) && item.key !== 'Authorization'"
@@ -578,7 +576,6 @@
           <v-btn
             fab
             dark
-            small
             color="error"
             class="add-btn"
             v-if="(formProvide.formObj.topicList.length !== index + 1 || index !== 0) && !item.disabled"
@@ -589,7 +586,6 @@
           <v-btn
             fab
             dark
-            small
             color="indigo"
             class="add-btn"
             v-if="formProvide.formObj.topicList.length === index + 1"

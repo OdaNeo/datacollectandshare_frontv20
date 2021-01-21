@@ -15,22 +15,20 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn height="38" color="primary" dark @click.stop="bindNet">绑定网络</v-btn>
+        <v-btn height="40" color="primary" dark @click.stop="bindNet">绑定网络</v-btn>
       </v-col>
     </v-row>
     <h-table
       :headers="headers"
       :desserts="desserts"
       :pageNum="pageNum"
-      @PaginationsNow="PaginationsNow"
+      @PaginationNow="PaginationNow"
       :paginationLength="paginationLength"
     >
       <template v-slot:operation="{ item }">
         <v-btn
-          small
           text
-          color="primary"
-          class="my-2"
+          color="error"
           @click="
             HConfirmShow = true
             HConfirmItem = item
@@ -201,7 +199,7 @@ export default class BindNetwork extends Vue {
     this.getNetworksAndSystems()
   }
 
-  private PaginationsNow(page: number) {
+  private PaginationNow(page: number) {
     this.pageNum = page
     this.searchMethod(false, {
       pageSize: this.pageSize,

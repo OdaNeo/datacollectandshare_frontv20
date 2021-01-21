@@ -6,7 +6,7 @@
       </v-col>
       <v-col cols="2">
         <h-date-picker
-          placeholder="选择查询起始时间"
+          label="选择查询起始时间"
           :begin="true"
           :anotherDate="afterDate"
           @pickerDate="time => (beginDate = time)"
@@ -21,7 +21,7 @@
         ></h-date-picker>
       </v-col>
       <v-col cols="2">
-        <v-btn :height="38" color="primary" dark @click="clickSearch">查询</v-btn>
+        <v-btn :height="39" color="primary" dark @click="clickSearch">查询</v-btn>
       </v-col>
     </v-row>
     <h-table
@@ -29,7 +29,7 @@
       :desserts="desserts"
       :pageNum="pageNum"
       :paginationLength="paginationLength"
-      @PaginationsNow="PaginationsNow"
+      @PaginationNow="PaginationNow"
     ></h-table>
   </div>
 </template>
@@ -98,7 +98,7 @@ export default class ViewLog extends Vue {
     this.desserts = data['list']
   }
 
-  private PaginationsNow(page: number) {
+  private PaginationNow(page: number) {
     this.pageNum = page
     this.searchMethod({
       pageSize: this.pageSize,

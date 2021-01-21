@@ -8,17 +8,17 @@
       style="overflow-x: visible; overflow-y: visible; animation-duration: 1s; animation-delay: 1.5s"
       class="animated bounceInLeft"
     > -->
-    <v-navigation-drawer app width="240" color="rgb(0,21,41)" v-show="navBar">
+    <v-navigation-drawer app width="250" color="rgb(0,21,41)" v-show="navBar" class="mt-14">
       <!-- <transition name="navbar"> -->
       <!-- <NavBar1 v-show="navBar"></NavBar1> -->
       <nav-bar v-show="navBar"></nav-bar>
       <!-- </transition> -->
     </v-navigation-drawer>
-    <v-app-bar app height="57" color="rgb(0,21,41)">
+    <v-app-bar app height="57" color="rgb(0,21,41)" width="100%" style="left: 0px">
       <TopBar />
     </v-app-bar>
     <v-main style="background: rgb(246, 248, 251)">
-      <v-container fluid style="height: 100%">
+      <v-container fluid class="main-container">
         <!-- <transition name="fade"> -->
         <v-breadcrumbs :items="items" v-show="bread"></v-breadcrumbs>
         <!-- </transition>
@@ -45,13 +45,13 @@ export default class Login extends Vue {
     if (this.$route.matched[0].meta.title === 'tct') {
       return [
         { text: '首页', disabled: false },
-        { text: this.$route.meta.title, disabled: false }
+        { text: this.$route.meta.title, disabled: true }
       ]
     } else {
       return [
-        { text: '首页', disabled: false, link: true, to: '/statePage/welcome' },
+        { text: '首页', disabled: false },
         { text: this.$route.matched[0].meta.title, disabled: false },
-        { text: this.$route.meta.title, disabled: false }
+        { text: this.$route.meta.title, disabled: true }
       ]
     }
   }

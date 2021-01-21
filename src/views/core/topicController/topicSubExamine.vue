@@ -16,11 +16,11 @@
     </v-row>
     <h-table :headers="headers" :desserts="desserts" :pageNum="pageNum" :paginationLength="paginationLength">
       <template v-slot:buttons="{ item }">
-        <v-btn small text color="primary" class="my-2" @click="dataStructure(item)">数据结构详情</v-btn>
+        <v-btn text color="primary" @click="dataStructure(item)">数据结构详情</v-btn>
       </template>
       <template v-slot:operation="{ item }">
-        <v-btn small text color="success" class="my-2" @click="examine(item, 1)">审核通过</v-btn>
-        <v-btn text color="red" small class="my-2" @click="examine(item, 2)">审核拒绝</v-btn>
+        <v-btn text color="success" @click="examine(item, 1)">审核通过</v-btn>
+        <v-btn text color="error" @click="examine(item, 2)">审核拒绝</v-btn>
       </template>
     </h-table>
     <h-dialog v-if="dialogFlag" v-model="dialogFlag">

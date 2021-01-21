@@ -1,12 +1,13 @@
 <template>
   <v-dialog v-model="closeDialog" max-width="750" persistent>
     <v-card>
-      <v-card-title class="dialog-title">
-        <p class="mb-0">{{ formProvide.title }}</p>
+      <v-card-title>
+        <span class="headline">{{ formProvide.title }}</span>
         <v-btn icon class="close-btn" @click="closeMethod">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
+      <v-divider></v-divider>
       <v-card-text>
         <v-container>
           <h-form ref="hform" @cancel="closeMethod" @validate="closeMethod">
@@ -44,7 +45,6 @@ export default class HDialog extends Vue {
 
 <style scoped>
 .dialog-title {
-  text-align: center;
   display: block;
 }
 .close-btn {

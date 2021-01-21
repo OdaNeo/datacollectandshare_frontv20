@@ -7,5 +7,5 @@
 // VUE_APP_BASE_API = 'http://8.131.231.56:49090'
 // 106
 // VUE_APP_BASE_API = 'http://172.51.216.106:9002'
-export const VUE_APP_BASE_API = 'http://172.51.216.106:9002'
+export const VUE_APP_BASE_API = 'http://8.131.231.56:49090'
 export const PROJECT_TITLE = '交控科技天枢平台元数据配置管理中心'

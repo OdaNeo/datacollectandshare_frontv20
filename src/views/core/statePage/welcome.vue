@@ -1,10 +1,10 @@
 <template>
   <div id="welcome">
-    <div class="topContent">
+    <div class="topContent" style="height: 230px">
       <system-topic-proportion></system-topic-proportion>
       <user-proportion></user-proportion>
     </div>
-    <div class="btmContent" style="height: 60.5%; margin-top: 1%">
+    <div class="btmContent" style="height: 450px; margin-top: 50px">
       <release-menu :systemItems="systemItems"></release-menu>
       <subscribe-menu :systemItems="systemItems"></subscribe-menu>
     </div>
@@ -449,17 +449,16 @@ export default class Welcome extends Vue {
     .btmContent
     .topContent
         width:100%
-        height:30%
         display:flex
         justify-content:space-around
         .viewBox
-            width:49%
+            width:43%
             height:100%
             // background:rgb(30,31,67)
             border: 1px solid rgb(30,31,67)
             box-shadow: 2px 6px 15px 0 rgba(69,65,78,.1)
-            border-radius: 4px
-            transition: .5s all ease
+            border-radius: 5px
+            // transition: .5s all ease
             position: relative
             // animation-duration:2s
             // animation-delay:1s

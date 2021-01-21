@@ -18,6 +18,7 @@
             prepend-icon="mdi-calendar"
             :rules="[...h_validator.noEmpty('起始时间'), ...startEndDateValidator]"
             readonly
+            outlined
             dense
             class="mx-4"
             v-bind="attrs"
@@ -36,6 +37,7 @@
         style="width: 50px"
         class="mx-4"
         dense
+        outlined
         :items="hours"
       ></v-autocomplete>
       <label class="label-end">时</label>
@@ -58,6 +60,7 @@
             prepend-icon="mdi-calendar"
             readonly
             dense
+            outlined
             class="mx-4"
             v-bind="attrs"
             v-on="on"
@@ -75,6 +78,7 @@
         style="width: 50px"
         class="mx-4"
         dense
+        outlined
         :items="hours2"
       ></v-autocomplete>
       <label class="label-end">时</label>

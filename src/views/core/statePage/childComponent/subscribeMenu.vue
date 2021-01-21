@@ -7,13 +7,7 @@
     @mouseleave="mouseLeaveMethod()"
     ref="rightBtmView"
   > -->
-  <div
-    class="viewBox rightBtmView"
-    :class="`${enterFlag ? 'enter' : ''}`"
-    ref="rightBtmView"
-    @mouseenter="mouseEnterMethod()"
-    @mouseleave="mouseLeaveMethod()"
-  >
+  <div class="viewBox rightBtmView" ref="rightBtmView">
     <!-- <v-overlay :absolute="true" :value="subscribeOverlay">
       <v-progress-circular indeterminate size="60">加载中</v-progress-circular>
     </v-overlay> -->
@@ -110,7 +104,7 @@ import util from '@/decorator/utilsDecorator'
 export default class SubscribeMenu extends Vue {
   @Prop() private systemItems!: unknown[]
   // private fristFlag = true
-  private enterFlag = false
+  // private enterFlag = false
   private subscribeOverlay = false
   private subscribeTopicExist = true
   private subscribeStartTime: string = Moment(Moment().subtract(11, 'months').calendar(), 'MM-DD-YYYY').format(
@@ -124,15 +118,15 @@ export default class SubscribeMenu extends Vue {
   private subscribeDate: string = new Date().toISOString().substr(0, 10)
   private subscribeTime = false
 
-  private mouseEnterMethod(): void {
-    // if (!this.fristFlag) {
-    this.enterFlag = true
-    // }
-  }
+  // private mouseEnterMethod(): void {
+  //   // if (!this.fristFlag) {
+  //   this.enterFlag = true
+  //   // }
+  // }
 
-  private mouseLeaveMethod(): void {
-    this.enterFlag = false
-  }
+  // private mouseLeaveMethod(): void {
+  //   this.enterFlag = false
+  // }
 
   private async getSubscribe(params: any, callback: Function) {
     const result: returnDataType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)

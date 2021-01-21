@@ -14,18 +14,17 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn height="38" color="primary" dark @click.stop="addItem">添加</v-btn>
+        <v-btn height="39" color="primary" dark @click.stop="addItem">添加</v-btn>
       </v-col>
     </v-row>
     <h-table :headers="headers" :desserts="desserts" :pageNum="pageNum" :paginationLength="paginationLength">
       <template v-slot:buttons="{ item }">
-        <v-btn small text color="success" class="my-2" @click="authItem(item)">授权</v-btn>
-        <v-btn small text color="primary" class="my-2" @click="editItem(item)">编辑</v-btn>
+        <!--TODO: 接口无权限？ -->
+        <v-btn text color="primary" @click="authItem(item)">授权</v-btn>
+        <v-btn text color="primary" @click="editItem(item)">编辑</v-btn>
         <v-btn
           text
-          color="orange"
-          small
-          class="my-2"
+          color="error"
           @click="
             HConfirmShow = true
             HConfirmItem = item

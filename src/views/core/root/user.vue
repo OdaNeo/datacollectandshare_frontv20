@@ -14,41 +14,33 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn color="primary" height="38" dark @click.stop="addItem">添加用户</v-btn>
+        <v-btn color="primary" height="39" dark @click.stop="addItem">添加用户</v-btn>
       </v-col>
     </v-row>
-    <transition name="table" @after-leave="tableAfterEnter" style="background: #fff">
-      <div>
-        <v-data-table
-          :headers="headers"
-          :items="desserts"
-          class="elevation-1"
-          hide-default-footer
-          item-key="name"
-          dense
-          :items-per-page="10"
-          v-show="tableShow"
-        >
-          <template v-slot:[`item.gmtCreated`]="{ item }">
-            {{ h_utils.timeutil.stamptoTime(item.gmtCreated, '-') }}
-          </template>
-          <template v-slot:[`item.userState`]="{ item }">
-            {{ h_enum['userState'][item.userState] }}
-          </template>
-          <template v-slot:[`item.actions`]="{ item }">
-            <v-icon small @click="editItem(item)">mdi-pencil</v-icon>
-            <!-- <v-icon small @click="deleteItem(item)">mdi-delete</v-icon> -->
-          </template>
-        </v-data-table>
-        <v-pagination
-          :length="paginationLength"
-          :total-visible="7"
-          circle
-          @input="handleCurrentChange"
-          :value="pageNum"
-        ></v-pagination>
-      </div>
-    </transition>
+    <!-- <transition name="table" @after-leave="tableAfterEnter" style="background: #fff"> -->
+    <!-- <div> -->
+    <h-table
+      :headers="headers"
+      :desserts="desserts"
+      :pageNum="pageNum"
+      @PaginationNow="PaginationNow"
+      :paginationLength="paginationLength"
+    >
+      <template v-slot:buttons="{ item }">
+        <v-btn text color="primary" @click="editItem(item)">编辑</v-btn>
+        <!-- <v-icon @click="editItem(item)">mdi-pencil</v-icon> -->
+        <!-- <v-icon  @click="deleteItem(item)">mdi-delete</v-icon> -->
+      </template>
+    </h-table>
+    <!-- <v-pagination
+      :length="paginationLength"
+      :total-visible="7"
+      circle
+      @input="handleCurrentChange"
+      :value="pageNum"
+    ></v-pagination> -->
+    <!-- </div> -->
+    <!-- </transition> -->
     <t-dialog v-if="dialogFlag" v-model="dialogFlag">
       <user-dialog />
     </t-dialog>
@@ -70,11 +62,13 @@ import Enum from '@/decorator/enumDecorator'
 import UserDialog from './childComponent/userDialog.vue'
 import TDialog from '@/components/t-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
+import HTable from '@/components/h-table.vue'
 
 @Component({
   components: {
     UserDialog,
-    TDialog
+    TDialog,
+    HTable
   }
 })
 @http
@@ -99,64 +93,53 @@ export default class User extends Vue {
   private pageSize = 10
   private paginationLength = 1
   private queryUserName = ''
-  private tableShow = true
 
   private headers = [
     {
       text: '账号ID',
       align: 'center',
-      sortable: false,
-      value: 'id',
-      divider: true
+      value: 'id'
     },
     {
       text: '账号名称',
       align: 'start',
-      sortable: false,
-      value: 'loginName',
-      divider: true
+      value: 'loginName'
     },
     {
       text: '创建时间',
       align: 'center',
-      sortable: false,
       value: 'gmtCreated',
-      divider: true
+      format: (n: number) => {
+        return this.h_utils.timeutil.stamptoTime(n, '-')
+      }
     },
     {
       text: '用户类型',
       align: 'start',
-      sortable: false,
-      value: 'phone',
-      divider: true
+      value: 'phone'
     },
     {
       text: '用户状态',
       align: 'center',
-      sortable: false,
       value: 'userState',
-      divider: true
+      format: (n: number) => {
+        return this.h_enum['userState'][n]
+      }
     },
     {
       text: '系统名称',
       align: 'center',
-      sortable: false,
-      value: 'systemName',
-      divider: true
+      value: 'systemName'
     },
     {
       text: '用户Token',
       align: 'start',
-      sortable: false,
-      value: 'userToken',
-      divider: true
+      value: 'userToken'
     },
     {
       text: '操作',
       align: 'center',
-      sortable: false,
-      value: 'actions',
-      divider: true
+      slot: 'buttons'
     }
   ]
 
@@ -190,7 +173,7 @@ export default class User extends Vue {
     this.desserts = data['list']
   }
 
-  private handleCurrentChange(nowPage: number): void {
+  private PaginationNow(nowPage: number): void {
     this.pageNum = nowPage
     const params: paramsType = {
       pageSize: this.pageSize,
@@ -199,9 +182,9 @@ export default class User extends Vue {
     this.searchMethod(true, params)
   }
 
-  private tableAfterEnter(): void {
-    this.tableShow = true
-  }
+  // private tableAfterEnter(): void {
+  //   this.tableShow = true
+  // }
 
   private searchUserList() {
     const params: userParamsType = {
@@ -266,7 +249,7 @@ export default class User extends Vue {
 </script>
 
 <style scoped>
-.table-leave-to {
+/* .table-leave-to {
   opacity: 0;
   transform: translate3d(800px, 0, 0);
 }
@@ -279,5 +262,5 @@ export default class User extends Vue {
 }
 .table-enter-active {
   transition: 0.5s all ease;
-}
+} */
 </style>

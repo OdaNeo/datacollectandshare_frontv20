@@ -6,13 +6,7 @@
     @mouseleave="mouseLeaveMethod()"
     ref="leftTopView"
   > -->
-  <div
-    class="viewBox leftTopView"
-    :class="`${enterFlag ? 'enter' : ''}`"
-    @mouseenter="mouseEnterMethod()"
-    @mouseleave="mouseLeaveMethod()"
-    ref="leftTopView"
-  >
+  <div class="viewBox leftTopView" ref="leftTopView">
     <!-- <v-overlay :absolute="true" :value="systemOverlay">
       <v-progress-circular indeterminate size="60">加载中</v-progress-circular>
     </v-overlay> -->
@@ -46,20 +40,20 @@ import BScroll from '@better-scroll/core'
 @http
 export default class SystemTopicProportion extends Vue {
   // private fristFlag = true
-  private enterFlag = false
+  // private enterFlag = false
   private systemOverlay = false
   private topicMsgList: Array<topicMsg> = []
   private colors: Array<string> = ['#884046', '#8a7e4e', '#749f83', '#a8d8ea']
 
-  private mouseEnterMethod(): void {
-    // if (!this.fristFlag) {
-    this.enterFlag = true
-    // }
-  }
+  // private mouseEnterMethod(): void {
+  //   // if (!this.fristFlag) {
+  //   this.enterFlag = true
+  //   // }
+  // }
 
-  private mouseLeaveMethod(): void {
-    this.enterFlag = false
-  }
+  // private mouseLeaveMethod(): void {
+  //   this.enterFlag = false
+  // }
 
   private topicProportion(elementName: string, opt: topicProportionOpt): void {
     const element = document.getElementById(elementName)

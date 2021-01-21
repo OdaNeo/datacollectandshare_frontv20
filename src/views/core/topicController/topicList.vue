@@ -17,11 +17,11 @@
         >
         </v-text-field>
       </v-col>
-      <v-col cols="1">
-        <v-btn color="primary" height="38" width="100%" dark @click.stop="createTopic(false)">创建结构化主题</v-btn>
+      <v-col cols="1" class="mr-6">
+        <v-btn color="primary" height="39" dark @click.stop="createTopic(false)">创建结构化主题</v-btn>
       </v-col>
       <v-col cols="1">
-        <v-btn color="primary" height="38" dark @click="openUpload($event)">通过文件创建</v-btn>
+        <v-btn color="primary" height="39" dark @click="openUpload($event)">通过文件创建</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -33,16 +33,14 @@
           :headers="headers"
           :desserts="desserts"
           :pageNum="pageNum"
-          @PaginationsNow="PaginationsNow"
+          @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
           <template v-slot:buttons="{ item }">
             <v-btn
               v-if="item.topicInterFaceType !== 6 && item.topicInterFaceType !== 5"
-              small
               text
               color="primary"
-              class="my-2"
               @click="dataStructureDetails(item)"
             >
               数据结构详情
@@ -53,20 +51,16 @@
               v-if="
                 tab && (item.topicInterFaceType === 1 || item.topicInterFaceType === 2 || item.topicInterFaceType === 3)
               "
-              small
               text
               color="primary"
-              class="my-2"
               @click.stop="addFileds(item)"
             >
               增加字段
             </v-btn>
             <v-btn
-              small
               v-if="tab"
               text
-              color="primary"
-              class="my-2"
+              color="error"
               @click.stop="
                 HConfirmShow = true
                 HConfirmItem = item
@@ -74,24 +68,10 @@
             >
               删除
             </v-btn>
-            <v-btn
-              small
-              v-if="item.topicInterFaceType === 6"
-              text
-              color="primary"
-              class="my-2"
-              @click.stop="downloadFile(item)"
-            >
+            <v-btn v-if="item.topicInterFaceType === 6" text color="primary" @click.stop="downloadFile(item)">
               下载
             </v-btn>
-            <v-btn
-              v-if="item.topicInterFaceType !== 5"
-              small
-              text
-              color="primary"
-              class="my-2"
-              @click="getTopicInformation(item, index)"
-            >
+            <v-btn v-if="item.topicInterFaceType !== 5" text color="primary" @click="getTopicInformation(item, index)">
               查看附加信息
             </v-btn>
           </template>
@@ -650,7 +630,7 @@ export default class TopicList extends Vue {
       this.pageNum = 1
     }
   }
-  private PaginationsNow(page: number) {
+  private PaginationNow(page: number) {
     this.pageNum = page
     this.searchMethod(
       false,

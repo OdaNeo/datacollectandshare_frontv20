@@ -4,8 +4,8 @@
       <v-card-title class="headline">确定删除么？</v-card-title>
       <v-card-actions>
         <v-spacer />
-        <v-btn color="green darken-1" text @click.stop="closeMethod">取消</v-btn>
-        <v-btn color="green darken-1" text @click.stop="$emit('hconfirm')">确定</v-btn>
+        <v-btn color="primary" text @click.stop="closeMethod">取消</v-btn>
+        <v-btn color="primary" text @click.stop="$emit('hconfirm')">确定</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

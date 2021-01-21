@@ -7,13 +7,7 @@
     @mouseleave="mouseLeaveMethod"
     ref="leftBtmView"
   > -->
-  <div
-    class="viewBox leftBtmView"
-    :class="`${enterFlag ? 'enter' : ''}`"
-    ref="leftBtmView"
-    @mouseenter="mouseEnterMethod"
-    @mouseleave="mouseLeaveMethod"
-  >
+  <div class="viewBox leftBtmView" ref="leftBtmView">
     <!-- <v-overlay :absolute="true" :value="releaseOverlay">
       <v-progress-circular indeterminate size="60">加载中</v-progress-circular>
     </v-overlay> -->
@@ -105,7 +99,7 @@ import util from '@/decorator/utilsDecorator'
 export default class ReleaseMenu extends Vue {
   @Prop() private systemItems!: unknown[]
   // private firstFlag = true
-  private enterFlag = false
+  // private enterFlag = false
   // private releaseOverlay = false
   private releaseTopicExist = true
   private releaseStartTime: string = Moment(Moment().subtract(11, 'months').calendar(), 'MM-DD-YYYY').format(
@@ -124,15 +118,15 @@ export default class ReleaseMenu extends Vue {
     callback(result)
   }
 
-  private mouseEnterMethod(): void {
-    // if (!this.firstFlag) {
-    this.enterFlag = true
-    // }
-  }
+  // private mouseEnterMethod(): void {
+  //   // if (!this.firstFlag) {
+  //   this.enterFlag = true
+  //   // }
+  // }
 
-  private mouseLeaveMethod(): void {
-    this.enterFlag = false
-  }
+  // private mouseLeaveMethod(): void {
+  //   this.enterFlag = false
+  // }
 
   private selectReleaseSystem(system: { name: string; id: number }) {
     this.releaseSystemName = system.name

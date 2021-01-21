@@ -29,10 +29,10 @@
     </v-row>
     <h-table :headers="headers" :desserts="desserts" :pageNum="pageNum" :paginationLength="paginationLength">
       <template v-slot:buttons="{ item }">
-        <v-btn small text color="primary" class="my-2" @click="dataStructure(item)"> 数据结构详情 </v-btn>
+        <v-btn text color="primary" @click="dataStructure(item)">数据结构详情</v-btn>
       </template>
       <template v-slot:examineType="{}">
-        <span :style="'color:' + colors[btnAction]">{{ h_enum['examineType'][btnAction] }}</span>
+        <v-btn text :color="colors[btnAction]">{{ h_enum['examineType'][btnAction] }}</v-btn>
       </template>
     </h-table>
     <h-dialog v-if="dialogFlag" v-model="dialogFlag">
@@ -82,7 +82,7 @@ export default class TopicAuditRecords extends Vue {
   })
   private desserts: Array<topicTable> = []
   private btnNames: Array<string> = ['未审核', '已通过', '已拒绝']
-  private colors: Array<string> = ['#e6a23c', '#67c23a', '#f56c6c']
+  private colors: Array<string> = ['warning', 'primary', 'error']
   private btnAction = 0
   private rowObj: object = {}
   private pageNum = 1

@@ -2,7 +2,7 @@
   <div id="topbar">
     <v-row align="center" no-gutters>
       <v-col cols="12" align-self="center">
-        <h1 class="titleshadow">{{ PROJECT_TITLE }}</h1>
+        <span class="titleShadow" @click="$router.push('/statePage/welcome')">{{ PROJECT_TITLE }}</span>
 
         <div class="userMenu" v-show="userMenuState">
           <v-menu offset-y transition="slide-x-transition">
@@ -137,31 +137,33 @@ export default class TopBar extends Vue {
 }
 .userAvatar {
   cursor: pointer;
-  width: 100px;
-  display: flex;
+  width: 110px;
+  /* display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: center; */
   /* position: absolute;
   right: 150px;
   top: 14px; */
 }
 .userMenu {
   position: absolute;
-  right: 150px;
+  right: 50px;
   top: -2px;
 }
 .userName {
   position: absolute;
   width: 100px;
-  right: 70px;
+  right: 5px;
   top: 17px;
   color: #fff;
 }
-.titleshadow {
-  width: 100%;
-  line-height: 50px;
+.titleShadow {
+  cursor: pointer;
   color: #fff;
-  font-size: 30px;
+  font-size: 26px;
+  font-weight: normal;
+  letter-spacing: 3px;
+  margin-left: 56px;
   /* background: -webkit-gradient(
     linear,
     left top,

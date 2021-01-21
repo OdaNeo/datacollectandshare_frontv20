@@ -73,7 +73,7 @@
     <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
     <!-- body示例及弹窗 -->
     <label class="label mr-4">Body示例：</label>
-    <v-btn color="blue darken-1" text outlined @click="showConstruction = true">查看</v-btn>
+    <v-btn color="primary" text outlined @click="showConstruction = true">查看</v-btn>
     <v-dialog v-model="showConstruction" width="500">
       <v-card>
         <v-card-title class="headline grey lighten-2">Body示例</v-card-title>

@@ -1,31 +1,21 @@
 <template>
   <div id="h-table">
     <div class="simple-table">
-      <p class="table-title mb-0" v-if="title">
+      <p class="table-title" v-if="title">
         {{ title }}
       </p>
-      <v-simple-table fixed-header dense>
+      <v-simple-table fixed-header>
         <template v-slot:default>
           <thead>
             <tr>
-              <th
-                v-for="(header, index) in headers"
-                :key="index"
-                :class="'text-' + header.align"
-                :style="header.divider ? 'border:1px solid rgba(0, 0, 0, 0.12)' : ''"
-              >
+              <th v-for="(header, index) in headers" :key="index" :class="'text-' + header.align">
                 {{ header.text }}
               </th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="(item, key) in desserts2" :key="key" v-show="showFun(item.parentid)">
-              <td
-                v-for="(header, index) in headers"
-                :key="index"
-                :class="'text-' + header.align"
-                :style="header.divider ? 'border:1px solid rgba(0, 0, 0, 0.12)' : ''"
-              >
+              <td v-for="(header, index) in headers" :key="index" :class="'text-' + header.align">
                 <div
                   :style="
                     'margin-left:' +
@@ -46,9 +36,9 @@
       </v-simple-table>
     </div>
     <v-pagination
+      class="py-6"
       :length="paginationLength"
-      :total-visible="7"
-      circle
+      :total-visible="10"
       @input="handleCurrentChange"
       :value="pageNum"
       v-if="paginationLength && pageNum"
@@ -134,7 +124,7 @@ export default class HTable extends Vue {
     }
   }
 
-  @Emit('PaginationsNow') private handleCurrentChange(value: number): number {
+  @Emit('PaginationNow') private handleCurrentChange(value: number): number {
     return value
   }
 
@@ -145,11 +135,19 @@ export default class HTable extends Vue {
 </script>
 
 <style scoped>
+#h-table {
+  background: rgb(246, 248, 251) !important;
+}
+.v-pagination {
+  background: rgb(246, 248, 251) !important;
+}
 .simple-table {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-radius: 5px;
+  max-height: 64vh;
+  /* border-top: 1px solid rgba(0, 0, 0, 0.12); */
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
+  /* border-radius: 5px; */
   background-color: #fff;
-  border-collapse: collapse;
+  /* border-collapse: collapse; */
   /* box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
     0px 1px 3px 0px rgba(0, 0, 0, 0.12) !important; */
   overflow-y: auto;

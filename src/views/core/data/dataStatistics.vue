@@ -3,7 +3,14 @@
     <div>
       <v-row>
         <v-col cols="2">
-          <v-select v-model="systemValue" :items="systemItems" label="请选择系统" @change="getTopicList"></v-select>
+          <v-select
+            solo
+            dense
+            v-model="systemValue"
+            :items="systemItems"
+            label="请选择系统"
+            @change="getTopicList"
+          ></v-select>
         </v-col>
         <v-col cols="2">
           <v-menu
@@ -16,7 +23,15 @@
             min-width="290px"
           >
             <template v-slot:activator="{ on, attrs }">
-              <v-text-field v-model="beginDate" label="请选择日期" readonly v-bind="attrs" v-on="on"></v-text-field>
+              <v-text-field
+                solo
+                dense
+                v-model="beginDate"
+                label="请选择日期"
+                readonly
+                v-bind="attrs"
+                v-on="on"
+              ></v-text-field>
             </template>
             <v-date-picker
               locale="zh-cn"
@@ -34,6 +49,8 @@
         </v-col>
         <v-col cols="2">
           <v-select
+            solo
+            dense
             v-model="currentSelectMonth"
             @change="getTopicList"
             :items="monthSelectItems"
@@ -42,6 +59,8 @@
         </v-col>
         <v-col cols="2" v-if="topicListNumber > 1">
           <v-select
+            solo
+            dense
             v-model="releasePageNum"
             :items="pageList"
             label="获取更多主题信息"

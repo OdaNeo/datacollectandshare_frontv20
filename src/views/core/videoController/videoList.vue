@@ -18,7 +18,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="2">
-        <v-btn color="primary" height="38" dark @click.stop="createTopicVideo">创建非结构化主题</v-btn>
+        <v-btn color="primary" height="39" dark @click.stop="createTopicVideo">创建非结构化主题</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -30,17 +30,15 @@
           :headers="headers"
           :desserts="desserts"
           :pageNum="pageNum"
-          @PaginationsNow="PaginationsNow"
+          @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
           <template v-slot:buttons2="{ item }">
-            <v-btn small text color="primary" @click.stop="showDateRangePopup(item)">查看视频</v-btn>
+            <v-btn text color="primary" @click.stop="showDateRangePopup(item)">查看视频</v-btn>
             <v-btn
-              small
               v-if="tab"
               text
-              color="primary"
-              class="my-2"
+              color="error"
               @click="
                 HConfirmShow = true
                 HConfirmItem = item
@@ -350,7 +348,7 @@ export default class CmdList extends Vue {
   }
 
   // 分页
-  private PaginationsNow(page: number) {
+  private PaginationNow(page: number) {
     this.pageNum = page
     this.searchMethod(
       false,

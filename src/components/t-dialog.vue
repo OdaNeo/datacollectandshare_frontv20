@@ -3,7 +3,7 @@
     <v-card>
       <v-card-title>
         <span class="headline">{{ formProvide.title }}</span>
-        <v-btn style="position: absolute; right: 14px; top: 14px" icon @click="closeMethod">
+        <v-btn class="close-btn" icon @click="closeMethod">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
@@ -15,20 +15,15 @@
           </v-form>
         </v-container>
       </v-card-text>
-      <v-card-actions class="pt-0" v-if="formProvide.btnName && formProvide.btnName.length > 0">
+      <v-card-actions class="pt-0 pb-6" v-if="formProvide.btnName && formProvide.btnName.length > 0">
         <v-spacer></v-spacer>
-        <v-btn
-          color="blue darken-1"
-          text
-          :disabled="!userDialogValid"
-          v-if="formProvide.btnName[0]"
-          @click.stop="validate"
-          >{{ formProvide.btnName[0] }}</v-btn
-        >
-        <v-btn color="blue darken-1" text v-if="formProvide.btnName[1]" @click.stop="closeMethod">
+        <v-btn color="primary" text :disabled="!userDialogValid" v-if="formProvide.btnName[0]" @click.stop="validate">{{
+          formProvide.btnName[0]
+        }}</v-btn>
+        <v-btn color="primary" text v-if="formProvide.btnName[1]" @click.stop="closeMethod">
           {{ formProvide.btnName[1] }}</v-btn
         >
-        <v-btn color="blue darken-1" text v-else @click.stop="reset">重置</v-btn>
+        <v-btn color="primary" text v-else @click.stop="reset">重置</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -69,7 +64,7 @@ export default class TDialog extends Vue {
     }
   }
 
-  created(): void {
+  mounted(): void {
     // 记录默认值
     for (let p in this.formProvide.formObj) {
       this.defaultFormObj[p] = this.formProvide.formObj[p]
@@ -77,3 +72,11 @@ export default class TDialog extends Vue {
   }
 }
 </script>
+
+<style scoped>
+.close-btn {
+  position: absolute;
+  right: 14px;
+  top: 14px;
+}
+</style>
