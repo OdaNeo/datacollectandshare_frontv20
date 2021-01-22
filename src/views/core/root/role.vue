@@ -24,7 +24,7 @@
         <v-btn text color="primary" @click="editItem(item)">编辑</v-btn>
         <v-btn
           text
-          color="error"
+          color="primary"
           @click="
             HConfirmShow = true
             HConfirmItem = item

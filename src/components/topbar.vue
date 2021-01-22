@@ -147,23 +147,23 @@ export default class TopBar extends Vue {
 }
 .userMenu {
   position: absolute;
-  right: 50px;
+  right: 27px;
   top: -2px;
 }
 .userName {
   position: absolute;
-  width: 100px;
-  right: 5px;
+  width: 75px;
+  right: 3px;
   top: 17px;
   color: #fff;
 }
 .titleShadow {
   cursor: pointer;
   color: #fff;
-  font-size: 26px;
+  font-size: 22px;
   font-weight: normal;
-  letter-spacing: 3px;
-  margin-left: 56px;
+  letter-spacing: 4px;
+  margin-left: 0px;
   /* background: -webkit-gradient(
     linear,
     left top,

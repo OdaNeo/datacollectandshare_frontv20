@@ -1,9 +1,9 @@
 <template>
   <div id="h-table">
     <div class="simple-table">
-      <p class="table-title" v-if="title">
+      <!-- <p class="table-title" v-if="title">
         {{ title }}
-      </p>
+      </p> -->
       <v-simple-table fixed-header>
         <template v-slot:default>
           <thead>
@@ -144,12 +144,12 @@ export default class HTable extends Vue {
 .simple-table {
   max-height: 64vh;
   /* border-top: 1px solid rgba(0, 0, 0, 0.12); */
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  /* border-radius: 5px; */
+  /* border-bottom: 1px solid rgba(0, 0, 0, 0.12); */
+  border-radius: 5px;
   background-color: #fff;
   /* border-collapse: collapse; */
-  /* box-shadow: 0px 2px 1px -1px rgba(0, 0, 0, 0.2), 0px 1px 1px 0px rgba(0, 0, 0, 0.14),
-    0px 1px 3px 0px rgba(0, 0, 0, 0.12) !important; */
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
+    0px 1px 5px 0px rgba(0, 0, 0, 0.12);
   overflow-y: auto;
   overflow-x: hidden;
 }

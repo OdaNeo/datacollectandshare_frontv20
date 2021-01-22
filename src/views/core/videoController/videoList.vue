@@ -38,7 +38,7 @@
             <v-btn
               v-if="tab"
               text
-              color="error"
+              color="primary"
               @click="
                 HConfirmShow = true
                 HConfirmItem = item
@@ -94,7 +94,7 @@ import { FormObj } from '@/type/dialog-form.type'
     enumName: 'dataType'
   }
 ])
-export default class CmdList extends Vue {
+export default class VideoList extends Vue {
   @Provide('formProvide') private formProvide: FormObj = {
     title: '' as string,
     btnName: [] as Array<string>,

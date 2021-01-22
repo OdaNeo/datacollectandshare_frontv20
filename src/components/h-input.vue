@@ -1,9 +1,9 @@
 <template>
   <!-- 如果不指明 type 则不显示 -->
-  <v-col v-if="formTypeItem.type" cols="12" class="d-flex justify-space-around">
-    <label class="label">
+  <v-col id="HInput" v-if="formTypeItem.type" cols="12" class="d-flex justify-space-around">
+    <label class="label mr-2">
       <div v-if="formTypeItem.label">
-        <span v-if="formTypeItem.require" class="require-span">*</span>{{ formTypeItem.label }}：
+        <span v-if="formTypeItem.require" class="require-span">*</span>{{ formTypeItem.label }}
       </div>
     </label>
     <!-- input类型 -->
@@ -13,13 +13,14 @@
       outlined
       dense
       clearable
+      height="34"
       :disabled="formTypeItem.disabled && formTypeItem.disabled"
       :rules="
         formTypeItem.rules
           ? [...noEmptyRules(formTypeItem.label), ...noRepeat, ...formTypeItem.rules]
           : [...noEmptyRules(formTypeItem.label), ...noRepeat]
       "
-      class="ml-4 mr-8 my-0"
+      class="ml-4 mr-8"
       @input="inputEvent(formProvide.formObj[formTypeItem.valueName])"
     ></v-text-field>
 
@@ -30,6 +31,7 @@
       outlined
       dense
       clearable
+      height="34"
       :multiple="!!formTypeItem.multiple"
       :label="formTypeItem.label ? `请选择${formTypeItem.label}` : '请选择'"
       :items="formTypeItem.items"
@@ -47,12 +49,13 @@
       v-model="formProvide.formObj[formTypeItem.valueName]"
       row
       dense
+      height="34"
       :rules="
         formTypeItem.rules
           ? [...noEmptyRules(formTypeItem.label), ...formTypeItem.rules]
           : [...noEmptyRules(formTypeItem.label)]
       "
-      class="ml-4 mr-8 my-2 flex-grow-1"
+      class="ml-4 mr-8 my-0 pt-0 flex-grow-1"
     >
       <v-radio
         v-for="n in formTypeItem.items"
@@ -120,19 +123,3 @@ export default class HInput extends Vue {
   }
 }
 </script>
-<style scoped>
-.label {
-  min-width: 125px;
-  display: flex;
-  justify-content: flex-end;
-  color: rgba(0, 0, 0, 0.87);
-  font-size: 16px;
-  line-height: 42px;
-}
-.label-end {
-  width: 80px;
-  color: rgba(0, 0, 0, 0.87);
-  font-size: 16px;
-  line-height: 42px;
-}
-</style>

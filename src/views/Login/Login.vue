@@ -1,50 +1,29 @@
 <template>
   <div id="login">
     <div class="bgImg">
-      <v-card class="loginContent">
-        <v-card-title class="headline grey lighten-2 pt-12 pl-6" style="color: #1976d2">{{
-          PROJECT_TITLE
-        }}</v-card-title>
+      <div class="loginContent">
+        <p class="loginSubTitle">交控科技天枢平台</p>
+        <p class="loginTitle">元数据配置管理中心</p>
 
         <v-form v-model="userDialogValid">
-          <v-row class="mt-12">
-            <v-col cols="12" class="d-flex justify-space-around py-1">
-              <label class="label"><span class="require-span">*</span>用户名：</label>
-              <v-text-field
-                v-model="username"
-                outlined
-                dense
-                clearable
-                class="ml-4 mr-12"
-                append-icon="mdi-account"
-                :rules="[v => !!v || '用户名不能为空']"
-              ></v-text-field>
-            </v-col>
-            <v-col cols="12" class="d-flex justify-space-around py-1">
-              <label class="label"><span class="require-span">*</span>密码：</label>
-              <v-text-field
-                v-model="password"
-                outlined
-                dense
-                clearable
-                class="ml-4 mr-12"
-                :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
-                :type="showPass ? 'text' : 'password'"
-                @click:append="showPass = !showPass"
-                :rules="[v => !!v || '密码不能为空']"
-              ></v-text-field>
-            </v-col>
-          </v-row>
+          <label class="labelLogin">用户名：</label>
+          <v-text-field v-model="username" dense color="white" class="my-4"></v-text-field>
+
+          <label class="labelLogin">密码：</label>
+          <v-text-field
+            v-model="password"
+            dense
+            color="white"
+            class="my-4"
+            :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+            :type="showPass ? 'text' : 'password'"
+            @click:append="showPass = !showPass"
+          ></v-text-field>
         </v-form>
 
-        <v-card-actions class="pt-4">
-          <v-switch class="mt-0 pt-0 ml-12" v-model="remember" label="记住账号" color="primary" hide-details></v-switch>
-          <v-spacer></v-spacer>
-          <v-btn depressed color="primary" class="px-8 mr-10" @click.stop="signIn" :disabled="!userDialogValid"
-            >登录</v-btn
-          >
-        </v-card-actions>
-      </v-card>
+        <v-switch class="mt-0 pt-2" dense v-model="remember" label="记住账号" color="white" hide-details></v-switch>
+        <v-btn depressed color="primary" width="150" class="mt-8" @click.stop="signIn">登录</v-btn>
+      </div>
       <!--  -->
       <!-- <div class="loginContent2">
         <div class="loginTitle">{{ PROJECT_TITLE }}</div>
@@ -147,35 +126,63 @@ export default class Login extends Vue {
   background-position: center;
   position: relative;
 }
-.loginTitle {
-  font-size: 24px;
-  color: #17a0df;
-  text-align: center;
-  margin-top: 30px;
-  margin-bottom: 15px;
+.bgImg::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to left, rgba(0, 21, 41, 0), rgba(0, 21, 41, 1));
+}
+#login >>> .v-icon.v-icon {
+  font-size: 16px;
+}
+#login >>> input {
+  -webkit-text-fill-color: #fff !important;
+}
+
+#login >>> .v-input--selection-controls .v-input__slot > .v-label,
+.v-input--selection-controls .v-radio > .v-label {
+  color: #fff;
+  font-size: 14px;
+}
+
+#login >>> .theme--light.v-text-field > .v-input__control > .v-input__slot:before {
+  border-color: #fff;
+}
+
+#login >>> .theme--light.v-icon {
+  color: #fff;
+}
+
+#login >>> .v-application .error--text {
+  color: #ff5252 !important;
+  caret-color: #ff5252 !important;
 }
 .loginContent {
-  width: 600px;
+  width: 400px;
   height: 400px;
+  /* background-color: transparent !important; */
   position: absolute;
   left: 0;
   top: 0;
   bottom: 0;
   right: 0;
   margin: auto;
+  margin-left: 300px;
+  color: #fff;
 }
-.label {
-  min-width: 125px;
-  display: flex;
-  justify-content: flex-end;
-  color: rgba(0, 0, 0, 0.87);
-  font-size: 16px;
-  line-height: 42px;
+.loginSubTitle {
+  font-style: italic;
+  font-size: 18px;
+  margin-bottom: 8px;
 }
-.label-end {
-  width: 80px;
-  color: rgba(0, 0, 0, 0.87);
+.loginTitle {
+  font-style: italic;
+  font-size: 38px;
+  margin-bottom: 32px;
+}
+.labelLogin {
+  color: #fff;
   font-size: 16px;
-  line-height: 42px;
 }
 </style>

@@ -412,7 +412,7 @@
           <v-btn
             fab
             dark
-            color="error"
+            color="primary"
             class="add-btn"
             v-if="(formProvide.formObj.header.length !== index + 1 || index !== 0) && item.key !== 'Authorization'"
             @click="minus2(index)"
@@ -576,7 +576,7 @@
           <v-btn
             fab
             dark
-            color="error"
+            color="primary"
             class="add-btn"
             v-if="(formProvide.formObj.topicList.length !== index + 1 || index !== 0) && !item.disabled"
             @click="minus(index)"

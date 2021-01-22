@@ -41,7 +41,7 @@
             <v-btn
               v-if="tab"
               text
-              color="error"
+              color="primary"
               @click="
                 HConfirmShow = true
                 HConfirmItem = item

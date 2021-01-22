@@ -6,6 +6,10 @@ body {
     font-family: 'Microsoft Yahei', STHeiti, sans-serif, Arial;
 }
 
+input:-webkit-autofill {
+    box-shadow: 0 0 0px 1000px transparent inset !important;
+}
+
 #app {
     width: 100%;
     height: 100%;
@@ -13,21 +17,25 @@ body {
 
 /* form */
 
-.text-label {
-    width: 150px;
+.label {
+    width: 110px;
     display: flex;
     justify-content: flex-end;
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 15px;
+    line-height: 32px;
+}
+
+.label-end {
+    width: 60px;
+    color: rgba(0, 0, 0, 0.87);
+    font-size: 15px;
+    line-height: 32px;
 }
 
 .require-span {
     color: red;
     margin-right: 4px;
-}
-
-/* reset v-radio */
-
-.v-input--selection-controls .v-input__slot>.v-label, .v-input--selection-controls .v-radio>.v-label {
-    color: rgba(0, 0, 0, 0.87);
 }
 
 /* reset v-breadcrumbs*/
@@ -39,11 +47,41 @@ body {
 /* reset v-data-table*/
 
 .v-data-table>.v-data-table__wrapper>table>tbody>tr>th, .v-data-table>.v-data-table__wrapper>table>thead>tr>th, .v-data-table>.v-data-table__wrapper>table>tfoot>tr>th {
-    font-size: 0.85rem;
-    height: 48px;
-    /* background-color: #eeeeee; */
-    font-weight: 600;
+    font-size: 0.85rem !important;
+    font-weight: 600 !important;
 }
+
+/* reset v-list-item*/
+
+.v-application--is-ltr .v-list-item__action:first-child, .v-application--is-ltr .v-list-item__icon:first-child {
+    margin-right: 12px !important;
+}
+
+.v-form .v-input__slot {
+    min-height: auto !important;
+}
+
+.v-form .v-input__append-inner {
+    margin-top: 5px !important;
+}
+
+.v-form .v-text-field--outlined.v-input--dense .v-label {
+    top: 7px !important;
+}
+
+/* .v-text-field--filled.v-input--dense.v-text-field--single-line>.v-input__control>.v-input__slot, .v-text-field--filled.v-input--dense.v-text-field--outlined>.v-input__control>.v-input__slot, .v-text-field--filled.v-input--dense.v-text-field--outlined.v-text-field--filled>.v-input__control>.v-input__slot, .v-text-field--full-width.v-input--dense.v-text-field--single-line>.v-input__control>.v-input__slot, .v-text-field--full-width.v-input--dense.v-text-field--outlined>.v-input__control>.v-input__slot, .v-text-field--full-width.v-input--dense.v-text-field--outlined.v-text-field--filled>.v-input__control>.v-input__slot, .v-text-field--outlined.v-input--dense.v-text-field--single-line>.v-input__control>.v-input__slot, .v-text-field--outlined.v-input--dense.v-text-field--outlined>.v-input__control>.v-input__slot, .v-text-field--outlined.v-input--dense.v-text-field--outlined.v-text-field--filled>.v-input__control>.v-input__slot {
+    min-height: 20px !important;
+} */
+
+/* .v-application--is-ltr .v-list-item__action:first-child, .v-application--is-ltr .v-list-item__icon:first-child {
+    margin-right: 20px !important;
+} */
+
+/* reset .v-list-group__items */
+
+/* .v-list-group__items {
+    background-color: #1E1E1E;
+} */
 
 /* html, body {
     height: 100%;

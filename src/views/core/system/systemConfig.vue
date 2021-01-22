@@ -30,7 +30,7 @@
       <template v-slot:operation="{ item }">
         <v-btn
           text
-          color="error"
+          color="primary"
           @click="
             HConfirmShow = true
             HConfirmItem = item

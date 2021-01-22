@@ -1,15 +1,14 @@
 <template>
   <v-row no-gutters>
     <!-- dateRange类型 -->
-    <v-col cols="12" class="d-flex justify-space-around my-2">
-      <label class="label"><span class="require-span">*</span>起始时间：</label>
+    <v-col cols="12" class="d-flex justify-space-around">
+      <label class="label"><span class="require-span">*</span>起始时间</label>
       <v-menu
         v-model="menuStart"
         :close-on-content-click="false"
         :nudge-right="40"
         transition="scale-transition"
         offset-y
-        class="mx-4"
         min-width="auto"
       >
         <template v-slot:activator="{ on, attrs }">
@@ -21,6 +20,7 @@
             outlined
             dense
             class="mx-4"
+            height="34"
             v-bind="attrs"
             v-on="on"
           ></v-text-field>
@@ -31,26 +31,26 @@
           @input="menuStart = false"
         ></v-date-picker>
       </v-menu>
-      <v-autocomplete
+      <v-select
         v-model="formProvide.formObj.startHour"
         @change="dateChange"
         style="width: 50px"
-        class="mx-4"
+        class="mx-3"
         dense
         outlined
+        height="34"
         :items="hours"
-      ></v-autocomplete>
+      ></v-select>
       <label class="label-end">时</label>
     </v-col>
-    <v-col cols="12" class="d-flex justify-space-around my-2">
-      <label class="label"><span class="require-span">*</span>截止时间：</label>
+    <v-col cols="12" class="d-flex justify-space-around">
+      <label class="label"><span class="require-span">*</span>截止时间</label>
       <v-menu
         v-model="menuEnd"
         :close-on-content-click="false"
         :nudge-right="40"
         transition="scale-transition"
         offset-y
-        class="mx-4"
         min-width="auto"
       >
         <template v-slot:activator="{ on, attrs }">
@@ -62,6 +62,7 @@
             dense
             outlined
             class="mx-4"
+            height="34"
             v-bind="attrs"
             v-on="on"
           ></v-text-field>
@@ -72,15 +73,16 @@
           @input="menuEnd = false"
         ></v-date-picker>
       </v-menu>
-      <v-autocomplete
+      <v-select
         v-model="formProvide.formObj.endHour"
         @change="dateChange"
         style="width: 50px"
-        class="mx-4"
+        class="mx-3"
         dense
+        height="34"
         outlined
         :items="hours2"
-      ></v-autocomplete>
+      ></v-select>
       <label class="label-end">时</label>
     </v-col>
   </v-row>
@@ -120,20 +122,3 @@ export default class SetDateRange extends Vue {
   }
 }
 </script>
-<style scoped>
-.label {
-  width: 125px;
-  display: flex;
-  justify-content: flex-end;
-  color: rgba(0, 0, 0, 0.87);
-  font-size: 16px;
-  line-height: 37px;
-}
-
-.label-end {
-  width: 80px;
-  color: rgba(0, 0, 0, 0.87);
-  font-size: 16px;
-  line-height: 37px;
-}
-</style>

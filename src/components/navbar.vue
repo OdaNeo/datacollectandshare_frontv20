@@ -1,6 +1,6 @@
 <template>
   <!-- <div id="navbar"> -->
-  <v-list dark :expand="true" class="pt-6">
+  <v-list id="navbar" dark expand class="pt-0" dense>
     <!-- <v-list-item link>
         <v-list-item-action>
           <v-icon>mdi-home</v-icon>
@@ -24,6 +24,7 @@
       :value="$route.matched[0].name === item.name"
       v-for="item in navMenu"
       :key="item.id"
+      append-icon="mdi-menu-up"
       :prepend-icon="parentIcon(item.name)"
       no-action
       color="white"
@@ -38,7 +39,7 @@
         <!-- <v-list-item-action> -->
         <!-- <v-icon>{{ childIcon(subItem.name) }}</v-icon> -->
         <!-- </v-list-item-action> -->
-        <v-list-item-content>
+        <v-list-item-content class="ml-0">
           <v-list-item-title v-text="subItem.name"></v-list-item-title>
         </v-list-item-content>
       </v-list-item>
@@ -83,3 +84,8 @@ export default class NavBar extends Vue {
   }
 }
 </script>
+<style scoped>
+#navbar >>> .v-icon.v-icon {
+  font-size: 18px;
+}
+</style>

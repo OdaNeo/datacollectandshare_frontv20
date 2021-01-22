@@ -29,6 +29,7 @@
     "xlsx": "^0.16.9"
   },
   "devDependencies": {
+    "@mdi/font": "^5.9.55",
     "@types/dplayer": "^1.25.0",
     "@typescript-eslint/eslint-plugin": "^4.12.0",
     "@typescript-eslint/parser": "^4.12.0",

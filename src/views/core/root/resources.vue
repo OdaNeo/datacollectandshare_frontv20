@@ -22,7 +22,7 @@
         <v-btn text color="primary" @click="editItem(item)">编辑</v-btn>
         <v-btn
           text
-          color="error"
+          color="primary"
           @click="
             HConfirmShow = true
             HConfirmItem = item
@@ -159,6 +159,7 @@ export default class Resources extends Vue {
 
   private async addResources(formObj: ResourcesFormObj) {
     const { name, url, parentid, type } = formObj
+    console.log(formObj)
     const { success } = await this.h_request['httpPOST']<ResourcesFormObj>('POST_PERMISSION_ADD_PERMISSION', {
       name,
       url,

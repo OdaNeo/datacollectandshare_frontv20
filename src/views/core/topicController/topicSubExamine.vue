@@ -20,7 +20,7 @@
       </template>
       <template v-slot:operation="{ item }">
         <v-btn text color="success" @click="examine(item, 1)">审核通过</v-btn>
-        <v-btn text color="error" @click="examine(item, 2)">审核拒绝</v-btn>
+        <v-btn text color="warning" @click="examine(item, 2)">审核拒绝</v-btn>
       </template>
     </h-table>
     <h-dialog v-if="dialogFlag" v-model="dialogFlag">

@@ -1,21 +1,21 @@
 <template>
-  <v-dialog v-model="dialog" width="800" persistent>
+  <v-dialog v-model="dialog" width="700" persistent>
     <v-card>
       <v-card-title>
-        <span class="headline">{{ formProvide.title }}</span>
+        <span style="font-size: 18px">{{ formProvide.title }}</span>
         <v-btn class="close-btn" icon @click="closeMethod">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
       <v-divider></v-divider>
-      <v-card-text class="pb-0 mt-6">
-        <v-container>
+      <v-card-text class="pb-0 mt-4">
+        <v-container class="pb-1">
           <v-form ref="userDialogForm" v-model="userDialogValid">
             <slot />
           </v-form>
         </v-container>
       </v-card-text>
-      <v-card-actions class="pt-0 pb-6" v-if="formProvide.btnName && formProvide.btnName.length > 0">
+      <v-card-actions class="pt-0 pb-4 pr-8" v-if="formProvide.btnName && formProvide.btnName.length > 0">
         <v-spacer></v-spacer>
         <v-btn color="primary" text :disabled="!userDialogValid" v-if="formProvide.btnName[0]" @click.stop="validate">{{
           formProvide.btnName[0]

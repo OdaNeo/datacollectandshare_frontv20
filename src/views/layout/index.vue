@@ -8,23 +8,21 @@
       style="overflow-x: visible; overflow-y: visible; animation-duration: 1s; animation-delay: 1.5s"
       class="animated bounceInLeft"
     > -->
-    <v-navigation-drawer app width="250" color="rgb(0,21,41)" v-show="navBar" class="mt-14">
+    <v-navigation-drawer width="200px" app color="rgb(0,21,41)" class="mt-14">
       <!-- <transition name="navbar"> -->
-      <!-- <NavBar1 v-show="navBar"></NavBar1> -->
-      <nav-bar v-show="navBar"></nav-bar>
+      <!-- <NavBar1 ></NavBar1> -->
+      <nav-bar></nav-bar>
       <!-- </transition> -->
     </v-navigation-drawer>
     <v-app-bar app height="57" color="rgb(0,21,41)" width="100%" style="left: 0px">
-      <TopBar />
+      <top-bar />
     </v-app-bar>
     <v-main style="background: rgb(246, 248, 251)">
       <v-container fluid class="main-container">
-        <!-- <transition name="fade"> -->
-        <v-breadcrumbs :items="items" v-show="bread"></v-breadcrumbs>
-        <!-- </transition>
-        <transition name="out"> -->
-        <router-view v-show="bread"></router-view>
-        <!-- </transition> -->
+        <v-breadcrumbs :items="items"></v-breadcrumbs>
+        <transition name="fade-transform" mode="out-in">
+          <router-view></router-view>
+        </transition>
       </v-container>
     </v-main>
   </v-app>
@@ -56,24 +54,39 @@ export default class Login extends Vue {
     }
   }
 
-  navBar = false
-  bread = false
-  content = false
+  // navBar = false
+  // bread = false
+  // content = false
 
   created(): void {
     new DevicePixelRatio().init()
     // setTimeout(() => {
-    this.bread = true
-    this.navBar = true
-    // }, 0)
-    // setTimeout(() => {
-    this.content = true
+    // this.bread = true
+    // this.navBar = true
+    // // }, 0)
+    // // setTimeout(() => {
+    // this.content = true
     // }, 1000)
   }
 }
 </script>
 
-<style scoped>
+<style>
+/* fade-transform */
+.fade-transform-leave-active,
+.fade-transform-enter-active {
+  transition: all 0.5s;
+}
+
+.fade-transform-enter {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.fade-transform-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
 /* .out-leave-to {
   opacity: 0;
   transform: translate3d(-1000px, 0, 0);
@@ -85,19 +98,6 @@ export default class Login extends Vue {
   transition: 1s all ease;
 }
 .out-enter-active {
-  transition: 1s all ease;
-}
-.fade-leave-to {
-  opacity: 0;
-  transform: translate3d(300px, 0, 0);
-}
-.fade-enter {
-  transform: translate3d(-1000px, 0, 0);
-}
-.fade-leave-active {
-  transition: 1s all ease;
-}
-.fade-enter-active {
   transition: 1s all ease;
 }
 

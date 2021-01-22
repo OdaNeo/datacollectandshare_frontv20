@@ -171,6 +171,7 @@ export default class ResourcesDialog extends Vue {
 
   @Watch('formProvide.formObj.type')
   private typesChange(val: any) {
+    console.log(this.formProvide.formObj)
     if (val === 'menu') {
       this.formTypeObj[3].valueName = 'parentid'
       this.formTypeObj[3].type = 'select'
@@ -182,7 +183,7 @@ export default class ResourcesDialog extends Vue {
       this.formTypeObj[4].items = []
       this.formTypeObj[4].require = false
 
-      this.formProvide.formObj.parentid = null
+      // this.formProvide.formObj.parentid = this.formProvide.formObj.parentid
     } else if (val === 'button') {
       this.formTypeObj[3].valueName = 'grandparentid'
       this.formTypeObj[3].type = 'select'

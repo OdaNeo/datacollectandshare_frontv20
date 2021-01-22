@@ -1,7 +1,7 @@
 <template>
-  <v-dialog v-model="closeDialog" max-width="290" persistent>
+  <v-dialog v-model="closeDialog" max-width="250" persistent>
     <v-card>
-      <v-card-title class="headline">确定删除么？</v-card-title>
+      <v-card-title style="font-size: 18px">确定删除么？</v-card-title>
       <v-card-actions>
         <v-spacer />
         <v-btn color="primary" text @click.stop="closeMethod">取消</v-btn>

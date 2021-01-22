@@ -1,10 +1,10 @@
 <template>
   <div id="welcome">
-    <div class="topContent" style="height: 230px">
+    <div class="topContent" style="height: 320px">
       <system-topic-proportion></system-topic-proportion>
       <user-proportion></user-proportion>
     </div>
-    <div class="btmContent" style="height: 450px; margin-top: 50px">
+    <div class="btmContent" style="height: 450px; margin-top: 24px">
       <release-menu :systemItems="systemItems"></release-menu>
       <subscribe-menu :systemItems="systemItems"></subscribe-menu>
     </div>
@@ -452,10 +452,10 @@ export default class Welcome extends Vue {
         display:flex
         justify-content:space-around
         .viewBox
-            width:43%
+            width:787px
             height:100%
-            // background:rgb(30,31,67)
-            border: 1px solid rgb(30,31,67)
+            background:#fff
+            // border: 1px solid rgb(30,31,67)
             box-shadow: 2px 6px 15px 0 rgba(69,65,78,.1)
             border-radius: 5px
             // transition: .5s all ease

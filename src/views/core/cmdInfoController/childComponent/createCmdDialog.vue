@@ -72,17 +72,17 @@
 
     <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
     <!-- body示例及弹窗 -->
-    <label class="label mr-4">Body示例：</label>
+    <label class="label mr-6">Body示例</label>
     <v-btn color="primary" text outlined @click="showConstruction = true">查看</v-btn>
-    <v-dialog v-model="showConstruction" width="500">
+    <v-dialog v-model="showConstruction" width="450">
       <v-card>
-        <v-card-title class="headline grey lighten-2">Body示例</v-card-title>
+        <v-card-title style="font-size: 18px">Body示例</v-card-title>
+        <v-divider></v-divider>
         <v-card-text class="mt-5">
           {<br />
           "cmddata": "{/"cmdId/":/"900001/",/"cmdContent/":/"这是一条测试信息/"}"
           <br />}
         </v-card-text>
-        <v-divider></v-divider>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="primary" text @click="showConstruction = false">关闭</v-btn>
@@ -164,14 +164,3 @@ export default class CreateCmdDialog extends Vue {
   }
 }
 </script>
-
-<style scoped>
-.label {
-  min-width: 125px;
-  display: flex;
-  justify-content: flex-end;
-  color: rgba(0, 0, 0, 0.87);
-  font-size: 16px;
-  line-height: 42px;
-}
-</style>
