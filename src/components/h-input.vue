@@ -20,7 +20,7 @@
           ? [...noEmptyRules(formTypeItem.label), ...noRepeat, ...formTypeItem.rules]
           : [...noEmptyRules(formTypeItem.label), ...noRepeat]
       "
-      class="ml-4 mr-8"
+      class="ml-4 mr-12"
       @input="inputEvent(formProvide.formObj[formTypeItem.valueName])"
     ></v-text-field>
 
@@ -30,7 +30,6 @@
       v-model="formProvide.formObj[formTypeItem.valueName]"
       outlined
       dense
-      clearable
       height="34"
       :multiple="!!formTypeItem.multiple"
       :label="formTypeItem.label ? `请选择${formTypeItem.label}` : '请选择'"
@@ -40,7 +39,7 @@
           ? [...noEmptyRules(formTypeItem.label), ...formTypeItem.rules]
           : [...noEmptyRules(formTypeItem.label)]
       "
-      class="ml-4 mr-8 my-0"
+      class="ml-4 mr-12 my-0"
     ></v-select>
 
     <!-- radio-group-->
@@ -55,7 +54,7 @@
           ? [...noEmptyRules(formTypeItem.label), ...formTypeItem.rules]
           : [...noEmptyRules(formTypeItem.label)]
       "
-      class="ml-4 mr-8 my-0 pt-0 flex-grow-1"
+      class="ml-4 mr-12 my-0 pt-0 flex-grow-1"
     >
       <v-radio
         v-for="n in formTypeItem.items"

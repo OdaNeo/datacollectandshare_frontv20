@@ -17,7 +17,7 @@
         >
         </v-text-field>
       </v-col>
-      <v-col cols="2">
+      <v-col cols="9">
         <v-btn color="primary" height="39" dark @click.stop="createTopicVideo">创建非结构化主题</v-btn>
       </v-col>
     </v-row>
@@ -94,7 +94,7 @@ import { FormObj } from '@/type/dialog-form.type'
     enumName: 'dataType'
   }
 ])
-export default class VideoList extends Vue {
+export default class VideoDataList extends Vue {
   @Provide('formProvide') private formProvide: FormObj = {
     title: '' as string,
     btnName: [] as Array<string>,

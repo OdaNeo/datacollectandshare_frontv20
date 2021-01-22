@@ -1,5 +1,5 @@
 <template>
-  <v-dialog v-model="closeDialog" max-width="250" persistent>
+  <v-dialog v-model="closeDialog" max-width="285" persistent>
     <v-card>
       <v-card-title style="font-size: 18px">确定删除么？</v-card-title>
       <v-card-actions>

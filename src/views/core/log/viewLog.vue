@@ -20,7 +20,7 @@
           @pickerDate="time => (afterDate = time)"
         ></h-date-picker>
       </v-col>
-      <v-col cols="2">
+      <v-col>
         <v-btn :height="39" color="primary" dark @click="clickSearch">查询</v-btn>
       </v-col>
     </v-row>

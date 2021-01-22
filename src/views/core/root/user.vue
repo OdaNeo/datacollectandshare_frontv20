@@ -13,7 +13,7 @@
         >
         </v-text-field>
       </v-col>
-      <v-col cols="2">
+      <v-col cols="9">
         <v-btn color="primary" height="39" dark @click.stop="addItem">添加用户</v-btn>
       </v-col>
     </v-row>

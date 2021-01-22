@@ -23,14 +23,7 @@ input:-webkit-autofill {
     justify-content: flex-end;
     color: rgba(0, 0, 0, 0.87);
     font-size: 15px;
-    line-height: 32px;
-}
-
-.label-end {
-    width: 60px;
-    color: rgba(0, 0, 0, 0.87);
-    font-size: 15px;
-    line-height: 32px;
+    line-height: 34px;
 }
 
 .require-span {
@@ -59,6 +52,7 @@ input:-webkit-autofill {
 
 .v-form .v-input__slot {
     min-height: auto !important;
+    display: flex !important;
 }
 
 .v-form .v-input__append-inner {

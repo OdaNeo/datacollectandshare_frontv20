@@ -35,7 +35,7 @@
         </v-list-item-content>
       </template>
 
-      <v-list-item v-for="subItem in item.childrenList" :key="subItem.id" link :to="subItem.url">
+      <v-list-item class="ml-n3" v-for="subItem in item.childrenList" :key="subItem.id" link :to="subItem.url">
         <!-- <v-list-item-action> -->
         <!-- <v-icon>{{ childIcon(subItem.name) }}</v-icon> -->
         <!-- </v-list-item-action> -->

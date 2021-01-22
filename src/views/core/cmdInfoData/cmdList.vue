@@ -17,7 +17,7 @@
         >
         </v-text-field>
       </v-col>
-      <v-col cols="2">
+      <v-col cols="9">
         <v-btn height="39" color="primary" dark @click.stop="createCommend(false)">创建命令</v-btn>
       </v-col>
     </v-row>

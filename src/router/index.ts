@@ -93,10 +93,10 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
-    path: '/topicController',
+    path: '/onLineData',
     name: '实时数据',
     component: StatePage,
-    redirect: '/topicController/topicList',
+    redirect: '/onLineData/topicList',
     meta: {
       title: '实时数据',
       icon: 'mdi-folder-cog-outline',
@@ -105,7 +105,7 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: 'topicList',
-        component: () => import('@/views/core/topicController/topicList.vue'),
+        component: () => import('@/views/core/onLineData/topicList.vue'),
         name: '实时主题',
         meta: {
           title: '实时主题',
@@ -115,7 +115,7 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: 'topicSub',
-        component: () => import('@/views/core/topicController/topicSub.vue'),
+        component: () => import('@/views/core/onLineData/topicSub.vue'),
         name: '主题订阅',
         meta: {
           title: '主题订阅',
@@ -125,7 +125,7 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: 'topicSubExamine',
-        component: () => import('@/views/core/topicController/topicSubExamine.vue'),
+        component: () => import('@/views/core/onLineData/topicSubExamine.vue'),
         name: '主题订阅审核',
         meta: {
           title: '主题订阅审核',
@@ -135,7 +135,7 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: 'topicAuditRecords',
-        component: () => import('@/views/core/topicController/topicAuditRecords.vue'),
+        component: () => import('@/views/core/onLineData/topicAuditRecords.vue'),
         name: '主题审核记录',
         meta: {
           title: '主题审核记录',
@@ -146,10 +146,10 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
-    path: '/offlineTopicController',
+    path: '/offlineData',
     name: '离线数据',
     component: StatePage,
-    redirect: '/offlineTopicController/topicList',
+    redirect: '/offlineData/topicList',
     meta: {
       title: '离线数据',
       icon: 'mdi-file-replace-outline ',
@@ -158,7 +158,7 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: 'topicList',
-        component: () => import('@/views/core/offlineTopicController/topicList.vue'),
+        component: () => import('@/views/core/offlineData/topicList.vue'),
         name: '离线主题',
         meta: {
           title: '离线主题',
@@ -168,7 +168,7 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: 'dataStatistics',
-        component: () => import('@/views/core/offlineTopicController/dataStatistics.vue'),
+        component: () => import('@/views/core/offlineData/dataStatistics.vue'),
         name: '离线数据统计',
         meta: {
           title: '离线数据统计',
@@ -179,10 +179,10 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
-    path: '/logController',
+    path: '/logData',
     name: '日志数据',
     component: StatePage,
-    redirect: '/logController/dataList',
+    redirect: '/logData/dataList',
     meta: {
       title: '日志数据',
       icon: 'mdi-file-table-box-outline',
@@ -191,7 +191,7 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: 'dataList',
-        component: () => import('@/views/core/logController/dataList.vue'),
+        component: () => import('@/views/core/logData/dataList.vue'),
         name: '日志主题',
         meta: {
           title: '日志主题',
@@ -201,7 +201,7 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: 'dataStatistics',
-        component: () => import('@/views/core/logController/dataStatistics.vue'),
+        component: () => import('@/views/core/logData/dataStatistics.vue'),
         name: '日志数据统计',
         meta: {
           title: '日志数据统计',
@@ -212,10 +212,10 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
-    path: '/bizController',
+    path: '/bizData',
     name: '事务数据',
     component: StatePage,
-    redirect: '/bizController/dataList',
+    redirect: '/bizData/dataList',
     meta: {
       title: '事务数据',
       icon: 'mdi-file-excel-box-outline ',
@@ -224,7 +224,7 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: 'dataList',
-        component: () => import('@/views/core/bizController/dataList.vue'),
+        component: () => import('@/views/core/bizData/dataList.vue'),
         name: '事务主题',
         meta: {
           title: '事务主题',
@@ -234,7 +234,7 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: 'dataStatistics',
-        component: () => import('@/views/core/bizController/dataStatistics.vue'),
+        component: () => import('@/views/core/bizData/dataStatistics.vue'),
         name: '事务数据统计',
         meta: {
           title: '事务数据统计',
@@ -245,10 +245,10 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
-    path: '/cmdInfoController',
+    path: '/cmdInfoData',
     name: '可靠通道',
     component: StatePage,
-    redirect: '/cmdInfoController/cmdList',
+    redirect: '/cmdInfoData/cmdList',
     meta: {
       title: '可靠通道',
       icon: 'mdi-console',
@@ -257,7 +257,7 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: 'cmdList',
-        component: () => import('@/views/core/cmdInfoController/cmdList.vue'),
+        component: () => import('@/views/core/cmdInfoData/cmdList.vue'),
         name: '可靠通道主题',
         meta: {
           title: '可靠通道主题',
@@ -268,10 +268,10 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
-    path: '/videoController',
+    path: '/videoData',
     name: '视频数据',
     component: StatePage,
-    redirect: '/videoController/videoList',
+    redirect: '/videoData/videoList',
     meta: {
       title: '视频数据',
       icon: 'mdi-video-box',
@@ -280,7 +280,7 @@ const routes: Array<RouteConfig> = [
     children: [
       {
         path: 'videoList',
-        component: () => import('@/views/core/videoController/videoList.vue'),
+        component: () => import('@/views/core/videoData/videoList.vue'),
         name: '视频主题',
         meta: {
           title: '视频主题',
@@ -290,7 +290,7 @@ const routes: Array<RouteConfig> = [
       },
       {
         path: 'dataStatistics',
-        component: () => import('@/views/core/videoController/dataStatistics.vue'),
+        component: () => import('@/views/core/videoData/dataStatistics.vue'),
         name: '视频数据统计',
         meta: {
           title: '视频数据统计',

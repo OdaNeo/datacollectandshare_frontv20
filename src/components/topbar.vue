@@ -4,16 +4,30 @@
       <v-col cols="12" align-self="center">
         <span class="titleShadow" @click="$router.push('/statePage/welcome')">{{ PROJECT_TITLE }}</span>
 
-        <div class="userMenu" v-show="userMenuState">
-          <v-menu offset-y transition="slide-x-transition">
-            <template v-slot:activator="{ on, attrs }">
-              <v-container class="mt-1 userAvatar">
-                <v-avatar v-bind="attrs" v-on="on" color="white" size="30">
+        <v-row class="userMenu" justify="center">
+          <v-menu offset-y bottom min-width="180px" rounded>
+            <template v-slot:activator="{ on }">
+              <v-btn icon v-on="on">
+                <v-avatar color="white" size="30">
                   <v-icon>mdi-account</v-icon>
                 </v-avatar>
-              </v-container>
+              </v-btn>
             </template>
-            <v-list subheader>
+            <v-card>
+              <v-list-item-content class="justify-center py-1">
+                <div class="text-center">
+                  <div class="user">{{ userName }}</div>
+                  <div class="user">{{ userType }}</div>
+                  <div class="user">{{ userStatus }}</div>
+                  <div class="user">{{ usersysName }}</div>
+                  <div class="user">{{ userToken }}</div>
+
+                  <v-divider class="my-1"></v-divider>
+                  <v-btn color="error" depressed rounded text @click.stop="clicklLogout">注销</v-btn>
+                </div>
+              </v-list-item-content>
+            </v-card>
+            <!-- <v-list subheader>
               <v-list-item>
                 <v-list-item-title>
                   <v-dialog v-model="dialog" width="500">
@@ -49,9 +63,9 @@
               <v-list-item v-for="(item, index) in userMenu" :key="index" @click="item.clickMethod">
                 <v-list-item-title>{{ item.title }}</v-list-item-title>
               </v-list-item>
-            </v-list>
+            </v-list> -->
           </v-menu>
-        </div>
+        </v-row>
         <div class="userName">
           {{ username }}
         </div>
@@ -70,10 +84,11 @@ import { PROJECT_TITLE } from '@/config'
 @Component
 @http
 export default class TopBar extends Vue {
-  private dialog = false
-  private titleState = false
-  private userMenuState = false
+  // private dialog = false
+  // private titleState = false
+  // private userMenuState = false
   private userInfoObj = rootStoreModule.UserState
+
   private PROJECT_TITLE = PROJECT_TITLE
 
   get username(): string {
@@ -120,14 +135,14 @@ export default class TopBar extends Vue {
     })
   }
 
-  userMenu = [{ title: '注销', clickMethod: this.clicklLogout }]
+  // userMenu = [{ title: '注销', clickMethod: this.clicklLogout }]
 
-  created(): void {
-    // setTimeout(() => {
-    this.titleState = true
-    this.userMenuState = true
-    // }, 1000)
-  }
+  // created(): void {
+  // setTimeout(() => {
+  // this.titleState = true
+  // this.userMenuState = true
+  // }, 1000)
+  // }
 }
 </script>
 
@@ -135,20 +150,14 @@ export default class TopBar extends Vue {
 #topbar {
   width: 100%;
 }
-.userAvatar {
-  cursor: pointer;
-  width: 110px;
-  /* display: flex;
-  justify-content: center;
-  align-items: center; */
-  /* position: absolute;
-  right: 150px;
-  top: 14px; */
+.user {
+  line-height: 42px;
+  font-size: 15px;
 }
 .userMenu {
   position: absolute;
-  right: 27px;
-  top: -2px;
+  right: 100px;
+  top: 18px;
 }
 .userName {
   position: absolute;

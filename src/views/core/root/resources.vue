@@ -9,11 +9,11 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchResources"
-          v-model="queryResourcesName"
+          v-model.trim="queryResourcesName"
         >
         </v-text-field>
       </v-col>
-      <v-col cols="2">
+      <v-col cols="9">
         <v-btn height="39" color="primary" dark @click.stop="addItem">添加权限</v-btn>
       </v-col>
     </v-row>
@@ -159,7 +159,6 @@ export default class Resources extends Vue {
 
   private async addResources(formObj: ResourcesFormObj) {
     const { name, url, parentid, type } = formObj
-    console.log(formObj)
     const { success } = await this.h_request['httpPOST']<ResourcesFormObj>('POST_PERMISSION_ADD_PERMISSION', {
       name,
       url,

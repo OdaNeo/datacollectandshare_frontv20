@@ -21,8 +21,8 @@
           ></v-text-field>
         </v-form>
 
-        <v-switch class="mt-0 pt-2" dense v-model="remember" label="记住账号" color="white" hide-details></v-switch>
-        <v-btn depressed color="primary" width="150" class="mt-8" @click.stop="signIn">登录</v-btn>
+        <v-switch class="mt-0 pt-3" dense v-model="remember" label="记住账号" color="white" hide-details></v-switch>
+        <v-btn depressed color="primary" width="150" class="mt-10" @click.stop="signIn">登录</v-btn>
       </div>
       <!--  -->
       <!-- <div class="loginContent2">
@@ -143,7 +143,7 @@ export default class Login extends Vue {
 #login >>> .v-input--selection-controls .v-input__slot > .v-label,
 .v-input--selection-controls .v-radio > .v-label {
   color: #fff;
-  font-size: 14px;
+  font-size: 16px;
 }
 
 #login >>> .theme--light.v-text-field > .v-input__control > .v-input__slot:before {

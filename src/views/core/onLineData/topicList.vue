@@ -17,10 +17,8 @@
         >
         </v-text-field>
       </v-col>
-      <v-col cols="1" class="mr-6">
-        <v-btn color="primary" height="39" dark @click.stop="createTopic(false)">创建结构化主题</v-btn>
-      </v-col>
-      <v-col cols="1">
+      <v-col cols="9">
+        <v-btn color="primary" height="39" dark class="mr-6" @click="createTopic(false)">创建结构化主题</v-btn>
         <v-btn color="primary" height="39" dark @click="openUpload($event)">通过文件创建</v-btn>
       </v-col>
     </v-row>
@@ -157,7 +155,7 @@ import { VUE_APP_BASE_API } from '@/config'
   }
 ])
 @util
-export default class TopicList extends Vue {
+export default class OnlineDataTopicList extends Vue {
   @Provide('formProvide') private formObj = new Vue({
     data() {
       return {

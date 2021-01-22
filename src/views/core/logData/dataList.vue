@@ -1,9 +1,9 @@
 <template>
-  <div>offlineTopicControllerTopicList</div>
+  <div>logControllerDataList</div>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 
 @Component({})
-export default class offlineTopicControllerTopicList extends Vue {}
+export default class LogDataList extends Vue {}
 </script>

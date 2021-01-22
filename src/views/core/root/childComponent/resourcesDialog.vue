@@ -170,8 +170,7 @@ export default class ResourcesDialog extends Vue {
   ]
 
   @Watch('formProvide.formObj.type')
-  private typesChange(val: any) {
-    console.log(this.formProvide.formObj)
+  private typesChange(val: string, oldVal: string) {
     if (val === 'menu') {
       this.formTypeObj[3].valueName = 'parentid'
       this.formTypeObj[3].type = 'select'
@@ -182,8 +181,8 @@ export default class ResourcesDialog extends Vue {
       this.formTypeObj[4].type = ''
       this.formTypeObj[4].items = []
       this.formTypeObj[4].require = false
-
-      // this.formProvide.formObj.parentid = this.formProvide.formObj.parentid
+      // 解决 formProvide.formObj.type 切换的时候 parentid不渲染的问题
+      oldVal && (this.formProvide.formObj.parentid = this.formProvide.formObj.grandparentid)
     } else if (val === 'button') {
       this.formTypeObj[3].valueName = 'grandparentid'
       this.formTypeObj[3].type = 'select'
@@ -246,7 +245,7 @@ export default class ResourcesDialog extends Vue {
     this.dessertsList = this.getDessertsList(this.desserts)
     // 编辑页面填充
     if (this.formProvide.formObj.type) {
-      this.typesChange(this.formProvide.formObj.type)
+      this.typesChange(this.formProvide.formObj.type, '')
     }
     // if (this.formProvide.formObj.type === 'button') {
     //   // this.getParentId(this.formProvide.formObj.parentid, this.dessertsList)

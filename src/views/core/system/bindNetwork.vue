@@ -14,8 +14,8 @@
         >
         </v-text-field>
       </v-col>
-      <v-col cols="2">
-        <v-btn height="40" color="primary" dark @click.stop="bindNet">绑定网络</v-btn>
+      <v-col cols="9">
+        <v-btn height="39" color="primary" dark @click.stop="bindNet">绑定网络</v-btn>
       </v-col>
     </v-row>
     <h-table

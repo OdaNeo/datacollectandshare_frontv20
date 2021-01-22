@@ -9,12 +9,12 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchSystem"
-          v-model="querySystemName"
+          v-model.trim="querySystemName"
         >
         </v-text-field>
       </v-col>
       <v-col>
-        <v-btn height="40" color="primary" dark @click.stop="addConfigure">添加配置</v-btn>
+        <v-btn height="39" color="primary" dark @click.stop="addConfigure">添加配置</v-btn>
       </v-col>
     </v-row>
     <h-table

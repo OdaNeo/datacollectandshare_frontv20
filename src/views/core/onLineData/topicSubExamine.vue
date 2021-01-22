@@ -1,40 +1,29 @@
 <template>
-  <div id="topicAuditRecords">
+  <div id="topicSubExamine">
     <v-row>
       <v-col cols="3">
         <v-text-field
           solo
           dense
-          placeholder="请输入要查询的主题ID"
+          placeholder="请输入要查询的订阅用户名"
           clearable
           append-icon="mdi-magnify"
-          @click:append="searchTopicID"
-          v-model="queryTopicID"
+          @click:append="searchExamine"
+          v-model.trim="queryExamineUser"
         >
         </v-text-field>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="10" style="padding: 0 12px 12px">
-        <v-btn
-          class="ma-2"
-          outlined
-          :color="btnAction == index ? 'primary' : ''"
-          v-for="(btnName, index) in btnNames"
-          :key="index"
-          @click="btnClickMethod(index)"
-          >{{ btnName }}</v-btn
-        >
       </v-col>
     </v-row>
     <h-table :headers="headers" :desserts="desserts" :pageNum="pageNum" :paginationLength="paginationLength">
       <template v-slot:buttons="{ item }">
         <v-btn text color="primary" @click="dataStructure(item)">数据结构详情</v-btn>
       </template>
-      <template v-slot:examineType="{}">
-        <v-btn text :color="colors[btnAction]">{{ h_enum['examineType'][btnAction] }}</v-btn>
+      <template v-slot:operation="{ item }">
+        <v-btn text color="success" @click="examine(item, 1)">审核通过</v-btn>
+        <v-btn text color="warning" @click="examine(item, 2)">审核拒绝</v-btn>
       </template>
     </h-table>
+    <!-- TODO -->
     <h-dialog v-if="dialogFlag" v-model="dialogFlag">
       <data-structure-dialog slot="dialog-content" :rowObj="rowObj"></data-structure-dialog>
     </h-dialog>
@@ -63,13 +52,9 @@ import DataStructureDialog from './childComponent/dataStructureDialog.vue'
   {
     tsFileName: 'topic-list-enum',
     enumName: 'queneType'
-  },
-  {
-    tsFileName: 'topic-audit-enum',
-    enumName: 'examineType'
   }
 ])
-export default class TopicAuditRecords extends Vue {
+export default class TopicSubExamine extends Vue {
   @Provide('formProvide') private formObj = new Vue({
     data() {
       return {
@@ -80,22 +65,15 @@ export default class TopicAuditRecords extends Vue {
       }
     }
   })
+
   private desserts: Array<topicTable> = []
-  private btnNames: Array<string> = ['未审核', '已通过', '已拒绝']
-  private colors: Array<string> = ['warning', 'primary', 'error']
-  private btnAction = 0
   private rowObj: object = {}
   private pageNum = 1
   private pageSize = 20
-  private paginationLength = 0
   private dialogFlag = false
-  private queryTopicID = ''
+  private paginationLength = 0
+  private queryExamineUser = ''
   private headers = [
-    {
-      text: '主题ID',
-      align: 'center',
-      value: 'id'
-    },
     {
       text: '主题名称',
       align: 'center',
@@ -107,19 +85,16 @@ export default class TopicAuditRecords extends Vue {
       value: 'belongUserName'
     },
     {
+      text: '订阅用户',
+      align: 'center',
+      value: 'userName'
+    },
+    {
       text: '订阅时间',
       align: 'center',
       value: 'subscribe',
       format: (time: number): string => {
         return this.h_utils.timeutil.stamptoTime(time, '-')
-      }
-    },
-    {
-      text: '审核时间',
-      align: 'center',
-      value: 'auditTime',
-      format: (time: number): string => {
-        return time ? this.h_utils.timeutil.stamptoTime(time, '-') : ''
       }
     },
     {
@@ -136,16 +111,16 @@ export default class TopicAuditRecords extends Vue {
       slot: 'buttons'
     },
     {
-      text: '审核状态',
+      text: '操作',
       align: 'center',
-      slot: 'examineType'
+      slot: 'operation'
     }
   ]
 
   async searchMethod(bool: boolean, params: paramsType): Promise<void> {
     const { data }: returnDataType = bool
-      ? await this.h_request['httpGET']<object>('GET_SUBMODERATIONS_SELECTAUDITSTATUSBYTOPICID', params)
-      : await this.h_request['httpGET']<object>('GET_SUB_MODERATIONS_SELECT_AUDIT_STATUS', params)
+      ? await this.h_request['httpGET']<object>('GET_SUBMODERATIONS_SELECTBYUSERNAMESTATUS', params)
+      : await this.h_request['httpGET']<object>('GET_SUB_MODERATIONS_SELECT_STATUS', params)
     this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     this.desserts = data['list']
   }
@@ -156,39 +131,49 @@ export default class TopicAuditRecords extends Vue {
     this.formObj.title = '数据结构详情'
   }
 
-  private btnClickMethod(index: number) {
-    this.searchMethod(false, {
-      pageSize: this.pageSize,
-      pageNum: 1,
-      status: index
+  private async examine(item: any, status: number) {
+    const { success } = await this.h_request['httpPOST']('POST_SUBMODERATIONS_UPDATESUBMODERATION', {
+      status: status,
+      subUserId: item.subUserId,
+      topicId: item.id
     })
-    this.btnAction = index
-    this.pageNum = 1
-  }
 
-  private searchTopicID() {
-    if (!this.queryTopicID) {
+    if (success) {
+      this.h_utils['alertUtil'].open(
+        status === 1 ? '主题已审核通过' : '主题已审核拒绝',
+        true,
+        status === 1 ? 'success' : 'error'
+      )
+
       this.searchMethod(false, {
         pageSize: this.pageSize,
-        pageNum: 1,
-        status: this.btnAction
+        pageNum: 1
+      })
+      this.pageNum = 1
+      this.queryExamineUser = ''
+    }
+  }
+
+  private searchExamine() {
+    if (!this.queryExamineUser) {
+      this.searchMethod(false, {
+        pageSize: this.pageSize,
+        pageNum: 1
       })
     } else {
       this.searchMethod(true, {
-        topicId: this.queryTopicID,
+        userName: this.queryExamineUser,
         pageSize: this.pageSize,
-        pageNum: 1,
-        status: this.btnAction
+        pageNum: 1
       })
     }
     this.pageNum = 1
   }
 
   created(): void {
-    this.searchMethod(false, {
+    this.searchMethod(true, {
       pageSize: this.pageSize,
-      pageNum: 1,
-      status: this.btnAction
+      pageNum: 1
     })
     this.pageNum = 1
   }

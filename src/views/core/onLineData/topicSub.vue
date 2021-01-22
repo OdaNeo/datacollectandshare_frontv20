@@ -33,6 +33,7 @@
         <v-btn text v-if="item.status" color="warning" class="my-2" @click="cancelScribe(item)">取消订阅</v-btn>
       </template>
     </h-table>
+    <!-- TODO -->
     <h-dialog v-if="dialogFlag" v-model="dialogFlag">
       <data-structure-dialog slot="dialog-content" :rowObj="rowObj"></data-structure-dialog>
     </h-dialog>

@@ -122,3 +122,11 @@ export default class SetDateRange extends Vue {
   }
 }
 </script>
+<style scoped>
+.label-end {
+  width: 60px;
+  color: rgba(0, 0, 0, 0.87);
+  font-size: 15px;
+  line-height: 32px;
+}
+</style>

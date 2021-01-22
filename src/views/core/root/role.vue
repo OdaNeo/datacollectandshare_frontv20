@@ -9,11 +9,11 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchRoles"
-          v-model="queryRolesName"
+          v-model.trim="queryRolesName"
         >
         </v-text-field>
       </v-col>
-      <v-col cols="2">
+      <v-col cols="9">
         <v-btn height="39" color="primary" dark @click.stop="addItem">添加</v-btn>
       </v-col>
     </v-row>
