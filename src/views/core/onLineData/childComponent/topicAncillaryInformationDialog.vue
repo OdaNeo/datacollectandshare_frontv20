@@ -1,12 +1,7 @@
 <template>
-  <div id="topicAncilaryInformationDialog">
-    <h-table :headers="tableHeader" :desserts="otherObj" class="mb-5"></h-table>
-    <h-table
-      v-if="otherObj.topicInterFaceType === 3"
-      :headers="headers"
-      :desserts="headerValue"
-      class="mb-10"
-    ></h-table>
+  <div id="topicAncillaryInformationDialog">
+    <h-table :headers="tableHeader" :desserts="otherObj"></h-table>
+    <!-- <h-table v-if="otherObj.topicInterFaceType === 3" :headers="headers" :desserts="headerValue"></h-table> -->
   </div>
 </template>
 <script lang="ts">
@@ -18,7 +13,7 @@ import HTable from '@/components/h-table.vue'
     HTable
   }
 })
-export default class TopicAncilaryInformationDialog extends Vue {
+export default class TopicAncillaryInformationDialog extends Vue {
   @Prop() private otherObj!: any
 
   get tableHeader(): any {
@@ -104,8 +99,8 @@ export default class TopicAncilaryInformationDialog extends Vue {
     ]
   }
 
-  get headerValue(): any {
-    return JSON.parse(this.otherObj.header)
-  }
+  // get headerValue(): any {
+  //   return JSON.parse(this.otherObj.header)
+  // }
 }
 </script>

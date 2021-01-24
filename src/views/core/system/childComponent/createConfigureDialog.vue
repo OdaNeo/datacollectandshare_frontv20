@@ -134,7 +134,7 @@ export default class CreateConfigureDialog extends Vue {
       label: '',
       valueName: 'typeInput',
       type: '',
-      rules: Validator['system-validator'].typeInputRules,
+      otherRules: Validator['system-validator'].typeInputRules,
       require: false
     },
     {
@@ -148,14 +148,14 @@ export default class CreateConfigureDialog extends Vue {
       label: '',
       valueName: 'nameInput',
       type: '',
-      rules: Validator['system-validator'].nameInputRules,
+      otherRules: Validator['system-validator'].nameInputRules,
       require: false
     },
     {
       label: '配置属性',
       valueName: 'value',
       type: 'input',
-      rules: Validator['system-validator'].valueRules,
+      otherRules: Validator['system-validator'].valueRules,
       require: true
     }
   ]

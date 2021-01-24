@@ -33,10 +33,10 @@
         <v-btn text v-if="item.status" color="warning" class="my-2" @click="cancelScribe(item)">取消订阅</v-btn>
       </template>
     </h-table>
-    <!-- TODO -->
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <data-structure-dialog slot="dialog-content" :rowObj="rowObj"></data-structure-dialog>
-    </h-dialog>
+
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+      <data-structure-dialog :rowObj="rowObj"></data-structure-dialog>
+    </t-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -46,12 +46,12 @@ import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import Enum from '@/decorator/enumDecorator'
-import HDialog from '@/components/h-dialog.vue'
+import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 @Component({
   components: {
     HTable,
-    HDialog,
+    TDialog,
     DataStructureDialog
   }
 })

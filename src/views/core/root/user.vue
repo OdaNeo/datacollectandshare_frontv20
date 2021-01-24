@@ -41,9 +41,9 @@
     ></v-pagination> -->
     <!-- </div> -->
     <!-- </transition> -->
-    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <user-dialog />
-    </t-dialog>
+    </f-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -60,14 +60,14 @@ import {
 import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
 import UserDialog from './childComponent/userDialog.vue'
-import TDialog from '@/components/t-dialog.vue'
+import FDialog from '@/components/f-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import HTable from '@/components/h-table.vue'
 
 @Component({
   components: {
     UserDialog,
-    TDialog,
+    FDialog,
     HTable
   }
 })

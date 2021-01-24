@@ -1,9 +1,9 @@
 <template>
   <div id="h-table">
     <div class="simple-table">
-      <!-- <p class="table-title" v-if="title">
+      <p class="table-title" v-if="title">
         {{ title }}
-      </p> -->
+      </p>
       <v-simple-table fixed-header>
         <template v-slot:default>
           <thead>

@@ -23,10 +23,10 @@
         <v-btn text color="warning" @click="examine(item, 2)">审核拒绝</v-btn>
       </template>
     </h-table>
-    <!-- TODO -->
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <data-structure-dialog slot="dialog-content" :rowObj="rowObj"></data-structure-dialog>
-    </h-dialog>
+
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+      <data-structure-dialog :rowObj="rowObj"></data-structure-dialog>
+    </t-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -37,12 +37,12 @@ import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
-import HDialog from '@/components/h-dialog.vue'
+import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 @Component({
   components: {
     HTable,
-    HDialog,
+    TDialog,
     DataStructureDialog
   }
 })

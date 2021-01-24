@@ -37,9 +37,9 @@
         >
       </template>
     </h-table>
-    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <bind-net-dialog :networks="networks" :systems="systems" />
-    </t-dialog>
+    </f-dialog>
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="relieveNetWork" />
   </div>
 </template>
@@ -48,7 +48,7 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
 import { returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
-import TDialog from '@/components/t-dialog.vue'
+import FDialog from '@/components/f-dialog.vue'
 import BindNetDialog from './childComponent/bindNetDialog.vue'
 import { BindNetworkObj } from '@/type/bindNetwork'
 import HConfirm from '@/components/h-confirm.vue'
@@ -58,7 +58,7 @@ import { FormObj } from '@/type/dialog-form.type'
 @Component({
   components: {
     HTable,
-    TDialog,
+    FDialog,
     BindNetDialog,
     HConfirm
   }

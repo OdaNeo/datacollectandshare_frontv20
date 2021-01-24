@@ -1,15 +1,26 @@
 <template>
-  <v-row no-gutters @click="firstToTheEgg">
+  <v-row no-gutters>
     <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
+    <v-col cols="12" class="d-flex justify-space-around">
+      <label class="label mr-5"><span class="require-span">*</span>上传文件</label>
+      <v-file-input
+        class="mt-0 pt-0 mr-12"
+        label="支持.proto格式的单文件上传"
+        clearable
+        accept=".proto"
+        @change="$emit('upload-proto-file', $event)"
+        :rules="rules"
+      ></v-file-input>
+    </v-col>
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Vue, Watch, Inject } from 'vue-property-decorator'
-import { H_Vue } from '@/declaration/vue-prototype'
-import HInput from '@/components/h-input.vue'
-import { InputType } from '@/type/dialog-form.type'
-import Validator from '@/validator2/t-validator'
+import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
+import { H_Vue } from '@/declaration/vue-prototype'
+import { InputType } from '@/type/dialog-form.type'
+import HInput from '@/components/h-input.vue'
+import Validator from '@/validator2/t-validator'
 
 @Component({
   components: {
@@ -17,9 +28,11 @@ import http from '@/decorator/httpDecorator'
   }
 })
 @http
-export default class CreateVideoTopicDialog extends Vue {
+export default class CreateProtobuf extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private noRepeat: string[] = []
+
+  private rules = [...Validator['topic-validator'].fileProtoValidate]
 
   private formTypeObj: Array<InputType> = [
     {
@@ -30,33 +43,14 @@ export default class CreateVideoTopicDialog extends Vue {
       otherRules: []
     },
     {
-      label: 'rtsp/rtmp地址',
-      valueName: 'sourceUrl',
-      type: 'input',
-      require: true
-    },
-    {
-      label: '摄像头地址',
-      valueName: 'address',
-      type: 'input',
-      require: true
+      label: '内存过期时间',
+      valueName: 'redisTimer',
+      type: 'slider',
+      items: ['5', '30'],
+      require: false
     }
   ]
 
-  //
-  private count = 0
-  private timer = 0
-  private firstToTheEgg() {
-    clearTimeout(this.timer)
-    this.count++
-    this.timer = setTimeout(() => {
-      this.count = 0
-    }, 800)
-    if (this.count === 10) {
-      clearTimeout(this.timer)
-      this.$router.push('/bulkCreateTopic')
-    }
-  }
   // topicName validation
   @Watch('formProvide.formObj.topicName')
   private async nameNoRepeat(val: string) {

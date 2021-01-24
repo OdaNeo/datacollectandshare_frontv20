@@ -20,9 +20,10 @@ export type InputType = {
   label?: string
   type: string
   valueName: string
-  require: boolean
+  require: boolean // 非空校验
   disabled?: boolean
-  rules?: Array<boolean | string>
+  otherRules?: Array<boolean | string> // 除了非空之外的rules
+  itemLabels?: Array<{ [key: string]: string | number | boolean } | any>
   multiple?: boolean
   items?: Array<{ [key: string]: string | number | boolean } | string | userFormVarDo>
 }

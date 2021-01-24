@@ -34,9 +34,9 @@
     <!-- <h-dialog v-if="dialogFlag" v-model="dialogFlag">
       <resources-dialog slot="dialog-content" :desserts="desserts"></resources-dialog>
     </h-dialog> -->
-    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <resources-dialog :desserts="desserts"></resources-dialog>
-    </t-dialog>
+    </f-dialog>
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteItem" />
   </div>
 </template>
@@ -45,7 +45,7 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import { returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import HTable from '@/components/h-table.vue'
-import TDialog from '@/components/t-dialog.vue'
+import FDialog from '@/components/f-dialog.vue'
 import ResourcesDialog from './childComponent/resourcesDialog.vue'
 import { ResourcesFormObj } from '@/type/resources.type'
 import util from '@/decorator/utilsDecorator'
@@ -55,7 +55,7 @@ import { FormObj } from '@/type/dialog-form.type'
 @Component({
   components: {
     HTable,
-    TDialog,
+    FDialog,
     ResourcesDialog,
     HConfirm
   }

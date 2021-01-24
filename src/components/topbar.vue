@@ -5,7 +5,7 @@
         <span class="titleShadow" @click="$router.push('/statePage/welcome')">{{ PROJECT_TITLE }}</span>
 
         <v-row class="userMenu" justify="center">
-          <v-menu offset-y bottom min-width="180px" rounded>
+          <v-menu offset-y bottom max-width="190px" min-width="190px" rounded>
             <template v-slot:activator="{ on }">
               <v-btn icon v-on="on">
                 <v-avatar color="white" size="30">
@@ -15,7 +15,7 @@
             </template>
             <v-card>
               <v-list-item-content class="justify-center py-1">
-                <div class="text-center">
+                <div>
                   <div class="user">{{ userName }}</div>
                   <div class="user">{{ userType }}</div>
                   <div class="user">{{ userStatus }}</div>
@@ -23,7 +23,15 @@
                   <div class="user">{{ userToken }}</div>
 
                   <v-divider class="my-1"></v-divider>
-                  <v-btn color="error" depressed rounded text @click.stop="clicklLogout">注销</v-btn>
+                  <v-btn
+                    color="error"
+                    style="display: block; margin: auto"
+                    depressed
+                    rounded
+                    text
+                    @click.stop="clicklLogout"
+                    >注销</v-btn
+                  >
                 </div>
               </v-list-item-content>
             </v-card>
@@ -151,8 +159,10 @@ export default class TopBar extends Vue {
   width: 100%;
 }
 .user {
-  line-height: 42px;
+  line-height: 28px;
   font-size: 15px;
+  white-space: wrap;
+  padding: 10px 15px 5px 18px;
 }
 .userMenu {
   position: absolute;

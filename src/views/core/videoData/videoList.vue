@@ -49,10 +49,10 @@
         </h-table>
       </v-tab-item>
     </v-tabs-items>
-    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <create-video-topic-dialog v-if="dialogShow === 1" />
       <set-date-range v-else-if="dialogShow === 2" />
-    </t-dialog>
+    </f-dialog>
     <video-popup :videoCounts="videoCounts" :videoList="videoList" v-if="showVideoPopup" v-model="showVideoPopup" />
 
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteVideoTopic" />
@@ -73,7 +73,7 @@ import Enum from '@/decorator/enumDecorator'
 import { dataType } from '@/enum/topic-datatype-enum.ts'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
 
-import TDialog from '@/components/t-dialog.vue'
+import FDialog from '@/components/f-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 
 @Component({
@@ -83,7 +83,7 @@ import { FormObj } from '@/type/dialog-form.type'
     CreateVideoTopicDialog,
     VideoPopup,
     SetDateRange,
-    TDialog
+    FDialog
   }
 })
 @http

@@ -39,10 +39,10 @@
         <v-btn text :color="colors[btnAction]">{{ h_enum['examineType'][btnAction] }}</v-btn>
       </template>
     </h-table>
-    <!-- TODO -->
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <data-structure-dialog slot="dialog-content" :rowObj="rowObj"></data-structure-dialog>
-    </h-dialog>
+
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+      <data-structure-dialog :rowObj="rowObj"></data-structure-dialog>
+    </t-dialog>
   </div>
 </template>
 <script lang="ts">
@@ -53,12 +53,12 @@ import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
-import HDialog from '@/components/h-dialog.vue'
+import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 @Component({
   components: {
     HTable,
-    HDialog,
+    TDialog,
     DataStructureDialog
   }
 })
@@ -158,7 +158,7 @@ export default class TopicAuditRecords extends Vue {
   private dataStructure(item: any) {
     this.dialogFlag = true
     this.rowObj = item
-    this.formObj.title = '数据结构详情'
+    // this.formObj.title = '数据结构详情'
   }
 
   private btnClickMethod(index: number) {

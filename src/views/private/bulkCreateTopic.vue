@@ -1,17 +1,17 @@
 <template>
   <div>
     <v-btn class="ml-12 mt-12" color="primary" height="39" dark @click.stop="createTopicVideo">批量创建视频主题</v-btn>
-    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <v-row no-gutters>
         <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
       </v-row>
-    </t-dialog>
+    </f-dialog>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
-import TDialog from '@/components/t-dialog.vue'
+import FDialog from '@/components/f-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
 import { dataType } from '@/enum/topic-datatype-enum.ts'
@@ -21,7 +21,7 @@ import Validator from '@/validator2/t-validator'
 
 @Component({
   components: {
-    TDialog,
+    FDialog,
     HInput
   }
 })
@@ -41,7 +41,7 @@ export default class bulkCreateTopic extends Vue {
       valueName: 'topicNameItem',
       type: 'input',
       require: true,
-      rules: Validator['topic-validator'].topicNameFormatter
+      otherRules: Validator['topic-validator'].topicNameFormatter
     },
     {
       label: 'rtsp/rtmp地址',
@@ -54,7 +54,7 @@ export default class bulkCreateTopic extends Vue {
       valueName: 'number',
       type: 'input',
       require: true,
-      rules: [(v: any) => !!(typeof Number(v) === 'number' && !isNaN(v)) || '请输入数字']
+      otherRules: [(v: any) => !!(typeof Number(v) === 'number' && !isNaN(v)) || '请输入数字']
     }
   ]
 

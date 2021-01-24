@@ -33,10 +33,10 @@
         </v-btn>
       </template>
     </h-table>
-    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <role-dialog v-if="dialogShow"></role-dialog>
       <auth-dialog v-else :roles="roles"></auth-dialog>
-    </t-dialog>
+    </f-dialog>
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteItem" />
   </div>
 </template>
@@ -46,7 +46,7 @@ import HTable from '@/components/h-table.vue'
 import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
 import { httpAllParams } from '@/type/http-request.type'
-import TDialog from '@/components/t-dialog.vue'
+import FDialog from '@/components/f-dialog.vue'
 import RoleDialog from './childComponent/roleDialog.vue'
 import { RoleFormObj } from '@/type/role.type'
 import AuthDialog from './childComponent/authDialog.vue'
@@ -56,7 +56,7 @@ import { FormObj } from '@/type/dialog-form.type'
 @Component({
   components: {
     HTable,
-    TDialog,
+    FDialog,
     RoleDialog,
     AuthDialog,
     HConfirm

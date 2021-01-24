@@ -1,10 +1,12 @@
 <template>
   <div id="dataStructureDialog">
-    <h-table v-if="rowObj.topicInterFaceType !== 4" :headers="headers" :desserts="desserts" class="mb-5"></h-table>
+    <h-table v-if="rowObj.topicInterFaceType !== 4" :headers="headers" :desserts="desserts"></h-table>
     <!--如果接口类型是4 就展示一个json数据-->
-    <p v-else>
-      {{ rowObj.dataStructSchema }}
-    </p>
+    <v-card-text v-else>
+      <v-container>
+        {{ rowObj.dataStructSchema }}
+      </v-container>
+    </v-card-text>
   </div>
 </template>
 <script lang="ts">

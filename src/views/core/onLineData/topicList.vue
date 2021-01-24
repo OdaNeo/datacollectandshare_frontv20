@@ -18,8 +18,9 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" height="39" dark class="mr-6" @click="createTopic(false)">创建结构化主题</v-btn>
-        <v-btn color="primary" height="39" dark @click="openUpload($event)">通过文件创建</v-btn>
+        <v-btn color="primary" height="39" class="mr-6" dark @click="createRest()">创建REST主题</v-btn>
+        <v-btn color="primary" height="39" class="mr-6" dark @click="createProtobuf">创建PROTOBUF主题</v-btn>
+        <v-btn color="primary" height="39" class="mr-6" dark @click="createJson">创建JSON主题</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -35,26 +36,14 @@
           :paginationLength="paginationLength"
         >
           <template v-slot:buttons="{ item }">
-            <v-btn
-              v-if="item.topicInterFaceType !== 6 && item.topicInterFaceType !== 5"
-              text
-              color="primary"
-              @click="dataStructureDetails(item)"
+            <v-btn v-if="item.topicInterFaceType !== 6" text color="primary" @click="dataStructureDetails(item)"
+              >数据结构详情</v-btn
             >
-              数据结构详情
-            </v-btn>
           </template>
           <template v-slot:buttons2="{ item, index }">
-            <v-btn
-              v-if="
-                tab && (item.topicInterFaceType === 1 || item.topicInterFaceType === 2 || item.topicInterFaceType === 3)
-              "
-              text
-              color="primary"
-              @click.stop="addFileds(item)"
+            <v-btn v-if="tab && item.topicInterFaceType === 1" text color="primary" @click.stop="addItems(item)"
+              >增加字段</v-btn
             >
-              增加字段
-            </v-btn>
             <v-btn
               v-if="tab"
               text
@@ -66,52 +55,28 @@
             >
               删除
             </v-btn>
-            <v-btn v-if="item.topicInterFaceType === 6" text color="primary" @click.stop="downloadFile(item)">
-              下载
-            </v-btn>
-            <v-btn v-if="item.topicInterFaceType !== 5" text color="primary" @click="getTopicInformation(item, index)">
-              查看附加信息
-            </v-btn>
+            <v-btn v-if="item.topicInterFaceType === 6" text color="primary" @click.stop="downloadFile(item)"
+              >下载</v-btn
+            >
+            <v-btn text color="primary" @click="getTopicInformation(item, index)">查看附加信息</v-btn>
           </template>
         </h-table>
       </v-tab-item>
     </v-tabs-items>
 
-    <h-dialog v-if="dialogFlag" v-model="dialogFlag" ref="HDialog">
-      <data-structure-dialog slot="dialog-content" :rowObj="rowObj" v-if="dialogShow === 2"></data-structure-dialog>
-      <create-topic-dialog
-        slot="dialog-content"
-        v-else-if="dialogShow === 1"
-        ref="createTopicDialog"
-        @create-protobuf-file="createProtobufFile"
-      ></create-topic-dialog>
-      <topic-ancilary-information-dialog
-        slot="dialog-content"
-        :otherObj="otherObj"
-        v-else-if="dialogShow === 3"
-      ></topic-ancilary-information-dialog>
-    </h-dialog>
-    <!-- 上传文件对话框 -->
-    <v-dialog v-model="upLoadFlag" max-width="750px" persistent content-class="upLoadDialog">
-      <v-card>
-        <v-card-title class="dialog-title">上传文件</v-card-title>
-        <v-card-text>支持.xls, .xlsx格式的单文件上传。文件名将自动填充主题名称。</v-card-text>
-        <v-file-input
-          accept=".xls,.xlsx"
-          label="File input"
-          @change="upLoadFile"
-          @click:clear="canUpLoad = false"
-          style="width: 730px"
-          :key="forceRenderFlag"
-        />
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn class="mr-4" solo :disabled="!canUpLoad" @click="upLoadFileConfirm">确定上传</v-btn>
-          <v-btn class="mr-4" solo @click="upLoadFileCancel">取消上传</v-btn>
-          <v-spacer></v-spacer>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <!-- 表单展示 -->
+    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
+      <create-rest v-if="fDialogShow === 1" @upload-file="upLoadFile"></create-rest>
+      <create-protobuf v-else-if="fDialogShow === 2" @upload-proto-file="uploadProtoFile" />
+      <create-json v-else-if="fDialogShow === 3"></create-json>
+    </f-dialog>
+
+    <!-- 表格显示 -->
+    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
+      <data-structure-dialog :rowObj="rowObj" v-if="tDialogShow === 1" />
+      <topic-ancillary-information-dialog :otherObj="otherObj" v-else-if="tDialogShow === 2" />
+    </t-dialog>
+
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteTopic" />
   </div>
 </template>
@@ -123,28 +88,37 @@ import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
 import Enum from '@/decorator/enumDecorator'
-import HDialog from '@/components/h-dialog.vue'
-import DataStructureDialog from './childComponent/dataStructureDialog.vue'
-import CreateTopicDialog from './childComponent/createTopicDialog.vue'
+import TDialog from '@/components/t-dialog.vue'
+import FDialog from '@/components/f-dialog.vue'
 import { TopicAdd } from '@/type/topic-add.type'
-import TopicAncilaryInformationDialog from './childComponent/topicAncilaryInformationDialog.vue'
 import util from '@/decorator/utilsDecorator'
-import alertUtil from '@/utils/alertUtil'
 import { dataType } from '@/enum/topic-datatype-enum.ts'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
+
 import axios from 'axios'
 import { rootStoreModule } from '@/store/modules/root'
 import XLSX from 'xlsx'
 import { VUE_APP_BASE_API } from '@/config'
 
+import { FormObj } from '@/type/dialog-form.type'
+import CreateRest from './childComponent/createRest.vue'
+import CreateProtobuf from './childComponent/createProtobuf.vue'
+import createJson from './childComponent/createJson.vue'
+
+import DataStructureDialog from './childComponent/dataStructureDialog.vue'
+import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInformationDialog.vue'
+
 @Component({
   components: {
     HTable,
-    HDialog,
+    TDialog,
+    FDialog,
     HConfirm,
+    CreateRest,
+    CreateProtobuf,
+    createJson,
     DataStructureDialog,
-    CreateTopicDialog,
-    TopicAncilaryInformationDialog
+    TopicAncillaryInformationDialog
   }
 })
 @http
@@ -156,65 +130,25 @@ import { VUE_APP_BASE_API } from '@/config'
 ])
 @util
 export default class OnlineDataTopicList extends Vue {
-  @Provide('formProvide') private formObj = new Vue({
-    data() {
-      return {
-        title: '',
-        btnName: [] as string[],
-        methodName: '',
-        formObj: {
-          id: '', // 主题ID
-          canNotEdit: false, // 添加数据
-          interfaceType: 1,
-          topicName: '', // 主题名称
-          messageType: 0, // 消息类型
-          dataBaseIp: '', // 数据库地址
-          databaseType: '', // 数据库类型
-          dataStructSchema: '', //
-          writeElasticsearch: 1, // 是否展示
-          redisTimer: '', // 内存过期时间
-          port: '', // ?拉取ftp 端口号
-          host: '', // ?拉取ftp
-          baseUrl: '', // ?拉取ftp 地址
-          userName: '', // ?拉取ftp 用户名
-          password: '', // ?拉取ftp 密码
-          header: [{ key: '', value: '' }],
-          url: '',
-          topicList: [
-            {
-              ['' as string]: '' as any,
-              ['' as string]: '' as any,
-              ['' as string]: '' as any, // 描述
-              disabled: false
-            }
-          ],
-          AuthorizationObj: {
-            key: '',
-            value: ''
-          },
-          type: '', // 请求类型
-          body: '' // body 数据结构
-        }
-      }
-    }
-  })
+  @Provide('formProvide') private formProvide: FormObj = {
+    title: '' as string,
+    btnName: [] as Array<string>,
+    methodName: '' as string,
+    formObj: {}
+  }
 
   private tab = null
   private items = ['所有主题', '我的主题']
-  private dialogFlag = false // 弹窗展示
-  private dialogShow = 0 // 展示哪个弹窗 1.是主题添加和修改弹窗 2.是详细信息弹窗 3.是附加信息弹窗
-  private rowObj: object = {} // 数据结构弹窗数据
-  private otherObj: any = {} // 数据结构弹窗数据 补充
-  private onlyShowOther = false // 只显示补充信息
+  private fDialogFlag = false // 弹窗展示
+  private tDialogFlag = false // 表格展示
 
-  private upLoadFlag = false
-  private canUpLoad = false
-  private SheetNames: string[] = ['']
-  private Sheets: any
-  private forceRenderFlag: number = Math.random()
-  private fileName = ''
+  private fDialogShow = 0 // 展示哪个弹窗 1.rest 2.Protobuf 3.JSON
+  private tDialogShow = 0 // 展示哪个弹窗 1.数据结构 2.其他信息
+
+  private rowObj: object = {}
+  private otherObj: object = {}
+
   private sheetObj: any
-  private sheetCurIndex = 1
 
   private HConfirmShow = false
   private HConfirmItem = {
@@ -222,8 +156,8 @@ export default class OnlineDataTopicList extends Vue {
     topicName: '',
     topicInterFaceType: 0
   }
-  private file: File | null = null
-  private forms = new FormData()
+  private protoFile: File | null = null
+  private protoForms = new FormData()
 
   private desserts: Array<topicTable> = [] // 数据列表
   private queryTopicID = '' // 查询主题ID input框内容
@@ -261,20 +195,6 @@ export default class OnlineDataTopicList extends Vue {
       value: 'topicInterFaceType',
       format: (val: number) => {
         return topicInterFaceType[val]
-        // switch (val) {
-        //   case 1:
-        //     return '通用Rest接口'
-        //   case 2:
-        //     return '数据库采集'
-        //   case 3:
-        //     return '服务主动拉取'
-        //   case 4:
-        //     return '多级嵌套免校验'
-        //   case 5:
-        //     return '拉取FTP'
-        //   case 6:
-        //     return 'PROTOBUF'
-        // }
       }
     },
     {
@@ -296,209 +216,194 @@ export default class OnlineDataTopicList extends Vue {
       slot: 'buttons2'
     }
   ]
-  // 添加主题调用方法
-  //  创建主题
-  private createTopic(item: any) {
-    this.dialogFlag = true
-    this.dialogShow = 1
-    this.formObj.btnName = ['立即提交']
-    this.formObj.title = '创建主题'
-    this.formObj.methodName = 'addTopic' // 立即提交
-
-    // if 增加字段
+  // REST
+  private createRest(item?: any) {
+    this.fDialogFlag = true
+    this.fDialogShow = 1
+    this.formProvide.btnName = ['立即提交']
+    this.formProvide.title = '通过REST接口创建主题'
+    this.formProvide.methodName = 'addRest' // 立即提交
+    // 修改
     if (item) {
-      this.formObj.title = '添加字段'
-      this.formObj.formObj.canNotEdit = true
-      this.formObj.formObj.interfaceType = item.topicInterFaceType
-      this.formObj.formObj.topicName = item.topicName
-      this.formObj.formObj.messageType = item.queneType
-      this.formObj.formObj.id = item.id
-      this.formObj.formObj.redisTimer = item.redisTimer
-      this.formObj.formObj.writeElasticsearch = item.writeElasticsearch
-      this.formObj.formObj.dataStructSchema = item.dataStructSchema
-      this.formObj.formObj.type = item.type
-      this.formObj.formObj.body = item.body
-      this.formObj.formObj.url = item.url
-      this.formObj.formObj.dataBaseIp = item.dataBaseIp
-      this.formObj.formObj.databaseType = item.dataBaseType
+      const obj1: any = JSON.parse(item.dsAnnotation)
+      const obj2: any = JSON.parse(item.dataStruct)[0]
 
-      this.formObj.formObj.port = item.port
-      this.formObj.formObj.host = item.host
-      this.formObj.formObj.baseUrl = item.baseUrl
-      this.formObj.formObj.userName = item.userName
-      this.formObj.formObj.password = item.password
-
-      this.formObj.formObj.AuthorizationObj = {
-        key: '***',
-        value: '***'
-      }
-      this.formObj.formObj.header = JSON.parse(item.header)
-      if (this.otherObj[0]) {
-        this.formObj.formObj.dataBaseIp = this.otherObj[0].dataBaseIp || ''
-        this.formObj.formObj.databaseType = this.otherObj[0].dataBaseType || ''
-        this.formObj.formObj.header = JSON.parse(this.otherObj[0].header) || ''
-        this.formObj.formObj.url = this.otherObj[0].url || ''
-      }
-
-      const obj1: any = JSON.parse(item.dsAnnotation) // 描述
-      const obj3: any = JSON.parse(item.dataStruct)[0]
-      this.formObj.formObj.topicList = []
+      let _topicList = []
       for (const k in obj1) {
-        this.formObj.formObj.topicList.push({
+        _topicList.push({
           key: k,
-          type: typeof obj3[k] === 'number' && obj3[k] > 1 ? 'TimeStamp' : obj3[k],
           description: obj1[k],
+          type: typeof obj2[k] === 'number' && obj2[k] > 1 ? 'TimeStamp' : obj2[k],
           disabled: true
         })
       }
+      this.formProvide.formObj = {
+        canNotEdit: true,
+        id: item.id,
+        queneType: item.queneType,
+        redisTimer: item.redisTimer,
+        topicName: item.topicName,
+        writeElasticsearch: item.writeElasticsearch === 1 ? '是' : '否',
+        topicList: _topicList
+      }
+    } else {
+      this.formProvide.formObj = {
+        topicList: [
+          {
+            key: '',
+            description: '',
+            type: '',
+            disabled: false
+          }
+        ],
+        writeElasticsearch: '是'
+      }
     }
   }
-  //  提交创建
-  private async addTopic(formObj: TopicAdd) {
+  // rest
+  private async addRest(formObj: TopicAdd) {
+    const canNotEdit = formObj.canNotEdit
+
     const dataStruct: any = {}
     const dataStructNumber: any = {}
 
     formObj.topicList.forEach(val => {
       dataStruct[val.key] = val.description
-      dataStructNumber[val.key] = val.type === '1' ? Number(val.type) : val.type === 'TimeStamp' ? Date.now() : val.type
+      dataStructNumber[val.key] = val.type === 'TimeStamp' ? Date.now() : val.type
     })
     const _numberS = JSON.stringify(dataStruct)
     const _keyS = '[' + JSON.stringify(dataStructNumber) + ']'
     const params: any = {
       dataStruct: _keyS,
-      structMapping: '',
       dsAnnotation: _numberS,
       dataType: dataType['结构化']
     }
+    params.writeElasticsearch = formObj.writeElasticsearch === '是' ? 1 : 0
+    params.topicName = formObj.topicName
+    params.redisTimer = formObj.redisTimer
+    params.queneType = formObj.queneType
+    params.topicInterFaceType = 1
 
-    if (!formObj.canNotEdit) {
-      switch (formObj.interfaceType) {
-        case topicInterFaceType['通用Rest接口']:
-          params.topicInterFaceType = formObj.interfaceType
-          params.topicName = formObj.topicName
-          params.queneType = formObj.messageType
-          params.redisTimer = formObj.redisTimer
-          params.writeElasticsearch = formObj.writeElasticsearch
-          break
-        case topicInterFaceType['数据库采集']:
-          params.topicInterFaceType = formObj.interfaceType
-          params.topicName = formObj.topicName
-          params.dataBaseType = formObj.databaseType
-          params.dataBaseIp = formObj.dataBaseIp
-          break
-        case topicInterFaceType['服务主动拉取']:
-          // 只在添加的时候 转base64
-          if (formObj.AuthorizationObj.key !== '' && formObj.AuthorizationObj.value !== '') {
-            formObj.header.unshift(this.authorizationBase64(formObj.AuthorizationObj))
-          }
-          params.topicInterFaceType = formObj.interfaceType
-          params.topicName = formObj.topicName
-          params.url = formObj.url
-          params.header = JSON.stringify(formObj.header)
-          params.type = formObj.type
-          params.body = formObj.body.replace(/\s+/g, '')
-          break
-        case topicInterFaceType['多级嵌套免校验']:
-          params.topicInterFaceType = formObj.interfaceType
-          params.topicName = formObj.topicName
-          params.queneType = formObj.messageType
-          params.redisTimer = formObj.redisTimer
-          params.writeElasticsearch = formObj.writeElasticsearch
-          params.dataStructSchema = formObj.dataStructSchema.replace(/\s+/g, '')
-          delete params.dataStruct
-          delete params.structMapping
-          delete params.dsAnnotation
-          break
-        case topicInterFaceType['拉取FTP']:
-          params.topicInterFaceType = formObj.interfaceType
-          params.topicName = formObj.topicName
-          params.port = formObj.port
-          params.host = formObj.host
-          params.baseUrl = formObj.baseUrl
-          params.userName = formObj.userName
-          params.password = formObj.password
-          delete params.dataStruct
-          delete params.structMapping
-          delete params.dsAnnotation
-          break
-        case topicInterFaceType['PROTOBUF']:
-          if (!this.file) {
-            break
-          }
-          this.forms.append('protoFile', this.file)
-          this.forms.append('redisTimer', formObj.redisTimer.toString())
-          this.forms.append('topicName', formObj.topicName.toString())
-          break
-      }
-    } else {
-      params.id = formObj.id
-    }
-    // protobuf情况下需要formData文件上传，与现有axios拦截逻辑不同
-    if (formObj.interfaceType !== topicInterFaceType['PROTOBUF']) {
-      const { success } = await this.h_request['httpPOST'](
-        !formObj.canNotEdit ? 'POST_TOPICS_ADD' : 'POST_TOPICS_UPDATE',
-        params
+    canNotEdit && (params.id = formObj.id)
+
+    const { success } = await this.h_request['httpPOST'](!canNotEdit ? 'POST_TOPICS_ADD' : 'POST_TOPICS_UPDATE', params)
+    if (success) {
+      this.h_utils['alertUtil'].open(!canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
+      this.searchMethod(
+        false,
+        {
+          pageSize: this.pageSize,
+          pageNum: 1
+        },
+        !!this.tab
       )
-      if (success) {
-        this.h_utils['alertUtil'].open(!formObj.canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
-        this.searchMethod(
-          false,
-          {
-            pageSize: this.pageSize,
-            pageNum: 1
-          },
-          !!this.tab
-        )
-        this.pageNum = 1
-        return Promise.resolve(success)
+      this.pageNum = 1
+      return Promise.resolve(success)
+    }
+  }
+
+  // createProtobuf
+  private createProtobuf() {
+    this.fDialogFlag = true
+    this.fDialogShow = 2
+    this.formProvide.btnName = ['立即提交']
+    this.formProvide.title = '上传PROTO文件'
+    this.formProvide.methodName = 'addProtobuf' // 立即提交
+    this.formProvide.formObj = {}
+  }
+  // addProtobuf
+  private addProtobuf(formObj: TopicAdd) {
+    if (!this.protoFile) {
+      return
+    }
+    this.protoForms = new FormData()
+
+    this.protoForms.append('protoFile', this.protoFile)
+    this.protoForms.append('redisTimer', formObj.redisTimer.toString())
+    this.protoForms.append('topicName', formObj.topicName.toString())
+    // 如果此处vetur报错，请将工程文件放在vscode根目录下 https://github.com/vuejs/vetur/issues/2602
+    axios({
+      method: 'post',
+      url: VUE_APP_BASE_API + '/topics/addProtobufTopic',
+      data: this.protoForms,
+      timeout: 500000,
+      headers: {
+        'Content-Type': 'multipart/form-data',
+        Authorization: rootStoreModule.UserState.token
       }
-    } else {
-      // protobuf文件上传
-      // 如果此处vetur报错，请将工程文件放在vscode根目录下 https://github.com/vuejs/vetur/issues/2602
-      axios({
-        method: 'post',
-        url: VUE_APP_BASE_API + '/topics/addProtobufTopic',
-        data: this.forms,
-        timeout: 500000,
-        headers: {
-          'Content-Type': 'multipart/form-data',
-          Authorization: rootStoreModule.UserState.token
+    })
+      .then(({ data }) => {
+        if (data.code === 200) {
+          this.h_utils['alertUtil'].open('主题创建成功', true, 'success')
+          this.searchMethod(
+            false,
+            {
+              pageSize: this.pageSize,
+              pageNum: 1
+            },
+            !!this.tab
+          )
+          this.pageNum = 1
+          return Promise.resolve(true)
+        } else {
+          this.h_utils['alertUtil'].open('错误代码：' + data.code + '，错误信息：' + data.message, true, 'error')
+          return Promise.reject(false)
         }
       })
-        .then(({ data }) => {
-          if (data.success) {
-            this.h_utils['alertUtil'].open('主题创建成功', true, 'success')
-            this.searchMethod(
-              false,
-              {
-                pageSize: this.pageSize,
-                pageNum: 1
-              },
-              !!this.tab
-            )
-            this.pageNum = 1
-          } else {
-            alertUtil.open('错误代码：' + data.code + '，错误信息：' + data.message, true, 'error')
-          }
-          return Promise.resolve(data.success)
-        })
-        .catch(err => {
-          console.log(err)
-        })
+      .catch(err => {
+        console.log(err)
+        return Promise.reject(false)
+      })
+  }
+
+  // createJson
+  private createJson() {
+    this.fDialogFlag = true
+    this.fDialogShow = 3
+    this.formProvide.btnName = ['立即提交']
+    this.formProvide.title = '创建JSON'
+    this.formProvide.methodName = 'addJson' // 立即提交
+    this.formProvide.formObj = {
+      writeElasticsearch: '是'
+    }
+  }
+  // addJson
+  private async addJson(formObj: TopicAdd) {
+    const params: any = {}
+
+    params.dataType = dataType['结构化']
+    params.topicInterFaceType = 4
+    params.topicName = formObj.topicName
+    params.queneType = formObj.queneType
+    params.redisTimer = formObj.redisTimer
+    params.writeElasticsearch = formObj.writeElasticsearch
+    params.dataStructSchema = formObj.dataStructSchema.replace(/\s+/g, '')
+
+    const { success } = await this.h_request['httpPOST']('POST_TOPICS_ADD', params)
+    if (success) {
+      this.h_utils['alertUtil'].open('主题创建成功', true, 'success')
+      this.searchMethod(
+        false,
+        {
+          pageSize: this.pageSize,
+          pageNum: 1
+        },
+        !!this.tab
+      )
+      this.pageNum = 1
+      return Promise.resolve(success)
     }
   }
 
-  private createProtobufFile(file: File) {
-    this.file = file
-  }
-
-  private authorizationBase64(obj: any) {
-    return {
-      key: 'Authorization',
-      value: 'Basic ' + window.btoa(obj.key + ':' + obj.value + '')
+  // 添加
+  private addItems(item: any) {
+    // rest
+    if (item.topicInterFaceType === 1) {
+      this.createRest(item)
     }
   }
-  // 查询通用调用方法 非结构化数据
+
+  // 查询通用调用方法 结构化数据
   private async searchMethod(bool: boolean, params: paramsType, tab?: boolean) {
     params.dataType = dataType['结构化']
     if (tab) {
@@ -559,30 +464,21 @@ export default class OnlineDataTopicList extends Vue {
   }
 
   // 数据结构展示方法
-  private dataStructure(item: any, str: string) {
-    this.dialogFlag = true
-    this.dialogShow = 2
+  private dataStructure(item: any) {
+    this.tDialogFlag = true
+    this.tDialogShow = 1
     this.rowObj = item
-    this.formObj.title = str
-    this.formObj.btnName = []
-    this.formObj.methodName = ' '
   }
 
-  private ancillaryInformation(info: any, str: string) {
-    this.dialogFlag = true
-    this.dialogShow = 3
+  // 附加信息
+  private ancillaryInformation(info: any) {
+    this.tDialogFlag = true
+    this.tDialogShow = 2
     this.otherObj = info
-    this.formObj.title = str
-    this.formObj.btnName = []
-    this.formObj.methodName = ' '
   }
 
   private dataStructureDetails(item: any) {
-    this.dataStructure(item, '数据结构详情')
-  }
-
-  private addFileds(item: any) {
-    this.createTopic(item)
+    this.dataStructure(item)
   }
 
   private async getTopicInformation(item: any, index: number) {
@@ -602,9 +498,10 @@ export default class OnlineDataTopicList extends Vue {
       // info = {...data[0],topicInterFaceType:item.topicInterFaceType,redisTimer:item.redisTimer}
       this.desserts[index].flag = true
     }
-    this.ancillaryInformation(this.desserts[index], '附加信息')
+    this.ancillaryInformation(this.desserts[index])
   }
 
+  // 删除
   private async deleteTopic() {
     if (this.HConfirmItem.id === undefined) {
       return
@@ -628,6 +525,8 @@ export default class OnlineDataTopicList extends Vue {
       this.pageNum = 1
     }
   }
+
+  // 分页方法
   private PaginationNow(page: number) {
     this.pageNum = page
     this.searchMethod(
@@ -639,13 +538,10 @@ export default class OnlineDataTopicList extends Vue {
       !!this.tab
     )
   }
-  public openUpload(): void {
-    this.upLoadFlag = true
-  }
 
   // 上传文件
-  private upLoadFile(e: File[]) {
-    const file = e as any
+  private upLoadFile(e: File) {
+    const file = e as File
     if (!file) {
       return
     }
@@ -655,18 +551,41 @@ export default class OnlineDataTopicList extends Vue {
       file.type === 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     ) {
       const reader = new FileReader()
+      reader.readAsArrayBuffer(file)
       reader.onload = (e: any) => {
         const data = new Uint8Array(e.target.result)
-        const { SheetNames, Sheets } = XLSX.read(data, { type: 'array' })
+        const { Sheets } = XLSX.read(data, { type: 'array' })
 
-        this.canUpLoad = true
-        this.SheetNames = SheetNames
-        this.Sheets = Sheets
-        this.fileName = file.name.split('.')[0]
+        Sheets[`sheet1`] && (this.sheetObj = Sheets[`sheet1`])
+
+        const _l: number = this.sheetObj['!ref'].split('C')[1]
+        const _topicList: Array<any> = []
+
+        for (let i = 1; i < _l; i++) {
+          _topicList.push({
+            [this.handleObjKey('A') as string]: this.handleObjKeyType(
+              this.sheetObj[`A${i + 1}`] ? this.sheetObj[`A${i + 1}`].v : ''
+            ),
+            [this.handleObjKey('B') as string]: this.handleObjKeyType(
+              this.sheetObj[`B${i + 1}`] ? this.sheetObj[`B${i + 1}`].v : ''
+            ),
+            [this.handleObjKey('C') as string]: this.handleObjKeyType(
+              this.sheetObj[`C${i + 1}`] ? this.sheetObj[`C${i + 1}`].v : ''
+            ),
+            disabled: false
+          })
+        }
+        // 填充列表
+        this.formProvide.formObj = {
+          topicName: file.name.split('.')[0],
+          queneType: 1,
+          topicList: _topicList,
+          writeElasticsearch: '是'
+        }
       }
-      reader.readAsArrayBuffer(file)
     }
   }
+  //
   private handleObjKey(k: string) {
     switch (this.sheetObj[`${k}1`].v) {
       case '字段名':
@@ -691,56 +610,16 @@ export default class OnlineDataTopicList extends Vue {
         return k
     }
   }
-  //  确定上传
-  private async upLoadFileConfirm() {
-    this.createTopic(false)
 
-    this.upLoadFlag = false
-    this.canUpLoad = false
-    this.forceRenderFlag = Math.random()
-
-    this.formObj.formObj.messageType = 1
-    this.Sheets[`sheet${this.sheetCurIndex}`] && (this.sheetObj = this.Sheets[`sheet${this.sheetCurIndex}`])
-    const _l: number = this.sheetObj['!ref'].split('C')[1]
-
-    const _topicList: Array<any> = []
-    for (let i = 1; i < _l; i++) {
-      _topicList.push({
-        [this.handleObjKey('A') as string]: this.handleObjKeyType(
-          this.sheetObj[`A${i + 1}`] ? this.sheetObj[`A${i + 1}`].v : ''
-        ),
-        [this.handleObjKey('B') as string]: this.handleObjKeyType(
-          this.sheetObj[`B${i + 1}`] ? this.sheetObj[`B${i + 1}`].v : ''
-        ),
-        [this.handleObjKey('C') as string]: this.handleObjKeyType(
-          this.sheetObj[`C${i + 1}`] ? this.sheetObj[`C${i + 1}`].v : ''
-        ),
-        disabled: false
-      })
+  // uploadProtoFile
+  private uploadProtoFile(e: File) {
+    if (!e) {
+      return
     }
-    // 获取dom
-    await this.$nextTick()
-    const child = this.$refs.createTopicDialog as CreateTopicDialog
-
-    setTimeout(() => {
-      this.formObj.formObj.topicName = this.fileName
-      child.inputEvent(this.fileName)
-      this.formObj.formObj.topicList = [..._topicList]
-    }, 1)
-  }
-  // 取消上传
-  private upLoadFileCancel() {
-    this.upLoadFlag = false
-    this.canUpLoad = false
-
-    this.forceRenderFlag = Math.random()
-
-    this.SheetNames = ['']
-    this.Sheets = {}
-    this.fileName = ''
+    this.protoFile = e
   }
 
-  // 下载
+  // 下载 proto
   private async downloadFile(item: any) {
     axios({
       method: 'get',
@@ -781,9 +660,3 @@ export default class OnlineDataTopicList extends Vue {
   }
 }
 </script>
-<style scoped>
-.dialog-title {
-  text-align: center;
-  display: block;
-}
-</style>

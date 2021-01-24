@@ -53,10 +53,10 @@
         </h-table>
       </v-tab-item>
     </v-tabs-items>
-    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <create-cmd-dialog v-if="dialogShow === 1" />
       <h-table :headers="headersObj" :desserts="dessertsObj" class="mb-6" v-else-if="dialogShow === 2"></h-table>
-    </t-dialog>
+    </f-dialog>
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteCmd" />
   </div>
 </template>
@@ -65,7 +65,7 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import { returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import HConfirm from '@/components/h-confirm.vue'
-import TDialog from '@/components/t-dialog.vue'
+import FDialog from '@/components/f-dialog.vue'
 import CreateCmdDialog from './childComponent/createCmdDialog.vue'
 import { CmdAdd } from '@/type/cmd-add.type'
 import util from '@/decorator/utilsDecorator'
@@ -76,7 +76,7 @@ import { FormObj } from '@/type/dialog-form.type'
 @Component({
   components: {
     HTable,
-    TDialog,
+    FDialog,
     HConfirm,
     CreateCmdDialog
   }
