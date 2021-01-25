@@ -2,6 +2,7 @@ import { Module, VuexModule, Mutation, Action, getModule } from 'vuex-module-dec
 import store from '@/store'
 import { returnDataType } from '../../type/http-request.type'
 import { userRootType, userMessageType } from '../../type/vuex.type'
+import { NAV_BAR_ITEM_LIST_ALL } from '@/config'
 
 type UserStateType = {
   username: string // 用户名称
@@ -112,9 +113,15 @@ export default class rootStore extends VuexModule {
 
   get navMenuList(): Array<userRootType> {
     if (this.UserState.userRoot.length > 0) {
-      return this.UserState.userRoot.filter(item => {
+      // 根据 NAV_BAR_ITEM_LIST_ALL 排序
+      const arr1 = NAV_BAR_ITEM_LIST_ALL
+      const arr2 = this.UserState.userRoot.filter(item => {
         return item.childrenList && item.type === 'menu' && item.childrenList.length !== 0
       })
+      arr2.sort((pre, next) => {
+        return arr1.indexOf(pre.name) - arr1.indexOf(next.name)
+      })
+      return arr2
     }
     return []
   }
