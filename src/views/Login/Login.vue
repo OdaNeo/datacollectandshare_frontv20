@@ -88,6 +88,9 @@ export default class Login extends Vue {
 
   // 登录方法
   async signIn(): Promise<void> {
+    if (!this.username || !this.password) {
+      return
+    }
     if (this.remember && !localStorage.getItem('userAndPass')) {
       localStorage.setItem('userAndPass', JSON.stringify({ user: this.username, pass: this.password }))
     } else if (this.remember && localStorage.getItem('userAndPass')) {

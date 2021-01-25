@@ -23,7 +23,7 @@
         <v-btn
           class="ma-2"
           outlined
-          :color="btnAction == index ? 'primary' : ''"
+          :color="btnAction === index ? 'primary' : ''"
           v-for="(btnName, index) in btnNames"
           :key="index"
           @click="btnClickMethod(index)"
