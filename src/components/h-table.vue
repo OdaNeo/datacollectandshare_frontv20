@@ -148,7 +148,7 @@ export default class HTable extends Vue {
   border-radius: 2px;
   background-color: #fff;
   /* border-collapse: collapse; */
-  box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 2px 0px 0px rgba(0, 0, 0, 0.14);
+  /* box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 2px 0px 0px rgba(0, 0, 0, 0.14); */
   overflow-y: auto;
   overflow-x: hidden;
 }

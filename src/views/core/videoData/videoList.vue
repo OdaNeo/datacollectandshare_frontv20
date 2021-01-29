@@ -5,6 +5,7 @@
         <v-text-field
           solo
           dense
+          height="35px"
           placeholder="请输入查找的非结构化主题ID"
           clearable
           append-icon="mdi-magnify"
@@ -18,7 +19,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" height="39" dark @click.stop="createTopicVideo">创建非结构化主题</v-btn>
+        <v-btn color="primary" height="35px" dark @click.stop="createTopicVideo">创建主题</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -95,12 +96,16 @@ import { FormObj } from '@/type/dialog-form.type'
   }
 ])
 export default class VideoDataList extends Vue {
-  @Provide('formProvide') private formProvide: FormObj = {
-    title: '' as string,
-    btnName: [] as Array<string>,
-    methodName: '' as string,
-    formObj: {}
-  }
+  @Provide('formProvide') private formProvide: FormObj = new Vue({
+    data() {
+      return {
+        title: '',
+        btnName: [] as string[],
+        methodName: '',
+        formObj: {}
+      }
+    }
+  })
 
   private tab = null
   private items = ['所有主题', '我的主题']

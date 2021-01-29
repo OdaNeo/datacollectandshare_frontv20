@@ -5,6 +5,7 @@
         <v-text-field
           solo
           dense
+          height="35px"
           placeholder="请输入要查询的订阅用户名"
           clearable
           append-icon="mdi-magnify"

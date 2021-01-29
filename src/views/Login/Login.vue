@@ -3,7 +3,7 @@
     <div class="bgImg">
       <div class="loginContent">
         <p class="loginSubTitle">交控科技天枢平台</p>
-        <p class="loginTitle">元数据配置管理中心</p>
+        <p class="loginTitle">数据采集管理中心</p>
 
         <v-form v-model="userDialogValid">
           <label class="labelLogin">用户名：</label>

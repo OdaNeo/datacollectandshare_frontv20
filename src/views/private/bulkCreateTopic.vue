@@ -1,6 +1,8 @@
 <template>
   <div>
-    <v-btn class="ml-12 mt-12" color="primary" height="39" dark @click.stop="createTopicVideo">批量创建视频主题</v-btn>
+    <v-btn class="ml-12 mt-12" color="primary" height="35px" dark @click.stop="createTopicVideo"
+      >批量创建视频主题</v-btn
+    >
     <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <v-row no-gutters>
         <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />

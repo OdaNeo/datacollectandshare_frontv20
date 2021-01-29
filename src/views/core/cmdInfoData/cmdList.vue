@@ -5,6 +5,7 @@
         <v-text-field
           solo
           dense
+          height="35px"
           placeholder="请输入查找的命令ID"
           clearable
           append-icon="mdi-magnify"
@@ -18,7 +19,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn height="39" color="primary" dark @click.stop="createCommend(false)">创建命令</v-btn>
+        <v-btn color="primary" height="35px" dark @click.stop="createCommend(false)">创建命令</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -53,10 +54,17 @@
         </h-table>
       </v-tab-item>
     </v-tabs-items>
+    <!-- form -->
     <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <create-cmd-dialog v-if="dialogShow === 1" />
-      <h-table :headers="headersObj" :desserts="dessertsObj" class="mb-6" v-else-if="dialogShow === 2"></h-table>
     </f-dialog>
+
+    <!-- table -->
+    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
+      <cmd-information-dialog v-if="tDialogShow === 1" :headersObj="headersObj" :dessertsObj="dessertsObj" />
+      <data-structure-dialog v-if="tDialogShow === 2" :headersObj="headersObj" :dessertsObj="dessertsObj" />
+    </t-dialog>
+
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteCmd" />
   </div>
 </template>
@@ -66,30 +74,40 @@ import { returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import HConfirm from '@/components/h-confirm.vue'
 import FDialog from '@/components/f-dialog.vue'
+import TDialog from '@/components/t-dialog.vue'
 import CreateCmdDialog from './childComponent/createCmdDialog.vue'
 import { CmdAdd } from '@/type/cmd-add.type'
 import util from '@/decorator/utilsDecorator'
 import { rootStoreModule } from '@/store/modules/root'
 import HTable from '@/components/h-table.vue'
 import { FormObj } from '@/type/dialog-form.type'
+import cmdInformationDialog from './childComponent/cmdInformationDialog.vue'
+import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 
 @Component({
   components: {
     HTable,
+    TDialog,
     FDialog,
     HConfirm,
-    CreateCmdDialog
+    CreateCmdDialog,
+    cmdInformationDialog,
+    DataStructureDialog
   }
 })
 @http
 @util
 export default class CmdList extends Vue {
-  @Provide('formProvide') private formProvide: FormObj = {
-    title: '' as string,
-    btnName: [] as Array<string>,
-    methodName: '' as string,
-    formObj: {}
-  }
+  @Provide('formProvide') private formProvide: FormObj = new Vue({
+    data() {
+      return {
+        title: '',
+        btnName: [] as string[],
+        methodName: '',
+        formObj: {}
+      }
+    }
+  })
 
   private tab = null
   private items = ['所有命令', '我的命令']
@@ -108,6 +126,8 @@ export default class CmdList extends Vue {
   private HConfirmItem = {
     id: ''
   }
+  private tDialogFlag = false
+  private tDialogShow = 0
 
   private desserts: Array<any> = [] // 数据列表
   private queryCmdID = null // 查询命令ID input框内容
@@ -265,8 +285,9 @@ export default class CmdList extends Vue {
 
   // 数据结构展示方法
   private consumersSystem(item: any) {
-    this.dialogFlag = true
-    this.dialogShow = 2
+    this.tDialogFlag = true
+    this.tDialogShow = 1
+    this.formProvide.title = '订阅系统信息详情'
     this.headersObj = [
       {
         text: '数据编码',
@@ -284,6 +305,7 @@ export default class CmdList extends Vue {
         value: 'value'
       }
     ]
+
     this.dessertsObj = []
     const _consumers = item.consumers.split(',')
     const _queueNames = item.queueNames.split(',')
@@ -294,16 +316,12 @@ export default class CmdList extends Vue {
         value: _queueNames[i]
       })
     }
-    this.formProvide.title = '订阅系统信息详情'
-    this.formProvide.btnName = []
-    this.formProvide.methodName = ''
-    this.formProvide.formObj = {}
   }
 
   // 详情展示
   private getCmdDescription(info: any) {
-    this.dialogFlag = true
-    this.dialogShow = 2
+    this.tDialogFlag = true
+    this.tDialogShow = 1
     this.dessertsObj = info
     this.headersObj = [
       {
@@ -313,9 +331,6 @@ export default class CmdList extends Vue {
       }
     ]
     this.formProvide.title = '描述'
-    this.formProvide.btnName = []
-    this.formProvide.methodName = ''
-    this.formProvide.formObj = {}
   }
 
   private async deleteCmd() {

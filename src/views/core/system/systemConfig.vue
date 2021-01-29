@@ -5,6 +5,7 @@
         <v-text-field
           solo
           dense
+          height="35px"
           placeholder="请输入查找的配置名称"
           clearable
           append-icon="mdi-magnify"
@@ -14,7 +15,7 @@
         </v-text-field>
       </v-col>
       <v-col>
-        <v-btn height="39" color="primary" dark @click.stop="addConfigure">添加配置</v-btn>
+        <v-btn height="35px" color="primary" dark @click.stop="addConfigure">添加配置</v-btn>
       </v-col>
     </v-row>
     <h-table
@@ -68,12 +69,17 @@ import { FormObj } from '@/type/dialog-form.type'
 @http
 @util
 export default class SystemConfig extends Vue {
-  @Provide('formProvide') private formProvide: FormObj = {
-    title: '' as string,
-    btnName: [] as Array<string>,
-    methodName: '' as string,
-    formObj: {}
-  }
+  @Provide('formProvide') private formProvide: FormObj = new Vue({
+    data() {
+      return {
+        title: '',
+        btnName: [] as string[],
+        methodName: '',
+        formObj: {}
+      }
+    }
+  })
+
   private pageSize = 20
   private pageNum = 1
   private desserts: Array<any> = []

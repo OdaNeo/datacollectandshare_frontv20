@@ -6,6 +6,7 @@
           v-model.trim="queryUserName"
           solo
           dense
+          height="35px"
           placeholder="请输入查找的账号名称"
           clearable
           append-icon="mdi-magnify"
@@ -14,7 +15,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" height="39" dark @click.stop="addItem">添加用户</v-btn>
+        <v-btn color="primary" height="35px" dark @click.stop="addItem">添加用户</v-btn>
       </v-col>
     </v-row>
     <!-- <transition name="table" @after-leave="tableAfterEnter" style="background: #fff"> -->
@@ -80,12 +81,16 @@ import HTable from '@/components/h-table.vue'
   }
 ])
 export default class User extends Vue {
-  @Provide('formProvide') private formProvide: FormObj = {
-    title: '' as string,
-    btnName: [] as Array<string>,
-    methodName: '' as string,
-    formObj: {}
-  }
+  @Provide('formProvide') private formProvide: FormObj = new Vue({
+    data() {
+      return {
+        title: '',
+        btnName: [] as string[],
+        methodName: '',
+        formObj: {}
+      }
+    }
+  })
 
   private dialogFlag = false
   private desserts: Array<userInfo> = []

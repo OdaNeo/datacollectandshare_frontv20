@@ -2,7 +2,14 @@
   <div id="viewLog">
     <v-row>
       <v-col cols="2">
-        <v-text-field solo dense placeholder="请输入查找的用户名" clearable v-model="queryUserName"></v-text-field>
+        <v-text-field
+          solo
+          dense
+          height="35px"
+          placeholder="请输入查找的用户名"
+          clearable
+          v-model="queryUserName"
+        ></v-text-field>
       </v-col>
       <v-col cols="2">
         <h-date-picker
@@ -21,7 +28,7 @@
         ></h-date-picker>
       </v-col>
       <v-col>
-        <v-btn :height="39" color="primary" dark @click="clickSearch">查询</v-btn>
+        <v-btn height="35px" color="primary" dark @click="clickSearch">查询</v-btn>
       </v-col>
     </v-row>
     <h-table

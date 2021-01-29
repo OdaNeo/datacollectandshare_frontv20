@@ -5,6 +5,7 @@
         <v-text-field
           solo
           dense
+          height="35px"
           placeholder="请输入查找的主题ID"
           clearable
           append-icon="mdi-magnify"

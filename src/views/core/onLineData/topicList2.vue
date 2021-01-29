@@ -6,6 +6,7 @@
         <v-text-field
           solo
           dense
+          height="35px"
           placeholder="请输入查找的主题ID"
           clearable
           append-icon="mdi-magnify"
@@ -19,8 +20,8 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" height="39" class="mr-6" dark @click="createTopic(false)">创建结构化主题</v-btn>
-        <v-btn color="primary" height="39" class="mr-6" dark @click="openUpload($event)">通过文件创建</v-btn>
+        <v-btn color="primary" height="35px" class="mr-6" dark @click="createTopic(false)">创建结构化主题</v-btn>
+        <v-btn color="primary" height="35px" class="mr-6" dark @click="openUpload($event)">通过文件创建</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">

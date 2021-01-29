@@ -32,7 +32,6 @@
         clearable
         accept=".xls,.xlsx"
         @change="$emit('upload-file', $event)"
-        :rules="excelRules"
       ></v-file-input>
     </v-col>
   </v-row>
@@ -55,7 +54,7 @@ export default class CreateRest extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private noRepeat: string[] = []
 
-  private excelRules = Validator['topic-validator'].fileExcelValidate
+  // private excelRules = Validator['topic-validator'].fileExcelValidate
 
   private showConstruction = false
 
@@ -96,17 +95,17 @@ export default class CreateRest extends Vue {
       disabled: !!this.formProvide.formObj.topicName,
       require: true
     },
-    {
-      label: '是否写入ES',
-      valueName: 'writeElasticsearch',
-      type: 'radioGroup',
-      items: [
-        { text: '是', value: '是' },
-        { text: '否', value: '否' }
-      ],
-      disabled: !!this.formProvide.formObj.topicName,
-      require: true
-    },
+    // {
+    //   label: '是否写入ES',
+    //   valueName: 'writeElasticsearch',
+    //   type: 'radioGroup',
+    //   items: [
+    //     { text: '是', value: '是' },
+    //     { text: '否', value: '否' }
+    //   ],
+    //   disabled: !!this.formProvide.formObj.topicName,
+    //   require: true
+    // },
     {
       label: '内存过期时间',
       valueName: 'redisTimer',
@@ -166,9 +165,9 @@ export default class CreateRest extends Vue {
       }
     })
     if (_L.length > _l.length) {
-      this.formTypeObj[4].otherRules = ['字段名不能重复']
+      this.formTypeObj[3].otherRules = ['字段名不能重复']
     } else {
-      this.formTypeObj[4].otherRules = []
+      this.formTypeObj[3].otherRules = []
     }
   }
 }

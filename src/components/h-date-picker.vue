@@ -12,6 +12,7 @@
         v-model="date"
         solo
         dense
+        height="35px"
         :placeholder="placeholder"
         readonly
         prepend-inner-icon="mdi-magnify"
@@ -22,6 +23,7 @@
     <v-date-picker
       v-model="date"
       no-title
+      height="35px"
       scrollable
       locale="zh-cn"
       @click.native="pickerClick"

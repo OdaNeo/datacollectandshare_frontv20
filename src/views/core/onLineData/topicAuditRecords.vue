@@ -5,6 +5,7 @@
         <v-text-field
           solo
           dense
+          height="35px"
           placeholder="请输入要查询的主题ID"
           clearable
           append-icon="mdi-magnify"
@@ -158,7 +159,7 @@ export default class TopicAuditRecords extends Vue {
   private dataStructure(item: any) {
     this.dialogFlag = true
     this.rowObj = item
-    // this.formObj.title = '数据结构详情'
+    this.formObj.title = '数据结构详情'
   }
 
   private btnClickMethod(index: number) {

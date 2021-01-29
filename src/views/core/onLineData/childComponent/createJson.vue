@@ -76,16 +76,16 @@ export default class CreateJson extends Vue {
       ],
       require: true
     },
-    {
-      label: '是否写入ES',
-      valueName: 'writeElasticsearch',
-      type: 'radioGroup',
-      items: [
-        { text: '是', value: '是' },
-        { text: '否', value: '否' }
-      ],
-      require: true
-    },
+    // {
+    //   label: '是否写入ES',
+    //   valueName: 'writeElasticsearch',
+    //   type: 'radioGroup',
+    //   items: [
+    //     { text: '是', value: '是' },
+    //     { text: '否', value: '否' }
+    //   ],
+    //   require: true
+    // },
     {
       label: '内存过期时间',
       valueName: 'redisTimer',

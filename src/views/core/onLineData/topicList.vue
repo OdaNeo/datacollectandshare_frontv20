@@ -5,6 +5,7 @@
         <v-text-field
           solo
           dense
+          height="35px"
           placeholder="请输入查找的主题ID"
           clearable
           append-icon="mdi-magnify"
@@ -18,9 +19,9 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" height="39" class="mr-6" small dark @click="createRest()">创建REST主题</v-btn>
-        <v-btn color="primary" height="39" class="mr-6" small dark @click="createProtobuf">创建PROTOBUF主题</v-btn>
-        <v-btn color="primary" height="39" class="mr-6" small dark @click="createJson">创建JSON主题</v-btn>
+        <v-btn color="primary" height="35px" class="mr-6" small dark @click="createRest()">创建REST</v-btn>
+        <v-btn color="primary" height="35px" class="mr-6" small dark @click="createProtobuf">创建PROTOBUF</v-btn>
+        <v-btn color="primary" height="35px" class="mr-6" small dark @click="createJson">创建JSON</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -130,12 +131,16 @@ import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInfo
 ])
 @util
 export default class OnlineDataTopicList extends Vue {
-  @Provide('formProvide') private formProvide: FormObj = {
-    title: '' as string,
-    btnName: [] as Array<string>,
-    methodName: '' as string,
-    formObj: {}
-  }
+  @Provide('formProvide') private formProvide: FormObj = new Vue({
+    data() {
+      return {
+        title: '',
+        btnName: [] as string[],
+        methodName: '',
+        formObj: {}
+      }
+    }
+  })
 
   private tab = null
   private items = ['所有主题', '我的主题']
@@ -243,7 +248,7 @@ export default class OnlineDataTopicList extends Vue {
         queneType: item.queneType,
         redisTimer: item.redisTimer,
         topicName: item.topicName,
-        writeElasticsearch: item.writeElasticsearch === 1 ? '是' : '否',
+        // writeElasticsearch: item.writeElasticsearch === 1 ? '是' : '否',
         topicList: _topicList
       }
     } else {
@@ -255,8 +260,8 @@ export default class OnlineDataTopicList extends Vue {
             type: '',
             disabled: false
           }
-        ],
-        writeElasticsearch: '是'
+        ]
+        // writeElasticsearch: '是'
       }
     }
   }
@@ -278,7 +283,8 @@ export default class OnlineDataTopicList extends Vue {
       dsAnnotation: _numberS,
       dataType: dataType['结构化']
     }
-    params.writeElasticsearch = formObj.writeElasticsearch === '是' ? 1 : 0
+    // params.writeElasticsearch = formObj.writeElasticsearch === '是' ? 1 : 0
+    params.writeElasticsearch = 1
     params.topicName = formObj.topicName
     params.redisTimer = formObj.redisTimer
     params.queneType = formObj.queneType
@@ -329,7 +335,7 @@ export default class OnlineDataTopicList extends Vue {
       timeout: 500000,
       headers: {
         'Content-Type': 'multipart/form-data',
-        Authorization: rootStoreModule.UserState.token
+        'Authorization': rootStoreModule.UserState.token
       }
     })
       .then(({ data }) => {
@@ -364,7 +370,7 @@ export default class OnlineDataTopicList extends Vue {
     this.formProvide.title = '创建JSON'
     this.formProvide.methodName = 'addJson' // 立即提交
     this.formProvide.formObj = {
-      writeElasticsearch: '是'
+      // writeElasticsearch: '是'
     }
   }
   // addJson
@@ -376,7 +382,8 @@ export default class OnlineDataTopicList extends Vue {
     params.topicName = formObj.topicName
     params.queneType = formObj.queneType
     params.redisTimer = formObj.redisTimer
-    params.writeElasticsearch = formObj.writeElasticsearch
+    // params.writeElasticsearch = formObj.writeElasticsearch === '是' ? 1 : 0
+    params.writeElasticsearch = 1
     params.dataStructSchema = formObj.dataStructSchema.replace(/\s+/g, '')
 
     const { success } = await this.h_request['httpPOST']('POST_TOPICS_ADD', params)
@@ -464,21 +471,23 @@ export default class OnlineDataTopicList extends Vue {
   }
 
   // 数据结构展示方法
-  private dataStructure(item: any) {
+  private dataStructure(item: any, str: string) {
     this.tDialogFlag = true
     this.tDialogShow = 1
     this.rowObj = item
+    this.formProvide.title = str
   }
 
   // 附加信息
-  private ancillaryInformation(info: any) {
+  private ancillaryInformation(info: any, str: string) {
     this.tDialogFlag = true
     this.tDialogShow = 2
     this.otherObj = info
+    this.formProvide.title = str
   }
 
   private dataStructureDetails(item: any) {
-    this.dataStructure(item)
+    this.dataStructure(item, '数据结构详情')
   }
 
   private async getTopicInformation(item: any, index: number) {
@@ -498,7 +507,7 @@ export default class OnlineDataTopicList extends Vue {
       // info = {...data[0],topicInterFaceType:item.topicInterFaceType,redisTimer:item.redisTimer}
       this.desserts[index].flag = true
     }
-    this.ancillaryInformation(this.desserts[index])
+    this.ancillaryInformation(this.desserts[index], '附加信息')
   }
 
   // 删除
@@ -558,20 +567,19 @@ export default class OnlineDataTopicList extends Vue {
 
         Sheets[`sheet1`] && (this.sheetObj = Sheets[`sheet1`])
 
+        // 格式不对报错
+        if (!this.sheetObj['!ref'].includes('C')) {
+          return
+        }
+
         const _l: number = this.sheetObj['!ref'].split('C')[1]
         const _topicList: Array<any> = []
 
         for (let i = 1; i < _l; i++) {
           _topicList.push({
-            [this.handleObjKey('A') as string]: this.handleObjKeyType(
-              this.sheetObj[`A${i + 1}`] ? this.sheetObj[`A${i + 1}`].v : ''
-            ),
-            [this.handleObjKey('B') as string]: this.handleObjKeyType(
-              this.sheetObj[`B${i + 1}`] ? this.sheetObj[`B${i + 1}`].v : ''
-            ),
-            [this.handleObjKey('C') as string]: this.handleObjKeyType(
-              this.sheetObj[`C${i + 1}`] ? this.sheetObj[`C${i + 1}`].v : ''
-            ),
+            [this.handleObjKey('A') as string]: this.handleObjKeyType(this.sheetObj[`A${i + 1}`]?.v),
+            [this.handleObjKey('B') as string]: this.handleObjKeyType(this.sheetObj[`B${i + 1}`]?.v),
+            [this.handleObjKey('C') as string]: this.handleObjKeyType(this.sheetObj[`C${i + 1}`]?.v),
             disabled: false
           })
         }
@@ -579,8 +587,8 @@ export default class OnlineDataTopicList extends Vue {
         this.formProvide.formObj = {
           topicName: file.name.split('.')[0],
           queneType: 1,
-          topicList: _topicList,
-          writeElasticsearch: '是'
+          topicList: _topicList
+          // writeElasticsearch: '是'
         }
       }
     }
@@ -598,7 +606,7 @@ export default class OnlineDataTopicList extends Vue {
   }
   // ['序号','字段名','字段类型(Int,String,TimeStamp)','字段含义']
   // this.formObj.formObj.topicList.type 转义
-  private handleObjKeyType(k: string) {
+  private handleObjKeyType(k?: string) {
     switch (k) {
       case 'Int':
         return 1

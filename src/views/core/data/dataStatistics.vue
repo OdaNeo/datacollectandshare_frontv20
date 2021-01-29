@@ -6,6 +6,7 @@
           <v-select
             solo
             dense
+            height="35px"
             v-model="systemValue"
             :items="systemItems"
             label="请选择系统"
@@ -25,6 +26,7 @@
               <v-text-field
                 solo
                 dense
+                height="35px"
                 v-model="beginDate"
                 label="请选择日期"
                 readonly
@@ -50,6 +52,7 @@
           <v-select
             solo
             dense
+            height="35px"
             v-model="currentSelectMonth"
             @change="getTopicList"
             :items="monthSelectItems"
@@ -61,6 +64,7 @@
             solo
             dense
             v-model="releasePageNum"
+            height="35px"
             :items="pageList"
             label="获取更多主题信息"
             @change="getTopicList"
