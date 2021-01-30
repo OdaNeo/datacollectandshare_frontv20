@@ -8,7 +8,7 @@ import { Component, Vue, Watch, Inject } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import HInput from '@/components/h-input.vue'
 import { InputType } from '@/type/dialog-form.type'
-import Validator from '@/validator2/t-validator'
+import Validator from '@/decorator/validatorDecorator'
 import http from '@/decorator/httpDecorator'
 
 @Component({
@@ -17,6 +17,7 @@ import http from '@/decorator/httpDecorator'
   }
 })
 @http
+@Validator(['topicNameFormatter'])
 export default class CreateVideoTopicDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private noRepeat: string[] = []
@@ -71,7 +72,7 @@ export default class CreateVideoTopicDialog extends Vue {
     } else {
       this.noRepeat = []
     }
-    this.formTypeObj[0].otherRules = [...Validator['topic-validator'].topicNameFormatter, ...this.noRepeat]
+    this.formTypeObj[0].otherRules = [...this.h_validator.topicNameFormatter(), ...this.noRepeat]
   }
 }
 </script>

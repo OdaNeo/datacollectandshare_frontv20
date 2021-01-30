@@ -22,11 +22,13 @@ class HttpRequest {
   constructor(headers: Array<headerObj>) {
     this.axiosIns.interceptors.request.use((config: AxiosRequestConfig) => {
       if (headers.length > 0) {
+        // 自定义headers
         headers.forEach((header: headerObj) => {
           config.headers[header.headerKey] = header.headerVal
         })
       } else {
-        config.headers.Authorization = rootStoreModule.UserState.token
+        // 默认发token
+        config.headers['Authorization'] = rootStoreModule.UserState.token
       }
       // config.headers["x-auth-token"] = 1234
       return config

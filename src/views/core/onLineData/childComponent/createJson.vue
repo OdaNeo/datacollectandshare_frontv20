@@ -31,7 +31,7 @@ import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import { InputType } from '@/type/dialog-form.type'
 import HInput from '@/components/h-input.vue'
-import Validator from '@/validator2/t-validator'
+import Validator from '@/decorator/validatorDecorator'
 
 @Component({
   components: {
@@ -39,6 +39,7 @@ import Validator from '@/validator2/t-validator'
   }
 })
 @http
+@Validator(['dataStructValidate', 'topicNameFormatter'])
 export default class CreateJson extends Vue {
   @Inject() private readonly formProvide!: H_Vue
 
@@ -98,7 +99,7 @@ export default class CreateJson extends Vue {
       valueName: 'dataStructSchema',
       type: 'textarea',
       require: true,
-      otherRules: Validator['topic-validator'].dataStructValidate
+      otherRules: this.h_validator.dataStructValidate()
     }
   ]
 
@@ -116,7 +117,7 @@ export default class CreateJson extends Vue {
     } else {
       this.noRepeat = []
     }
-    this.formTypeObj[0].otherRules = [...Validator['topic-validator'].topicNameFormatter, ...this.noRepeat]
+    this.formTypeObj[0].otherRules = [...this.h_validator.topicNameFormatter(), ...this.noRepeat]
   }
 }
 </script>

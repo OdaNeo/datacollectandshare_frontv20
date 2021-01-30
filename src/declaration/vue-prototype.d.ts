@@ -20,6 +20,7 @@ type Request2 = {
 declare module 'vue/types/vue' {
   interface Vue {
     h_request: Request
+    h_upload: Request
     h_request2: Request2
     h_echars: any
     h_utils: any

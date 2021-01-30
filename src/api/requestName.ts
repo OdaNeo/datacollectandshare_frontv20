@@ -99,6 +99,8 @@ export const GET_CMD_DELETE = '/cmd/delCmdInfo'
 
 // 视频流
 export const GET_VIDEO_ADDRESS = '/topics/getVideoAddress'
+// 上传proto文件
+export const POST_TOPIC_ADDPROTOBUGTOPIC = '/topics/addProtobufTopic'
 
 type REQUEST_NAME_TYPE = {
   [key: string]: string
@@ -171,7 +173,8 @@ const REQUEST_NAME: REQUEST_NAME_TYPE = {
   GET_TOPICS_PROTOBUFDOWNLOAD,
   GET_TOPICS_FINDALLSUBTOPIC,
   GET_TOPICS_SELECTSUBTOPICBYID,
-  GET_VIDEO_ADDRESS
+  GET_VIDEO_ADDRESS,
+  POST_TOPIC_ADDPROTOBUGTOPIC
 }
 
 export default REQUEST_NAME

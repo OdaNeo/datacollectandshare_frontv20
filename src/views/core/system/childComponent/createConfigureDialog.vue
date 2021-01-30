@@ -100,13 +100,14 @@ import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import HInput from '@/components/h-input.vue'
 import { InputType } from '@/type/dialog-form.type'
-import Validator from '@/validator2/t-validator'
+import Validator from '@/decorator/validatorDecorator'
 
 @Component({
   components: {
     HInput
   }
 })
+@Validator(['typeInputRules', 'nameInputRules', 'valueRules'])
 export default class CreateConfigureDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
 
@@ -134,7 +135,7 @@ export default class CreateConfigureDialog extends Vue {
       label: '',
       valueName: 'typeInput',
       type: '',
-      otherRules: Validator['system-validator'].typeInputRules,
+      otherRules: this.h_validator.typeInputRules(),
       require: false
     },
     {
@@ -148,14 +149,14 @@ export default class CreateConfigureDialog extends Vue {
       label: '',
       valueName: 'nameInput',
       type: '',
-      otherRules: Validator['system-validator'].nameInputRules,
+      otherRules: this.h_validator.nameInputRules(),
       require: false
     },
     {
       label: '配置属性',
       valueName: 'value',
       type: 'input',
-      otherRules: Validator['system-validator'].valueRules,
+      otherRules: this.h_validator.valueRules(),
       require: true
     }
   ]

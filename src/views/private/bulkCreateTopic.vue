@@ -19,8 +19,7 @@ import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
 import { dataType } from '@/enum/topic-datatype-enum.ts'
 import HInput from '@/components/h-input.vue'
 import { InputType } from '@/type/dialog-form.type'
-import Validator from '@/validator2/t-validator'
-
+import Validator from '@/decorator/validatorDecorator'
 @Component({
   components: {
     FDialog,
@@ -28,6 +27,7 @@ import Validator from '@/validator2/t-validator'
   }
 })
 @http
+@Validator(['topicNameFormatter'])
 export default class bulkCreateTopic extends Vue {
   @Provide('formProvide') private formProvide: FormObj = {
     title: '' as string,
@@ -43,7 +43,7 @@ export default class bulkCreateTopic extends Vue {
       valueName: 'topicNameItem',
       type: 'input',
       require: true,
-      otherRules: Validator['topic-validator'].topicNameFormatter
+      otherRules: this.h_validator.topicNameFormatter()
     },
     {
       label: 'rtsp/rtmp地址',

@@ -42,7 +42,7 @@ import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import { InputType } from '@/type/dialog-form.type'
 import HInput from '@/components/h-input.vue'
-import Validator from '@/validator2/t-validator'
+import Validator from '@/decorator/validatorDecorator'
 
 @Component({
   components: {
@@ -50,11 +50,10 @@ import Validator from '@/validator2/t-validator'
   }
 })
 @http
+@Validator(['topicNameFormatter'])
 export default class CreateRest extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private noRepeat: string[] = []
-
-  // private excelRules = Validator['topic-validator'].fileExcelValidate
 
   private showConstruction = false
 
@@ -148,7 +147,7 @@ export default class CreateRest extends Vue {
     } else {
       this.noRepeat = []
     }
-    this.formTypeObj[0].otherRules = [...Validator['topic-validator'].topicNameFormatter, ...this.noRepeat]
+    this.formTypeObj[0].otherRules = [...this.h_validator.topicNameFormatter(), ...this.noRepeat]
   }
 
   // validation topicList no-repeat-key

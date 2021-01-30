@@ -51,7 +51,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { rootStoreModule } from '../store/modules/root'
-import { Route } from 'vue-router'
+// import { Route } from 'vue-router'
 import { userRootType } from '@/type/vuex.type.ts'
 @Component
 export default class NavBar extends Vue {
@@ -60,27 +60,27 @@ export default class NavBar extends Vue {
   }
 
   public parentIcon(routeName: string): string {
-    const $Router: any = this.$router
-    const $Route = $Router.options.routes.find((v: Route) => {
+    // const $Router: any = this.$router
+    const $Route = this.$router.options.routes?.find(v => {
       return v.name === routeName
     })
-    return $Route.meta.icon
+    return $Route?.meta.icon
   }
 
-  public childIcon(routeName: string): string {
-    const $Router: any = this.$router
-    let res!: any
-    $Router.options.routes.forEach((route: any) => {
-      if (route.children) {
-        route.children.forEach((route2: Route) => {
-          if (route2.name === routeName) {
-            res = route2.meta.icon
-          }
-        })
-      }
-    })
-    return res
-  }
+  // public childIcon(routeName: string): string {
+  //   // const $Router: any = this.$router
+  //   let res!: string
+  //   this.$router.options.routes?.forEach(route => {
+  //     if (route.children) {
+  //       route.children.forEach(route2 => {
+  //         if (route2.name === routeName) {
+  //           res = route2.meta.icon
+  //         }
+  //       })
+  //     }
+  //   })
+  //   return res
+  // }
 }
 </script>
 <style scoped>

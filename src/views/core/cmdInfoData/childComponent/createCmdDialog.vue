@@ -97,7 +97,7 @@ import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import HInput from '@/components/h-input.vue'
 import { InputType } from '@/type/dialog-form.type'
-import Validator from '@/validator2/t-validator'
+import Validator from '@/decorator/validatorDecorator'
 
 @Component({
   components: {
@@ -105,6 +105,7 @@ import Validator from '@/validator2/t-validator'
   }
 })
 @http
+@Validator(['cmdNameFormatter'])
 export default class CreateCmdDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private systemList: Array<{ text: string; value: string }> = []
@@ -116,7 +117,7 @@ export default class CreateCmdDialog extends Vue {
       type: 'input',
       require: true,
       disabled: !!this.formProvide.formObj.cmdName,
-      otherRules: Validator['cmd-validator'].cmdNameFormatter
+      otherRules: this.h_validator.cmdNameFormatter()
     },
     {
       label: '生产系统名',

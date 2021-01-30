@@ -85,6 +85,7 @@
 import { Component, Vue, Provide } from 'vue-property-decorator'
 import { paramsType, returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
+import upload from '@/decorator/uploadDecorator.ts'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
@@ -123,6 +124,16 @@ import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInfo
   }
 })
 @http
+@upload([
+  {
+    headerKey: 'Content-Type',
+    headerVal: 'multipart/form-data'
+  },
+  {
+    headerKey: 'Authorization',
+    headerVal: rootStoreModule.UserState.token
+  }
+])
 @Enum([
   {
     tsFileName: 'topic-list-enum',
@@ -318,7 +329,7 @@ export default class OnlineDataTopicList extends Vue {
     this.formProvide.formObj = {}
   }
   // addProtobuf
-  private addProtobuf(formObj: TopicAdd) {
+  private async addProtobuf(formObj: TopicAdd) {
     if (!this.protoFile) {
       return
     }
@@ -328,38 +339,20 @@ export default class OnlineDataTopicList extends Vue {
     this.protoForms.append('redisTimer', formObj.redisTimer.toString())
     this.protoForms.append('topicName', formObj.topicName.toString())
     // 如果此处vetur报错，请将工程文件放在vscode根目录下 https://github.com/vuejs/vetur/issues/2602
-    axios({
-      method: 'post',
-      url: VUE_APP_BASE_API + '/topics/addProtobufTopic',
-      data: this.protoForms,
-      timeout: 500000,
-      headers: {
-        'Content-Type': 'multipart/form-data',
-        'Authorization': rootStoreModule.UserState.token
-      }
-    })
-      .then(({ data }) => {
-        if (data.code === 200) {
-          this.h_utils['alertUtil'].open('主题创建成功', true, 'success')
-          this.searchMethod(
-            false,
-            {
-              pageSize: this.pageSize,
-              pageNum: 1
-            },
-            !!this.tab
-          )
-          this.pageNum = 1
-          return Promise.resolve(true)
-        } else {
-          this.h_utils['alertUtil'].open('错误代码：' + data.code + '，错误信息：' + data.message, true, 'error')
-          return Promise.reject(false)
-        }
-      })
-      .catch(err => {
-        console.log(err)
-        return Promise.reject(false)
-      })
+    const { success } = await this.h_upload.httpPOST('POST_TOPIC_ADDPROTOBUGTOPIC', this.protoForms)
+
+    if (success) {
+      this.searchMethod(
+        false,
+        {
+          pageSize: this.pageSize,
+          pageNum: 1
+        },
+        !!this.tab
+      )
+      this.pageNum = 1
+      return Promise.resolve(true)
+    }
   }
 
   // createJson
