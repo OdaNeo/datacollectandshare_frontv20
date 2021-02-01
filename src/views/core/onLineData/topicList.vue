@@ -1,12 +1,12 @@
 <template>
-  <div id="topicList">
+  <div id="onLineTopicList">
     <v-row>
       <v-col cols="3">
         <v-text-field
           solo
           dense
           height="35px"
-          placeholder="请输入查找的主题ID"
+          placeholder="请输入查找的实时主题ID"
           clearable
           append-icon="mdi-magnify"
           @click:append="searchTopic"
@@ -124,16 +124,7 @@ import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInfo
   }
 })
 @http
-@upload([
-  {
-    headerKey: 'Content-Type',
-    headerVal: 'multipart/form-data'
-  },
-  {
-    headerKey: 'Authorization',
-    headerVal: rootStoreModule.UserState.token
-  }
-])
+@upload
 @Enum([
   {
     tsFileName: 'topic-list-enum',
@@ -411,7 +402,7 @@ export default class OnlineDataTopicList extends Vue {
         ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICS', params)
       this.desserts = data.list.map((item: any) => {
-        return { ...item, flag: false }
+        return { ...item }
       })
       this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     } else {
@@ -419,7 +410,7 @@ export default class OnlineDataTopicList extends Vue {
         ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTTOPIC', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL', params)
       this.desserts = data.list.map((item: any) => {
-        return { ...item, flag: false }
+        return { ...item }
       })
       this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     }
@@ -484,22 +475,6 @@ export default class OnlineDataTopicList extends Vue {
   }
 
   private async getTopicInformation(item: any, index: number) {
-    if (!this.desserts[index].flag) {
-      const { data }: any = await this.h_request['httpGET']('GET_TOPICS_INFORMATION', {
-        topicID: item.id,
-        topicName: item.topicName,
-        topicInterFaceType: item.topicInterFaceType
-      })
-
-      if (data.length > 0) {
-        this.desserts[index].dataBaseIp = data[0].dataBaseIp
-        this.desserts[index].dataBaseType = data[0].dataBaseType
-        this.desserts[index].url = data[0].url
-        this.desserts[index].header = data[0].header
-      }
-      // info = {...data[0],topicInterFaceType:item.topicInterFaceType,redisTimer:item.redisTimer}
-      this.desserts[index].flag = true
-    }
     this.ancillaryInformation(this.desserts[index], '附加信息')
   }
 

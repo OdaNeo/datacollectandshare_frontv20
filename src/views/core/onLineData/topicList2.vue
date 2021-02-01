@@ -397,7 +397,7 @@ export default class OnlineDataTopicList extends Vue {
         case topicInterFaceType['数据库采集']:
           params.topicInterFaceType = formObj.interfaceType
           params.topicName = formObj.topicName
-          params.dataBaseType = formObj.databaseType
+          params.dataBaseType = formObj.dataBaseType
           params.dataBaseIp = formObj.dataBaseIp
           break
         case topicInterFaceType['服务主动拉取']:

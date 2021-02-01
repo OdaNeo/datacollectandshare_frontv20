@@ -21,7 +21,7 @@ class HttpRequest {
 
   constructor(headers: Array<headerObj>) {
     this.axiosIns.interceptors.request.use((config: AxiosRequestConfig) => {
-      if (headers.length > 0) {
+      if (headers?.length > 0) {
         // 自定义headers
         headers.forEach((header: headerObj) => {
           config.headers[header.headerKey] = header.headerVal

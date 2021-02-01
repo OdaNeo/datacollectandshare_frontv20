@@ -99,6 +99,73 @@
     >
     </v-slider>
 
+    <!-- doubleInput -->
+    <div v-if="formTypeItem.type === 'doubleInput'" class="ml-2" style="min-width: 500px">
+      <v-row
+        class="d-flex justify-space-around"
+        no-gutters
+        v-for="(item, index) in formProvide.formObj[formTypeItem.valueName]"
+        :key="item.id"
+      >
+        <v-col cols="5">
+          <v-text-field
+            v-model="item[formTypeItem.itemLabels[0].value]"
+            dense
+            outlined
+            :disabled="item.disabled"
+            :label="formTypeItem.itemLabels[0].text"
+            :rules="
+              formTypeItem.otherRules
+                ? [...noEmptyRules(formTypeItem.itemLabels[0].text), ...formTypeItem.otherRules]
+                : [...noEmptyRules(formTypeItem.itemLabels[0].text)]
+            "
+            height="34"
+          ></v-text-field>
+        </v-col>
+        <v-col cols="5">
+          <v-text-field
+            v-model="item[formTypeItem.itemLabels[1].value]"
+            dense
+            outlined
+            :disabled="item.disabled"
+            :label="formTypeItem.itemLabels[1].text"
+            :rules="
+              formTypeItem.otherRules
+                ? [...noEmptyRules(formTypeItem.itemLabels[1].text), ...formTypeItem.otherRules]
+                : [...noEmptyRules(formTypeItem.itemLabels[1].text)]
+            "
+            height="34"
+          ></v-text-field>
+        </v-col>
+        <v-col v-if="formTypeItem.addItem" cols="1" class="d-flex justify-space-around">
+          <v-btn
+            v-if="formProvide.formObj[formTypeItem.valueName].length === index + 1"
+            fab
+            dark
+            max-width="24"
+            max-height="24"
+            color="primary"
+            style="margin-top: 5px"
+            @click.stop="add(formTypeItem.valueName)"
+          >
+            <v-icon dark>mdi-plus</v-icon>
+          </v-btn>
+          <v-btn
+            v-if="formProvide.formObj[formTypeItem.valueName].length > 1"
+            fab
+            dark
+            max-width="24"
+            max-height="24"
+            color="primary"
+            style="margin-top: 5px"
+            @click.stop="minus(formTypeItem.valueName, index, item.disabled)"
+          >
+            <v-icon dark>mdi-minus</v-icon>
+          </v-btn>
+        </v-col>
+        <v-col v-else cols="1" class="d-flex justify-space-around" />
+      </v-row>
+    </div>
     <!-- tripleInput -->
     <div v-if="formTypeItem.type === 'tripleInput'" class="ml-2" style="min-width: 450px">
       <v-row
@@ -153,30 +220,32 @@
             :items="formTypeItem.items"
           ></v-select>
         </v-col>
-        <v-btn
-          v-if="formProvide.formObj[formTypeItem.valueName].length === index + 1"
-          fab
-          dark
-          max-width="24"
-          max-height="24"
-          color="primary"
-          style="margin-top: 5px"
-          @click.stop="add(formTypeItem.valueName)"
-        >
-          <v-icon dark>mdi-plus</v-icon>
-        </v-btn>
-        <v-btn
-          v-else
-          fab
-          dark
-          max-width="24"
-          max-height="24"
-          color="primary"
-          style="margin-top: 5px"
-          @click.stop="minus(formTypeItem.valueName, index, item.disabled)"
-        >
-          <v-icon dark>mdi-minus</v-icon>
-        </v-btn>
+        <v-col cols="1" class="d-flex justify-space-around">
+          <v-btn
+            v-if="formProvide.formObj[formTypeItem.valueName].length === index + 1"
+            fab
+            dark
+            max-width="24"
+            max-height="24"
+            color="primary"
+            style="margin-top: 5px"
+            @click.stop="add(formTypeItem.valueName)"
+          >
+            <v-icon dark>mdi-plus</v-icon>
+          </v-btn>
+          <v-btn
+            v-if="formProvide.formObj[formTypeItem.valueName].length > 1"
+            fab
+            dark
+            max-width="24"
+            max-height="24"
+            color="primary"
+            style="margin-top: 5px"
+            @click.stop="minus(formTypeItem.valueName, index, item.disabled)"
+          >
+            <v-icon dark>mdi-minus</v-icon>
+          </v-btn>
+        </v-col>
       </v-row>
     </div>
   </v-col>
@@ -200,7 +269,7 @@ export default class HInput extends Vue {
       this.formProvide.formObj[valueName].push({
         [this.formTypeItem.itemLabels[0].value]: '',
         [this.formTypeItem.itemLabels[1].value]: '',
-        [this.formTypeItem.itemLabels[2].value]: '',
+        [this.formTypeItem.itemLabels[2]?.value]: '',
         disabled: false
       })
   }

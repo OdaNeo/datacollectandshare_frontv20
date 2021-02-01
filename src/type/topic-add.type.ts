@@ -8,7 +8,7 @@ export type TopicAdd = {
   _numberS: string
   _keyS: string
   interfaceType: string | number
-  databaseType: string
+  dataBaseType: string
   dataBaseIp: string
   url: string
   header: any

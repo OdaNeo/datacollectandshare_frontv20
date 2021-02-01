@@ -26,6 +26,7 @@ export type InputType = {
   itemLabels?: Array<{ [key: string]: string | number | boolean } | any>
   multiple?: boolean
   items?: Array<{ [key: string]: string | number | boolean } | string | userFormVarDo>
+  addItem?: boolean
 }
 
 export type dialogForm = FormObj
