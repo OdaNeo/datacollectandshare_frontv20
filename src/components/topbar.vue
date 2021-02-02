@@ -4,18 +4,19 @@
       <v-col cols="12" align-self="center">
         <span class="titleShadow" @click="$router.push('/statePage/welcome')">{{ PROJECT_TITLE }}</span>
 
-        <v-row class="userMenu" justify="center">
-          <v-menu offset-y bottom max-width="190px" min-width="190px" rounded>
+        <v-row class="userMenu">
+          <v-menu left offset-y bottom max-width="200px" min-width="200px" rounded attach>
             <template v-slot:activator="{ on }">
-              <v-btn icon v-on="on">
-                <v-avatar color="white" size="30">
+              <div class="userMenuBtn" v-on="on">
+                <v-avatar color="white" size="30" class="ml-4">
                   <v-icon>mdi-account</v-icon>
                 </v-avatar>
-              </v-btn>
+                <div class="userName">{{ username }}</div>
+              </div>
             </template>
             <v-card>
               <v-list-item-content class="justify-center py-1">
-                <div>
+                <div style="width: 100%">
                   <div class="user">{{ userName }}</div>
                   <div class="user">{{ userType }}</div>
                   <div class="user">{{ userStatus }}</div>
@@ -74,9 +75,6 @@
             </v-list> -->
           </v-menu>
         </v-row>
-        <div class="userName">
-          {{ username }}
-        </div>
       </v-col>
     </v-row>
   </div>
@@ -166,37 +164,22 @@ export default class TopBar extends Vue {
 }
 .userMenu {
   position: absolute;
-  right: 100px;
-  top: 18px;
+  right: 18px;
+  top: 12px;
+  height: 100%;
+}
+.userMenuBtn {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  width: 160px;
+  height: 100%;
 }
 .userName {
-  position: absolute;
-  width: 75px;
-  right: 3px;
-  top: 17px;
+  margin-left: 18px;
   color: #fff;
 }
-.titleShadow {
-  cursor: pointer;
-  color: #fff;
-  font-size: 22px;
-  font-weight: normal;
-  letter-spacing: 4px;
-  margin-left: 0px;
-  /* background: -webkit-gradient(
-    linear,
-    left top,
-    right top,
-    color-stop(0, #fff),
-    color-stop(0.4, #fff),
-    color-stop(0.5, rgb(255, 172, 20)),
-    color-stop(0.6, #fff),
-    color-stop(1, #fff)
-  );
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: animate 3s infinite; */
-}
+
 /* @keyframes animate {
   from {
     background-position: -500px;

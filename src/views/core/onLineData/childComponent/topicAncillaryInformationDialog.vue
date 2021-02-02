@@ -1,7 +1,6 @@
 <template>
   <div id="topicAncillaryInformationDialog">
     <h-table :headers="tableHeader" :desserts="otherObj"></h-table>
-    <!-- <h-table v-if="otherObj.topicInterFaceType === 3" :headers="headers" :desserts="headerValue"></h-table> -->
   </div>
 </template>
 <script lang="ts">
@@ -80,27 +79,5 @@ export default class TopicAncillaryInformationDialog extends Vue {
         return []
     }
   }
-
-  get headers(): any {
-    return [
-      {
-        text: 'key',
-        align: 'center',
-        value: 'key'
-      },
-      {
-        text: 'value',
-        align: 'center',
-        value: 'value',
-        formater: () => {
-          return '222'
-        }
-      }
-    ]
-  }
-
-  // get headerValue(): any {
-  //   return JSON.parse(this.otherObj.header)
-  // }
 }
 </script>

@@ -3,21 +3,23 @@
     <!-- <v-navigation-drawer
       app
       width="240"
-      color="rgb(0,21,41)"
+      :color="PROJECT_BASE_COLOR"
       v-show="navBar"
       style="overflow-x: visible; overflow-y: visible; animation-duration: 1s; animation-delay: 1.5s"
       class="animated bounceInLeft"
     > -->
-    <v-navigation-drawer width="200px" app color="rgb(0,21,41)" class="mt-14">
+
+    <v-app-bar app height="57" width="100%" style="left: 0px" :color="PROJECT_BASE_COLOR">
+      <top-bar />
+    </v-app-bar>
+    <v-navigation-drawer class="mt-14" width="200px" height="100%" app :color="PROJECT_BASE_COLOR">
       <!-- <transition name="navbar"> -->
       <!-- <NavBar1 ></NavBar1> -->
       <nav-bar></nav-bar>
       <!-- </transition> -->
     </v-navigation-drawer>
-    <v-app-bar app height="57" color="rgb(0,21,41)" width="100%" style="left: 0px">
-      <top-bar />
-    </v-app-bar>
-    <v-main style="background: rgb(246, 248, 251)">
+
+    <v-main style="background: rgb(246, 248, 251); width: 100%; height: 100%">
       <v-container fluid class="main-container">
         <v-breadcrumbs :items="items"></v-breadcrumbs>
         <transition name="fade-transform" mode="out-in">
@@ -32,6 +34,8 @@ import { Component, Vue } from 'vue-property-decorator'
 import NavBar from '@/components/navbar.vue'
 import TopBar from '@/components/topbar.vue'
 import DevicePixelRatio from '@/utils/windowResize'
+import { PROJECT_BASE_COLOR } from '@/config'
+
 @Component({
   components: {
     NavBar,
@@ -39,6 +43,8 @@ import DevicePixelRatio from '@/utils/windowResize'
   }
 })
 export default class Login extends Vue {
+  private PROJECT_BASE_COLOR = PROJECT_BASE_COLOR
+
   get items(): Array<{ text: string; disabled?: boolean; link?: boolean; to?: string }> {
     if (this.$route.matched[0].meta.title === 'tct') {
       return [
@@ -72,6 +78,14 @@ export default class Login extends Vue {
 </script>
 
 <style>
+#tct {
+  width: 100%;
+  height: 100%;
+}
+.main-container {
+  height: 100%;
+  width: 100%;
+}
 /* fade-transform */
 .fade-transform-leave-active,
 .fade-transform-enter-active {
@@ -86,6 +100,30 @@ export default class Login extends Vue {
 .fade-transform-leave-to {
   opacity: 0;
   transform: translateX(20px);
+}
+.titleShadow {
+  position: fixed;
+  cursor: pointer;
+  color: #fff;
+  font-size: 22px;
+  font-weight: normal;
+  letter-spacing: 4px;
+  z-index: 7;
+  top: 15px;
+  left: 15px;
+  /* background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    color-stop(0, #fff),
+    color-stop(0.4, #fff),
+    color-stop(0.5, rgb(255, 172, 20)),
+    color-stop(0.6, #fff),
+    color-stop(1, #fff)
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: animate 3s infinite; */
 }
 /* .out-leave-to {
   opacity: 0;

@@ -1,17 +1,6 @@
 <template>
   <v-row no-gutters>
     <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
-    <v-col cols="12" class="d-flex justify-space-around">
-      <label class="label mr-5"><span class="require-span">*</span>上传文件</label>
-      <v-file-input
-        class="mt-0 pt-0 mr-12"
-        label="支持.proto格式的单文件上传"
-        clearable
-        accept=".proto"
-        @change="$emit('upload-proto-file', $event)"
-        :rules="rules"
-      ></v-file-input>
-    </v-col>
   </v-row>
 </template>
 <script lang="ts">
@@ -29,7 +18,7 @@ import Validator from '@/decorator/validatorDecorator'
 })
 @http
 @Validator(['fileProtoValidate', 'topicNameFormatter'])
-export default class CreateJson extends Vue {
+export default class PullFTP extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private noRepeat: string[] = []
 
@@ -44,11 +33,33 @@ export default class CreateJson extends Vue {
       otherRules: []
     },
     {
-      label: '内存过期时间',
-      valueName: 'redisTimer',
-      type: 'slider',
-      items: ['5', '30'],
-      require: false
+      label: 'baseUrl',
+      valueName: 'baseUrl',
+      type: 'input',
+      require: true
+    },
+    {
+      label: 'FTP地址',
+      valueName: 'ftp',
+      type: 'doubleInput',
+      itemLabels: [
+        { text: 'host', value: 'host' },
+        { text: 'port', value: 'port' }
+      ],
+      addItem: false,
+      require: true
+    },
+    {
+      label: 'FTP账号',
+      valueName: 'userName',
+      type: 'input',
+      require: true
+    },
+    {
+      label: 'FTP密码',
+      valueName: 'password',
+      type: 'input',
+      require: true
     }
   ]
 

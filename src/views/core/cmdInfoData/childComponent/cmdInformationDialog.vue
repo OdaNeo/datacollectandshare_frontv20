@@ -12,7 +12,7 @@ import HTable from '@/components/h-table.vue'
     HTable
   }
 })
-export default class cmdInformationDialog extends Vue {
+export default class CmdInformationDialog extends Vue {
   @Prop() private headersObj!: any
   @Prop() private dessertsObj!: any
 }

@@ -1,6 +1,6 @@
 <template>
   <!-- 如果不指明 type 则不显示 -->
-  <v-col id="HInput" v-if="formTypeItem.type" cols="12" class="d-flex justify-space-around">
+  <div id="HInput" v-if="formTypeItem.type" class="d-flex">
     <label class="label mr-2">
       <div v-if="formTypeItem.label">
         <span v-if="formTypeItem.require" class="require-span">*</span>{{ formTypeItem.label }}
@@ -20,8 +20,7 @@
           ? [...noEmptyRules(formTypeItem.label), ...formTypeItem.otherRules]
           : [...noEmptyRules(formTypeItem.label)]
       "
-      class="ml-4 mr-11"
-      style="max-width: 450px"
+      class="ml-4"
     ></v-text-field>
 
     <!-- textarea -->
@@ -35,8 +34,7 @@
           ? [...noEmptyRules(formTypeItem.label), ...formTypeItem.otherRules]
           : [...noEmptyRules(formTypeItem.label)]
       "
-      class="ml-4 mr-11"
-      style="max-width: 450px"
+      class="ml-4"
     ></v-textarea>
 
     <!-- select下拉框 单选/多选-->
@@ -55,8 +53,7 @@
           ? [...noEmptyRules(formTypeItem.label), ...formTypeItem.otherRules]
           : [...noEmptyRules(formTypeItem.label)]
       "
-      class="ml-4 mr-11 my-0"
-      style="max-width: 450px"
+      class="ml-4 my-0"
     ></v-select>
 
     <!-- radio-group-->
@@ -72,8 +69,7 @@
           ? [...noEmptyRules(formTypeItem.label), ...formTypeItem.otherRules]
           : [...noEmptyRules(formTypeItem.label)]
       "
-      class="ml-4 mr-11 my-0 pt-0 flex-grow-1"
-      style="max-width: 450px"
+      class="ml-4 my-0 pt-0 flex-grow-1"
     >
       <v-radio
         v-for="n in formTypeItem.items"
@@ -89,8 +85,7 @@
       v-if="formTypeItem.type === 'slider'"
       v-model="formProvide.formObj[formTypeItem.valueName]"
       :disabled="formTypeItem.disabled && formTypeItem.disabled"
-      class="align-center ml-4 mr-11 mb-4"
-      style="max-width: 450px"
+      class="align-center ml-4 mb-4"
       :max="formTypeItem.items[1]"
       :min="formTypeItem.items[0]"
       hide-details
@@ -100,19 +95,20 @@
     </v-slider>
 
     <!-- doubleInput -->
-    <div v-if="formTypeItem.type === 'doubleInput'" class="ml-2" style="min-width: 500px">
+    <div v-if="formTypeItem.type === 'doubleInput'" class="ml-4">
       <v-row
-        class="d-flex justify-space-around"
+        class="d-flex justify-space-between"
         no-gutters
         v-for="(item, index) in formProvide.formObj[formTypeItem.valueName]"
         :key="item.id"
       >
-        <v-col cols="5">
+        <v-col class="mr-2">
           <v-text-field
             v-model="item[formTypeItem.itemLabels[0].value]"
             dense
             outlined
-            :disabled="item.disabled"
+            clearable
+            :disabled="formTypeItem.disabled && formTypeItem.disabled"
             :label="formTypeItem.itemLabels[0].text"
             :rules="
               formTypeItem.otherRules
@@ -122,12 +118,13 @@
             height="34"
           ></v-text-field>
         </v-col>
-        <v-col cols="5">
+        <v-col>
           <v-text-field
             v-model="item[formTypeItem.itemLabels[1].value]"
             dense
             outlined
-            :disabled="item.disabled"
+            clearable
+            :disabled="formTypeItem.disabled && formTypeItem.disabled"
             :label="formTypeItem.itemLabels[1].text"
             :rules="
               formTypeItem.otherRules
@@ -137,7 +134,11 @@
             height="34"
           ></v-text-field>
         </v-col>
-        <v-col v-if="formTypeItem.addItem" cols="1" class="d-flex justify-space-around">
+        <!-- 按钮 -->
+        <v-col
+          v-if="formTypeItem.addItem && !formTypeItem.disabled"
+          class="d-flex justify-space-around label-end-polyfill flex-grow-0"
+        >
           <v-btn
             v-if="formProvide.formObj[formTypeItem.valueName].length === index + 1"
             fab
@@ -146,7 +147,7 @@
             max-height="24"
             color="primary"
             style="margin-top: 5px"
-            @click.stop="add(formTypeItem.valueName)"
+            @click.stop="add2(formTypeItem.valueName)"
           >
             <v-icon dark>mdi-plus</v-icon>
           </v-btn>
@@ -158,23 +159,23 @@
             max-height="24"
             color="primary"
             style="margin-top: 5px"
-            @click.stop="minus(formTypeItem.valueName, index, item.disabled)"
+            @click.stop="minus(formTypeItem.valueName, index)"
           >
             <v-icon dark>mdi-minus</v-icon>
           </v-btn>
         </v-col>
-        <v-col v-else cols="1" class="d-flex justify-space-around" />
+        <v-col v-else class="label-end-polyfill flex-grow-0"></v-col>
       </v-row>
     </div>
     <!-- tripleInput -->
-    <div v-if="formTypeItem.type === 'tripleInput'" class="ml-2" style="min-width: 450px">
+    <div v-if="formTypeItem.type === 'tripleInput'" class="ml-4">
       <v-row
-        class="d-flex justify-space-around"
+        class="d-flex justify-space-between"
         no-gutters
         v-for="(item, index) in formProvide.formObj[formTypeItem.valueName]"
         :key="item.id"
       >
-        <v-col cols="3">
+        <v-col class="mr-2">
           <v-text-field
             v-model="item[formTypeItem.itemLabels[0].value]"
             dense
@@ -189,7 +190,7 @@
             height="34"
           ></v-text-field>
         </v-col>
-        <v-col cols="3">
+        <v-col class="mr-2">
           <v-text-field
             v-model="item[formTypeItem.itemLabels[1].value]"
             dense
@@ -204,7 +205,7 @@
             height="34"
           ></v-text-field>
         </v-col>
-        <v-col cols="4">
+        <v-col>
           <v-select
             v-model="item[formTypeItem.itemLabels[2].value]"
             dense
@@ -220,7 +221,8 @@
             :items="formTypeItem.items"
           ></v-select>
         </v-col>
-        <v-col cols="1" class="d-flex justify-space-around">
+        <!-- 按钮 -->
+        <v-col class="d-flex justify-space-around label-end-polyfill flex-grow-0">
           <v-btn
             v-if="formProvide.formObj[formTypeItem.valueName].length === index + 1"
             fab
@@ -234,7 +236,7 @@
             <v-icon dark>mdi-plus</v-icon>
           </v-btn>
           <v-btn
-            v-if="formProvide.formObj[formTypeItem.valueName].length > 1"
+            v-if="!item.disabled && formProvide.formObj[formTypeItem.valueName].length > 1"
             fab
             dark
             max-width="24"
@@ -248,7 +250,10 @@
         </v-col>
       </v-row>
     </div>
-  </v-col>
+    <!-- 保留显示尾部加减号的空间 -->
+    <!-- 仅doubleInput  tripleInput显示 -->
+    <div v-if="formTypeItem.type !== 'doubleInput' && formTypeItem.type !== 'tripleInput'" class="label-end-polyfill" />
+  </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Prop, Inject } from 'vue-property-decorator'
@@ -269,8 +274,16 @@ export default class HInput extends Vue {
       this.formProvide.formObj[valueName].push({
         [this.formTypeItem.itemLabels[0].value]: '',
         [this.formTypeItem.itemLabels[1].value]: '',
-        [this.formTypeItem.itemLabels[2]?.value]: '',
+        [this.formTypeItem.itemLabels[2].value]: '',
         disabled: false
+      })
+  }
+  // add2
+  private add2(valueName: string) {
+    this.formTypeItem.itemLabels &&
+      this.formProvide.formObj[valueName].push({
+        [this.formTypeItem.itemLabels[0].value]: '',
+        [this.formTypeItem.itemLabels[1].value]: ''
       })
   }
   // minus
@@ -294,36 +307,13 @@ export default class HInput extends Vue {
       return []
     }
   }
-
-  // private noRepeat: Function[] = []
-  // rule: topicNameNoRepeat, cmdNameNoRepeat
-  // private async inputEvent(v: string) {
-  //   if (this.formTypeItem.valueName === 'topicName' && v) {
-  //     const { success } = await this.h_request['httpGET']('GET_TOPICS_CHECKED', {
-  //       topicName: v
-  //     })
-  //     if (success) {
-  //       this.noRepeat = [() => '主题名称已被注册']
-  //     } else {
-  //       this.noRepeat = []
-  //     }
-  //   } else if (
-  //     this.formTypeItem.valueName === 'cmdName' &&
-  //     this.formProvide.formObj.cmdName &&
-  //     this.formProvide.formObj.producer
-  //   ) {
-  //     const { success } = await this.h_request['httpGET']('GET_CMD_CHECKED', {
-  //       cmdName: this.formProvide.formObj.cmdName,
-  //       producer: this.formProvide.formObj.producer
-  //     })
-  //     if (success) {
-  //       this.noRepeat = [() => '命令名称已被注册']
-  //     } else {
-  //       this.noRepeat = []
-  //     }
-  //   } else {
-  //     this.noRepeat = []
-  //   }
-  // }
 }
 </script>
+<style scoped>
+#HInput {
+  width: 100%;
+}
+.label-end-polyfill {
+  min-width: 60px;
+}
+</style>

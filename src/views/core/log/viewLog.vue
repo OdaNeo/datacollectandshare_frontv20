@@ -13,7 +13,7 @@
       </v-col>
       <v-col cols="2">
         <h-date-picker
-          label="选择查询起始时间"
+          placeholder="选择查询起始时间"
           :begin="true"
           :anotherDate="afterDate"
           @pickerDate="time => (beginDate = time)"

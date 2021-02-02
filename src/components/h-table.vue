@@ -36,7 +36,7 @@
       </v-simple-table>
     </div>
     <v-pagination
-      class="py-6"
+      class="pt-6 pb-0"
       :length="paginationLength"
       :total-visible="10"
       @input="handleCurrentChange"
@@ -139,10 +139,11 @@ export default class HTable extends Vue {
   background: rgb(246, 248, 251) !important;
 }
 .v-pagination {
-  background: rgb(246, 248, 251) !important;
+  background: transparent !important;
 }
+
 .simple-table {
-  max-height: 64vh;
+  max-height: 70vh;
   /* border-top: 1px solid rgba(0, 0, 0, 0.1); */
   /* border-bottom: 1px solid rgba(0, 0, 0, 0.12); */
   border-radius: 2px;

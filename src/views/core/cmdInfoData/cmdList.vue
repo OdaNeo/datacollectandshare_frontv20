@@ -81,7 +81,7 @@ import util from '@/decorator/utilsDecorator'
 import { rootStoreModule } from '@/store/modules/root'
 import HTable from '@/components/h-table.vue'
 import { FormObj } from '@/type/dialog-form.type'
-import cmdInformationDialog from './childComponent/cmdInformationDialog.vue'
+import CmdInformationDialog from './childComponent/cmdInformationDialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 
 @Component({
@@ -91,7 +91,7 @@ import DataStructureDialog from './childComponent/dataStructureDialog.vue'
     FDialog,
     HConfirm,
     CreateCmdDialog,
-    cmdInformationDialog,
+    CmdInformationDialog,
     DataStructureDialog
   }
 })
@@ -225,9 +225,8 @@ export default class CmdList extends Vue {
   private async searchMethod(bool: boolean, params: object, tab?: boolean) {
     if (tab) {
       const { data }: returnDataType = bool
-        ? await this.h_request.httpGET<object>('GET_CMD_MYCMDBYID', params)
+        ? await this.h_request.httpGET<object>('GET_CMD_FINDMYCMDINFOBYID', params)
         : await this.h_request.httpGET<object>('GET_CMD_MYCMD', params)
-
       data.list &&
         (this.desserts = data.list.map((item: any) => {
           return { ...item, flag: false }

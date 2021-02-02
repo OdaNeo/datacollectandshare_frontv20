@@ -330,7 +330,7 @@ export default class OnlineDataTopicList extends Vue {
     this.protoForms.append('redisTimer', formObj.redisTimer.toString())
     this.protoForms.append('topicName', formObj.topicName.toString())
     // 如果此处vetur报错，请将工程文件放在vscode根目录下 https://github.com/vuejs/vetur/issues/2602
-    const { success } = await this.h_upload.httpPOST('POST_TOPIC_ADDPROTOBUGTOPIC', this.protoForms)
+    const { success } = await this.h_upload.httpPOST('POST_TOPIC_ADDPROTOBUFTOPIC', this.protoForms)
 
     if (success) {
       this.searchMethod(

@@ -1,6 +1,6 @@
 <template>
   <!-- <div id="navbar"> -->
-  <v-list id="navbar" dark expand class="pt-0" dense>
+  <v-list id="navbar" dark expand dense>
     <!-- <v-list-item link>
         <v-list-item-action>
           <v-icon>mdi-home</v-icon>
@@ -53,6 +53,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { rootStoreModule } from '../store/modules/root'
 // import { Route } from 'vue-router'
 import { userRootType } from '@/type/vuex.type.ts'
+
 @Component
 export default class NavBar extends Vue {
   get navMenu(): userRootType[] {
@@ -84,6 +85,10 @@ export default class NavBar extends Vue {
 }
 </script>
 <style scoped>
+#navbar {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 #navbar >>> .v-icon.v-icon {
   font-size: 18px;
 }

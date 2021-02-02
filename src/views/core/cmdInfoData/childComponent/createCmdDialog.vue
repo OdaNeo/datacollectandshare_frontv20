@@ -92,7 +92,7 @@
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator'
+import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import HInput from '@/components/h-input.vue'
@@ -109,6 +109,7 @@ import Validator from '@/decorator/validatorDecorator'
 export default class CreateCmdDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private systemList: Array<{ text: string; value: string }> = []
+  private noRepeat: string[] = []
 
   private formTypeObj: Array<InputType> = [
     {
@@ -117,7 +118,7 @@ export default class CreateCmdDialog extends Vue {
       type: 'input',
       require: true,
       disabled: !!this.formProvide.formObj.cmdName,
-      otherRules: this.h_validator.cmdNameFormatter()
+      otherRules: []
     },
     {
       label: '生产系统名',
@@ -158,6 +159,23 @@ export default class CreateCmdDialog extends Vue {
     for (let i = 0; i < data.length; i++) {
       this.systemList.push({ text: data[i].name, value: data[i].name })
     }
+  }
+  // validation cmdName no-repeat
+  @Watch('formProvide.formObj.cmdName')
+  private async handleCmdNameNoRepeat(val: string) {
+    if (!val) {
+      return
+    }
+    const { success } = await this.h_request['httpGET']('GET_CMD_CHECKED', {
+      cmdName: val,
+      producer: this.formProvide.formObj.producer
+    })
+    if (success) {
+      this.noRepeat = ['命令名称已被注册']
+    } else {
+      this.noRepeat = []
+    }
+    this.formTypeObj[0].otherRules = [...this.h_validator.cmdNameFormatter(), ...this.noRepeat]
   }
 
   created(): void {

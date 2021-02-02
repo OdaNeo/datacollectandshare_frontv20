@@ -1,7 +1,6 @@
 <template>
   <v-row no-gutters>
     <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
-
     <v-col cols="12" class="d-flex mb-5">
       <label class="label mr-6">数据发送示例</label>
       <v-btn color="grey" outlined @click="showConstruction = true">查看</v-btn>

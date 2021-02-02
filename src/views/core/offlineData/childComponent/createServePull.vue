@@ -30,12 +30,14 @@ export default class CreateServePull extends Vue {
       valueName: 'topicName',
       type: 'input',
       require: true,
+      disabled: !!this.formProvide.formObj.topicName,
       otherRules: []
     },
     {
       label: 'Authorization',
       valueName: 'AuthorizationObj',
       type: 'doubleInput',
+      disabled: !!this.formProvide.formObj.topicName,
       itemLabels: [
         { text: '用户名', value: 'key' },
         { text: '密码', value: 'value' }
@@ -44,9 +46,10 @@ export default class CreateServePull extends Vue {
       require: false
     },
     {
-      label: 'url',
+      label: 'URL',
       valueName: 'url',
       type: 'input',
+      disabled: !!this.formProvide.formObj.topicName,
       require: true
     },
     {
@@ -54,6 +57,7 @@ export default class CreateServePull extends Vue {
       valueName: 'type',
       type: 'select',
       items: this.typeItem,
+      disabled: !!this.formProvide.formObj.topicName,
       require: true
     },
     {
@@ -61,6 +65,7 @@ export default class CreateServePull extends Vue {
       valueName: 'body',
       type: '',
       require: true,
+      disabled: !!this.formProvide.formObj.topicName,
       otherRules: [...this.h_validator.dataStructValidate()]
     },
     {
@@ -71,6 +76,7 @@ export default class CreateServePull extends Vue {
         { text: '键', value: 'key' },
         { text: '值', value: 'value' }
       ],
+      disabled: !!this.formProvide.formObj.topicName,
       addItem: true,
       require: false
     },
@@ -93,9 +99,8 @@ export default class CreateServePull extends Vue {
       require: true
     }
   ]
-
   // 请求类型
-  @Watch('formProvide.formObj.type')
+  @Watch('formProvide.formObj.type', { immediate: true })
   private handleRequestType(val: string) {
     // 选择是否显示body
     if (val === this.typeItem[0]) {

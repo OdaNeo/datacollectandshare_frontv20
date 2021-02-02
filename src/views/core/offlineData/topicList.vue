@@ -23,7 +23,7 @@
           >数据库采集</v-btn
         >
         <v-btn color="primary" height="35px" class="mr-6" small dark @click="createServePull()">服务主动拉取</v-btn>
-        <v-btn color="primary" height="35px" class="mr-6" small dark @click="createJson">拉取FTP</v-btn>
+        <v-btn color="primary" height="35px" class="mr-6" small dark @click="pullFTP">拉取FTP</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -74,7 +74,7 @@
     <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
       <CreateDataBaseAcquisition v-if="fDialogShow === 1" />
       <CreateServePull v-else-if="fDialogShow === 2" />
-      <create-json v-else-if="fDialogShow === 3" />
+      <PullFTP v-else-if="fDialogShow === 3" />
     </f-dialog>
 
     <!-- 表格显示 -->
@@ -104,7 +104,7 @@ import { FormObj } from '@/type/dialog-form.type'
 
 import CreateDataBaseAcquisition from './childComponent/createDataBaseAcquisition.vue'
 import CreateServePull from './childComponent/createServePull.vue'
-import createJson from './childComponent/createJson.vue'
+import PullFTP from './childComponent/pullFTP.vue'
 
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInformationDialog.vue'
@@ -116,7 +116,7 @@ import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInfo
     TDialog,
     CreateDataBaseAcquisition,
     CreateServePull,
-    createJson,
+    PullFTP,
     DataStructureDialog,
     TopicAncillaryInformationDialog
   }
@@ -243,6 +243,7 @@ export default class OfflineTopicList extends Vue {
       }
       this.formProvide.formObj = {
         canNotEdit: true,
+        id: item.id,
         topicName: item.topicName,
         dataBaseType: item.dataBaseType,
         dataBaseIp: item.dataBaseIp,
@@ -311,14 +312,46 @@ export default class OfflineTopicList extends Vue {
     this.formProvide.methodName = 'addServePull'
 
     if (item) {
-      console.log(item)
+      // TODO 详细测试
+      const obj1: any = JSON.parse(item.dsAnnotation)
+      const obj2: any = JSON.parse(item.dataStruct)[0]
+      let _topicList = []
+      for (const k in obj1) {
+        _topicList.push({
+          key: k,
+          description: obj1[k],
+          type: typeof obj2[k] === 'number' && obj2[k] > 1 ? 'TimeStamp' : obj2[k],
+          disabled: true
+        })
+      }
+      this.formProvide.formObj = {
+        canNotEdit: true,
+        topicName: item.topicName,
+        id: item.id,
+        url: item.url,
+        type: item.type,
+        body: item.body,
+        topicList: _topicList,
+        AuthorizationObj: [
+          {
+            key: '***',
+            value: '***'
+          }
+        ],
+        header: JSON.parse(item.header)
+      }
     } else {
       this.formProvide.formObj = {
         AuthorizationObj: [
           {
             key: '',
-            value: '',
-            disabled: false
+            value: ''
+          }
+        ],
+        header: [
+          {
+            key: '',
+            value: ''
           }
         ],
         topicList: [
@@ -328,24 +361,46 @@ export default class OfflineTopicList extends Vue {
             type: '',
             disabled: false
           }
-        ],
-        header: [
-          {
-            key: '',
-            value: '',
-            disabled: false
-          }
         ]
       }
     }
   }
   // addServePull
   private async addServePull(formObj: TopicAdd) {
-    console.log(formObj)
+    const canNotEdit = formObj.canNotEdit
+    const dataStruct: any = {}
+    const dataStructNumber: any = {}
 
-    const { success } = await this.h_upload.httpPOST('POST_TOPIC_ADDPROTOBUGTOPIC', formObj)
+    formObj.topicList.forEach(val => {
+      dataStruct[val.key] = val.description
+      dataStructNumber[val.key] = val.type === 'TimeStamp' ? Date.now() : val.type
+    })
+    const _numberS = JSON.stringify(dataStruct)
+    const _keyS = '[' + JSON.stringify(dataStructNumber) + ']'
+    const params: any = {
+      dataStruct: _keyS,
+      dsAnnotation: _numberS,
+      dataType: dataType['结构化']
+    }
+    canNotEdit && (params.id = formObj.id)
+
+    let _obj = [...formObj.header]
+    // 只在添加的时候 转base64
+    if (!canNotEdit && formObj.AuthorizationObj.key && formObj.AuthorizationObj.value) {
+      _obj.unshift(this.authorizationBase64(formObj.AuthorizationObj))
+    }
+
+    params.topicInterFaceType = 3
+    params.topicName = formObj.topicName
+    params.url = formObj.url
+    params.header = JSON.stringify(_obj)
+    params.type = formObj.type
+    // 如果是post请求，会有body字段
+    formObj.body && (params.body = formObj.body.replace(/\s+/g, ''))
+    const { success } = await this.h_request['httpPOST'](!canNotEdit ? 'POST_TOPICS_ADD' : 'POST_TOPICS_UPDATE', params)
 
     if (success) {
+      this.h_utils['alertUtil'].open(!canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
       this.searchMethod(
         false,
         {
@@ -358,27 +413,43 @@ export default class OfflineTopicList extends Vue {
       return Promise.resolve(true)
     }
   }
+  // 转64
+  private authorizationBase64(obj: any) {
+    return {
+      key: 'Authorization',
+      value: 'Basic ' + window.btoa(obj.key + ':' + obj.value + '')
+    }
+  }
 
-  // createJson
-  private createJson() {
+  // pullFTP
+  private pullFTP() {
     this.fDialogFlag = true
     this.fDialogShow = 3
     this.formProvide.btnName = ['立即提交']
     this.formProvide.title = '创建JSON'
-    this.formProvide.methodName = 'addJson' // 立即提交
-    this.formProvide.formObj = {}
+    this.formProvide.methodName = 'addFTP' // 立即提交
+    this.formProvide.formObj = {
+      ftp: [
+        {
+          host: '',
+          port: ''
+        }
+      ]
+    }
   }
-  // addJson
-  private async addJson(formObj: TopicAdd) {
+  // addFTP
+  private async addFTP(formObj: TopicAdd) {
     const params: any = {}
+    console.log(formObj)
 
     params.dataType = dataType['结构化']
-    params.topicInterFaceType = 4
+    params.topicInterFaceType = 5
     params.topicName = formObj.topicName
-    params.queneType = formObj.queneType
-    params.redisTimer = formObj.redisTimer
-    params.writeElasticsearch = 1
-    params.dataStructSchema = formObj.dataStructSchema.replace(/\s+/g, '')
+    params.port = formObj.ftp.port
+    params.host = formObj.ftp.host
+    params.baseUrl = formObj.baseUrl
+    params.userName = formObj.userName
+    params.password = formObj.password
 
     const { success } = await this.h_request['httpPOST']('POST_TOPICS_ADD', params)
     if (success) {
@@ -397,8 +468,15 @@ export default class OfflineTopicList extends Vue {
   }
 
   // 添加
-  private addItems(item: any) {
-    this.createDataBaseAcquisition(item)
+  private addItems(item: { topicInterFaceType: number }) {
+    if (item.topicInterFaceType === 2) {
+      // 数据库采集
+      this.createDataBaseAcquisition(item)
+    } else if (item.topicInterFaceType === 3) {
+      // 服务端主动拉取
+      this.createServePull(item)
+    }
+    //
   }
 
   // 查询通用调用方法 结构化数据
