@@ -15,7 +15,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" height="35px" dark @click.stop="addItem">添加用户</v-btn>
+        <v-btn color="primary" height="35px" depressed dark @click.stop="addItem">添加用户</v-btn>
       </v-col>
     </v-row>
     <!-- <transition name="table" @after-leave="tableAfterEnter" style="background: #fff"> -->

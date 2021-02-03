@@ -19,9 +19,11 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" height="35px" class="mr-6" small dark @click="createRest()">创建REST</v-btn>
-        <v-btn color="primary" height="35px" class="mr-6" small dark @click="createProtobuf">创建PROTOBUF</v-btn>
-        <v-btn color="primary" height="35px" class="mr-6" small dark @click="createJson">创建JSON</v-btn>
+        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createRest()">创建REST</v-btn>
+        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createProtobuf"
+          >创建PROTOBUF</v-btn
+        >
+        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createJson">创建JSON</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -37,12 +39,23 @@
           :paginationLength="paginationLength"
         >
           <template v-slot:buttons="{ item }">
-            <v-btn v-if="item.topicInterFaceType !== 6" text color="primary" @click="dataStructureDetails(item)"
+            <v-btn
+              :disabled="item.topicInterFaceType === 6 || item.topicInterFaceType === 5"
+              text
+              color="primary"
+              @click="dataStructureDetails(item)"
               >数据结构详情</v-btn
             >
           </template>
           <template v-slot:buttons2="{ item, index }">
-            <v-btn v-if="tab && item.topicInterFaceType === 1" text color="primary" @click.stop="addItems(item)"
+            <v-btn
+              v-if="tab"
+              :disabled="
+                item.topicInterFaceType !== 1 && item.topicInterFaceType !== 2 && item.topicInterFaceType !== 3
+              "
+              text
+              color="primary"
+              @click.stop="addItems(item)"
               >增加字段</v-btn
             >
             <v-btn
@@ -59,7 +72,13 @@
             <v-btn v-if="item.topicInterFaceType === 6" text color="primary" @click.stop="downloadFile(item)"
               >下载</v-btn
             >
-            <v-btn text color="primary" @click="getTopicInformation(item, index)">查看附加信息</v-btn>
+            <v-btn
+              text
+              color="primary"
+              :disabled="item.topicInterFaceType === 5"
+              @click="getTopicInformation(item, index)"
+              >查看附加信息</v-btn
+            >
           </template>
         </h-table>
       </v-tab-item>
@@ -537,6 +556,7 @@ export default class OnlineDataTopicList extends Vue {
 
         // 格式不对报错
         if (!this.sheetObj['!ref'].includes('C')) {
+          this.h_utils['alertUtil'].open('表头有误', true, 'error')
           return
         }
 

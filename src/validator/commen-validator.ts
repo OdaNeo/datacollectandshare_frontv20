@@ -5,6 +5,10 @@ class CommonValidator {
   public readonly noEmpty = (str: string): ValidatorType => {
     return [(v: string) => !!v || `${str}不能为空`]
   }
+  // 数字校验
+  public readonly isNumber = (): ValidatorType => {
+    return [(v: unknown) => !isNaN(Number(v)) || '请输入数字']
+  }
 }
 
 export default CommonValidator

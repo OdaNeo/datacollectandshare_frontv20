@@ -23,6 +23,9 @@ export type InputType = {
   require: boolean // 非空校验
   disabled?: boolean
   otherRules?: Array<boolean | string> // 除了非空之外的rules
+  otherRules_0?: Array<boolean | string>
+  otherRules_1?: Array<boolean | string>
+  otherRules_2?: Array<boolean | string>
   itemLabels?: Array<{ [key: string]: string | number | boolean } | any>
   multiple?: boolean
   items?: Array<{ [key: string]: string | number | boolean } | string | userFormVarDo>

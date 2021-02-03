@@ -62,7 +62,7 @@ export default class CreateDataBaseAcquisition extends Vue {
         { text: '描述', value: 'description' },
         { text: '字段类型', value: 'type' }
       ],
-      otherRules: [],
+      otherRules_0: [],
       require: true
     }
   ]
@@ -98,9 +98,9 @@ export default class CreateDataBaseAcquisition extends Vue {
       }
     })
     if (_L.length > _l.length) {
-      this.formTypeObj[3].otherRules = ['字段名不能重复']
+      this.formTypeObj[3].otherRules_0 = ['字段名不能重复']
     } else {
-      this.formTypeObj[3].otherRules = []
+      this.formTypeObj[3].otherRules_0 = []
     }
   }
 }

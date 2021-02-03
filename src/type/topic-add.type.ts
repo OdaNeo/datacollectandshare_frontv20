@@ -20,10 +20,10 @@ export type TopicAdd = {
   AuthorizationObj: any
   type: string
   body: any
-  ftp: {
+  ftp: Array<{
     port: string
     host: string
-  }
+  }>
   port: string
   host: string
   baseUrl: string

@@ -101,30 +101,7 @@ export default class Login extends Vue {
   opacity: 0;
   transform: translateX(20px);
 }
-.titleShadow {
-  position: fixed;
-  cursor: pointer;
-  color: #fff;
-  font-size: 22px;
-  font-weight: normal;
-  letter-spacing: 4px;
-  z-index: 7;
-  top: 15px;
-  left: 15px;
-  /* background: -webkit-gradient(
-    linear,
-    left top,
-    right top,
-    color-stop(0, #fff),
-    color-stop(0.4, #fff),
-    color-stop(0.5, rgb(255, 172, 20)),
-    color-stop(0.6, #fff),
-    color-stop(1, #fff)
-  );
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: animate 3s infinite; */
-}
+
 /* .out-leave-to {
   opacity: 0;
   transform: translate3d(-1000px, 0, 0);

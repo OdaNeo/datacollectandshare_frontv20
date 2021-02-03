@@ -25,7 +25,7 @@
       v-for="item in navMenu"
       :key="item.id"
       append-icon="mdi-menu-up"
-      :prepend-icon="parentIcon(item.name)"
+      :prepend-icon="parentIcon(item.url)"
       no-action
       color="white"
     >
@@ -60,10 +60,10 @@ export default class NavBar extends Vue {
     return rootStoreModule.navMenuList
   }
 
-  public parentIcon(routeName: string): string {
+  public parentIcon(url: string): string {
     // const $Router: any = this.$router
     const $Route = this.$router.options.routes?.find(v => {
-      return v.name === routeName
+      return v.path === url
     })
     return $Route?.meta.icon
   }

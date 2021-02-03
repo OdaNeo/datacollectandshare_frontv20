@@ -179,7 +179,30 @@ export default class TopBar extends Vue {
   margin-left: 18px;
   color: #fff;
 }
-
+.titleShadow {
+  position: fixed;
+  cursor: pointer;
+  color: #fff;
+  font-size: 22px;
+  font-weight: normal;
+  letter-spacing: 4px;
+  z-index: 7;
+  top: 13px;
+  left: 15px;
+  /* background: -webkit-gradient(
+    linear,
+    left top,
+    right top,
+    color-stop(0, #fff),
+    color-stop(0.4, #fff),
+    color-stop(0.5, rgb(255, 172, 20)),
+    color-stop(0.6, #fff),
+    color-stop(1, #fff)
+  );
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: animate 3s infinite; */
+}
 /* @keyframes animate {
   from {
     background-position: -500px;

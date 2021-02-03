@@ -19,7 +19,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" height="35px" dark @click.stop="createCommend(false)">创建命令</v-btn>
+        <v-btn color="primary" depressed height="35px" dark @click.stop="createCommend(false)">创建命令</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">

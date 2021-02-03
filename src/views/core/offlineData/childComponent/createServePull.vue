@@ -95,7 +95,7 @@ export default class CreateServePull extends Vue {
         { text: '描述', value: 'description' },
         { text: '字段类型', value: 'type' }
       ],
-      otherRules: [],
+      otherRules_0: [],
       require: true
     }
   ]
@@ -142,9 +142,9 @@ export default class CreateServePull extends Vue {
       }
     })
     if (_L.length > _l.length) {
-      this.formTypeObj[6].otherRules = ['字段名不能重复']
+      this.formTypeObj[6].otherRules_0 = ['字段名不能重复']
     } else {
-      this.formTypeObj[6].otherRules = []
+      this.formTypeObj[6].otherRules_0 = []
     }
   }
 }

@@ -111,8 +111,8 @@
             :disabled="formTypeItem.disabled && formTypeItem.disabled"
             :label="formTypeItem.itemLabels[0].text"
             :rules="
-              formTypeItem.otherRules
-                ? [...noEmptyRules(formTypeItem.itemLabels[0].text), ...formTypeItem.otherRules]
+              formTypeItem.otherRules_0
+                ? [...noEmptyRules(formTypeItem.itemLabels[0].text), ...formTypeItem.otherRules_0]
                 : [...noEmptyRules(formTypeItem.itemLabels[0].text)]
             "
             height="34"
@@ -127,8 +127,8 @@
             :disabled="formTypeItem.disabled && formTypeItem.disabled"
             :label="formTypeItem.itemLabels[1].text"
             :rules="
-              formTypeItem.otherRules
-                ? [...noEmptyRules(formTypeItem.itemLabels[1].text), ...formTypeItem.otherRules]
+              formTypeItem.otherRules_1
+                ? [...noEmptyRules(formTypeItem.itemLabels[1].text), ...formTypeItem.otherRules_1]
                 : [...noEmptyRules(formTypeItem.itemLabels[1].text)]
             "
             height="34"
@@ -167,6 +167,7 @@
         <v-col v-else class="label-end-polyfill flex-grow-0"></v-col>
       </v-row>
     </div>
+
     <!-- tripleInput -->
     <div v-if="formTypeItem.type === 'tripleInput'" class="ml-4">
       <v-row
@@ -183,8 +184,8 @@
             :disabled="item.disabled"
             :label="formTypeItem.itemLabels[0].text"
             :rules="
-              formTypeItem.otherRules
-                ? [...noEmptyRules(formTypeItem.itemLabels[0].text), ...formTypeItem.otherRules]
+              formTypeItem.otherRules_0
+                ? [...noEmptyRules(formTypeItem.itemLabels[0].text), ...formTypeItem.otherRules_0]
                 : [...noEmptyRules(formTypeItem.itemLabels[0].text)]
             "
             height="34"
@@ -198,8 +199,8 @@
             :disabled="item.disabled"
             :label="formTypeItem.itemLabels[1].text"
             :rules="
-              formTypeItem.otherRules
-                ? [...noEmptyRules(formTypeItem.itemLabels[1].text), ...formTypeItem.otherRules]
+              formTypeItem.otherRules_1
+                ? [...noEmptyRules(formTypeItem.itemLabels[1].text), ...formTypeItem.otherRules_1]
                 : [...noEmptyRules(formTypeItem.itemLabels[1].text)]
             "
             height="34"
@@ -213,8 +214,8 @@
             :disabled="item.disabled"
             :label="formTypeItem.itemLabels[2].text"
             :rules="
-              formTypeItem.otherRules
-                ? [...noEmptyRules(formTypeItem.itemLabels[2].text), ...formTypeItem.otherRules]
+              formTypeItem.otherRules_2
+                ? [...noEmptyRules(formTypeItem.itemLabels[2].text), ...formTypeItem.otherRules_2]
                 : [...noEmptyRules(formTypeItem.itemLabels[2].text)]
             "
             height="34"

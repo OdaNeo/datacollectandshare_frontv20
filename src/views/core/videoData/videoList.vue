@@ -19,7 +19,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" height="35px" dark @click.stop="createTopicVideo">创建主题</v-btn>
+        <v-btn color="primary" height="35px" depressed dark @click.stop="createTopicVideo">创建主题</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -54,7 +54,13 @@
       <create-video-topic-dialog v-if="dialogShow === 1" />
       <set-date-range v-else-if="dialogShow === 2" />
     </f-dialog>
-    <video-popup :videoCounts="videoCounts" :videoList="videoList" v-if="showVideoPopup" v-model="showVideoPopup" />
+    <video-popup
+      :videoCounts="videoCounts"
+      :videoList="videoList"
+      :videoCountsReal="videoCountsReal"
+      v-if="showVideoPopup"
+      v-model="showVideoPopup"
+    />
 
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteVideoTopic" />
   </div>
@@ -174,10 +180,13 @@ export default class VideoDataList extends Vue {
       slot: 'buttons2'
     }
   ]
+  // 查询到视频数量（包含空视频）
   private videoList: Array<{ timer: string; url: string }> = []
-  private curItem: any
-  private videoCounts = 0 // 总共应该显示多少视频
 
+  private curItem: any
+
+  private videoCounts = 0 // 总共应该显示多少视频
+  private videoCountsReal = 0 // 实际视频数量
   //  创建主题
   private createTopicVideo() {
     this.dialogFlag = true
@@ -230,6 +239,7 @@ export default class VideoDataList extends Vue {
   // 获得视频列表
   private async getVideoList(formObj: any) {
     this.videoList = []
+    this.videoCountsReal = 0
     const params: any = {}
     // -8小时时差
     // 2020-1-1-0时 ~ 2020-1-1-1时 视频文件数：1，overTime - beginTime=0ms
@@ -250,8 +260,11 @@ export default class VideoDataList extends Vue {
       if (item.url.length === 0) {
         this.videoList.push({ timer: item.timer + '时', url: '' })
       } else {
-        item.url.forEach((_, index) => {
-          this.videoList.push({ timer: item.timer + '时' + '-' + (index + 1), url: item.url[index] })
+        item.url.forEach((_item, _index) => {
+          this.videoList.push({ timer: item.timer + '时' + '-' + (_index + 1), url: item.url[_index] })
+          if (_item) {
+            this.videoCountsReal++
+          }
         })
       }
     })

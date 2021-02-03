@@ -17,7 +17,7 @@ import Validator from '@/decorator/validatorDecorator'
   }
 })
 @http
-@Validator(['fileProtoValidate', 'topicNameFormatter'])
+@Validator(['fileProtoValidate', 'topicNameFormatter', 'isNumber'])
 export default class PullFTP extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private noRepeat: string[] = []
@@ -47,7 +47,8 @@ export default class PullFTP extends Vue {
         { text: 'port', value: 'port' }
       ],
       addItem: false,
-      require: true
+      require: true,
+      otherRules_1: [...this.h_validator.isNumber()]
     },
     {
       label: 'FTP账号',

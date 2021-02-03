@@ -143,7 +143,7 @@ export default class HTable extends Vue {
 }
 
 .simple-table {
-  max-height: 70vh;
+  max-height: 67vh;
   /* border-top: 1px solid rgba(0, 0, 0, 0.1); */
   /* border-bottom: 1px solid rgba(0, 0, 0, 0.12); */
   border-radius: 2px;

@@ -19,11 +19,13 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" height="35px" class="mr-6" small dark @click="createDataBaseAcquisition()"
+        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createDataBaseAcquisition()"
           >数据库采集</v-btn
         >
-        <v-btn color="primary" height="35px" class="mr-6" small dark @click="createServePull()">服务主动拉取</v-btn>
-        <v-btn color="primary" height="35px" class="mr-6" small dark @click="pullFTP">拉取FTP</v-btn>
+        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createServePull()"
+          >服务主动拉取</v-btn
+        >
+        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="pullFTP">拉取FTP</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -39,13 +41,20 @@
           :paginationLength="paginationLength"
         >
           <template v-slot:buttons="{ item }">
-            <v-btn v-if="item.topicInterFaceType !== 5" text color="primary" @click="dataStructureDetails(item)"
+            <v-btn
+              :disabled="item.topicInterFaceType === 6 || item.topicInterFaceType === 5"
+              text
+              color="primary"
+              @click="dataStructureDetails(item)"
               >数据结构详情</v-btn
             >
           </template>
           <template v-slot:buttons2="{ item, index }">
             <v-btn
-              v-if="tab && (item.topicInterFaceType === 2 || item.topicInterFaceType === 3)"
+              v-if="tab"
+              :disabled="
+                item.topicInterFaceType !== 1 && item.topicInterFaceType !== 2 && item.topicInterFaceType !== 3
+              "
               text
               color="primary"
               @click.stop="addItems(item)"
@@ -62,7 +71,11 @@
             >
               删除
             </v-btn>
-            <v-btn text color="primary" v-if="item.topicInterFaceType !== 5" @click="getTopicInformation(item, index)"
+            <v-btn
+              text
+              color="primary"
+              :disabled="item.topicInterFaceType === 5"
+              @click="getTopicInformation(item, index)"
               >查看附加信息</v-btn
             >
           </template>
@@ -312,7 +325,6 @@ export default class OfflineTopicList extends Vue {
     this.formProvide.methodName = 'addServePull'
 
     if (item) {
-      // TODO 详细测试
       const obj1: any = JSON.parse(item.dsAnnotation)
       const obj2: any = JSON.parse(item.dataStruct)[0]
       let _topicList = []
@@ -324,6 +336,7 @@ export default class OfflineTopicList extends Vue {
           disabled: true
         })
       }
+      const _header = JSON.parse(item.header)
       this.formProvide.formObj = {
         canNotEdit: true,
         topicName: item.topicName,
@@ -338,7 +351,14 @@ export default class OfflineTopicList extends Vue {
             value: '***'
           }
         ],
-        header: JSON.parse(item.header)
+        header: _header.length
+          ? _header
+          : [
+              {
+                key: '',
+                value: ''
+              }
+            ]
       }
     } else {
       this.formProvide.formObj = {
@@ -384,9 +404,10 @@ export default class OfflineTopicList extends Vue {
     }
     canNotEdit && (params.id = formObj.id)
 
-    let _obj = [...formObj.header]
+    // 去除key为空的项
+    let _obj = [...this.cleanObj(formObj.header)]
     // 只在添加的时候 转base64
-    if (!canNotEdit && formObj.AuthorizationObj.key && formObj.AuthorizationObj.value) {
+    if (!canNotEdit && formObj.AuthorizationObj[0].key && formObj.AuthorizationObj[0].value) {
       _obj.unshift(this.authorizationBase64(formObj.AuthorizationObj))
     }
 
@@ -397,6 +418,7 @@ export default class OfflineTopicList extends Vue {
     params.type = formObj.type
     // 如果是post请求，会有body字段
     formObj.body && (params.body = formObj.body.replace(/\s+/g, ''))
+
     const { success } = await this.h_request['httpPOST'](!canNotEdit ? 'POST_TOPICS_ADD' : 'POST_TOPICS_UPDATE', params)
 
     if (success) {
@@ -421,12 +443,25 @@ export default class OfflineTopicList extends Vue {
     }
   }
 
+  // 去除obj中key为空的项
+  private cleanObj(obj: Array<{ key: unknown }>): Array<{ key: unknown }> {
+    const _obj = [...obj]
+    const _object: Array<{ key: unknown }> = []
+
+    _obj.forEach(item => {
+      if (item.key || typeof item.key === 'number') {
+        _object.push(item)
+      }
+    })
+    return _object
+  }
+
   // pullFTP
   private pullFTP() {
     this.fDialogFlag = true
     this.fDialogShow = 3
     this.formProvide.btnName = ['立即提交']
-    this.formProvide.title = '创建JSON'
+    this.formProvide.title = '拉取FTP'
     this.formProvide.methodName = 'addFTP' // 立即提交
     this.formProvide.formObj = {
       ftp: [
@@ -440,13 +475,12 @@ export default class OfflineTopicList extends Vue {
   // addFTP
   private async addFTP(formObj: TopicAdd) {
     const params: any = {}
-    console.log(formObj)
 
     params.dataType = dataType['结构化']
     params.topicInterFaceType = 5
     params.topicName = formObj.topicName
-    params.port = formObj.ftp.port
-    params.host = formObj.ftp.host
+    params.port = formObj.ftp[0].port
+    params.host = formObj.ftp[0].host
     params.baseUrl = formObj.baseUrl
     params.userName = formObj.userName
     params.password = formObj.password

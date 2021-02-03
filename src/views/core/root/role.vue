@@ -15,12 +15,11 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn height="35px" color="primary" dark @click.stop="addItem">添加</v-btn>
+        <v-btn height="35px" color="primary" depressed dark @click.stop="addItem">添加</v-btn>
       </v-col>
     </v-row>
     <h-table :headers="headers" :desserts="desserts" :pageNum="pageNum" :paginationLength="paginationLength">
       <template v-slot:buttons="{ item }">
-        <!--TODO: 接口无权限？ -->
         <v-btn text color="primary" @click="authItem(item)">授权</v-btn>
         <v-btn text color="primary" @click="editItem(item)">编辑</v-btn>
         <v-btn
@@ -206,7 +205,6 @@ export default class Role extends Vue {
 
   private async editRole(formObj: RoleFormObj) {
     const { name, id } = formObj
-    console.log(formObj)
     const { success } = await this.h_request['httpPUT']<RoleFormObj>('PUT_ROLE_UPDATEROLE', {
       name,
       id
