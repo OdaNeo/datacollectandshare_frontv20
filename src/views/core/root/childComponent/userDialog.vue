@@ -1,16 +1,79 @@
 <template>
   <v-row no-gutters>
-    <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>用户名</label>
+      <v-text-field
+        v-model="formProvide.formObj['loginName']"
+        :disabled="editDialog"
+        outlined
+        dense
+        clearable
+        height="34"
+        :rules="[...h_validator.noEmpty('用户名')]"
+        class="ml-4 mr-15"
+      ></v-text-field>
+    </v-col>
+    <v-col v-if="!editDialog" cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>密码</label>
+      <v-text-field
+        v-model="formProvide.formObj['loginPwd']"
+        outlined
+        dense
+        clearable
+        height="34"
+        :rules="[...h_validator.noEmpty('密码')]"
+        class="ml-4 mr-15"
+      ></v-text-field>
+    </v-col>
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>用户类型</label>
+      <v-select
+        v-model="formProvide.formObj['userType']"
+        outlined
+        dense
+        height="34"
+        label="请选择用户类型"
+        :items="userRoots"
+        :rules="[...h_validator.noEmpty('用户类型')]"
+        class="ml-4 my-0 mr-15"
+      ></v-select>
+    </v-col>
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>用户状态</label>
+      <v-radio-group
+        v-model="formProvide.formObj['userState']"
+        row
+        dense
+        height="34"
+        :rules="[...h_validator.noEmpty('用户状态')]"
+        class="ml-4 my-0 pt-0 flex-grow-1 mr-15"
+      >
+        <v-radio v-for="n in userStates" :key="n.value" :label="`${n.text}`" :value="n.value"></v-radio>
+      </v-radio-group>
+    </v-col>
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>系统名称</label>
+      <v-select
+        v-model="formProvide.formObj['systemName']"
+        outlined
+        dense
+        height="34"
+        label="请选择系统名称"
+        :items="systemNames"
+        :rules="[...h_validator.noEmpty('系统名称')]"
+        class="ml-4 my-0 mr-15"
+      ></v-select>
+    </v-col>
   </v-row>
 </template>
 <script lang="ts">
 import { Component, Vue, Inject } from 'vue-property-decorator'
 import HInput from '@/components/h-input.vue'
-import { InputType } from '@/type/dialog-form.type'
 import { userFormVar } from '@/type/user.type'
 import http from '@/decorator/httpDecorator'
 import { returnDataType, httpAllParams } from '@/type/http-request.type'
 import { H_Vue } from '@/declaration/vue-prototype'
+import Validator from '@/decorator/validatorDecorator'
 
 @http
 @Component({
@@ -18,6 +81,7 @@ import { H_Vue } from '@/declaration/vue-prototype'
     HInput
   }
 })
+@Validator(['noEmpty'])
 export default class userDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private userStates: Array<userFormVar> = [
@@ -27,42 +91,43 @@ export default class userDialog extends Vue {
   ]
   private userRoots: Array<userFormVar> = []
   private systemNames: Array<userFormVar> = []
+  private editDialog = false
 
-  private formTypeObj: Array<InputType> = [
-    {
-      label: '用户名',
-      valueName: 'loginName',
-      type: 'input',
-      require: true
-    },
-    {
-      label: '密码',
-      valueName: 'loginPwd',
-      type: 'input',
-      require: true
-    },
-    {
-      label: '用户类型',
-      valueName: 'userType',
-      type: 'select',
-      items: [],
-      require: true
-    },
-    {
-      label: '用户状态',
-      valueName: 'userState',
-      type: 'radioGroup',
-      items: this.userStates,
-      require: true
-    },
-    {
-      label: '系统名称',
-      valueName: 'systemName',
-      type: 'select',
-      items: [],
-      require: true
-    }
-  ]
+  // private formTypeObj: Array<InputType> = [
+  //   {
+  //     label: '用户名',
+  //     valueName: 'loginName',
+  //     type: 'input',
+  //     require: true
+  //   },
+  //   {
+  //     label: '密码',
+  //     valueName: 'loginPwd',
+  //     type: 'input',
+  //     require: true
+  //   },
+  //   {
+  //     label: '用户类型',
+  //     valueName: 'userType',
+  //     type: 'select',
+  //     items: [],
+  //     require: true
+  //   },
+  //   {
+  //     label: '用户状态',
+  //     valueName: 'userState',
+  //     type: 'radioGroup',
+  //     items: this.userStates,
+  //     require: true
+  //   },
+  //   {
+  //     label: '系统名称',
+  //     valueName: 'systemName',
+  //     type: 'select',
+  //     items: [],
+  //     require: true
+  //   }
+  // ]
 
   private getUserRoot({ data }: returnDataType) {
     this.userRoots = data.map((s: { name: string; id: number }) => {
@@ -71,8 +136,6 @@ export default class userDialog extends Vue {
         value: s.id.toString()
       }
     })
-    // 响应式更新
-    this.formTypeObj[2].items = this.userRoots.concat([])
   }
   private getSystemName({ data }: returnDataType) {
     this.systemNames = data.map((s: { name: string; id: number }) => {
@@ -81,8 +144,6 @@ export default class userDialog extends Vue {
         value: s.id.toString()
       }
     })
-    // 响应式更新
-    this.formTypeObj[4].items = this.systemNames.concat([])
   }
 
   private async httpAll() {
@@ -105,8 +166,7 @@ export default class userDialog extends Vue {
     this.httpAll()
     // 编辑页面没有密码项，不能编辑用户名
     if (this.formProvide.formObj.loginName) {
-      this.formTypeObj[0].disabled = true
-      this.$set(this.formTypeObj, 1, {})
+      this.editDialog = true
     }
   }
 }

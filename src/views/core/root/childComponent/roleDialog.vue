@@ -1,26 +1,32 @@
 <template>
   <v-row no-gutters>
-    <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>角色名称</label>
+      <v-text-field
+        v-model="formProvide.formObj['name']"
+        outlined
+        dense
+        clearable
+        height="34"
+        :rules="[...h_validator.noEmpty('角色名称')]"
+        class="ml-4 mr-15"
+      ></v-text-field>
+    </v-col>
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Inject } from 'vue-property-decorator'
 import HInput from '@/components/h-input.vue'
-import { InputType } from '@/type/dialog-form.type'
+import { H_Vue } from '@/declaration/vue-prototype'
+import Validator from '@/decorator/validatorDecorator'
 
 @Component({
   components: {
     HInput
   }
 })
+@Validator(['noEmpty'])
 export default class RoleDialog extends Vue {
-  private formTypeObj: Array<InputType> = [
-    {
-      label: '角色名称',
-      valueName: 'name',
-      type: 'input',
-      require: true
-    }
-  ]
+  @Inject() private readonly formProvide!: H_Vue
 }
 </script>

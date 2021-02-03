@@ -2,8 +2,9 @@ import { ValidatorType } from '../type/validator.type'
 
 class CommonValidator {
   // 通用非空校验规则
-  public readonly noEmpty = (str: string): ValidatorType => {
-    return [(v: string) => !!v || `${str}不能为空`]
+  public readonly noEmpty = (str?: string): ValidatorType => {
+    // return [(v: string) => !!v || `${str}不能为空`]
+    return [(v: string | number | Array<string>) => !!(v && v.toString()) || (str ? `${str}不能为空` : `此项不能为空`)]
   }
   // 数字校验
   public readonly isNumber = (): ValidatorType => {
