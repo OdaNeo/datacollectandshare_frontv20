@@ -187,7 +187,8 @@ export default class CmdList extends Vue {
         cmdName: item.cmdName, // 命令名称
         producer: item.producer, // 系统名称
         consumers: item.consumers.split(','), // 订阅系统名
-        description: item.description // 描述（描述）
+        description: item.description, // 描述（描述）
+        canNotEdit: true
       }
     }
   }

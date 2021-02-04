@@ -4,7 +4,7 @@
       <label class="label mr-2"><span class="require-span">*</span>用户名</label>
       <v-text-field
         v-model="formProvide.formObj['loginName']"
-        :disabled="editDialog"
+        :disabled="formProvide.formObj.canNotEdit"
         outlined
         dense
         clearable
@@ -13,7 +13,7 @@
         class="ml-4 mr-15"
       ></v-text-field>
     </v-col>
-    <v-col v-if="!editDialog" cols="12" class="d-flex">
+    <v-col v-if="!formProvide.formObj.canNotEdit" cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>密码</label>
       <v-text-field
         v-model="formProvide.formObj['loginPwd']"
@@ -91,7 +91,7 @@ export default class userDialog extends Vue {
   ]
   private userRoots: Array<userFormVar> = []
   private systemNames: Array<userFormVar> = []
-  private editDialog = false
+  // private editDialog = false
 
   // private formTypeObj: Array<InputType> = [
   //   {
@@ -165,9 +165,6 @@ export default class userDialog extends Vue {
   created(): void {
     this.httpAll()
     // 编辑页面没有密码项，不能编辑用户名
-    if (this.formProvide.formObj.loginName) {
-      this.editDialog = true
-    }
   }
 }
 </script>

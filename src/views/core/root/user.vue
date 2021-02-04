@@ -166,7 +166,8 @@ export default class User extends Vue {
       userType: { text: item.phone, value: item.userType.toString() },
       userState: item.userState.toString(),
       systemName: { text: item.systemName.toString(), value: item.email },
-      userId: item.id
+      userId: item.id,
+      canNotEdit: true
     }
   }
 

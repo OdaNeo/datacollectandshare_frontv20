@@ -70,7 +70,59 @@
       </v-radio-group>
     </v-col> -->
 
-    <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
+    <!-- <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" /> -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>命令名称</label>
+      <v-text-field
+        v-model="formProvide.formObj['cmdName']"
+        :disabled="formProvide.formObj.canNotEdit"
+        outlined
+        dense
+        clearable
+        height="34"
+        :rules="[...h_validator.noEmpty('命令名称'), ...noRepeat]"
+        class="ml-4 mr-15"
+      ></v-text-field>
+    </v-col>
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>生产系统名</label>
+      <v-text-field
+        v-model="formProvide.formObj['producer']"
+        outlined
+        dense
+        disabled
+        clearable
+        height="34"
+        :rules="[...h_validator.noEmpty('生产系统名')]"
+        class="ml-4 mr-15"
+      ></v-text-field>
+    </v-col>
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>订阅系统名</label>
+      <v-select
+        v-model="formProvide.formObj['consumers']"
+        outlined
+        dense
+        clearable
+        multiple
+        height="34"
+        label="请选择订阅系统名"
+        :rules="[...h_validator.noEmpty('订阅系统名')]"
+        :items="systemList"
+        class="ml-4 my-0 mr-15"
+      ></v-select>
+    </v-col>
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2">描述</label>
+      <v-text-field
+        v-model="formProvide.formObj['description']"
+        outlined
+        dense
+        clearable
+        height="34"
+        class="ml-4 mr-15"
+      ></v-text-field>
+    </v-col>
     <!-- body示例及弹窗 -->
     <label class="label mr-6">Body示例</label>
     <v-btn color="grey" outlined @click="showConstruction = true">查看</v-btn>
@@ -96,7 +148,7 @@ import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import HInput from '@/components/h-input.vue'
-import { InputType } from '@/type/dialog-form.type'
+// import { InputType } from '@/type/dialog-form.type'
 import Validator from '@/decorator/validatorDecorator'
 
 @Component({
@@ -105,43 +157,42 @@ import Validator from '@/decorator/validatorDecorator'
   }
 })
 @http
-@Validator(['cmdNameFormatter'])
+@Validator(['cmdNameFormatter', 'noEmpty'])
 export default class CreateCmdDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private systemList: Array<{ text: string; value: string }> = []
   private noRepeat: string[] = []
-
-  private formTypeObj: Array<InputType> = [
-    {
-      label: '命令名称',
-      valueName: 'cmdName',
-      type: 'input',
-      require: true,
-      disabled: !!this.formProvide.formObj.cmdName,
-      otherRules: []
-    },
-    {
-      label: '生产系统名',
-      valueName: 'producer',
-      type: 'input',
-      require: true,
-      disabled: !!this.formProvide.formObj.producer
-    },
-    {
-      label: '订阅系统名',
-      valueName: 'consumers',
-      type: 'select',
-      multiple: true,
-      items: this.systemList,
-      require: true
-    },
-    {
-      label: '描述',
-      valueName: 'description',
-      type: 'input',
-      require: false
-    }
-  ]
+  // private formTypeObj: Array<InputType> = [
+  //   {
+  //     label: '命令名称',
+  //     valueName: 'cmdName',
+  //     type: 'input',
+  //     require: true,
+  //     disabled: !!this.formProvide.formObj.cmdName,
+  //     otherRules: []
+  //   },
+  //   {
+  //     label: '生产系统名',
+  //     valueName: 'producer',
+  //     type: 'input',
+  //     require: true,
+  //     disabled: !!this.formProvide.formObj.producer
+  //   },
+  //   {
+  //     label: '订阅系统名',
+  //     valueName: 'consumers',
+  //     type: 'select',
+  //     multiple: true,
+  //     items: this.systemList,
+  //     require: true
+  //   },
+  //   {
+  //     label: '描述',
+  //     valueName: 'description',
+  //     type: 'input',
+  //     require: false
+  //   }
+  // ]
 
   private showConstruction = false
 
@@ -175,7 +226,6 @@ export default class CreateCmdDialog extends Vue {
     } else {
       this.noRepeat = []
     }
-    this.formTypeObj[0].otherRules = [...this.h_validator.cmdNameFormatter(), ...this.noRepeat]
   }
 
   created(): void {

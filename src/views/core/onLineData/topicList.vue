@@ -344,7 +344,7 @@ export default class OnlineDataTopicList extends Vue {
       return
     }
     this.protoForms = new FormData()
-
+    // topicInterFaceType = 6
     this.protoForms.append('protoFile', this.protoFile)
     this.protoForms.append('redisTimer', formObj.redisTimer.toString())
     this.protoForms.append('topicName', formObj.topicName.toString())
@@ -425,6 +425,8 @@ export default class OnlineDataTopicList extends Vue {
       })
       this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     } else {
+      // console.log(params)
+
       const { data }: returnDataType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTTOPIC', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL', params)
