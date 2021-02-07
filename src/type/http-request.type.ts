@@ -2,6 +2,7 @@ export type paramsType = {
   pageSize: number
   pageNum: number
   dataType?: number
+  faceTypes?: any
   userName?: string
   id?: string
   status?: number

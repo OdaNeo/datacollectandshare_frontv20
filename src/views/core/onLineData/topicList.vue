@@ -415,7 +415,11 @@ export default class OnlineDataTopicList extends Vue {
 
   // 查询通用调用方法 结构化数据
   private async searchMethod(bool: boolean, params: paramsType, tab?: boolean) {
+    console.log(bool)
+    console.log(params)
+    console.log(tab)
     params.dataType = dataType['结构化']
+    params.faceTypes = '[1,4,6]'
     if (tab) {
       const { data }: returnDataType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
