@@ -222,34 +222,34 @@ const routes: Array<RouteConfig> = [
     ]
   },
   {
-    path: '/bizData',
+    path: '/transactionalData',
     name: '事务数据',
     component: StatePage,
-    redirect: '/bizData/dataList',
+    redirect: '/transactionalData/dataList',
     meta: {
       title: '事务数据',
       icon: 'mdi-file-excel-box-outline',
-      access: true
+      access: false
     },
     children: [
       {
         path: 'dataList',
-        component: () => import('@/views/core/bizData/dataList.vue'),
+        component: () => import('@/views/core/transactionalData/dataList.vue'),
         name: '事务主题',
         meta: {
           title: '事务主题',
           // icon: 'mdi-file-video',
-          access: true
+          access: false
         }
       },
       {
         path: 'dataStatistics',
-        component: () => import('@/views/core/bizData/dataStatistics.vue'),
+        component: () => import('@/views/core/transactionalData/dataStatistics.vue'),
         name: '事务数据统计',
         meta: {
           title: '事务数据统计',
           // icon: 'mdi-file-video',
-          access: true
+          access: false
         }
       }
     ]

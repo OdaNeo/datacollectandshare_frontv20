@@ -41,20 +41,14 @@
           :paginationLength="paginationLength"
         >
           <template v-slot:buttons="{ item }">
-            <v-btn
-              :disabled="item.topicInterFaceType === 6 || item.topicInterFaceType === 5"
-              text
-              color="primary"
-              @click="dataStructureDetails(item)"
+            <v-btn :disabled="item.topicInterFaceType === 5" text color="primary" @click="dataStructureDetails(item)"
               >数据结构详情</v-btn
             >
           </template>
           <template v-slot:buttons2="{ item, index }">
             <v-btn
               v-if="tab"
-              :disabled="
-                item.topicInterFaceType !== 1 && item.topicInterFaceType !== 2 && item.topicInterFaceType !== 3
-              "
+              :disabled="item.topicInterFaceType !== 2 && item.topicInterFaceType !== 3"
               text
               color="primary"
               @click.stop="addItems(item)"
@@ -165,7 +159,7 @@ export default class OfflineTopicList extends Vue {
   private rowObj: object = {}
   private otherObj: object = {}
 
-  private sheetObj: any
+  // private sheetObj: any
 
   private HConfirmShow = false
   private HConfirmItem = {
@@ -173,6 +167,7 @@ export default class OfflineTopicList extends Vue {
     topicName: '',
     topicInterFaceType: 0
   }
+
   private protoFile: File | null = null
   private protoForms = new FormData()
 
@@ -214,14 +209,14 @@ export default class OfflineTopicList extends Vue {
         return topicInterFaceType[val]
       }
     },
-    {
-      text: '消息类型',
-      align: 'center',
-      value: 'queneType',
-      format: (quene: number) => {
-        return this.h_enum['queneType'][quene]
-      }
-    },
+    // {
+    //   text: '消息类型',
+    //   align: 'center',
+    //   value: 'queneType',
+    //   format: (quene: number) => {
+    //     return this.h_enum['queneType'][quene]
+    //   }
+    // },
     {
       text: '数据结构',
       align: 'center',
@@ -515,7 +510,11 @@ export default class OfflineTopicList extends Vue {
 
   // 查询通用调用方法 结构化数据
   private async searchMethod(bool: boolean, params: paramsType, tab?: boolean) {
+    // console.log(bool)
+    // console.log(params)
+    // console.log(tab)
     params.dataType = dataType['结构化']
+    params.faceTypes = `${topicInterFaceType['数据库采集']},${topicInterFaceType['服务主动拉取']},${topicInterFaceType['拉取FTP']}`
     if (tab) {
       const { data }: returnDataType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)

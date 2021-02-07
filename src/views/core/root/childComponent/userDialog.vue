@@ -9,7 +9,7 @@
         dense
         clearable
         height="34"
-        :rules="[...h_validator.noEmpty('用户名')]"
+        :rules="[...h_validator.noEmpty('用户名'), ...noRepeat]"
         class="ml-4 mr-15"
       ></v-text-field>
     </v-col>
@@ -67,8 +67,8 @@
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Vue, Inject } from 'vue-property-decorator'
-import HInput from '@/components/h-input.vue'
+import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
+// import HInput from '@/components/h-input.vue'
 import { userFormVar } from '@/type/user.type'
 import http from '@/decorator/httpDecorator'
 import { returnDataType, httpAllParams } from '@/type/http-request.type'
@@ -78,7 +78,7 @@ import Validator from '@/decorator/validatorDecorator'
 @http
 @Component({
   components: {
-    HInput
+    // HInput
   }
 })
 @Validator(['noEmpty'])
@@ -91,6 +91,7 @@ export default class userDialog extends Vue {
   ]
   private userRoots: Array<userFormVar> = []
   private systemNames: Array<userFormVar> = []
+  private noRepeat: Array<string> = []
   // private editDialog = false
 
   // private formTypeObj: Array<InputType> = [
@@ -162,9 +163,22 @@ export default class userDialog extends Vue {
     this.getUserRoot(results[0])
     this.getSystemName(results[1])
   }
+
+  @Watch('formProvide.formObj.loginName', { immediate: true })
+  private async loginNameNorepeat(val: string) {
+    if (val === undefined) {
+      return
+    }
+    const { data } = await this.h_request['httpGET']('GET_USER_FIND_ALL_USER_BY_PARAM', { loginName: val })
+    if (data?.list?.length > 0) {
+      this.noRepeat = ['用户名重复']
+    } else {
+      this.noRepeat = []
+    }
+  }
+
   created(): void {
     this.httpAll()
-    // 编辑页面没有密码项，不能编辑用户名
   }
 }
 </script>

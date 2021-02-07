@@ -277,6 +277,7 @@ export default class VideoDataList extends Vue {
   private async searchMethod(bool: boolean, params: paramsType, tab?: boolean) {
     // 非结构化数据
     params.dataType = dataType['非结构化']
+    params.faceTypes = topicInterFaceType['VIDEO']
 
     if (tab) {
       const { data } = bool

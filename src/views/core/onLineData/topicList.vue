@@ -39,20 +39,14 @@
           :paginationLength="paginationLength"
         >
           <template v-slot:buttons="{ item }">
-            <v-btn
-              :disabled="item.topicInterFaceType === 6 || item.topicInterFaceType === 5"
-              text
-              color="primary"
-              @click="dataStructureDetails(item)"
+            <v-btn :disabled="item.topicInterFaceType === 6" text color="primary" @click="dataStructureDetails(item)"
               >数据结构详情</v-btn
             >
           </template>
           <template v-slot:buttons2="{ item, index }">
             <v-btn
               v-if="tab"
-              :disabled="
-                item.topicInterFaceType !== 1 && item.topicInterFaceType !== 2 && item.topicInterFaceType !== 3
-              "
+              :disabled="item.topicInterFaceType !== 1"
               text
               color="primary"
               @click.stop="addItems(item)"
@@ -69,16 +63,10 @@
             >
               删除
             </v-btn>
-            <v-btn v-if="item.topicInterFaceType === 6" text color="primary" @click.stop="downloadFile(item)"
+            <v-btn :disabled="item.topicInterFaceType !== 6" text color="primary" @click.stop="downloadFile(item)"
               >下载</v-btn
             >
-            <v-btn
-              text
-              color="primary"
-              :disabled="item.topicInterFaceType === 5"
-              @click="getTopicInformation(item, index)"
-              >查看附加信息</v-btn
-            >
+            <v-btn text color="primary" @click="getTopicInformation(item, index)">查看附加信息</v-btn>
           </template>
         </h-table>
       </v-tab-item>
@@ -415,11 +403,12 @@ export default class OnlineDataTopicList extends Vue {
 
   // 查询通用调用方法 结构化数据
   private async searchMethod(bool: boolean, params: paramsType, tab?: boolean) {
-    console.log(bool)
-    console.log(params)
-    console.log(tab)
+    // console.log(bool)
+    // console.log(params)
+    // console.log(tab)
+    params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['多级嵌套免校验']},${topicInterFaceType['PROTOBUF']}`
     params.dataType = dataType['结构化']
-    params.faceTypes = '[1,4,6]'
+
     if (tab) {
       const { data }: returnDataType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)

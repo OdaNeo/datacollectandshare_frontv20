@@ -6,5 +6,6 @@ export enum topicInterFaceType {
   多级嵌套免校验,
   拉取FTP,
   PROTOBUF,
-  VIDEO
+  VIDEO,
+  事务数据
 }

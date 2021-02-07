@@ -100,8 +100,14 @@ export const GET_CMD_DELETE = '/cmd/delCmdInfo'
 
 // 视频流
 export const GET_VIDEO_ADDRESS = '/topics/getVideoAddress'
+export const GET_TOPICS_GETVIDEO = '/topics/getVideo'
 // 上传proto文件
 export const POST_TOPIC_ADDPROTOBUFTOPIC = '/topics/addProtobufTopic'
+
+// 事务数据
+export const GET_TOPICS_GETOFFLINELOG = '/topics/getOfflineLog'
+export const POST_TOPICS_ADDTOPIC = '/topics/addTopic'
+export const POST_TOPICS_UPDATETRANSACTIONALTOPIC = '/topics/updateTransactionalTopic'
 
 type REQUEST_NAME_TYPE = {
   [key: string]: string
@@ -176,7 +182,11 @@ const REQUEST_NAME: REQUEST_NAME_TYPE = {
   GET_TOPICS_SELECTSUBTOPICBYID,
   GET_VIDEO_ADDRESS,
   POST_TOPIC_ADDPROTOBUFTOPIC,
-  GET_CMD_FINDMYCMDINFOBYID
+  GET_CMD_FINDMYCMDINFOBYID,
+  GET_TOPICS_GETOFFLINELOG,
+  GET_TOPICS_GETVIDEO,
+  POST_TOPICS_ADDTOPIC,
+  POST_TOPICS_UPDATETRANSACTIONALTOPIC
 }
 
 export default REQUEST_NAME
