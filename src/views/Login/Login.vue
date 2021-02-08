@@ -67,14 +67,9 @@ import { rootStoreModule } from '@/store/modules/root'
 import http from '@/decorator/httpDecorator'
 import { returnDataType } from '@/type/http-request.type'
 import { userAndPassType } from '@/type/login.type'
-import HInput from '@/components/h-input.vue'
 import { PROJECT_TITLE } from '@/config'
 
-@Component({
-  components: {
-    HInput
-  }
-})
+@Component({})
 @http
 export default class Login extends Vue {
   PROJECT_TITLE = PROJECT_TITLE

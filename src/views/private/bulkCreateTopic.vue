@@ -5,7 +5,44 @@
     >
     <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <v-row no-gutters>
-        <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
+        <!-- 主题名称母版 -->
+        <v-col cols="12" class="d-flex">
+          <label class="label mr-2"><span class="require-span">*</span>主题名称母版</label>
+          <v-text-field
+            v-model="formProvide.formObj['topicNameItem']"
+            outlined
+            dense
+            clearable
+            height="34"
+            class="ml-4 mr-15"
+            :rules="[v => !!v || `主题名称母版不能为空`]"
+          ></v-text-field>
+        </v-col>
+        <!-- rtsp/rtmp地址 -->
+        <v-col cols="12" class="d-flex">
+          <label class="label mr-2">rtsp/rtmp地址</label>
+          <v-text-field
+            v-model="formProvide.formObj['sourceUrl']"
+            outlined
+            dense
+            clearable
+            height="34"
+            class="ml-4 mr-15"
+          ></v-text-field>
+        </v-col>
+        <!-- 批量创建数量 -->
+        <v-col cols="12" class="d-flex">
+          <label class="label mr-2"><span class="require-span">*</span>批量创建数量</label>
+          <v-text-field
+            v-model="formProvide.formObj['number']"
+            outlined
+            dense
+            clearable
+            height="34"
+            class="ml-4 mr-15"
+            :rules="[v => !!(typeof Number(v) === 'number' && !isNaN(v)) || '请输入数字']"
+          ></v-text-field>
+        </v-col>
       </v-row>
     </f-dialog>
   </div>
@@ -17,17 +54,13 @@ import FDialog from '@/components/f-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
 import { dataType } from '@/enum/topic-datatype-enum.ts'
-import HInput from '@/components/h-input.vue'
-import { InputType } from '@/type/dialog-form.type'
-import Validator from '@/decorator/validatorDecorator'
+
 @Component({
   components: {
-    FDialog,
-    HInput
+    FDialog
   }
 })
 @http
-@Validator(['topicNameFormatter'])
 export default class bulkCreateTopic extends Vue {
   @Provide('formProvide') private formProvide: FormObj = {
     title: '' as string,
@@ -36,29 +69,6 @@ export default class bulkCreateTopic extends Vue {
     formObj: {}
   }
   private count = 0
-
-  private formTypeObj: Array<InputType> = [
-    {
-      label: '主题名称母版',
-      valueName: 'topicNameItem',
-      type: 'input',
-      require: true,
-      otherRules: this.h_validator.topicNameFormatter()
-    },
-    {
-      label: 'rtsp/rtmp地址',
-      valueName: 'sourceUrl',
-      type: 'input',
-      require: false
-    },
-    {
-      label: '批量创建数量',
-      valueName: 'number',
-      type: 'input',
-      require: true,
-      otherRules: [(v: any) => !!(typeof Number(v) === 'number' && !isNaN(v)) || '请输入数字']
-    }
-  ]
 
   private dialogFlag = false // 弹窗展示
   //  创建主题

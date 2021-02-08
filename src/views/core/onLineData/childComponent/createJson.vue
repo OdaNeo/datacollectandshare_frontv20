@@ -1,7 +1,60 @@
 <template>
   <v-row no-gutters>
-    <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
-
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>主题名称</label>
+      <v-text-field
+        v-model="formProvide.formObj['topicName']"
+        :disabled="formProvide.formObj.canNotEdit"
+        outlined
+        dense
+        clearable
+        height="34"
+        :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
+        class="ml-4 mr-15"
+      ></v-text-field>
+    </v-col>
+    <!-- 消息类型 -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>消息类型</label>
+      <v-radio-group
+        v-model="formProvide.formObj['queneType']"
+        :disabled="formProvide.formObj.canNotEdit"
+        row
+        dense
+        height="34"
+        :rules="[...h_validator.noEmpty('消息类型')]"
+        class="ml-4 my-0 pt-0 flex-grow-1"
+      >
+        <v-radio v-for="n in queneTypeItem" :key="n.value" :label="`${n.text}`" :value="n.value"></v-radio>
+      </v-radio-group>
+    </v-col>
+    <!-- 内存过期时间 -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2">内存过期时间</label>
+      <v-slider
+        v-model="formProvide.formObj['redisTimer']"
+        :disabled="formProvide.formObj.canNotEdit"
+        class="align-center ml-4 mb-4 mr-15"
+        :max="30"
+        :min="5"
+        hide-details
+        :thumb-size="20"
+        thumb-label="always"
+      >
+      </v-slider>
+    </v-col>
+    <!-- 数据结构 -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>数据结构</label>
+      <v-textarea
+        v-model="formProvide.formObj['dataStructSchema']"
+        outlined
+        :disabled="formProvide.formObj.canNotEdit"
+        :rules="[...h_validator.noEmpty('数据结构'), ...h_validator.isJSON()]"
+        class="ml-4 mr-15"
+      ></v-textarea>
+    </v-col>
+    <!--  -->
     <v-col cols="12" class="d-flex mb-6">
       <label class="label mr-6">数据发送示例</label>
       <v-btn color="grey" outlined @click="showConstruction = true">查看</v-btn>
@@ -29,22 +82,20 @@
 import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
-import { InputType } from '@/type/dialog-form.type'
-import HInput from '@/components/h-input.vue'
 import Validator from '@/decorator/validatorDecorator'
 
-@Component({
-  components: {
-    HInput
-  }
-})
+@Component
 @http
-@Validator(['dataStructValidate', 'topicNameFormatter'])
+@Validator(['noEmpty', 'isJSON', 'topicNameFormatter'])
 export default class CreateJson extends Vue {
   @Inject() private readonly formProvide!: H_Vue
 
   private noRepeat: string[] = []
   private showConstruction = false
+  private queneTypeItem = [
+    { text: '数据量优先', value: 1 },
+    { text: '顺序优先', value: 2 }
+  ]
 
   private get msgSendExample() {
     let msg = ''
@@ -58,50 +109,6 @@ export default class CreateJson extends Vue {
       '\t'
     )
   }
-
-  private formTypeObj: Array<InputType> = [
-    {
-      label: '主题名称',
-      valueName: 'topicName',
-      type: 'input',
-      require: true,
-      otherRules: []
-    },
-    {
-      label: '消息类型',
-      valueName: 'queneType',
-      type: 'radioGroup',
-      items: [
-        { text: '数据量优先', value: 1 },
-        { text: '顺序优先', value: 2 }
-      ],
-      require: true
-    },
-    // {
-    //   label: '是否写入ES',
-    //   valueName: 'writeElasticsearch',
-    //   type: 'radioGroup',
-    //   items: [
-    //     { text: '是', value: '是' },
-    //     { text: '否', value: '否' }
-    //   ],
-    //   require: true
-    // },
-    {
-      label: '内存过期时间',
-      valueName: 'redisTimer',
-      type: 'slider',
-      items: ['5', '30'],
-      require: false
-    },
-    {
-      label: '数据结构',
-      valueName: 'dataStructSchema',
-      type: 'textarea',
-      require: true,
-      otherRules: this.h_validator.dataStructValidate()
-    }
-  ]
 
   // topicName validation
   @Watch('formProvide.formObj.topicName')
@@ -117,7 +124,6 @@ export default class CreateJson extends Vue {
     } else {
       this.noRepeat = []
     }
-    this.formTypeObj[0].otherRules = [...this.h_validator.topicNameFormatter(), ...this.noRepeat]
   }
 }
 </script>

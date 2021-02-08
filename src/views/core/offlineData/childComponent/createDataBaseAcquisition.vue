@@ -1,6 +1,5 @@
 <template>
   <v-row no-gutters>
-    <!-- <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" /> -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>主题名称</label>
       <v-text-field
@@ -121,15 +120,9 @@
 import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
-// import { InputType } from '@/type/dialog-form.type'
-import HInput from '@/components/h-input.vue'
 import Validator from '@/decorator/validatorDecorator'
 
-@Component({
-  components: {
-    HInput
-  }
-})
+@Component({})
 @http
 @Validator(['topicNameFormatter', 'noEmpty'])
 export default class CreateDataBaseAcquisition extends Vue {
@@ -164,51 +157,6 @@ export default class CreateDataBaseAcquisition extends Vue {
     }
   }
 
-  // private formTypeObj: Array<InputType> = [
-  //   {
-  //     label: '主题名称',
-  //     valueName: 'topicName',
-  //     type: 'input',
-  //     require: true,
-  //     disabled: !!this.formProvide.formObj.topicName,
-  //     otherRules: []
-  //   },
-  //   {
-  //     label: '数据库地址',
-  //     valueName: 'dataBaseIp',
-  //     type: 'input',
-  //     disabled: !!this.formProvide.formObj.topicName,
-  //     require: true
-  //   },
-  //   {
-  //     label: '数据库类型',
-  //     valueName: 'dataBaseType',
-  //     type: 'select',
-  //     multiple: false,
-  //     items: ['Mysql', 'Oracle', 'Sql Server'],
-  //     disabled: !!this.formProvide.formObj.topicName,
-  //     require: true
-  //   },
-  //   {
-  //     label: '数据结构',
-  //     valueName: 'topicList',
-  //     type: 'tripleInput',
-  //     items: [
-  //       { text: 'Int', value: 1 },
-  //       { text: 'String', value: 'str' },
-  //       { text: 'Date', value: 'Date' },
-  //       { text: 'TimeStamp', value: 'TimeStamp' }
-  //     ],
-  //     itemLabels: [
-  //       { text: '字段名', value: 'key' },
-  //       { text: '描述', value: 'description' },
-  //       { text: '字段类型', value: 'type' }
-  //     ],
-  //     otherRules_0: [],
-  //     require: true
-  //   }
-  // ]
-
   // topicName validation
   @Watch('formProvide.formObj.topicName')
   private async nameNoRepeat(val: string) {
@@ -223,7 +171,6 @@ export default class CreateDataBaseAcquisition extends Vue {
     } else {
       this.noRepeat = []
     }
-    // this.formTypeObj[0].otherRules = [...this.h_validator.topicNameFormatter(), ...this.noRepeat]
   }
 
   // validation topicList no-repeat-key

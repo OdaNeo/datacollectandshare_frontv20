@@ -6,11 +6,19 @@
       :pageNum="pageNum"
       @PaginationNow="PaginationNow"
       :paginationLength="paginationLength"
-    ></h-table>
+    >
+      <template v-slot:buttons="{ item }">
+        <v-btn text color="primary" @click.stop="offlineLogDetails(item)">查看离线日志详情</v-btn>
+      </template>
+    </h-table>
+    <!-- 表格显示 -->
+    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
+      <OfflineLogData :rowJson="rowJson" />
+    </t-dialog>
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Provide } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
 import { topicTable } from '@/type/topic.type'
 import { paramsType, returnDataType } from '@/type/http-request.type'
@@ -18,15 +26,34 @@ import { dataType } from '@/enum/topic-datatype-enum.ts'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
 import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
+import OfflineLogData from './childComponent/offlineLogData.vue'
+import TDialog from '@/components/t-dialog.vue'
+import { FormObj } from '@/type/dialog-form.type'
 
 @Component({
   components: {
-    HTable
+    HTable,
+    OfflineLogData,
+    TDialog
   }
 })
 @http
 @util
 export default class TransactionalDataStatistics extends Vue {
+  @Provide('formProvide') private formProvide: FormObj = new Vue({
+    data() {
+      return {
+        title: '',
+        btnName: [] as string[],
+        methodName: '',
+        formObj: {}
+      }
+    }
+  })
+
+  private tDialogFlag = false
+  private rowJson = ''
+
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
@@ -54,19 +81,18 @@ export default class TransactionalDataStatistics extends Vue {
     },
     {
       text: '日志',
-      align: 'left',
-      value: 'log'
-      // format: (log: any) => {
-      //   const _log = JSON.parse(log)
-      //   let _str = ''
-      //   _log
-      //   for (const i in _log) {
-      //     _str += `${i}:${_log[i]}`
-      //   }
-      //   return _str
-      // }
+      align: 'center',
+      slot: 'buttons'
     }
   ]
+
+  // 查看日志详情
+  private offlineLogDetails(item: { log: string }) {
+    this.tDialogFlag = true
+    this.formProvide.title = '查看离线日志详情'
+    this.rowJson = item.log
+  }
+
   // 查询通用调用方法 结构化数据
   private async searchMethod(params: paramsType) {
     params.faceTypes = `${topicInterFaceType['事务数据']}`
@@ -97,3 +123,8 @@ export default class TransactionalDataStatistics extends Vue {
   }
 }
 </script>
+<style scoped>
+#TransactionalDataStatistics {
+  margin-top: 50px;
+}
+</style>

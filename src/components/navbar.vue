@@ -51,7 +51,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { rootStoreModule } from '../store/modules/root'
-// import { Route } from 'vue-router'
 import { userRootType } from '@/type/vuex.type.ts'
 
 @Component
@@ -61,7 +60,6 @@ export default class NavBar extends Vue {
   }
 
   public parentIcon(url: string): string {
-    // const $Router: any = this.$router
     const $Route = this.$router.options.routes?.find(v => {
       return v.path === url
     })

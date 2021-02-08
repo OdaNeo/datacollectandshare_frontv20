@@ -1,115 +1,294 @@
 <template>
   <v-row no-gutters>
-    <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
+    <!-- 主题 -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>主题名称</label>
+      <v-text-field
+        v-model="formProvide.formObj['topicName']"
+        :disabled="formProvide.formObj.canNotEdit"
+        outlined
+        dense
+        clearable
+        height="34"
+        :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
+        class="ml-4 mr-15"
+      ></v-text-field>
+    </v-col>
+    <!--AuthorizationObj  -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2">Authorization</label>
+      <div class="ml-4">
+        <v-row
+          v-for="item in formProvide.formObj.AuthorizationObj"
+          :key="item.id"
+          class="d-flex justify-space-between mr-15"
+          no-gutters
+        >
+          <v-col class="mr-2">
+            <v-text-field
+              v-model="item[AuthorizationObj[0].value]"
+              dense
+              outlined
+              :disabled="formProvide.formObj.canNotEdit"
+              :label="AuthorizationObj[0].text"
+              height="34"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field
+              v-model="item[AuthorizationObj[1].value]"
+              dense
+              :disabled="formProvide.formObj.canNotEdit"
+              outlined
+              :label="AuthorizationObj[1].text"
+              height="34"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </div>
+    </v-col>
+    <!-- url -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>URL</label>
+      <v-text-field
+        v-model="formProvide.formObj['url']"
+        :disabled="formProvide.formObj.canNotEdit"
+        outlined
+        dense
+        clearable
+        height="34"
+        :rules="[...h_validator.noEmpty('URL')]"
+        class="ml-4 mr-15"
+      ></v-text-field>
+    </v-col>
+    <!--请求类型-->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>请求类型</label>
+      <v-select
+        v-model="formProvide.formObj['type']"
+        outlined
+        dense
+        clearable
+        :disabled="formProvide.formObj.canNotEdit"
+        height="34"
+        label="请选择请求类型"
+        :rules="[...h_validator.noEmpty('请求类型')]"
+        :items="typeItem"
+        class="ml-4 my-0 mr-15"
+      ></v-select>
+    </v-col>
+    <!-- body  -->
+    <v-col v-if="formProvide.formObj['type'] === 'post'" cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>body</label>
+      <v-textarea
+        v-model="formProvide.formObj['body']"
+        outlined
+        :disabled="formProvide.formObj.canNotEdit"
+        :rules="[...h_validator.noEmpty('body'), ...h_validator.isJSON()]"
+        class="ml-4 mr-15"
+      ></v-textarea>
+    </v-col>
+    <!-- 头信息 -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2">头信息</label>
+      <div class="ml-4">
+        <v-row
+          v-for="(item, index) in formProvide.formObj.header"
+          :key="item.id"
+          class="d-flex justify-space-between"
+          no-gutters
+        >
+          <v-col class="mr-2">
+            <v-text-field
+              v-model="item[header[0].value]"
+              dense
+              outlined
+              :disabled="formProvide.formObj.canNotEdit"
+              :label="header[0].text"
+              height="34"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-text-field
+              v-model="item[header[1].value]"
+              dense
+              :disabled="formProvide.formObj.canNotEdit"
+              outlined
+              :label="header[1].text"
+              height="34"
+            ></v-text-field>
+          </v-col>
+          <v-col class="d-flex justify-space-around flex-grow-0" style="min-width: 60px">
+            <v-btn
+              v-if="formProvide.formObj.header.length === index + 1"
+              :disabled="formProvide.formObj.canNotEdit"
+              fab
+              dark
+              max-width="24"
+              max-height="24"
+              color="primary"
+              style="margin-top: 5px"
+              @click.stop="add2"
+            >
+              <v-icon dark>mdi-plus</v-icon>
+            </v-btn>
+            <v-btn
+              v-if="formProvide.formObj.header.length > 1"
+              :disabled="formProvide.formObj.canNotEdit"
+              fab
+              dark
+              max-width="24"
+              max-height="24"
+              color="primary"
+              style="margin-top: 5px"
+              @click.stop="minus2(index)"
+            >
+              <v-icon dark>mdi-minus</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+      </div>
+    </v-col>
+
+    <!-- 数据结构 -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>数据结构</label>
+      <div class="ml-4">
+        <v-row
+          class="d-flex justify-space-between"
+          no-gutters
+          v-for="(item, index) in formProvide.formObj['topicList']"
+          :key="item.id"
+        >
+          <v-col class="mr-2">
+            <v-text-field
+              v-model="item.key"
+              dense
+              outlined
+              :disabled="item.disabled"
+              label="字段名"
+              :rules="[...h_validator.noEmpty('字段名'), ...noRepeatKey]"
+              height="34"
+            ></v-text-field>
+          </v-col>
+          <v-col class="mr-2">
+            <v-text-field
+              v-model="item.description"
+              dense
+              :disabled="item.disabled"
+              outlined
+              label="描述"
+              :rules="[...h_validator.noEmpty('描述')]"
+              height="34"
+            ></v-text-field>
+          </v-col>
+          <v-col>
+            <v-select
+              v-model="item.type"
+              dense
+              outlined
+              :disabled="item.disabled"
+              label="字段类型"
+              :rules="[...h_validator.noEmpty('字段类型')]"
+              height="34"
+              :items="items2"
+            ></v-select>
+          </v-col>
+          <!-- 按钮 -->
+          <v-col class="d-flex justify-space-around flex-grow-0" style="min-width: 60px">
+            <v-btn
+              v-if="formProvide.formObj['topicList'].length === index + 1"
+              fab
+              dark
+              max-width="24"
+              max-height="24"
+              color="primary"
+              style="margin-top: 5px"
+              @click.stop="add"
+            >
+              <v-icon dark>mdi-plus</v-icon>
+            </v-btn>
+            <v-btn
+              v-if="!item.disabled && formProvide.formObj['topicList'].length > 1"
+              fab
+              dark
+              max-width="24"
+              max-height="24"
+              color="primary"
+              style="margin-top: 5px"
+              @click.stop="minus(index, item.disabled)"
+            >
+              <v-icon dark>mdi-minus</v-icon>
+            </v-btn>
+          </v-col>
+        </v-row>
+      </div>
+    </v-col>
   </v-row>
 </template>
 <script lang="ts">
 import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
-import { InputType } from '@/type/dialog-form.type'
-import HInput from '@/components/h-input.vue'
 import Validator from '@/decorator/validatorDecorator'
 
-@Component({
-  components: {
-    HInput
-  }
-})
+@Component
 @http
-@Validator(['dataStructValidate', 'topicNameFormatter'])
+@Validator(['noEmpty', 'isJSON', 'topicNameFormatter'])
 export default class CreateServePull extends Vue {
   @Inject() private readonly formProvide!: H_Vue
 
   private noRepeat: string[] = []
+  private noRepeatKey: string[] = []
+  private items2 = [
+    { text: 'Int', value: 1 },
+    { text: 'String', value: 'str' },
+    { text: 'Date', value: 'Date' },
+    { text: 'TimeStamp', value: 'TimeStamp' }
+  ]
+
   private typeItem = ['get', 'post']
 
-  private formTypeObj: Array<InputType> = [
-    {
-      label: '主题名称',
-      valueName: 'topicName',
-      type: 'input',
-      require: true,
-      disabled: !!this.formProvide.formObj.topicName,
-      otherRules: []
-    },
-    {
-      label: 'Authorization',
-      valueName: 'AuthorizationObj',
-      type: 'doubleInput',
-      disabled: !!this.formProvide.formObj.topicName,
-      itemLabels: [
-        { text: '用户名', value: 'key' },
-        { text: '密码', value: 'value' }
-      ],
-      addItem: false,
-      require: false
-    },
-    {
-      label: 'URL',
-      valueName: 'url',
-      type: 'input',
-      disabled: !!this.formProvide.formObj.topicName,
-      require: true
-    },
-    {
-      label: '请求类型',
-      valueName: 'type',
-      type: 'select',
-      items: this.typeItem,
-      disabled: !!this.formProvide.formObj.topicName,
-      require: true
-    },
-    {
-      label: 'body',
-      valueName: 'body',
-      type: '',
-      require: true,
-      disabled: !!this.formProvide.formObj.topicName,
-      otherRules: [...this.h_validator.dataStructValidate()]
-    },
-    {
-      label: '头信息',
-      valueName: 'header',
-      type: 'doubleInput',
-      itemLabels: [
-        { text: '键', value: 'key' },
-        { text: '值', value: 'value' }
-      ],
-      disabled: !!this.formProvide.formObj.topicName,
-      addItem: true,
-      require: false
-    },
-    {
-      label: '数据结构',
-      valueName: 'topicList',
-      type: 'tripleInput',
-      items: [
-        { text: 'Int', value: 1 },
-        { text: 'String', value: 'str' },
-        { text: 'Date', value: 'Date' },
-        { text: 'TimeStamp', value: 'TimeStamp' }
-      ],
-      itemLabels: [
-        { text: '字段名', value: 'key' },
-        { text: '描述', value: 'description' },
-        { text: '字段类型', value: 'type' }
-      ],
-      otherRules_0: [],
-      require: true
-    }
+  private AuthorizationObj = [
+    { text: '用户名', value: 'key' },
+    { text: '密码', value: 'value' }
   ]
-  // 请求类型
-  @Watch('formProvide.formObj.type', { immediate: true })
-  private handleRequestType(val: string) {
-    // 选择是否显示body
-    if (val === this.typeItem[0]) {
-      this.formTypeObj[4].type = ''
-    } else if (val === this.typeItem[1]) {
-      this.formTypeObj[4].type = 'textarea'
+
+  private header = [
+    { text: '键', value: 'key' },
+    { text: '值', value: 'value' }
+  ]
+
+  // add
+  private add() {
+    this.formProvide.formObj['topicList'].push({
+      ['key']: '',
+      ['description']: '',
+      ['type']: '',
+      disabled: false
+    })
+  }
+  // minus
+  private minus(index: number, bo: boolean) {
+    if (bo) {
+      // disable 不能修改
+      return
     } else {
-      this.formTypeObj[4].type = ''
+      this.formProvide.formObj['topicList'].splice(index, 1)
     }
+  }
+
+  // 头信息
+  private add2() {
+    this.formProvide.formObj['header'].push({
+      key: '',
+      value: ''
+    })
+  }
+
+  // 头信息
+  private minus2(index: number) {
+    this.formProvide.formObj['header'].splice(index, 1)
   }
 
   // topicName validation
@@ -126,7 +305,6 @@ export default class CreateServePull extends Vue {
     } else {
       this.noRepeat = []
     }
-    this.formTypeObj[0].otherRules = [...this.h_validator.topicNameFormatter(), ...this.noRepeat]
   }
   // validation topicList no-repeat-key
   @Watch('formProvide.formObj.topicList', { deep: true })
@@ -142,9 +320,9 @@ export default class CreateServePull extends Vue {
       }
     })
     if (_L.length > _l.length) {
-      this.formTypeObj[6].otherRules_0 = ['字段名不能重复']
+      this.noRepeatKey = ['字段名不能重复']
     } else {
-      this.formTypeObj[6].otherRules_0 = []
+      this.noRepeatKey = []
     }
   }
 }

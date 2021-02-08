@@ -1,76 +1,5 @@
 <template>
   <v-row no-gutters>
-    <!-- <v-col cols="11">
-      <v-text-field
-        single-line
-        outlined
-        clearable
-        dense
-        solo
-        class="dialogInput"
-        v-model="formProvide.formObj.cmdName"
-        :rules="[...h_validator.cmdNameValidate(), ...cmdRepeat]"
-        :disabled="formProvide.formObj.canNotEdit"
-        @input="inputEvent(formProvide.formObj.cmdName, formProvide.formObj.producer)"
-        required
-      >
-        <template v-slot:prepend>
-          <label class="text-label"><span class="require-span">*</span>命令名称：</label>
-        </template>
-      </v-text-field>
-    </v-col>
-    <v-col cols="11">
-      <v-text-field class="dialogInput" single-line outlined dense solo v-model="formProvide.formObj.producer" disabled>
-        <template v-slot:prepend>
-          <label class="text-label"><span class="require-span">*</span>生产系统名：</label>
-        </template>
-      </v-text-field>
-    </v-col>
-    <v-col cols="11">
-      <v-radio-group row>
-        <template v-slot:prepend>
-          <label class="text-label"><span class="require-span">*</span>订阅系统名：</label>
-        </template>
-      </v-radio-group>
-      <v-row class="checkbox-container" justify="start">
-        <v-checkbox
-          required
-          v-model="formProvide.formObj.consumers"
-          :rules="[...h_validator.cmdConsumersValidate()]"
-          v-for="item in systemList"
-          :key="item.id"
-          class="mx-2 checkbox-item"
-          :label="item.name"
-          :value="item.name"
-        >
-        </v-checkbox>
-      </v-row>
-    </v-col>
-    <v-col cols="11">
-      <v-text-field
-        class="dialogInput"
-        solo
-        single-line
-        outlined
-        clearable
-        dense
-        v-model="formProvide.formObj.description"
-      >
-        <template v-slot:prepend>
-          <label class="text-label">描述：</label>
-        </template>
-      </v-text-field>
-    </v-col>
-    <v-col cols="11">
-      <v-radio-group row>
-        <template v-slot:prepend>
-          <label class="text-label"><span class="require-span"></span>Body示例：</label>
-        </template>
-        <v-btn solo @click.native="showConstruction = true">查看</v-btn>
-      </v-radio-group>
-    </v-col> -->
-
-    <!-- <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" /> -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>命令名称</label>
       <v-text-field
@@ -147,52 +76,15 @@
 import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
-import HInput from '@/components/h-input.vue'
-// import { InputType } from '@/type/dialog-form.type'
 import Validator from '@/decorator/validatorDecorator'
 
-@Component({
-  components: {
-    HInput
-  }
-})
+@Component({})
 @http
 @Validator(['cmdNameFormatter', 'noEmpty'])
 export default class CreateCmdDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private systemList: Array<{ text: string; value: string }> = []
   private noRepeat: string[] = []
-  // private formTypeObj: Array<InputType> = [
-  //   {
-  //     label: '命令名称',
-  //     valueName: 'cmdName',
-  //     type: 'input',
-  //     require: true,
-  //     disabled: !!this.formProvide.formObj.cmdName,
-  //     otherRules: []
-  //   },
-  //   {
-  //     label: '生产系统名',
-  //     valueName: 'producer',
-  //     type: 'input',
-  //     require: true,
-  //     disabled: !!this.formProvide.formObj.producer
-  //   },
-  //   {
-  //     label: '订阅系统名',
-  //     valueName: 'consumers',
-  //     type: 'select',
-  //     multiple: true,
-  //     items: this.systemList,
-  //     require: true
-  //   },
-  //   {
-  //     label: '描述',
-  //     valueName: 'description',
-  //     type: 'input',
-  //     require: false
-  //   }
-  // ]
 
   private showConstruction = false
 
@@ -211,6 +103,7 @@ export default class CreateCmdDialog extends Vue {
       this.systemList.push({ text: data[i].name, value: data[i].name })
     }
   }
+
   // validation cmdName no-repeat
   @Watch('formProvide.formObj.cmdName')
   private async handleCmdNameNoRepeat(val: string) {

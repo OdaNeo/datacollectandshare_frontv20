@@ -1,50 +1,61 @@
 <template>
   <v-row no-gutters @click="firstToTheEgg">
-    <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" />
+    <!-- 主题名称 -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>主题名称</label>
+      <v-text-field
+        v-model="formProvide.formObj['topicName']"
+        outlined
+        dense
+        clearable
+        height="34"
+        :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
+        class="ml-4 mr-15"
+      ></v-text-field>
+    </v-col>
+    <!-- rtsp/rtmp地址 -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>rtsp/rtmp地址</label>
+      <v-text-field
+        v-model="formProvide.formObj['sourceUrl']"
+        outlined
+        dense
+        clearable
+        height="34"
+        :rules="[...h_validator.noEmpty('rtsp/rtmp地址')]"
+        class="ml-4 mr-15"
+      ></v-text-field>
+    </v-col>
+    <!-- 摄像头地址 -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>摄像头地址</label>
+      <v-text-field
+        v-model="formProvide.formObj['address']"
+        outlined
+        dense
+        clearable
+        height="34"
+        :rules="[...h_validator.noEmpty('摄像头地址')]"
+        class="ml-4 mr-15"
+      ></v-text-field>
+    </v-col>
   </v-row>
 </template>
 <script lang="ts">
 import { Component, Vue, Watch, Inject } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
-import HInput from '@/components/h-input.vue'
-import { InputType } from '@/type/dialog-form.type'
+
 import Validator from '@/decorator/validatorDecorator'
 import http from '@/decorator/httpDecorator'
 
-@Component({
-  components: {
-    HInput
-  }
-})
+@Component
 @http
-@Validator(['topicNameFormatter'])
+@Validator(['topicNameFormatter', 'noEmpty'])
 export default class CreateVideoTopicDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private noRepeat: string[] = []
 
-  private formTypeObj: Array<InputType> = [
-    {
-      label: '主题名称',
-      valueName: 'topicName',
-      type: 'input',
-      require: true,
-      otherRules: []
-    },
-    {
-      label: 'rtsp/rtmp地址',
-      valueName: 'sourceUrl',
-      type: 'input',
-      require: true
-    },
-    {
-      label: '摄像头地址',
-      valueName: 'address',
-      type: 'input',
-      require: true
-    }
-  ]
-
-  //
+  // firstToTheEgg
   private count = 0
   private timer = 0
   private firstToTheEgg() {
@@ -55,7 +66,7 @@ export default class CreateVideoTopicDialog extends Vue {
     }, 800)
     if (this.count === 10) {
       clearTimeout(this.timer)
-      this.$router.push('/bulkCreateTopic')
+      this.$router.push('/private/bulkCreateTopic')
     }
   }
   // topicName validation
@@ -72,7 +83,6 @@ export default class CreateVideoTopicDialog extends Vue {
     } else {
       this.noRepeat = []
     }
-    this.formTypeObj[0].otherRules = [...this.h_validator.topicNameFormatter(), ...this.noRepeat]
   }
 }
 </script>

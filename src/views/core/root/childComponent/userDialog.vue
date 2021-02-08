@@ -68,7 +68,6 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
-// import HInput from '@/components/h-input.vue'
 import { userFormVar } from '@/type/user.type'
 import http from '@/decorator/httpDecorator'
 import { returnDataType, httpAllParams } from '@/type/http-request.type'
@@ -76,11 +75,7 @@ import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 
 @http
-@Component({
-  components: {
-    // HInput
-  }
-})
+@Component({})
 @Validator(['noEmpty'])
 export default class userDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue

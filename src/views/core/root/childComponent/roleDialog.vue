@@ -16,15 +16,10 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Inject } from 'vue-property-decorator'
-import HInput from '@/components/h-input.vue'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 
-@Component({
-  components: {
-    HInput
-  }
-})
+@Component({})
 @Validator(['noEmpty'])
 export default class RoleDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue

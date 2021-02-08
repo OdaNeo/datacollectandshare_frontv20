@@ -108,7 +108,6 @@
     </v-col>
   </v-row> -->
   <v-row no-gutters>
-    <!-- <h-input v-for="item in formTypeObj" :key="item.id" :formTypeItem="item" /> -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>权限名称</label>
       <v-text-field
@@ -193,17 +192,11 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Prop, Inject, Watch } from 'vue-property-decorator'
-import HInput from '@/components/h-input.vue'
-// import { InputType } from '@/type/dialog-form.type'
 import { userFormVar, userFormVarDo } from '@/type/user.type'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 
-@Component({
-  components: {
-    HInput
-  }
-})
+@Component({})
 @Validator(['noEmpty'])
 export default class ResourcesDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue

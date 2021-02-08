@@ -23,7 +23,7 @@
       <v-container fluid class="main-container">
         <v-breadcrumbs :items="items"></v-breadcrumbs>
         <transition name="fade-transform" mode="out-in">
-          <router-view></router-view>
+          <router-view class="main-container-inner"></router-view>
         </transition>
       </v-container>
     </v-main>
@@ -85,6 +85,10 @@ export default class Login extends Vue {
 .main-container {
   height: 100%;
   width: 100%;
+}
+.main-container-inner {
+  width: 97%;
+  margin: 0 auto;
 }
 /* fade-transform */
 .fade-transform-leave-active,

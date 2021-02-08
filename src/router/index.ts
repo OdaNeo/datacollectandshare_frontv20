@@ -407,16 +407,17 @@ const routes: Array<RouteConfig> = [
           title: '主题生产消费测试',
           access: false
         }
+      },
+      {
+        path: 'bulkCreateTopic',
+        name: '批量创建主题',
+        meta: {
+          title: '批量创建主题',
+          access: false
+        },
+        component: () => import('@/views/private/bulkCreateTopic.vue')
       }
     ]
-  },
-  {
-    path: '/bulkCreateTopic',
-    name: '批量创建主题',
-    meta: {
-      access: false
-    },
-    component: () => import('@/views/private/bulkCreateTopic.vue')
   }
 ]
 
