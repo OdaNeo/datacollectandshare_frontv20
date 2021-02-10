@@ -10,6 +10,7 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchTopic"
+          @click:clear="tabChange(tab)"
           v-model="queryTopicID"
           v-only-num="{
             set: this,
@@ -35,6 +36,7 @@
           :headers="headers"
           :desserts="desserts"
           :pageNum="pageNum"
+          :loading="loading"
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
@@ -178,6 +180,7 @@ export default class OnlineDataTopicList extends Vue {
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
+  private loading = true
   private headers = [
     // 表头内容 所有主题
     {
@@ -406,6 +409,8 @@ export default class OnlineDataTopicList extends Vue {
     // console.log(bool)
     // console.log(params)
     // console.log(tab)
+    this.loading = true
+
     params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['多级嵌套免校验']},${topicInterFaceType['PROTOBUF']}`
     params.dataType = dataType['结构化']
 
@@ -428,6 +433,7 @@ export default class OnlineDataTopicList extends Vue {
       })
       this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     }
+    this.loading = false
   }
 
   // 主题查询

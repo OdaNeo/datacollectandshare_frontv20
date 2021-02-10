@@ -22,6 +22,7 @@
       :headers="headers"
       :desserts="desserts"
       :pageNum="pageNum"
+      :loading="loading"
       @PaginationNow="PaginationNow"
       :paginationLength="paginationLength"
     >
@@ -57,6 +58,7 @@ import { SystemConfigFormObj } from '@/type/system-config.type'
 import HConfirm from '@/components/h-confirm.vue'
 import util from '@/decorator/utilsDecorator'
 import { FormObj } from '@/type/dialog-form.type'
+import { topicTable } from '@/type/topic.type'
 
 @Component({
   components: {
@@ -82,8 +84,9 @@ export default class SystemConfig extends Vue {
 
   private pageSize = 20
   private pageNum = 1
-  private desserts: Array<any> = []
+  private desserts: Array<topicTable> = []
   private paginationLength = 0
+  private loading = true
   private querySystemName = ''
   private dialogFlag = false
   private headers = [
@@ -176,11 +179,13 @@ export default class SystemConfig extends Vue {
   }
 
   async searchMethod(bool: boolean, params: object): Promise<void> {
+    this.loading = true
     const { data }: returnDataType = bool
       ? await this.h_request['httpGET']<object>('GET_SYSTEM_GETINFOBYTYPENAME', params)
       : await this.h_request['httpGET']<object>('GET_SYSTEM_FINDALL', params)
     this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     this.desserts = data['list']
+    this.loading = false
   }
 
   private PaginationNow(page: number) {

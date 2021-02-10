@@ -10,6 +10,7 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchVideoTopic"
+          @click:clear="tabChange(tab)"
           v-model="queryVideoTopicID"
           v-only-num="{
             set: this,
@@ -31,6 +32,7 @@
           :headers="headers"
           :desserts="desserts"
           :pageNum="pageNum"
+          :loading="loading"
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
@@ -82,6 +84,7 @@ import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
 
 import FDialog from '@/components/f-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
+import { topicTable } from '@/type/topic.type'
 
 @Component({
   components: {
@@ -126,11 +129,12 @@ export default class VideoDataList extends Vue {
   }
   private showVideoPopup = false
 
-  private desserts: Array<any> = [] // 数据列表
+  private desserts: Array<topicTable> = [] // 数据列表
   private queryVideoTopicID = '' // 查询主题ID input框内容
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
+  private loading = true
 
   // 表头内容 所有主题
   private headers = [
@@ -275,6 +279,7 @@ export default class VideoDataList extends Vue {
 
   // 查询通用调用方法
   private async searchMethod(bool: boolean, params: paramsType, tab?: boolean) {
+    this.loading = true
     // 非结构化数据
     params.dataType = dataType['非结构化']
     params.faceTypes = topicInterFaceType['VIDEO']
@@ -300,6 +305,7 @@ export default class VideoDataList extends Vue {
 
       this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     }
+    this.loading = false
   }
 
   // 非结构化主题查询

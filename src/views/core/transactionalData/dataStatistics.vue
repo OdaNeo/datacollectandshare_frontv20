@@ -4,6 +4,7 @@
       :headers="headers"
       :desserts="desserts"
       :pageNum="pageNum"
+      :loading="loading"
       @PaginationNow="PaginationNow"
       :paginationLength="paginationLength"
     >
@@ -58,7 +59,7 @@ export default class TransactionalDataStatistics extends Vue {
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
   private desserts: Array<topicTable> = [] // 数据列表
-
+  private loading = true
   private headers = [
     // 表头内容 所有主题
     {
@@ -95,6 +96,7 @@ export default class TransactionalDataStatistics extends Vue {
 
   // 查询通用调用方法 结构化数据
   private async searchMethod(params: paramsType) {
+    this.loading = true
     params.faceTypes = `${topicInterFaceType['事务数据']}`
     params.dataType = dataType['结构化']
 
@@ -103,6 +105,7 @@ export default class TransactionalDataStatistics extends Vue {
       return { ...item }
     })
     this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
+    this.loading = false
   }
 
   // 分页方法

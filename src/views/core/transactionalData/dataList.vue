@@ -10,6 +10,7 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchTopic"
+          @click:clear="tabChange(tab)"
           v-model="queryTopicID"
           v-only-num="{
             set: this,
@@ -33,6 +34,7 @@
           :headers="headers"
           :desserts="desserts"
           :pageNum="pageNum"
+          :loading="loading"
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
@@ -140,6 +142,7 @@ export default class transactionalDataList extends Vue {
   private rowJson: unknown
 
   private desserts: Array<topicTable> = [] // 数据列表
+  private loading = true
   private headers = [
     // 表头内容 所有主题
     {
@@ -276,6 +279,7 @@ export default class transactionalDataList extends Vue {
     // console.log(bool)
     // console.log(params)
     // console.log(tab)
+    this.loading = true
     params.faceTypes = `${topicInterFaceType['事务数据']}`
     params.dataType = dataType['结构化']
 
@@ -298,6 +302,7 @@ export default class transactionalDataList extends Vue {
       })
       this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     }
+    this.loading = false
   }
 
   // 删除

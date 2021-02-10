@@ -4,7 +4,10 @@
       <!-- <p class="table-title" v-if="title">
         {{ title }}
       </p> -->
-      <v-simple-table fixed-header>
+      <div v-if="loading" class="text-center my-15">
+        <v-progress-circular indeterminate color="primary"></v-progress-circular>
+      </div>
+      <v-simple-table v-else fixed-header>
         <template v-slot:default>
           <thead>
             <tr>
@@ -36,7 +39,7 @@
       </v-simple-table>
     </div>
     <v-pagination
-      class="pt-6 pb-0"
+      class="pt-6 pb-3"
       :length="paginationLength"
       :total-visible="10"
       @input="handleCurrentChange"
@@ -58,8 +61,9 @@ export default class HTable extends Vue {
   @Prop() private headers!: any
   @Prop() private desserts!: any
   @Prop() private title!: string
+  @Prop({ default: false }) private loading!: boolean
 
-  @Watch('desserts')
+  @Watch('desserts', { immediate: true })
   private dessertsChanged(val: any): void {
     this.desserts2 = []
     this.dessertsRecursion(val, 1)
@@ -143,7 +147,7 @@ export default class HTable extends Vue {
 }
 
 .simple-table {
-  max-height: 67vh;
+  /* max-height: 67vh; */
   /* border-top: 1px solid rgba(0, 0, 0, 0.1); */
   /* border-bottom: 1px solid rgba(0, 0, 0, 0.12); */
   border-radius: 2px;
@@ -169,12 +173,12 @@ export default class HTable extends Vue {
 .simple-table table tbody tr td:last-child {
   border-right: 0px !important;
 } */
-.table-title {
+/* .table-title {
   height: 45px;
   text-align: center;
   line-height: 45px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.12);
   font-size: 16px;
   color: rgba(0, 0, 0, 0.6);
-}
+} */
 </style>

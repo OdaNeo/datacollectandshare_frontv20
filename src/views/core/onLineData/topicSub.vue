@@ -22,6 +22,7 @@
     <h-table
       :headers="headers"
       :desserts="desserts"
+      :loading="loading"
       :pageNum="pageNum"
       @PaginationNow="PaginationNow"
       :paginationLength="paginationLength"
@@ -81,6 +82,7 @@ export default class TopicSub extends Vue {
   private paginationLength = 0
   private dialogFlag = false
   private queryTopicID = ''
+  private loading = true
   private headers = [
     {
       text: '主题ID',
@@ -126,11 +128,13 @@ export default class TopicSub extends Vue {
   ]
 
   async searchMethod(bool: boolean, params: object): Promise<void> {
+    this.loading = true
     const { data }: returnDataType = bool
       ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTSUBTOPICBYID', params)
       : await this.h_request['httpGET']<object>('GET_TOPICS_FINDALLSUBTOPIC', params)
     this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     this.desserts = data['list']
+    this.loading = false
   }
 
   private dataStructure(item: any) {
@@ -187,6 +191,7 @@ export default class TopicSub extends Vue {
       pageNum: this.pageNum
     })
   }
+
   created(): void {
     this.searchMethod(false, {
       pageSize: this.pageSize,

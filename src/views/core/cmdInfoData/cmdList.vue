@@ -10,6 +10,7 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchCmd"
+          @click:clear="tabChange(tab)"
           v-model="queryCmdID"
           v-only-num="{
             set: this,
@@ -31,6 +32,7 @@
           :headers="headers"
           :desserts="desserts"
           :pageNum="pageNum"
+          :loading="loading"
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
@@ -83,6 +85,7 @@ import HTable from '@/components/h-table.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import CmdInformationDialog from './childComponent/cmdInformationDialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
+import { topicTable } from '@/type/topic.type'
 
 @Component({
   components: {
@@ -108,7 +111,6 @@ export default class CmdList extends Vue {
       }
     }
   })
-
   private tab = null
   private items = ['所有命令', '我的命令']
   private dialogFlag = false // 弹窗展示
@@ -129,11 +131,12 @@ export default class CmdList extends Vue {
   private tDialogFlag = false
   private tDialogShow = 0
 
-  private desserts: Array<any> = [] // 数据列表
+  private desserts: Array<topicTable> = [] // 数据列表
   private queryCmdID = null // 查询命令ID input框内容
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
+  private loading = true
   private headers = [
     // 表头内容 所有命令
     {
@@ -224,6 +227,7 @@ export default class CmdList extends Vue {
 
   // 查询通用调用方法
   private async searchMethod(bool: boolean, params: object, tab?: boolean) {
+    this.loading = true
     if (tab) {
       const { data }: returnDataType = bool
         ? await this.h_request.httpGET<object>('GET_CMD_FINDMYCMDINFOBYID', params)
@@ -232,7 +236,6 @@ export default class CmdList extends Vue {
         (this.desserts = data.list.map((item: any) => {
           return { ...item, flag: false }
         }))
-
       this.paginationLength = Math.ceil(data.total / this.pageSize) || 1
     } else {
       const { data }: returnDataType = bool
@@ -242,9 +245,9 @@ export default class CmdList extends Vue {
         (this.desserts = data.list.map((item: any) => {
           return { ...item, flag: false }
         }))
-
       this.paginationLength = Math.ceil(data.total / this.pageSize) || 1
     }
+    this.loading = false
   }
 
   // 命令查询
@@ -281,6 +284,19 @@ export default class CmdList extends Vue {
       !!tab
     )
     this.pageNum = 1
+  }
+  // clearSearchModel
+  private clearSearchModel() {
+    this.searchMethod(
+      false,
+      {
+        pageSize: this.pageSize,
+        pageNum: 1
+      },
+      !!this.tab
+    )
+    this.pageNum = 1
+    // this.tab = null
   }
 
   // 数据结构展示方法

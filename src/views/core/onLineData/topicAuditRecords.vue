@@ -1,6 +1,6 @@
 <template>
   <div id="topicAuditRecords">
-    <v-row>
+    <v-row no-gutters>
       <v-col cols="3">
         <v-text-field
           solo
@@ -10,7 +10,7 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchTopicID"
-          v-model.trim="queryTopicID"
+          v-model="queryTopicID"
           v-only-num="{
             set: this,
             name: 'userID'
@@ -19,10 +19,10 @@
         </v-text-field>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col cols="10" style="padding: 0 12px 12px">
+    <v-row no-gutters>
+      <v-col>
         <v-btn
-          class="ma-2"
+          class="mr-4 mb-6"
           outlined
           :color="btnAction === index ? 'primary' : ''"
           v-for="(btnName, index) in btnNames"
@@ -32,7 +32,13 @@
         >
       </v-col>
     </v-row>
-    <h-table :headers="headers" :desserts="desserts" :pageNum="pageNum" :paginationLength="paginationLength">
+    <h-table
+      :headers="headers"
+      :desserts="desserts"
+      :loading="loading"
+      :pageNum="pageNum"
+      :paginationLength="paginationLength"
+    >
       <template v-slot:buttons="{ item }">
         <v-btn text color="primary" @click="dataStructure(item)">数据结构详情</v-btn>
       </template>
@@ -96,6 +102,7 @@ export default class TopicAuditRecords extends Vue {
   private paginationLength = 0
   private dialogFlag = false
   private queryTopicID = ''
+  private loading = true
   private headers = [
     {
       text: '主题ID',
@@ -149,11 +156,13 @@ export default class TopicAuditRecords extends Vue {
   ]
 
   async searchMethod(bool: boolean, params: paramsType): Promise<void> {
+    this.loading = true
     const { data }: returnDataType = bool
       ? await this.h_request['httpGET']<object>('GET_SUBMODERATIONS_SELECTAUDITSTATUSBYTOPICID', params)
       : await this.h_request['httpGET']<object>('GET_SUB_MODERATIONS_SELECT_AUDIT_STATUS', params)
     this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     this.desserts = data['list']
+    this.loading = false
   }
 
   private dataStructure(item: any) {

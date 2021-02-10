@@ -23,6 +23,7 @@
       :headers="headers"
       :desserts="desserts"
       :pageNum="pageNum"
+      :loading="loading"
       @PaginationNow="PaginationNow"
       :paginationLength="paginationLength"
     >
@@ -55,6 +56,7 @@ import { BindNetworkObj } from '@/type/bindNetwork'
 import HConfirm from '@/components/h-confirm.vue'
 import util from '@/decorator/utilsDecorator'
 import { FormObj } from '@/type/dialog-form.type'
+import { topicTable } from '@/type/topic.type'
 
 @Component({
   components: {
@@ -83,10 +85,11 @@ export default class BindNetwork extends Vue {
 
   private pageSize = 20
   private pageNum = 1
-  private desserts: Array<unknown> = []
+  private desserts: Array<topicTable> = []
   private paginationLength = 0
   private dialogFlag = false
   private querySystemName = null
+  private loading = true
   private headers = [
     {
       text: '系统ID',
@@ -119,11 +122,13 @@ export default class BindNetwork extends Vue {
   private HConfirmItem: BindNetworkObj = { systemId: '', systemName: '', networkId: '', networkName: '' }
 
   async searchMethod(bool: boolean, params: object): Promise<void> {
+    this.loading = true
     const { data }: returnDataType = bool
       ? await this.h_request['httpGET']<object>('GET_SYSNET_GETBINDBYNAME', params)
       : await this.h_request['httpGET']<object>('GET_SYSNET_GETBINDLIST', params)
     this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     this.desserts = data['list']
+    this.loading = false
   }
 
   private searchSystemName() {

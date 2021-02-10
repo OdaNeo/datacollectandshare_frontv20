@@ -10,6 +10,7 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchTopic"
+          @click:clear="tabChange(tab)"
           v-model="queryTopicID"
           v-only-num="{
             set: this,
@@ -35,6 +36,7 @@
       <v-tab-item v-for="item in items" :key="item">
         <h-table
           :headers="headers"
+          :loading="loading"
           :desserts="desserts"
           :pageNum="pageNum"
           @PaginationNow="PaginationNow"
@@ -160,6 +162,7 @@ export default class OfflineTopicList extends Vue {
   private otherObj: object = {}
 
   // private sheetObj: any
+  private loading = true
 
   private HConfirmShow = false
   private HConfirmItem = {
@@ -513,6 +516,8 @@ export default class OfflineTopicList extends Vue {
     // console.log(bool)
     // console.log(params)
     // console.log(tab)
+    this.loading = true
+
     params.dataType = dataType['结构化']
     params.faceTypes = `${topicInterFaceType['数据库采集']},${topicInterFaceType['服务主动拉取']},${topicInterFaceType['拉取FTP']}`
     if (tab) {
@@ -532,6 +537,7 @@ export default class OfflineTopicList extends Vue {
       })
       this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     }
+    this.loading = false
   }
 
   // 主题查询

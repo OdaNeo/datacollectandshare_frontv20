@@ -18,7 +18,13 @@
         <v-btn height="35px" color="primary" depressed dark @click.stop="addItem">添加</v-btn>
       </v-col>
     </v-row>
-    <h-table :headers="headers" :desserts="desserts" :pageNum="pageNum" :paginationLength="paginationLength">
+    <h-table
+      :headers="headers"
+      :desserts="desserts"
+      :loading="loading"
+      :pageNum="pageNum"
+      :paginationLength="paginationLength"
+    >
       <template v-slot:buttons="{ item }">
         <v-btn text color="primary" @click="authItem(item)">授权</v-btn>
         <v-btn text color="primary" @click="editItem(item)">编辑</v-btn>
@@ -52,6 +58,7 @@ import { RoleFormObj } from '@/type/role.type'
 import AuthDialog from './childComponent/authDialog.vue'
 import HConfirm from '@/components/h-confirm.vue'
 import { FormObj } from '@/type/dialog-form.type'
+import { topicTable } from '@/type/topic.type'
 
 @Component({
   components: {
@@ -81,7 +88,8 @@ export default class Role extends Vue {
   private pageNum = 1
   private pageSize = 20
   private paginationLength = 0
-  private desserts: Array<any> = []
+  private desserts: Array<topicTable> = []
+  private loading = true
   private roles: Array<any> = []
   private queryRolesName = ''
   private headers = [
@@ -121,12 +129,14 @@ export default class Role extends Vue {
   private HConfirmItem = { id: '' }
 
   private async searchMethod(bool: boolean, params?: object) {
+    this.loading = true
     const { data } = bool
       ? await this.h_request['httpGET']<object>('GET_ROLE_FIND_ALL_ROLE_BY_PARAM', params as object)
       : await this.h_request['httpGET']<object>('GET_ROLE_FIND_ALL_ROLE', params as object)
     const { list, total } = data
     this.desserts = list
     this.paginationLength = Math.ceil(total / this.pageSize) || 1
+    this.loading = false
   }
 
   private searchRoles() {
@@ -265,6 +275,7 @@ export default class Role extends Vue {
   }
 
   async created(): Promise<void> {
+    this.loading = true
     const [{ data: data1 }, { data: data2 }] = await this.h_request['httpAll']<httpAllParams>([
       {
         name: 'GET_ROLE_FIND_ALL_ROLE',
@@ -283,6 +294,7 @@ export default class Role extends Vue {
     this.desserts = data1.list
     this.paginationLength = Math.ceil(data1['total'] / this.pageSize) || 1
     this.roles = this.getRoles(data2)
+    this.loading = false
   }
 }
 </script>

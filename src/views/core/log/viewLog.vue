@@ -1,7 +1,7 @@
 <template>
   <div id="viewLog">
     <v-row>
-      <v-col cols="2">
+      <v-col>
         <v-text-field
           solo
           dense
@@ -11,7 +11,7 @@
           v-model="queryUserName"
         ></v-text-field>
       </v-col>
-      <v-col cols="2">
+      <v-col>
         <h-date-picker
           placeholder="选择查询起始时间"
           :begin="true"
@@ -19,7 +19,7 @@
           @pickerDate="time => (beginDate = time)"
         ></h-date-picker>
       </v-col>
-      <v-col cols="2">
+      <v-col>
         <h-date-picker
           placeholder="选择查询截止时间"
           :begin="false"
@@ -33,6 +33,7 @@
     </v-row>
     <h-table
       :headers="headers"
+      :loading="loading"
       :desserts="desserts"
       :pageNum="pageNum"
       :paginationLength="paginationLength"
@@ -47,6 +48,7 @@ import http from '@/decorator/httpDecorator'
 import { returnDataType } from '@/type/http-request.type'
 import util from '@/decorator/utilsDecorator'
 import HDatePicker from '@/components/h-date-picker.vue'
+import { topicTable } from '@/type/topic.type'
 
 @Component({
   components: {
@@ -59,7 +61,8 @@ import HDatePicker from '@/components/h-date-picker.vue'
 export default class ViewLog extends Vue {
   private pageSize = 20
   private pageNum = 1
-  private desserts: Array<any> = []
+  private desserts: Array<topicTable> = []
+  private loading = true
   private paginationLength = 0
   private dialogFlag = false
   private queryUserName = ''
@@ -97,12 +100,14 @@ export default class ViewLog extends Vue {
   ]
 
   private async searchMethod(params: object) {
+    this.loading = true
     const { data }: returnDataType = await this.h_request['httpGET']<object>(
       'GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG',
       params
     )
     this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     this.desserts = data['list']
+    this.loading = false
   }
 
   private PaginationNow(page: number) {

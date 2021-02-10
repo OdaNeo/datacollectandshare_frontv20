@@ -31,6 +31,7 @@ class DevicePixelRatio {
   _correct(): void {
     const body = document.getElementsByTagName('body')[0]
     // 页面devicePixelRatio（设备像素比例）变化后，计算页面body标签zoom修改其大小，来抵消devicePixelRatio带来的变化。
+    // zoom会导致echarts 动画便宜，慎用
     switch (window.devicePixelRatio) {
       case 1:
         body.style.zoom = '1'

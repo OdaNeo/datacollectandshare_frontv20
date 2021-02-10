@@ -15,7 +15,13 @@
         </v-text-field>
       </v-col>
     </v-row>
-    <h-table :headers="headers" :desserts="desserts" :pageNum="pageNum" :paginationLength="paginationLength">
+    <h-table
+      :headers="headers"
+      :desserts="desserts"
+      :loading="loading"
+      :pageNum="pageNum"
+      :paginationLength="paginationLength"
+    >
       <template v-slot:buttons="{ item }">
         <v-btn text color="primary" @click="dataStructure(item)">数据结构详情</v-btn>
       </template>
@@ -73,6 +79,7 @@ export default class TopicSubExamine extends Vue {
   private pageSize = 20
   private dialogFlag = false
   private paginationLength = 0
+  private loading = true
   private queryExamineUser = ''
   private headers = [
     {
@@ -119,11 +126,13 @@ export default class TopicSubExamine extends Vue {
   ]
 
   async searchMethod(bool: boolean, params: paramsType): Promise<void> {
+    this.loading = true
     const { data }: returnDataType = bool
       ? await this.h_request['httpGET']<object>('GET_SUBMODERATIONS_SELECTBYUSERNAMESTATUS', params)
       : await this.h_request['httpGET']<object>('GET_SUB_MODERATIONS_SELECT_STATUS', params)
     this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     this.desserts = data['list']
+    this.loading = false
   }
 
   private dataStructure(item: any) {

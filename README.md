@@ -37,6 +37,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 7. ~~form 结构
    dialog(v-modal, prop(title,btn), form-slots(for headers-form), auto renew provider/reject, dynamic create form/provider)~~
 8. ~~统一非空校验~~
-9. 更人性化的搜索体验
-10. table 添加 loading 图
-11. topicTable 类型优化
+9. ~~更人性化的搜索体验~~
+10. ~~table 添加 loading 图~~
+11. ~~topicTable 类型优化~~
+12. echarts 优化

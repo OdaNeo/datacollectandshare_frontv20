@@ -24,6 +24,7 @@
       :headers="headers"
       :desserts="desserts"
       :pageNum="pageNum"
+      :loading="loading"
       @PaginationNow="PaginationNow"
       :paginationLength="paginationLength"
     >
@@ -98,7 +99,7 @@ export default class User extends Vue {
   private pageSize = 10
   private paginationLength = 1
   private queryUserName = ''
-
+  private loading = true
   private headers = [
     {
       text: '账号ID',
@@ -172,11 +173,13 @@ export default class User extends Vue {
   }
 
   private async searchMethod(bool: boolean, params: paramsType): Promise<void> {
+    this.loading = true
     const { data }: returnDataType = bool
       ? await this.h_request['httpGET']<paramsType>('GET_USER_FIND_ALL_USER_BY_PARAM', params)
       : await this.h_request['httpGET']<paramsType>('GET_USER_FIND_ALL_USER', params)
     this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     this.desserts = data['list']
+    this.loading = false
   }
 
   private PaginationNow(nowPage: number): void {

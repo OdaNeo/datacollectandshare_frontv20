@@ -18,7 +18,7 @@
         <v-btn height="35px" color="primary" depressed dark @click.stop="addItem">添加权限</v-btn>
       </v-col>
     </v-row>
-    <h-table :headers="headers" :desserts="desserts">
+    <h-table :headers="headers" :desserts="desserts" :loading="loading">
       <template v-slot:buttons="{ item }">
         <v-btn text color="primary" @click="editItem(item)">编辑</v-btn>
         <v-btn
@@ -52,6 +52,7 @@ import { ResourcesFormObj } from '@/type/resources.type'
 import util from '@/decorator/utilsDecorator'
 import HConfirm from '@/components/h-confirm.vue'
 import { FormObj } from '@/type/dialog-form.type'
+import { topicTable } from '@/type/topic.type'
 
 @Component({
   components: {
@@ -76,9 +77,9 @@ export default class Resources extends Vue {
   })
 
   private queryResourcesName = ''
-  private desserts: Array<unknown> = []
+  private desserts: Array<topicTable> = []
   private dialogFlag = false
-
+  private loading = true
   private headers = [
     {
       text: '权限名称',
@@ -117,10 +118,12 @@ export default class Resources extends Vue {
   private HConfirmItem = { id: '' }
 
   private async searchMethod(bool: boolean, params?: object) {
+    this.loading = true
     const { data }: returnDataType = bool
       ? await this.h_request['httpGET']<object>('GET_PERMISSION_FIND_ALL_PERMISSION_BY_PARAM', params as object)
       : await this.h_request['httpGET']('GET_PERMISSION_FIND_ALL_PERMISSION', {})
     this.desserts = data
+    this.loading = false
   }
 
   private searchResources() {
