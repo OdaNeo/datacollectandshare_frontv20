@@ -12,10 +12,7 @@
           @click:append="searchCmd"
           @click:clear="tabChange(tab)"
           v-model="queryCmdID"
-          v-only-num="{
-            set: this,
-            name: 'userID'
-          }"
+          v-only-num
         >
         </v-text-field>
       </v-col>

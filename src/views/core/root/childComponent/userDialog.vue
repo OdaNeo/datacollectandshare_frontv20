@@ -89,42 +89,6 @@ export default class userDialog extends Vue {
   private noRepeat: Array<string> = []
   // private editDialog = false
 
-  // private formTypeObj: Array<InputType> = [
-  //   {
-  //     label: '用户名',
-  //     valueName: 'loginName',
-  //     type: 'input',
-  //     require: true
-  //   },
-  //   {
-  //     label: '密码',
-  //     valueName: 'loginPwd',
-  //     type: 'input',
-  //     require: true
-  //   },
-  //   {
-  //     label: '用户类型',
-  //     valueName: 'userType',
-  //     type: 'select',
-  //     items: [],
-  //     require: true
-  //   },
-  //   {
-  //     label: '用户状态',
-  //     valueName: 'userState',
-  //     type: 'radioGroup',
-  //     items: this.userStates,
-  //     require: true
-  //   },
-  //   {
-  //     label: '系统名称',
-  //     valueName: 'systemName',
-  //     type: 'select',
-  //     items: [],
-  //     require: true
-  //   }
-  // ]
-
   private getUserRoot({ data }: returnDataType) {
     this.userRoots = data.map((s: { name: string; id: number }) => {
       return {

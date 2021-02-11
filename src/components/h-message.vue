@@ -7,7 +7,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { alertStoreModule } from '../../store/modules/alert'
+import { alertStoreModule } from '@/store/modules/alert'
 
 @Component
 export default class HDialog extends Vue {

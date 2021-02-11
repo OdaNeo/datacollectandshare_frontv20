@@ -1,6 +1,6 @@
 <template>
   <div id="welcome">
-    <div class="topContent" style="height: 320px">
+    <div class="topContent" style="height: 200px">
       <system-topic-proportion></system-topic-proportion>
       <user-proportion></user-proportion>
     </div>
@@ -19,7 +19,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { returnDataType } from '@/type/http-request.type'
 
-import echarts from '@/decorator/echarsDecorator'
+import echarts from '@/decorator/echartsDecorator'
 import { topicRankingInfo, topicRankingData } from '@/type/welcome.type'
 import ReleaseMenu from './childComponent/releaseMenu.vue'
 import SystemTopicProportion from './childComponent/systemTopicProportion.vue'
@@ -87,12 +87,14 @@ export default class Welcome extends Vue {
   }
 
   public topicRanking(elementName: string, msg: topicRankingInfo, endTime: string): void {
+    // 报错因为接口没有分页
+    // console.log(msg)
     const years: Array<string> = this.getYearsList(['年', '月'], endTime)
     const keysList: Array<Array<string>> = this.getKeysList(msg.list)
     const datasList: Array<Array<number>> = this.getDatasList(this.getYearsList(['-', '-'], endTime), msg.list)
     this.$nextTick(() => {
       const element = document.getElementById(elementName)
-      const myChartElement = this.h_echars.init(element as HTMLCanvasElement)
+      const myChartElement = this.h_echarts.init(element as HTMLCanvasElement)
       myChartElement.setOption(
         {
           baseOption: {
@@ -444,15 +446,16 @@ export default class Welcome extends Vue {
 </script>
 <style lang="stylus" scoped>
 #welcome
-    width:100%
+    width:97%
     height:100%
+    margin:0 auto
     .btmContent
     .topContent
         width:100%
         display:flex
-        justify-content:space-around
+        justify-content:space-between
         .viewBox
-            width:787px
+            width:49%
             height:100%
             background:#fff
             // border: 1px solid rgb(30,31,67)
@@ -462,8 +465,8 @@ export default class Welcome extends Vue {
             position: relative
             // animation-duration:2s
             // animation-delay:1s
-        .enter
-            transform: scale(1.03)
+        // .enter
+        //     transform: scale(1.03)
 ::-webkit-scrollbar
     display:none
 </style>

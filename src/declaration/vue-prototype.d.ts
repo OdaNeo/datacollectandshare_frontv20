@@ -22,7 +22,7 @@ declare module 'vue/types/vue' {
     h_request: Request
     h_upload: Request
     h_request2: Request2
-    h_echars: any
+    h_echarts: any
     h_utils: any
     h_enum: any
     h_validator: any

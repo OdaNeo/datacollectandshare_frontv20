@@ -10,6 +10,12 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchRoles"
+          @click:clear="
+            searchMethod(false, {
+              pageNum: pageNum,
+              pageSize: pageSize
+            })
+          "
           v-model.trim="queryRolesName"
         >
         </v-text-field>

@@ -11,6 +11,12 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchUserList"
+          @click:clear="
+            searchMethod(false, {
+              pageSize: pageSize,
+              pageNum: pageNum
+            })
+          "
         >
         </v-text-field>
       </v-col>

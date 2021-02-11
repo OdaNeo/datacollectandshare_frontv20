@@ -207,6 +207,7 @@ export default class ReleaseMenu extends Vue {
   }
 
   private drawRelease({ data }: returnDataType) {
+    console.log(data)
     this.releaseTopicExist = true
     this.releaseTotal = data.total
     const parent = this.$parent as Welcome

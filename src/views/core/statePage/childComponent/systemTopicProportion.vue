@@ -32,7 +32,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { topicMsg, topicProportionOpt } from '@/type/welcome.type'
 import http from '@/decorator/httpDecorator'
 import { returnDataType } from '@/type/http-request.type'
-import echarts from '@/decorator/echarsDecorator'
+import echarts from '@/decorator/echartsDecorator'
 import BScroll from '@better-scroll/core'
 
 @Component
@@ -57,7 +57,7 @@ export default class SystemTopicProportion extends Vue {
 
   private topicProportion(elementName: string, opt: topicProportionOpt): void {
     const element = document.getElementById(elementName)
-    const chartElement = this.h_echars.init(element as HTMLCanvasElement)
+    const chartElement = this.h_echarts.init(element as HTMLCanvasElement)
     chartElement.setOption(
       {
         title: {
@@ -209,8 +209,8 @@ export default class SystemTopicProportion extends Vue {
         margin-bottom:0px
     .view-box-con
         display: inline-flex
-        align-items:center
-        justify-content:space-around
+        align-items: center
+        justify-content: space-around
         div
             width:150px
             height: 150px

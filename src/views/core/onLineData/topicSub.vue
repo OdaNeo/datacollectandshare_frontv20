@@ -10,11 +10,14 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchTopic"
+          @click:clear="
+            searchMethod(false, {
+              pageSize: pageSize,
+              pageNum: pageNum
+            })
+          "
           v-model="queryTopicID"
-          v-only-num="{
-            set: this,
-            name: 'userID'
-          }"
+          v-only-num
         >
         </v-text-field>
       </v-col>

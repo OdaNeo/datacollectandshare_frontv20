@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import vuetify from './plugins/vuetify'
-import vueProtoInstall from './plugins/vueProtoInstall'
+// import vueProtoInstall from './plugins/vueProtoInstall'
 import { rootStoreModule } from './store/modules/root'
 import { Route, NavigationGuardNext } from 'vue-router'
 import alertUtil from './utils/alertUtil'
@@ -12,7 +12,7 @@ const { UserState, logout } = rootStoreModule
 
 Vue.config.productionTip = false
 
-Vue.use(vueProtoInstall)
+// Vue.use(vueProtoInstall)
 
 Vue.directive('onlyNum', {
   bind: function (el, binding) {

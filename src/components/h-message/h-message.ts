@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
 import MessageComponent from './h-messageComponent.vue'
 import { VueConstructor } from 'vue'
 

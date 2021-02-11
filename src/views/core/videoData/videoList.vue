@@ -12,10 +12,7 @@
           @click:append="searchVideoTopic"
           @click:clear="tabChange(tab)"
           v-model="queryVideoTopicID"
-          v-only-num="{
-            set: this,
-            name: 'userID'
-          }"
+          v-only-num
         >
         </v-text-field>
       </v-col>

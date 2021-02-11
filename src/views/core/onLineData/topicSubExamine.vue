@@ -10,6 +10,12 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchExamine"
+          @click:clear="
+            searchMethod(true, {
+              pageSize: pageSize,
+              pageNum: pageNum
+            })
+          "
           v-model.trim="queryExamineUser"
         >
         </v-text-field>

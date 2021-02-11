@@ -1,4 +1,6 @@
+/* eslint-disable @typescript-eslint/no-var-requires */
 // const userList = require('./mock/user.json')
+
 module.exports = {
   // publicPath:"/tsweb2/",
   lintOnSave: process.env.NODE_ENV === 'development',
@@ -32,7 +34,9 @@ module.exports = {
           comments: false // 移除js中的注释
         }
       }
+      config.devtool = undefined
+    } else {
+      config.devtool = 'cheap-module-eval-source-map'
     }
-    config.devtool = process.env.NODE_ENV === 'production' ? undefined : 'source-map'
   }
 }

@@ -163,7 +163,7 @@ import { Component, Vue, Watch } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
 import { returnDataType } from '@/type/http-request.type'
-import echarts from '@/decorator/echarsDecorator'
+import echarts from '@/decorator/echartsDecorator'
 import moment from 'moment'
 @Component
 @echarts
@@ -340,7 +340,7 @@ export default class DataStatistics extends Vue {
     var start = api.coord([api.value(1), categoryIndex])
     var end = api.coord([api.value(2), categoryIndex])
     var height = api.size([0, 1])[1] * 0.6
-    var rectShape = (this as any).$echarts.graphic.clipRectByRect(
+    var rectShape = this.h_echarts.graphic.clipRectByRect(
       {
         x: start[0],
         y: start[1] - height / 2,
@@ -512,10 +512,10 @@ export default class DataStatistics extends Vue {
     }
     if (this.echartsType === 'Release') {
       const Release = document.getElementById('canvasPackRelease')
-      this.myChartRelease = (this as any).$echarts.init(Release)
+      this.myChartRelease = this.h_echarts.init(Release)
     } else {
       const Subscribe = document.getElementById('canvasPackSubscribe')
-      this.myChartSubscribe = (this as any).$echarts.init(Subscribe)
+      this.myChartSubscribe = this.h_echarts.init(Subscribe)
     }
     this.getRelease(
       {
@@ -639,7 +639,7 @@ export default class DataStatistics extends Vue {
   }
   private async getData() {
     const doc = document.getElementById('canvasPackProportion')
-    this.echartsProport = (this as any).$echarts.init(doc)
+    this.echartsProport = this.h_echarts.init(doc)
     const { data }: returnDataType = await this.h_request['httpGET']('GET_STATISTICS_STAT_SYS_TOPIC', {})
     // 判断是否显示
     if (data.length > 0) {

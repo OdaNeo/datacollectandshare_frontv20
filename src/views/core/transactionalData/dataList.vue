@@ -12,10 +12,7 @@
           @click:append="searchTopic"
           @click:clear="tabChange(tab)"
           v-model="queryTopicID"
-          v-only-num="{
-            set: this,
-            name: 'userID'
-          }"
+          v-only-num
         >
         </v-text-field>
       </v-col>

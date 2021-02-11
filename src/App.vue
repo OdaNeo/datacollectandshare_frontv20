@@ -6,7 +6,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import HMessage from './components/h-message/h-messageComponent.vue'
+import HMessage from '@/components/h-message.vue'
 
 @Component({
   components: {

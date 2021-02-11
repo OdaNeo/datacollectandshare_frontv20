@@ -10,6 +10,12 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchSystem"
+          @click:clear="
+            searchMethod(false, {
+              pageSize: pageSize,
+              pageNum: pageNum
+            })
+          "
           v-model.trim="querySystemName"
         >
         </v-text-field>

@@ -12,9 +12,9 @@
     </v-overlay> -->
     <p>用户占比</p>
     <div id="rightTopView">
-      <div id="userRoolProportion" :style="{ width: '180px', height: '180px' }"></div>
-      <div id="userSystemProportion" :style="{ width: '180px', height: '180px' }"></div>
-      <div id="userStateProportion" :style="{ width: '180px', height: '180px' }"></div>
+      <div id="userRoolProportion" :style="{ width: '175px', height: '175px' }"></div>
+      <div id="userSystemProportion" :style="{ width: '175px', height: '175px' }"></div>
+      <div id="userStateProportion" :style="{ width: '175px', height: '175px' }"></div>
     </div>
   </div>
 </template>
@@ -24,7 +24,7 @@ import http from '@/decorator/httpDecorator'
 import { returnDataType } from '@/type/http-request.type'
 import { userProportion, topicRankingInfo } from '@/type/welcome.type'
 import { userInfo } from '@/type/user.type'
-import echarts from '@/decorator/echarsDecorator'
+import echarts from '@/decorator/echartsDecorator'
 import Enum from '@/decorator/enumDecorator'
 
 @Component
@@ -71,7 +71,7 @@ export default class UserProportion extends Vue {
 
   private userProportion(elementName: string, msgList: Array<userProportion>, title: string): void {
     const element = document.getElementById(elementName)
-    const chartElement = this.h_echars.init(element as HTMLCanvasElement)
+    const chartElement = this.h_echarts.init(element as HTMLCanvasElement)
     chartElement.setOption({
       color: ['#d34e58', '#f49d13', '#f6d748', '#45dbf6', '#44aff0', '#4877f4', '#4f46f6', '#ad45f4', '#f845f1'],
       tooltip: {
