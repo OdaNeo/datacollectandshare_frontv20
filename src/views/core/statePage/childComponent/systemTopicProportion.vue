@@ -245,7 +245,7 @@ export default class SystemTopicProportion extends Vue {
                 margin:auto
                 border-radius:50% 50%
                 border:2px solid rgb(23,137,251)
-                z-index:999
+                // z-index:999
                 color:#000
                 text-align:center
                 transform-style: preserve-3d

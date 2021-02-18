@@ -63,7 +63,7 @@ export default class HTable extends Vue {
   @Prop() private title!: string
   @Prop({ default: false }) private loading!: boolean
 
-  @Watch('desserts', { immediate: true })
+  @Watch('desserts')
   private dessertsChanged(val: any): void {
     this.desserts2 = []
     this.dessertsRecursion(val, 1)

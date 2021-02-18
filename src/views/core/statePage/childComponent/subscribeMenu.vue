@@ -251,7 +251,7 @@ export default class SubscribeMenu extends Vue {
     top:5px
     width:20%
     display:flex
-    z-index:999
+    // z-index:999
 .rightBtmView
     p
         text-align: center

@@ -66,7 +66,7 @@ export default class Welcome extends Vue {
     })
   }
 
-  private getDatasList(years: string[], list: Array<userInfo>): Array<Array<number>> {
+  private getDataList(years: string[], list: Array<userInfo>): Array<Array<number>> {
     return Array.from({ length: 12 }, (v, k) => {
       return list.map(obj => {
         return obj[Object.keys(obj)[0]].reduce(
@@ -91,7 +91,7 @@ export default class Welcome extends Vue {
     // console.log(msg)
     const years: Array<string> = this.getYearsList(['年', '月'], endTime)
     const keysList: Array<Array<string>> = this.getKeysList(msg.list)
-    const datasList: Array<Array<number>> = this.getDatasList(this.getYearsList(['-', '-'], endTime), msg.list)
+    const dataList: Array<Array<number>> = this.getDataList(this.getYearsList(['-', '-'], endTime), msg.list)
     this.$nextTick(() => {
       const element = document.getElementById(elementName)
       const myChartElement = this.h_echarts.init(element as HTMLCanvasElement)
@@ -381,21 +381,21 @@ export default class Welcome extends Vue {
             animationEasingUpdate: 'quinticInOut',
             animationDurationUpdate: 1500
           },
-          options: this.pushOption(years, keysList, datasList)
+          options: this.pushOption(years, keysList, dataList)
         },
         true
       )
     })
   }
 
-  private pushOption(years: Array<string>, keysList: Array<Array<string>>, datasList: Array<Array<number>>) {
+  private pushOption(years: Array<string>, keysList: Array<Array<string>>, dataList: Array<Array<number>>) {
     const options = []
     for (let n = 0; n < years.length; n++) {
       const res = []
-      for (let j = 0; j < datasList[n].length; j++) {
+      for (let j = 0; j < dataList[n].length; j++) {
         res.push({
           name: keysList[n][j],
-          value: datasList[n][j]
+          value: dataList[n][j]
         })
       }
       res

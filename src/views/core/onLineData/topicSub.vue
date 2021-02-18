@@ -31,7 +31,19 @@
       :paginationLength="paginationLength"
     >
       <template v-slot:buttons="{ item }">
-        <v-btn text color="primary" class="my-2" @click="dataStructure(item)">数据结构详情</v-btn>
+        <v-btn
+          text
+          color="primary"
+          :disabled="
+            item.topicInterFaceType === 5 ||
+            item.topicInterFaceType === 6 ||
+            item.topicInterFaceType === 7 ||
+            item.topicInterFaceType === 8
+          "
+          class="my-2"
+          @click="dataStructure(item)"
+          >数据结构详情</v-btn
+        >
       </template>
       <template v-slot:operation="{ item }">
         <v-btn text v-if="!item.status" color="primary" class="my-2" @click="subscribe(item)">订阅</v-btn>
@@ -129,8 +141,8 @@ export default class TopicSub extends Vue {
       slot: 'operation'
     }
   ]
-
-  async searchMethod(bool: boolean, params: object): Promise<void> {
+  //TODO 主题订阅分页接口有问题
+  private async searchMethod(bool: boolean, params: object): Promise<void> {
     this.loading = true
     const { data }: returnDataType = bool
       ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTSUBTOPICBYID', params)

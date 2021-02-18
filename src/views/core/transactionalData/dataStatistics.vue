@@ -128,6 +128,6 @@ export default class TransactionalDataStatistics extends Vue {
 </script>
 <style scoped>
 #TransactionalDataStatistics {
-  margin-top: 50px;
+  margin-top: 10px;
 }
 </style>
