@@ -1,4 +1,3 @@
-// TODO :更新bind-net-dialog子组件
 <template>
   <div id="bindNetwork">
     <v-row>

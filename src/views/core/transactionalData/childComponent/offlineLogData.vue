@@ -1,8 +1,6 @@
 <template>
   <div id="OfflineLogData">
-    <v-card-text>
-      <v-container v-html="obj"></v-container>
-    </v-card-text>
+    <v-container v-html="obj"></v-container>
   </div>
 </template>
 <script lang="ts">
@@ -30,9 +28,3 @@ export default class OfflineLogData extends Vue {
   }
 }
 </script>
-<style scoped>
-.obj-title {
-  font-size: 18px;
-  text-align: right;
-}
-</style>

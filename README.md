@@ -30,7 +30,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 
 1. ~~topicList 页面代码重构，去除冗余代码 1 天 !~~
 2. ~~cmdList videoList 页面创建主题代码重构 1 天 !~~
-3. http 接口是否可用 1 天 !
+3. ~~http 接口是否可用 1 天 !~~
 4. ~~所有删除按钮添加弹框提示，打包 bundle 文件大小优化 1 天~~
 5. ~~eslint（代码风格、缩进）~~、自动部署、版本控制、线上查看版本添加 ? 天
 6. ~~解耦 formobj~~

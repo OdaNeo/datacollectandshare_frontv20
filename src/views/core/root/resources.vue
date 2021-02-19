@@ -33,9 +33,6 @@
         >
       </template>
     </h-table>
-    <!-- <h-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <resources-dialog slot="dialog-content" :desserts="desserts"></resources-dialog>
-    </h-dialog> -->
     <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <resources-dialog :desserts="desserts"></resources-dialog>
     </f-dialog>

@@ -4,7 +4,7 @@
       <!-- <p class="table-title" v-if="title">
         {{ title }}
       </p> -->
-      <div v-if="loading" class="text-center my-15">
+      <div v-if="loading" class="text-center mt-15" style="min-height: 300px">
         <v-progress-circular indeterminate color="primary"></v-progress-circular>
       </div>
       <v-simple-table v-else fixed-header>
