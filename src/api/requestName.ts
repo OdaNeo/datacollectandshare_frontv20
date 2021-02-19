@@ -1,113 +1,99 @@
 export const POST_LOGIN_LOGIN = '/login/login'
 
+// ------------------------权限管理----------------------------
 export const GET_USER_FIND_ALL_USER = '/user/findAllUser'
-export const GET_USER_FIND_ALL_USER_BY_PARAM = '/user/findAllUserByParam'
-export const POST_USER_ADD_USER = '/user/addUser'
-export const POST_USER_UPDATE_USER = '/user/updateUser'
-
-export const GET_PERMISSION_FIND_ALL_PERMISSION = '/permission/findAllPermission'
-export const GET_PERMISSION_FIND_ALL_PERMISSION_BY_PARAM = '/permission/findAllPermissionByParam'
-export const POST_PERMISSION_ADD_PERMISSION = '/permission/addPermission'
-export const GET_PERMISSION_DELETE = '/permission/delete'
-export const PUT_PERMISSION_UPDATE_PERMISSION = '/permission/updatePermission'
-
-export const GET_ROLE_FIND_ALL_ROLE = '/role/findAllRole'
-export const GET_PERMISSION_AUTHORIZATION_FIND_ALL_PERMISSION = '/permission/authorization/findAllPermission'
-export const GET_ROLE_FIND_ALL_ROLE_BY_PARAM = '/role/findAllRoleByParam'
 export const POST_ROLE_ADDROLE = '/role/addRole'
 export const PUT_ROLE_UPDATEROLE = '/role/updateRole'
 export const GET_ROLE_DELETE = '/role/delete'
+export const GET_USER_FIND_ALL_USER_BY_PARAM = '/user/findAllUserByParam'
+export const POST_USER_ADD_USER = '/user/addUser'
+export const GET_USER_ADDUSER_FIND_ALL_ROLE = '/user/addUser/findAllRole'
+export const GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER = '/user/addUser/getSystemInfoAndAddUser'
+export const POST_USER_UPDATE_USER = '/user/updateUser'
+export const GET_PERMISSION_FIND_ALL_PERMISSION = '/permission/findAllPermission'
+export const GET_PERMISSION_FIND_ALL_PERMISSION_BY_PARAM = '/permission/findAllPermissionByParam'
+export const POST_PERMISSION_ADD_PERMISSION = '/permission/addPermission'
+export const PUT_PERMISSION_UPDATE_PERMISSION = '/permission/updatePermission'
+export const GET_PERMISSION_DELETE = '/permission/delete'
+export const GET_ROLE_FIND_ALL_ROLE = '/role/findAllRole'
+export const GET_ROLE_FIND_ALL_ROLE_BY_PARAM = '/role/findAllRoleByParam'
+export const GET_PERMISSION_AUTHORIZATION_FIND_ALL_PERMISSION = '/permission/authorization/findAllPermission'
 export const GET_PERMISSION_AUTHORIZATION_FINDPERMISSIONLISTBYROLEID =
   '/permission/authorization/findPermissionListByRoleId'
 export const POST_PERMISSION_AUTHORIZATION_ADDROLEIDPERMISSIONID = '/permission/authorization/addRoleIdPermissionId'
-
-// export const GET_TOPICS_SELECTTOPICBYTIDTNAME = '/topics/selectTopicByTIdTName'
-export const POST_SUBMODERATIONS_INSERTSUBMODERATION = '/subModerations/insertSubModeration'
-export const POST_TOPICS_DELSUBUSER = '/topics/delSubUser'
-
-export const GET_TOPICS_FIND_ALL = '/topics/findAll'
-export const GET_TOPICS_SELECTTOPIC = '/topics/selectTopic'
-export const GET_TOPICS_MYTOPICS = '/topics/myTopics'
-export const GET_TOPICS_MYTOPICSBYID = '/topics/myTopicsById'
-export const GET_TOPICS_FINDTOPICBYTOPICNAME = '/topics/findTopicByTopicName'
-
-export const POST_TRANSMISSION_ATS = '/transmission/ATS'
-export const GET_TRANSMISSION_REALTIME = '/transmission/realtime/ATS'
-export const GET_TRANSMISSION_HISTORY = '/transmission/history/ATS'
-
-// 增加主题
-export const POST_TOPICS_ADD = '/topics/addTopic'
-// 更新主题
-export const POST_TOPICS_UPDATE = 'topics/updateTopic'
-// 删除主题
-export const GET_TOPICS_DELETE = '/topics/delTopic'
-// 查询主题附加信息
-export const GET_TOPICS_INFORMATION = '/topics/findTopicAdditionalByTopicName'
-// 校验主题名称是否存在
-export const GET_TOPICS_CHECKED = '/topics/findTopicByTopicName'
-// 下载protobuf文件
-export const GET_TOPICS_PROTOBUFDOWNLOAD = '/topics/protobufDownload'
-
-// ---------------- 主题订阅审核 ------------------
 export const GET_TOPICS_FINDALLSUBTOPIC = '/topics/findAllSubTopic' // 查询可订阅的主题
 export const GET_TOPICS_SELECTSUBTOPICBYID = '/topics/selectSubTopicById' // 通过id查询主题
+// /system/getSystemTypeInfo ？
+// /user/delete/* ?
+// /permission/findPermissionListByRoleId/* ?
+
+// ---------------------------实时数据-------------------------
+export const GET_TOPICS_MYTOPICS = '/topics/myTopics'
+export const POST_TOPICS_ADD = '/topics/addTopic' // 增加主题
+export const POST_TOPICS_UPDATE = '/topics/updateTopic' // 更新主题
+export const GET_TOPICS_DELETE = '/topics/delTopic' // 删除主题
+export const GET_TOPICS_SELECTTOPIC = '/topics/selectTopic'
+export const GET_TOPICS_FIND_ALL = '/topics/findAll'
+export const GET_TOPICS_CHECKED = '/topics/findTopicByTopicName'
+export const GET_TOPICS_MYTOPICSBYID = '/topics/myTopicsById'
+export const GET_TOPICS_INFORMATION = '/topics/findTopicAdditionalByTopicName' // 查询主题附加信息
+export const POST_SUBMODERATIONS_INSERTSUBMODERATION = '/subModerations/insertSubModeration'
+export const POST_TOPIC_ADDPROTOBUFTOPIC = '/topics/addProtobufTopic' // 上传proto文件
+export const GET_TOPICS_PROTOBUFDOWNLOAD = '/topics/protobufDownload' // 下载protobuf文件
+export const POST_TOPICS_DELSUBUSER = '/topics/delSubUser'
 export const GET_SUB_MODERATIONS_SELECT_STATUS = '/subModerations/selectStatus' // 获取审核列表
-export const GET_SUBMODERATIONS_SELECTBYUSERNAMESTATUS = '/subModerations/selectByUserNameStatus' // 通过订阅用户获取审核列表
-export const POST_SUBMODERATIONS_UPDATESUBMODERATION = '/subModerations/updateSubModeration' // 审核操作
-
-// ---------------- 主题审核记录 -----------------------------
 export const GET_SUB_MODERATIONS_SELECT_AUDIT_STATUS = '/subModerations/selectAuditStatus' // 获取主题审核记录
+export const POST_SUBMODERATIONS_UPDATESUBMODERATION = '/subModerations/updateSubModeration' // 审核操作
+export const GET_SUBMODERATIONS_SELECTBYUSERNAMESTATUS = '/subModerations/selectByUserNameStatus' // 通过订阅用户获取审核列表
 export const GET_SUBMODERATIONS_SELECTAUDITSTATUSBYTOPICID = '/subModerations/selectAuditStatusByTopicID' // 通过ID获取主题审核记录
+// /topics/alterTopic ?
+// /topics/addSubUser ?
 
-// ---------------- 系统配置 --------------------------
+// --------------------------- 系统管理 --------------------------
 export const GET_SYSTEM_FINDALL = '/system/findAll' // 获取系统列表
 export const GET_SYSTEM_GETINFOBYTYPENAME = '/system/getInfoByTypeName'
 export const GET_SYSTEM_DELCONFIG = '/system/delConfig'
 export const POST_SYSTEM_ADDCONFIG = '/system/addConfig'
-
-// ---------------- 绑定网络 ---------------------------
-export const GET_SYSNET_GETBINDLIST = '/sysnet/getBindList'
+export const GET_SYSNET_GETBINDLIST = '/sysnet/getBindList' // 绑定网络
 export const GET_SYSNET_GETBINDBYNAME = '/sysnet/getBindByName'
 export const GET_SYSNET_GETSYSNETLIST = '/sysnet/getSysNetList'
 export const GET_SYSNET_ADDBINDINFO = '/sysnet/addBindInfo'
 export const POST_SYSNET_DELETEBINDINFO = '/sysnet/delBindInfo'
 
-// ---------------- 日志审查 ---------------------------
+// ---------------------------- 操作日志 ---------------------------
 export const GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG = '/logMGT/viewLog/log/findAllLog'
+// /logMGT/viewLog/log/findAllLogByParam ？
 
-export const GET_STATISTICS_STAT_SYS_TOPIC = '/statistics/statSysTopic'
-export const GET_STATISTICS_STAT_TOPIC_DATA = '/statistics/statTopicData'
-export const GET_TOPICS_FIND_ALL_TOPIC = '/topics/findAllTopic'
-
-export const GET_USER_ADDUSER_FIND_ALL_ROLE = '/user/addUser/findAllRole'
-export const GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER = '/user/addUser/getSystemInfoAndAddUser'
+// ---------------------------- 系统统计 ---------------------------
 export const GET_SYSTEM_GETSYSTEMINFO = '/system/getSystemInfo'
+export const GET_STATISTICS_STAT_TOPIC_DATA = '/statistics/statTopicData'
+export const GET_STATISTICS_STAT_SYS_TOPIC = '/statistics/statSysTopic'
 
-// -------------------命令管理——————————————————————————————
+// ---------------------------- 可靠通道 ---------------------------
 export const GET_CMD_FIND_ALL = '/cmd/findAll'
 export const GET_CMD_MYCMD = '/cmd/findCmdInfoByUserId'
-// export const GET_CMD_MYCMDBYID = '/cmd/findCmdInfoById' // 此接口与GET_CMD_SELECTCMD重复
 export const GET_CMD_FINDMYCMDINFOBYID = '/cmd/findMyCmdInfoById'
-
-// 校验cmd是否存在
-export const GET_CMD_CHECKED = '/cmd/isRepeat'
+export const GET_CMD_CHECKED = '/cmd/isRepeat' // 校验cmd是否存在
 export const GET_CMD_SELECTCMD = '/cmd/findCmdInfoById'
-
-// 创建命令
-export const POST_CMD_ADD = '/cmd/addCmdInfo'
+export const POST_CMD_ADD = '/cmd/addCmdInfo' // 创建命令
 export const POST_CMD_UPDATE = '/cmd/updateCmdInfo'
 export const GET_CMD_DELETE = '/cmd/delCmdInfo'
 
-// 视频流
-export const GET_VIDEO_ADDRESS = '/topics/getVideoAddress'
+// ----------------------------- 视频数据 ---------------------------
+export const GET_VIDEO_ADDRESS = '/topics/getVideoAddress' // 视频数据统计
 export const GET_TOPICS_GETVIDEO = '/topics/getVideo'
 
-// 上传proto文件
-export const POST_TOPIC_ADDPROTOBUFTOPIC = '/topics/addProtobufTopic'
-
-// 事务数据
+// ----------------------------- 事务数据 ----------------------------
 export const GET_TOPICS_GETOFFLINELOG = '/topics/getOfflineLog'
 export const POST_TOPICS_UPDATETRANSACTIONALTOPIC = '/topics/updateTransactionalTopic'
+
+// ----------------------------- 内部调试页面 未配置权限 -------------------------
+export const POST_TRANSMISSION_ATS = '/transmission/ATS'
+export const GET_TRANSMISSION_REALTIME = '/transmission/realtime/ATS'
+export const GET_TRANSMISSION_HISTORY = '/transmission/history/ATS'
+
+// export const GET_TOPICS_SELECTTOPICBYTIDTNAME = '/topics/selectTopicByTIdTName'
+// export const GET_TOPICS_FIND_ALL_TOPIC = '/topics/findAllTopic'
 
 type REQUEST_NAME_TYPE = {
   [key: string]: string
@@ -120,7 +106,7 @@ const REQUEST_NAME: REQUEST_NAME_TYPE = {
   GET_STATISTICS_STAT_SYS_TOPIC,
   GET_STATISTICS_STAT_TOPIC_DATA,
   GET_TOPICS_FIND_ALL,
-  GET_TOPICS_FIND_ALL_TOPIC,
+  // GET_TOPICS_FIND_ALL_TOPIC,
   GET_SUB_MODERATIONS_SELECT_STATUS,
   GET_SUB_MODERATIONS_SELECT_AUDIT_STATUS,
   GET_USER_ADDUSER_FIND_ALL_ROLE,
@@ -141,7 +127,6 @@ const REQUEST_NAME: REQUEST_NAME_TYPE = {
   GET_TOPICS_MYTOPICS,
   GET_TOPICS_MYTOPICSBYID,
   GET_TOPICS_SELECTTOPIC,
-  GET_TOPICS_FINDTOPICBYTOPICNAME,
   // GET_TOPICS_SELECTTOPICBYTIDTNAME,
   POST_SUBMODERATIONS_INSERTSUBMODERATION,
   POST_TOPICS_DELSUBUSER,

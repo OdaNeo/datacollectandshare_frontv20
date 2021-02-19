@@ -158,7 +158,7 @@ export default class Login extends Vue {
 }
 .loginContent {
   width: 400px;
-  height: 400px;
+  height: 450px;
   /* background-color: transparent !important; */
   position: absolute;
   left: 0;

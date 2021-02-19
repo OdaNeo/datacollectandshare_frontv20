@@ -537,6 +537,7 @@ export default class OfflineTopicList extends Vue {
     this.loading = false
   }
 
+  // TODO 离线查询到实时 与 事务性？
   // 主题查询
   private searchTopic() {
     if (!this.queryTopicID) {

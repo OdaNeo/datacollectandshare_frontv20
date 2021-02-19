@@ -100,7 +100,7 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: '实时数据',
       icon: 'mdi-folder-cog-outline',
-      access: false
+      access: true
     },
     children: [
       {
@@ -120,7 +120,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '实时主题',
           // icon: 'mdi-folder-multiple',
-          access: false
+          access: true
         }
       },
       {
@@ -130,7 +130,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '主题订阅',
           // icon: 'mdi-folder-heart',
-          access: false
+          access: true
         }
       },
       {
@@ -140,7 +140,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '主题订阅审核',
           // icon: 'mdi-folder-edit',
-          access: false
+          access: true
         }
       },
       {
@@ -150,7 +150,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '主题审核记录',
           // icon: 'mdi-folder-clock',
-          access: false
+          access: true
         }
       }
     ]
@@ -163,7 +163,7 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: '离线数据',
       icon: 'mdi-file-replace-outline',
-      access: false
+      access: true
     },
     children: [
       {
@@ -173,7 +173,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '离线主题',
           // icon: 'mdi-file-video',
-          access: false
+          access: true
         }
       },
       {
@@ -183,7 +183,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '离线数据统计',
           // icon: 'mdi-file-video',
-          access: false
+          access: true
         }
       }
     ]
@@ -196,7 +196,7 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: '日志数据',
       icon: 'mdi-file-table-box-outline',
-      access: true
+      access: false
     },
     children: [
       {
@@ -206,7 +206,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '日志主题',
           // icon: 'mdi-file-video',
-          access: true
+          access: false
         }
       },
       {
@@ -216,7 +216,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '日志数据统计',
           // icon: 'mdi-file-video',
-          access: true
+          access: false
         }
       }
     ]
@@ -229,7 +229,7 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: '事务数据',
       icon: 'mdi-file-excel-box-outline',
-      access: false
+      access: true
     },
     children: [
       {
@@ -239,7 +239,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '事务主题',
           // icon: 'mdi-file-video',
-          access: false
+          access: true
         }
       },
       {
@@ -249,7 +249,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '事务数据统计',
           // icon: 'mdi-file-video',
-          access: false
+          access: true
         }
       }
     ]
@@ -262,7 +262,7 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: '可靠通道',
       icon: 'mdi-console',
-      access: false
+      access: true
     },
     children: [
       {
@@ -272,7 +272,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '可靠通道主题',
           // icon: 'mdi-console-line ',
-          access: false
+          access: true
         }
       }
     ]
@@ -285,7 +285,7 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: '视频数据',
       icon: 'mdi-video-box',
-      access: false
+      access: true
     },
     children: [
       {
@@ -295,7 +295,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '视频主题',
           // icon: 'mdi-file-video',
-          access: false
+          access: true
         }
       },
       {
@@ -305,7 +305,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '视频数据统计',
           // icon: 'mdi-file-video',
-          access: false
+          access: true
         }
       }
     ]

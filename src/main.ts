@@ -26,19 +26,19 @@ Vue.directive('onlyNum', {
     }
 
     ele.oninput = function () {
-      if (binding.value.bool === undefined) {
+      if (binding.value?.bool === undefined) {
         let val = ele.value
         val = val.replace(/[^\d]/g, '') // 清除"数字"和"."以外的字符
         ele.value = val
-        const userID = val
-        binding.value.set[binding.value.name] = userID
+        // const userID = val
+        // binding.value.set[binding.value.name] = userID
       } else {
         if (binding.value.set[binding.value.bool]) {
           let val = ele.value
           val = val.replace(/[^\d]/g, '') // 清除"数字"和"."以外的字符
           ele.value = val
-          const userID = val
-          binding.value.set[binding.value.name] = userID
+          // const userID = val
+          // binding.value.set[binding.value.name] = userID
         }
       }
     }
