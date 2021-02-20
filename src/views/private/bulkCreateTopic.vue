@@ -1,8 +1,8 @@
 <template>
   <div>
-    <v-btn class="ml-12 mt-12" color="primary" height="35px" dark @click.stop="createTopicVideo"
-      >批量创建视频主题</v-btn
-    >
+    <div class="mt-6">First To the Egg: {{ BRANCH }}</div>
+    <div class="mt-6">First To the Key: {{ COMMITHASH }}</div>
+    <v-btn class="mt-6" color="primary" height="35px" small dark @click.stop="createTopicVideo">批量创建视频主题</v-btn>
     <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <v-row no-gutters>
         <!-- 主题名称母版 -->
@@ -69,6 +69,8 @@ export default class bulkCreateTopic extends Vue {
     formObj: {}
   }
   private count = 0
+  private COMMITHASH = process.env.COMMITHASH
+  private BRANCH = process.env.BRANCH
 
   private dialogFlag = false // 弹窗展示
   //  创建主题

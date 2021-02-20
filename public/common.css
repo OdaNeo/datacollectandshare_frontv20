@@ -63,6 +63,18 @@ input:-webkit-autofill {
     display: flex !important;
 }
 
+.v-input input {
+    font-size: 14px !important;
+}
+
+.v-input {
+    font-size: 14px !important;
+}
+
+.v-label {
+    font-size: 14px !important;
+}
+
 .v-form .v-input__append-inner {
     margin-top: 5px !important;
 }

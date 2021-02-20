@@ -12,7 +12,7 @@
     <v-app-bar app height="57" width="100%" style="left: 0px" :color="PROJECT_BASE_COLOR">
       <top-bar />
     </v-app-bar>
-    <v-navigation-drawer class="mt-14" width="200px" height="100%" app :color="PROJECT_BASE_COLOR">
+    <v-navigation-drawer class="mt-14" width="210px" height="100%" app :color="PROJECT_BASE_COLOR">
       <!-- <transition name="navbar"> -->
       <!-- <NavBar1 ></NavBar1> -->
       <nav-bar></nav-bar>

@@ -1,5 +1,7 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 // const userList = require('./mock/user.json')
+const GitRevisionPlugin = require('git-revision-webpack-plugin')
+const gitRevisionPlugin = new GitRevisionPlugin()
 
 module.exports = {
   // publicPath:"/tsweb2/",
@@ -38,5 +40,17 @@ module.exports = {
     } else {
       config.devtool = 'cheap-module-eval-source-map'
     }
+    // 添加线上环境查看git版本号
+    config.plugins = config.plugins.concat([gitRevisionPlugin])
+  },
+  // 配置环境变量
+  chainWebpack: config => {
+    //  https://github.com/vuejs/vue-cli/issues/1671
+    config.plugin('define').tap(args => {
+      // [ { 'process.env': { NODE_ENV: '"development"', BASE_URL: '"/"' } } ]
+      args[0]['process.env']['COMMITHASH'] = JSON.stringify(gitRevisionPlugin.commithash())
+      args[0]['process.env']['BRANCH'] = JSON.stringify(gitRevisionPlugin.branch())
+      return args
+    })
   }
 }

@@ -87,11 +87,12 @@ export const GET_TOPICS_GETVIDEO = '/topics/getVideo'
 export const GET_TOPICS_GETOFFLINELOG = '/topics/getOfflineLog'
 export const POST_TOPICS_UPDATETRANSACTIONALTOPIC = '/topics/updateTransactionalTopic'
 
-// ----------------------------- 内部调试页面 未配置权限 -------------------------
+// ----------------------------- 内部调试页面 未配置权限 ---------------
 export const POST_TRANSMISSION_ATS = '/transmission/ATS'
 export const GET_TRANSMISSION_REALTIME = '/transmission/realtime/ATS'
 export const GET_TRANSMISSION_HISTORY = '/transmission/history/ATS'
 
+// ----------------------------- 废弃API ----------------------------
 // export const GET_TOPICS_SELECTTOPICBYTIDTNAME = '/topics/selectTopicByTIdTName'
 // export const GET_TOPICS_FIND_ALL_TOPIC = '/topics/findAllTopic'
 

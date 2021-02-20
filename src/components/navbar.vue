@@ -1,6 +1,6 @@
 <template>
   <!-- <div id="navbar"> -->
-  <v-list id="navbar" dark expand dense>
+  <v-list id="navbar" dark class="pt-0" expand dense>
     <!-- <v-list-item link>
         <v-list-item-action>
           <v-icon>mdi-home</v-icon>

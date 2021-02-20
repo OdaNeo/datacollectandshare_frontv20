@@ -16,7 +16,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn height="35px" color="primary" depressed dark @click.stop="addItem">添加权限</v-btn>
+        <v-btn height="35px" color="primary" depressed small dark @click.stop="addItem">添加权限</v-btn>
       </v-col>
     </v-row>
     <h-table :headers="headers" :desserts="desserts" :loading="loading">

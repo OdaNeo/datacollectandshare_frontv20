@@ -18,10 +18,10 @@
       </v-col>
       <v-col cols="9">
         <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createRest()">创建REST</v-btn>
+        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createJson">创建JSON</v-btn>
         <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createProtobuf"
           >创建PROTOBUF</v-btn
         >
-        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createJson">创建JSON</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
