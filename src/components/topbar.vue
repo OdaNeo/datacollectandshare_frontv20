@@ -4,7 +4,7 @@
       <v-col cols="12" align-self="center">
         <h1 style="color: #fff; text-align: center" class="titleshadow">{{ PROJECT_TITLE }}</h1>
         <div class="userMenu" v-show="userMenuState">
-          <v-menu offset-y transition="slide-x-transition">
+          <v-menu left offset-y bottom attach transition="slide-x-transition">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
                 small

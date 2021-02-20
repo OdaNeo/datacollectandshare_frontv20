@@ -106,8 +106,8 @@ export default class Login extends Vue {
   margin-bottom: 15px;
 }
 .loginContent {
-  width: 400px;
-  height: 370px;
+  width: 450px;
+  height: 340px;
   position: absolute;
   background: #fff;
   box-shadow: -2px 2px 8px #333;

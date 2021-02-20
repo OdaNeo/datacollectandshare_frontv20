@@ -1,7 +1,7 @@
 <template>
   <div id="topicList">
     <v-row>
-      <v-col cols="3">
+      <v-col cols="3" class="mr-2">
         <v-text-field
           solo
           dense
@@ -17,12 +17,8 @@
         >
         </v-text-field>
       </v-col>
-      <v-col cols="1">
-        <v-btn color="primary" height="38" width="100%" dark @click.stop="createTopic(false)">创建结构化主题</v-btn>
-      </v-col>
-      <v-col cols="1">
-        <v-btn color="primary" height="38" dark @click="openUpload($event)">通过文件创建</v-btn>
-      </v-col>
+      <v-btn class="mt-3 mr-5" color="primary" height="38" dark @click.stop="createTopic(false)">创建结构化主题</v-btn>
+      <v-btn class="mt-3" color="primary" height="38" dark @click="openUpload($event)">通过文件创建</v-btn>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
       <v-tab v-for="item in items" :key="item">{{ item }}</v-tab>
