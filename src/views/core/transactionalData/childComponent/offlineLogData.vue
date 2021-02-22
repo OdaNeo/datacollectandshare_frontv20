@@ -15,11 +15,11 @@ export default class OfflineLogData extends Vue {
     let html = ''
 
     for (const p in _obj) {
-      _obj[p] = _obj[p].replaceAll('\n', '<div />')
+      _obj[p] = _obj[p].replaceAll('\n', '<br />')
       html += `
       <div style="display:flex;font-size: 16px;line-height:28px;">
-        <div style="min-width:150px;font-size: 16px;text-align: right;padding-right:10px">${p}:</div>
-        <div>${_obj[p]}</div>
+        <div style="width:100px;font-size: 16px;text-align: center;padding-right:10px;overflow: auto">${p}:</div>
+        <div style="overflow: auto;width: 500px;">${_obj[p]}</div>
       </div>
       `
     }

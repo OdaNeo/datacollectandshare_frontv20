@@ -10,6 +10,7 @@
         clearable
         height="34"
         :rules="[...h_validator.noEmpty('用户名'), ...noRepeat]"
+        @input="loginNameNoRepeat"
         class="ml-4 mr-15"
       ></v-text-field>
     </v-col>
@@ -67,7 +68,7 @@
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
+import { Component, Vue, Inject } from 'vue-property-decorator'
 import { userFormVar } from '@/type/user.type'
 import http from '@/decorator/httpDecorator'
 import { returnDataType, httpAllParams } from '@/type/http-request.type'
@@ -88,6 +89,7 @@ export default class userDialog extends Vue {
   private systemNames: Array<userFormVar> = []
   private noRepeat: Array<string> = []
   // private editDialog = false
+  private timer = 0
 
   private getUserRoot({ data }: returnDataType) {
     this.userRoots = data.map((s: { name: string; id: number }) => {
@@ -123,17 +125,20 @@ export default class userDialog extends Vue {
     this.getSystemName(results[1])
   }
 
-  @Watch('formProvide.formObj.loginName', { immediate: true })
-  private async loginNameNorepeat(val: string) {
+  private async loginNameNoRepeat(val: string) {
     if (val === undefined) {
       return
     }
-    const { data } = await this.h_request['httpGET']('GET_USER_FIND_ALL_USER_BY_PARAM', { loginName: val })
-    if (data?.list?.length > 0) {
-      this.noRepeat = ['用户名重复']
-    } else {
-      this.noRepeat = []
-    }
+
+    clearTimeout(this.timer)
+    this.timer = setTimeout(async () => {
+      const { data } = await this.h_request['httpGET']('GET_USER_FIND_ALL_USER_BY_PARAM', { loginName: val })
+      if (data?.list?.length > 0) {
+        this.noRepeat = ['用户名重复']
+      } else {
+        this.noRepeat = []
+      }
+    }, 150)
   }
 
   created(): void {

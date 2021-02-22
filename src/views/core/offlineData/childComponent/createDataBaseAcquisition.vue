@@ -10,6 +10,11 @@
         clearable
         height="34"
         :rules="[...h_validator.noEmpty('主题名称'), ...noRepeat]"
+        v-topicNameNoRepeat="{
+          set: n => {
+            noRepeat = [...n]
+          }
+        }"
         class="ml-4 mr-15"
       ></v-text-field>
     </v-col>
@@ -154,22 +159,6 @@ export default class CreateDataBaseAcquisition extends Vue {
       return
     } else {
       this.formProvide.formObj['topicList'].splice(index, 1)
-    }
-  }
-
-  // topicName validation
-  @Watch('formProvide.formObj.topicName')
-  private async nameNoRepeat(val: string) {
-    if (!val) {
-      return
-    }
-    const { success } = await this.h_request['httpGET']('GET_TOPICS_CHECKED', {
-      topicName: val
-    })
-    if (success) {
-      this.noRepeat = ['主题名称已被注册']
-    } else {
-      this.noRepeat = []
     }
   }
 

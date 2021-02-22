@@ -1,161 +1,158 @@
 <template>
   <div id="dataStatistics">
-    <div>
-      <v-row>
-        <v-col cols="2">
-          <v-select
-            solo
-            dense
-            height="35px"
-            v-model="systemValue"
-            :items="systemItems"
-            label="请选择系统"
-            @change="getTopicList"
-          ></v-select>
-        </v-col>
-        <v-col cols="2">
-          <v-menu
-            ref="menu"
-            v-model="menu"
-            :close-on-content-click="false"
-            :return-value.sync="beginDate"
-            transition="scale-transition"
-            offset-y
-          >
-            <template v-slot:activator="{ on, attrs }">
-              <v-text-field
-                solo
-                dense
-                height="35px"
-                v-model="beginDate"
-                label="请选择日期"
-                readonly
-                v-bind="attrs"
-                v-on="on"
-              ></v-text-field>
-            </template>
-            <v-date-picker
-              locale="zh-cn"
+    <v-row>
+      <v-col cols="2">
+        <v-select
+          solo
+          dense
+          height="35px"
+          v-model="systemValue"
+          :items="systemItems"
+          label="请选择系统"
+          @change="getTopicList"
+        ></v-select>
+      </v-col>
+      <v-col cols="2">
+        <v-menu
+          ref="menu"
+          v-model="menu"
+          :close-on-content-click="false"
+          :return-value.sync="beginDate"
+          transition="scale-transition"
+          offset-y
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              solo
+              dense
+              height="35px"
               v-model="beginDate"
-              @change="getTopicList"
-              @click.native="$refs.menu.save(beginDate)"
-              no-title
-              scrollable
-            >
-              <!-- <v-spacer></v-spacer>
+              label="请选择日期"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            locale="zh-cn"
+            v-model="beginDate"
+            @change="getTopicList"
+            @click.native="$refs.menu.save(beginDate)"
+            no-title
+            scrollable
+          >
+            <!-- <v-spacer></v-spacer>
                             <v-btn text color="primary" @click="menu = false">取消</v-btn>
                             <v-btn text color="primary" @click="$refs.menu.save(beginDate)">确定</v-btn> -->
-            </v-date-picker>
-          </v-menu>
-        </v-col>
-        <v-col cols="2">
-          <v-select
-            solo
-            dense
-            height="35px"
-            v-model="currentSelectMonth"
-            @change="getTopicList"
-            :items="monthSelectItems"
-            label="获取更长时间信息"
-          ></v-select>
-        </v-col>
-        <v-col cols="2" v-if="topicListNumber > 1">
-          <v-select
-            solo
-            dense
-            v-model="releasePageNum"
-            height="35px"
-            :items="pageList"
-            label="获取更多主题信息"
-            @change="getTopicList"
-          ></v-select>
-        </v-col>
-        <!-- <v-col cols="2">
+          </v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col cols="2">
+        <v-select
+          solo
+          dense
+          height="35px"
+          v-model="currentSelectMonth"
+          @change="getTopicList"
+          :items="monthSelectItems"
+          label="获取更长时间信息"
+        ></v-select>
+      </v-col>
+      <v-col cols="2" v-if="topicListNumber > 1">
+        <v-select
+          solo
+          dense
+          v-model="releasePageNum"
+          height="35px"
+          :items="pageList"
+          label="获取更多主题信息"
+          @change="getTopicList"
+        ></v-select>
+      </v-col>
+      <!-- <v-col cols="2">
                    <v-btn
                        color="primary"
                        @click="getTopicList"
                        dark
                    >生成数据</v-btn>
                 </v-col> -->
-      </v-row>
-      <v-row class="chartContent">
-        <v-tabs v-model="tabs" background-color="indigo" center-active dark>
-          <v-tab @click.native="issueTopic()"> 发布主题 </v-tab>
-          <v-tab @click.native="subscriptionTopic()">订阅主题</v-tab>
-          <v-tab @click.native="getData()">系统主题占比</v-tab>
-          <v-tab-item class="tabContent">
-            <!-- 不满足查询条件 不显示 -->
-            <div v-show="!showEchartsBox">
-              <div class="nodata-box">
-                <p>请选择系统及初始时间</p>
-                <div class="bg-box">
-                  <img src="../../../assets/image/kong.png" alt="" />
-                </div>
-              </div>
-            </div>
-            <!-- 满足查询条件 显示图表 -->
-            <div v-show="showEchartsBox">
-              <div class="before-btn" @click="beforeMonth">
-                <img src="../../../assets/image/leftBtn.png" alt="" />
-              </div>
-              <div class="chart-box">
-                <div v-show="haveData" id="canvasPackRelease" class="canvasPack echartsBox"></div>
-                <div v-show="!haveData">
-                  <p>{{ beginDate }}至{{ afterDate }}时间内{{ getSystemName() }}系统暂无主题消息发布</p>
-                  <div class="bg-box">
-                    <img src="../../../assets/image/kong.png" alt="" />
-                  </div>
-                </div>
-              </div>
-              <div class="after-btn" @click="afterMonth">
-                <img src="../../../assets/image/rightBtn.png" alt="" />
-              </div>
-            </div>
-          </v-tab-item>
-          <v-tab-item class="tabContent">
-            <!-- 不满足查询条件 不显示 -->
-            <div v-show="!showEchartsBox">
-              <div class="nodata-box">
-                <p>请选择系统及初始时间</p>
-                <div class="bg-box">
-                  <img src="../../../assets/image/kong.png" alt="" />
-                </div>
-              </div>
-            </div>
-            <!-- 满足查询条件 显示图表 -->
-            <div v-show="showEchartsBox">
-              <div class="before-btn" @click="beforeMonth">
-                <img src="../../../assets/image/leftBtn.png" alt="" />
-              </div>
-              <div class="chart-box">
-                <div v-show="haveData" id="canvasPackSubscribe" class="canvasPack echartsBox"></div>
-                <div v-show="!haveData">
-                  <p>{{ beginDate }}至{{ afterDate }}时间内{{ getSystemName() }}系统暂无主题订阅信息</p>
-                  <div class="bg-box">
-                    <img src="../../../assets/image/kong.png" alt="" />
-                  </div>
-                </div>
-              </div>
-              <div class="after-btn" @click="afterMonth">
-                <img src="../../../assets/image/rightBtn.png" alt="" />
-              </div>
-            </div>
-          </v-tab-item>
-          <v-tab-item class="tabContent">
-            <div class="noMsg" v-show="!noMsg">
-              <p>暂无系统数据</p>
+    </v-row>
+    <v-row class="chartContent">
+      <v-tabs v-model="tabs" background-color="indigo" center-active dark>
+        <v-tab @click.native="issueTopic()"> 发布主题 </v-tab>
+        <v-tab @click.native="subscriptionTopic()">订阅主题</v-tab>
+        <v-tab @click.native="getData()">系统主题占比</v-tab>
+        <v-tab-item class="tabContent">
+          <!-- 不满足查询条件 不显示 -->
+          <div v-show="!showEchartsBox">
+            <div class="nodata-box">
+              <p>请选择系统及初始时间</p>
               <div class="bg-box">
                 <img src="../../../assets/image/kong.png" alt="" />
               </div>
             </div>
-            <div class="showChart" v-show="noMsg">
-              <div id="canvasPackProportion" style="width: 780px !important; height: 360px"></div>
+          </div>
+          <!-- 满足查询条件 显示图表 -->
+          <div v-show="showEchartsBox">
+            <div class="before-btn" @click="beforeMonth">
+              <img src="../../../assets/image/leftBtn.png" alt="" />
             </div>
-          </v-tab-item>
-        </v-tabs>
-        <div></div>
-      </v-row>
-    </div>
+            <div class="chart-box">
+              <div v-show="haveData" id="canvasPackRelease" class="canvasPack echartsBox"></div>
+              <div v-show="!haveData">
+                <p>{{ beginDate }}至{{ afterDate }}时间内{{ getSystemName() }}系统暂无主题消息发布</p>
+                <div class="bg-box">
+                  <img src="../../../assets/image/kong.png" alt="" />
+                </div>
+              </div>
+            </div>
+            <div class="after-btn" @click="afterMonth">
+              <img src="../../../assets/image/rightBtn.png" alt="" />
+            </div>
+          </div>
+        </v-tab-item>
+        <v-tab-item class="tabContent">
+          <!-- 不满足查询条件 不显示 -->
+          <div v-show="!showEchartsBox">
+            <div class="nodata-box">
+              <p>请选择系统及初始时间</p>
+              <div class="bg-box">
+                <img src="../../../assets/image/kong.png" alt="" />
+              </div>
+            </div>
+          </div>
+          <!-- 满足查询条件 显示图表 -->
+          <div v-show="showEchartsBox">
+            <div class="before-btn" @click="beforeMonth">
+              <img src="../../../assets/image/leftBtn.png" alt="" />
+            </div>
+            <div class="chart-box">
+              <div v-show="haveData" id="canvasPackSubscribe" class="canvasPack echartsBox"></div>
+              <div v-show="!haveData">
+                <p>{{ beginDate }}至{{ afterDate }}时间内{{ getSystemName() }}系统暂无主题订阅信息</p>
+                <div class="bg-box">
+                  <img src="../../../assets/image/kong.png" alt="" />
+                </div>
+              </div>
+            </div>
+            <div class="after-btn" @click="afterMonth">
+              <img src="../../../assets/image/rightBtn.png" alt="" />
+            </div>
+          </div>
+        </v-tab-item>
+        <v-tab-item class="tabContent">
+          <div class="noMsg" v-show="!noMsg">
+            <p>暂无系统数据</p>
+            <div class="bg-box">
+              <img src="../../../assets/image/kong.png" alt="" />
+            </div>
+          </div>
+          <div class="showChart" v-show="noMsg">
+            <div id="canvasPackProportion" style="width: 780px !important; height: 360px"></div>
+          </div>
+        </v-tab-item>
+      </v-tabs>
+    </v-row>
   </div>
 </template>
 <script lang="ts">
@@ -532,7 +529,7 @@ export default class DataStatistics extends Vue {
         this.startTimeSubscribe = this.beginDate
         this.endTimeRelease = this.afterDate
         this.endTimeSubscribe = this.afterDate
-        if (result.data.list.length !== 0) {
+        if (result.data.list && result.data.list.length) {
           this.haveData = true
           this.echartsType === 'Release'
             ? (this.topicMsgRelease = this.dataStructure(result.data.list))

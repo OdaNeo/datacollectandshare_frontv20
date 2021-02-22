@@ -12,6 +12,11 @@
         height="34"
         :rules="[...h_validator.noEmpty('主题名称'), ...noRepeat]"
         class="ml-4 mr-15"
+        v-topicNameNoRepeat="{
+          set: n => {
+            noRepeat = [...n]
+          }
+        }"
       ></v-text-field>
     </v-col>
     <!-- cron -->
@@ -98,10 +103,8 @@
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
-// import { userFormVar } from '@/type/user.type'
+import { Component, Vue, Inject } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
-// import { returnDataType, httpAllParams } from '@/type/http-request.type'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 
@@ -119,20 +122,5 @@ export default class CreateTransactionalData extends Vue {
     "column":"id",
     "sql":"select max(id) as id from video_stream_info"
 }`
-
-  @Watch('formProvide.formObj.topicName')
-  private async nameNoRepeat(val: string) {
-    if (!val) {
-      return
-    }
-    const { success } = await this.h_request['httpGET']('GET_TOPICS_CHECKED', {
-      topicName: val
-    })
-    if (success) {
-      this.noRepeat = ['主题名称已被注册']
-    } else {
-      this.noRepeat = []
-    }
-  }
 }
 </script>

@@ -1,10 +1,8 @@
 <template>
   <div id="SqlMaxContentDetails">
-    <v-card-text>
-      <v-container>
-        {{ rowJson }}
-      </v-container>
-    </v-card-text>
+    <v-container>
+      {{ rowJson }}
+    </v-container>
   </div>
 </template>
 <script lang="ts">

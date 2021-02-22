@@ -11,6 +11,11 @@
         height="34"
         :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
         class="ml-4 mr-15"
+        v-topicNameNoRepeat="{
+          set: n => {
+            noRepeat = [...n]
+          }
+        }"
       ></v-text-field>
     </v-col>
     <!-- rtsp/rtmp地址 -->
@@ -42,7 +47,7 @@
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Vue, Watch, Inject } from 'vue-property-decorator'
+import { Component, Vue, Inject } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 
 import Validator from '@/decorator/validatorDecorator'
@@ -67,21 +72,6 @@ export default class CreateVideoTopicDialog extends Vue {
     if (this.count === 10) {
       clearTimeout(this.timer)
       this.$router.push('/private/bulkCreateTopic')
-    }
-  }
-  // topicName validation
-  @Watch('formProvide.formObj.topicName')
-  private async nameNoRepeat(val: string) {
-    if (!val) {
-      return
-    }
-    const { success } = await this.h_request['httpGET']('GET_TOPICS_CHECKED', {
-      topicName: val
-    })
-    if (success) {
-      this.noRepeat = ['主题名称已被注册']
-    } else {
-      this.noRepeat = []
     }
   }
 }

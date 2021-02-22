@@ -12,6 +12,11 @@
         height="34"
         :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
         class="ml-4 mr-15"
+        v-topicNameNoRepeat="{
+          set: n => {
+            noRepeat = [...n]
+          }
+        }"
       ></v-text-field>
     </v-col>
 
@@ -46,7 +51,7 @@
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
+import { Component, Inject, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
@@ -57,21 +62,5 @@ import Validator from '@/decorator/validatorDecorator'
 export default class CreateProtobuf extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private noRepeat: string[] = []
-
-  // topicName validation
-  @Watch('formProvide.formObj.topicName')
-  private async nameNoRepeat(val: string) {
-    if (!val) {
-      return
-    }
-    const { success } = await this.h_request['httpGET']('GET_TOPICS_CHECKED', {
-      topicName: val
-    })
-    if (success) {
-      this.noRepeat = ['主题名称已被注册']
-    } else {
-      this.noRepeat = []
-    }
-  }
 }
 </script>

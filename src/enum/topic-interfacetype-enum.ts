@@ -7,9 +7,11 @@ export enum topicInterFaceType {
   拉取FTP,
   PROTOBUF,
   VIDEO,
-  事务数据
+  事务数据,
+  日志数据
 }
 // 实时 ： 1 4 6
 // 离线 ： 2 3 5
 // 视频 ： 7
 // 事务 ： 8
+// 日志 ：

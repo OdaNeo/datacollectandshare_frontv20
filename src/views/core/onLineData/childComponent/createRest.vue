@@ -12,6 +12,11 @@
         height="34"
         :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
         class="ml-4 mr-15"
+        v-topicNameNoRepeat="{
+          set: n => {
+            noRepeat = [...n]
+          }
+        }"
       ></v-text-field>
     </v-col>
     <!-- 消息类型 -->
@@ -213,23 +218,6 @@ export default class CreateRest extends Vue {
     } else {
       this.formProvide.formObj['topicList'].splice(index, 1)
     }
-  }
-
-  // topicName validation
-  @Watch('formProvide.formObj.topicName')
-  private async nameNoRepeat(val: string) {
-    if (!val) {
-      return
-    }
-    const { success } = await this.h_request['httpGET']('GET_TOPICS_CHECKED', {
-      topicName: val
-    })
-    if (success) {
-      this.noRepeat = ['主题名称已被注册']
-    } else {
-      this.noRepeat = []
-    }
-    // this.formTypeObj[0].otherRules = [...this.h_validator.topicNameFormatter(), ...this.noRepeat]
   }
 
   // validation topicList no-repeat-key

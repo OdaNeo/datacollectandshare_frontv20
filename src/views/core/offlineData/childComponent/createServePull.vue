@@ -11,13 +11,18 @@
         clearable
         height="34"
         :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
+        v-topicNameNoRepeat="{
+          set: n => {
+            noRepeat = [...n]
+          }
+        }"
         class="ml-4 mr-15"
       ></v-text-field>
     </v-col>
     <!--AuthorizationObj  -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2">Authorization</label>
-      <div class="ml-4">
+      <div class="ml-4 flex-grow-1">
         <v-row
           v-for="item in formProvide.formObj.AuthorizationObj"
           :key="item.id"
@@ -91,7 +96,7 @@
     <!-- 头信息 -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2">头信息</label>
-      <div class="ml-4">
+      <div class="ml-4 flex-grow-1">
         <v-row
           v-for="(item, index) in formProvide.formObj.header"
           :key="item.id"
@@ -291,21 +296,6 @@ export default class CreateServePull extends Vue {
     this.formProvide.formObj['header'].splice(index, 1)
   }
 
-  // topicName validation
-  @Watch('formProvide.formObj.topicName')
-  private async nameNoRepeat(val: string) {
-    if (!val) {
-      return
-    }
-    const { success } = await this.h_request['httpGET']('GET_TOPICS_CHECKED', {
-      topicName: val
-    })
-    if (success) {
-      this.noRepeat = ['主题名称已被注册']
-    } else {
-      this.noRepeat = []
-    }
-  }
   // validation topicList no-repeat-key
   @Watch('formProvide.formObj.topicList', { deep: true })
   private handleKeyNoRepeat(val: Array<any>) {

@@ -10,6 +10,7 @@
         clearable
         height="34"
         :rules="[...h_validator.noEmpty('命令名称'), ...noRepeat]"
+        @input="handleCmdNameNoRepeat"
         class="ml-4 mr-15"
       ></v-text-field>
     </v-col>
@@ -73,7 +74,7 @@
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
+import { Component, Inject, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
@@ -85,6 +86,7 @@ export default class CreateCmdDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   private systemList: Array<{ text: string; value: string }> = []
   private noRepeat: string[] = []
+  private timer = 0
 
   private showConstruction = false
 
@@ -105,20 +107,22 @@ export default class CreateCmdDialog extends Vue {
   }
 
   // validation cmdName no-repeat
-  @Watch('formProvide.formObj.cmdName')
-  private async handleCmdNameNoRepeat(val: string) {
+  private handleCmdNameNoRepeat(val: string) {
     if (!val) {
       return
     }
-    const { success } = await this.h_request['httpGET']('GET_CMD_CHECKED', {
-      cmdName: val,
-      producer: this.formProvide.formObj.producer
-    })
-    if (success) {
-      this.noRepeat = ['命令名称已被注册']
-    } else {
-      this.noRepeat = []
-    }
+    clearTimeout(this.timer)
+    this.timer = setTimeout(async () => {
+      const { success } = await this.h_request['httpGET']('GET_CMD_CHECKED', {
+        cmdName: val,
+        producer: this.formProvide.formObj.producer
+      })
+      if (success) {
+        this.noRepeat = ['命令名称已被注册']
+      } else {
+        this.noRepeat = []
+      }
+    }, 150)
   }
 
   created(): void {

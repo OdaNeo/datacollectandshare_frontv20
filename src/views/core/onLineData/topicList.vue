@@ -65,7 +65,7 @@
             <v-btn :disabled="item.topicInterFaceType !== 6" text color="primary" @click.stop="downloadFile(item)"
               >下载</v-btn
             >
-            <v-btn text color="primary" @click="getTopicInformation(item, index)">查看附加信息</v-btn>
+            <v-btn text color="primary" @click="getTopicInformation(item, index)">附加信息</v-btn>
           </template>
         </h-table>
       </v-tab-item>
@@ -274,7 +274,7 @@ export default class OnlineDataTopicList extends Vue {
       }
     }
   }
-  // rest
+  // rest addTopic code 500, but topic actually created success /topics/addTopic
   private async addRest(formObj: TopicAdd) {
     const canNotEdit = formObj.canNotEdit
 
@@ -326,6 +326,7 @@ export default class OnlineDataTopicList extends Vue {
     this.formProvide.methodName = 'addProtobuf' // 立即提交
     this.formProvide.formObj = {}
   }
+
   // addProtobuf
   private async addProtobuf(formObj: TopicAdd) {
     if (!this.protoFile) {
