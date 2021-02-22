@@ -1,0 +1,78 @@
+{
+  "job": {
+    "setting": {
+      "speed": {
+        "channel": 1
+      }
+    },
+    "content": [
+      {
+        "reader": {
+          "name": "mysqlreader",
+          "parameter": {
+            "column": ["id", "Name", "Value", "Type"],
+            "connection": [
+              {
+                "jdbcUrl": ["jdbc:mysql://112.126.69.158:3306/datatransfer"],
+                "table": ["system_info"]
+              }
+            ],
+            "password": "JKroot123",
+            "username": "root",
+            "where": ""
+          }
+        },
+        "writer": {
+          "name": "hbase11xwriter",
+          "parameter": {
+            "hbaseConfig": {
+              "hbase.zookeeper.quorum": "bj-tct.com-01:2181,bj-tct.com-02:2181,bj-tct.com-03:2181",
+              "hbase.cluster.distributed": false,
+              "zookeeper.znode.parent": "/hbase"
+            },
+            "table": "testtopic001",
+            "mode": "normal",
+            "rowkeyColumn": [
+              {
+                "index": 0,
+                "type": "string"
+              },
+              {
+                "index": -1,
+                "type": "string",
+                "value": "_"
+              }
+            ],
+            "column": [
+              {
+                "index": 0,
+                "name": "f1:id",
+                "type": "string"
+              },
+              {
+                "index": 1,
+                "name": "f1:name",
+                "type": "string"
+              },
+              {
+                "index": 2,
+                "name": "f1:value",
+                "type": "string"
+              },
+              {
+                "index": 3,
+                "name": "f1:type",
+                "type": "string"
+              }
+            ],
+            "versionColumn": {
+              "index": -1,
+              "value": "123456789"
+            },
+            "encoding": "utf-8"
+          }
+        }
+      }
+    ]
+  }
+}
