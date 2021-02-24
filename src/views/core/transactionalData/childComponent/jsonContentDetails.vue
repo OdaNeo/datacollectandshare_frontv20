@@ -54,22 +54,22 @@ export default class JsonContentDetails extends Vue {
     let html = ''
     for (const p in obj) {
       if (Array.isArray(obj[p])) {
-        // 数组
-        html += `
-        <div style="font-size: 16px;line-height: 24px;">
-          <span style="font-size: 16px;over-flow: auto;">"${p}":</span>
-          <span>[</span>
-          <div style="margin-left:24px">${this.arrayToHTML(obj[p])}</div>
-          <span>],</span>
-        </div>
-        `
+        // // array
+        // html += `
+        // <div style="font-size: 16px;line-height: 24px;">
+        //   <span style="font-size: 16px;over-flow: auto;">"${p}":</span>
+        //   <span>[</span>
+        //   <div style="margin-left:24px">${this.arrayToHTML(obj[p])}</div>
+        //   <span>],</span>
+        // </div>
+        // `
       } else if (Object.prototype.toString.call(obj[p]) === '[object Object]') {
-        // 对象
+        // object
         html += `
         <div style="font-size: 16px;line-height: 24px;">
-          <span style="font-size: 16px;over-flow: auto;">"${p}":</span>
           <span>{</span>
-          <div style="margin-left:24px">${this.objToHTML(obj[p])}</div>
+          <div style="margin-left:24px; font-size: 16px;over-flow: auto;">"${p}":</div>
+          <div style="margin-left:48px">${this.objToHTML(obj[p])}</div>
           <span>},</span>
         </div>
         `
@@ -77,16 +77,20 @@ export default class JsonContentDetails extends Vue {
         // string
         html += `
         <div style="font-size: 16px;line-height: 24px;">
+          <span>{</span>
           <span style="font-size: 16px;over-flow: auto;">"${p}":</span>
-          <span>"${obj[p]}"</span><span>,</span>
+          <span>"${obj[p]}"</span>
+          <span>},</span>
         </div>
         `
       } else {
         // string
         html += `
         <div style="font-size: 16px;line-height: 24px;">
+          <span>{</span>
           <span style="font-size: 16px;over-flow: auto;">"${p}":</span>
-          <span>${obj[p]}</span><span>,</span>
+          <span>${obj[p]}</span>
+          <span>},</span>
         </div>
         `
       }
@@ -96,7 +100,7 @@ export default class JsonContentDetails extends Vue {
 
   private get obj() {
     const _obj = JSON.parse(this.rowJson)
-    return `<div style="font-size: 16px;">{</div>${this.objToHTML(_obj)}<div>}</div>`
+    return this.objToHTML(_obj)
   }
 }
 </script>
