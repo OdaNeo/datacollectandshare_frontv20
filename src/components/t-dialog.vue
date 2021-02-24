@@ -13,6 +13,10 @@
           <slot />
         </v-container>
       </v-card-text>
+      <v-card-actions v-if="$slots['action-button']" class="pt-0 pb-4 pr-8">
+        <v-spacer></v-spacer>
+        <slot name="action-button" />
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>

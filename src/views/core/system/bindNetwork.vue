@@ -21,7 +21,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn height="35px" color="primary" depressed small dark @click.stop="bindNet">绑定网络</v-btn>
+        <v-btn height="35px" width="95px" color="primary" depressed small dark @click.stop="bindNet">绑定网络</v-btn>
       </v-col>
     </v-row>
     <h-table
@@ -131,9 +131,12 @@ export default class BindNetwork extends Vue {
     const { data }: returnDataType = bool
       ? await this.h_request['httpGET']<object>('GET_SYSNET_GETBINDBYNAME', params)
       : await this.h_request['httpGET']<object>('GET_SYSNET_GETBINDLIST', params)
-    this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
-    this.desserts = data['list']
-    this.loading = false
+
+    if (data) {
+      this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
+      this.desserts = data['list']
+      this.loading = false
+    }
   }
 
   private searchSystemName() {

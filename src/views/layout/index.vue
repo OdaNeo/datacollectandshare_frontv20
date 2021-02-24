@@ -33,7 +33,6 @@
 import { Component, Vue } from 'vue-property-decorator'
 import NavBar from '@/components/navbar.vue'
 import TopBar from '@/components/topbar.vue'
-// import DevicePixelRatio from '@/utils/windowResize'
 import { PROJECT_BASE_COLOR } from '@/config'
 
 @Component({
@@ -65,7 +64,6 @@ export default class Login extends Vue {
   // content = false
 
   created(): void {
-    // new DevicePixelRatio().init()
     // setTimeout(() => {
     // this.bread = true
     // this.navBar = true

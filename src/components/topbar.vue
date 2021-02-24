@@ -2,7 +2,7 @@
   <div id="topbar">
     <v-row align="center" no-gutters>
       <v-col cols="12" align-self="center">
-        <span class="titleShadow" @click="$router.push('/statePage/welcome')">{{ PROJECT_TITLE }}</span>
+        <span class="titleShadow" @click="handleNavRouter">{{ PROJECT_TITLE }}</span>
 
         <v-row class="userMenu">
           <v-menu left offset-y bottom max-width="200px" min-width="200px" rounded attach>
@@ -20,7 +20,7 @@
                   <div class="user">{{ userName }}</div>
                   <div class="user">{{ userType }}</div>
                   <div class="user">{{ userStatus }}</div>
-                  <div class="user">{{ usersysName }}</div>
+                  <div class="user">{{ userSysName }}</div>
                   <div class="user">{{ userToken }}</div>
 
                   <v-divider class="my-1"></v-divider>
@@ -30,7 +30,7 @@
                     depressed
                     rounded
                     text
-                    @click.stop="clicklLogout"
+                    @click.stop="clickLogout"
                     >注销</v-btn
                   >
                 </div>
@@ -55,7 +55,7 @@
                         {{ userStatus }}
                       </v-card-text>
                       <v-card-text>
-                        {{ usersysName }}
+                        {{ userSysName }}
                       </v-card-text>
                       <v-card-text>
                         {{ userToken }}
@@ -117,7 +117,7 @@ export default class TopBar extends Vue {
     }
   }
 
-  get usersysName(): string {
+  get userSysName(): string {
     const data = JSON.parse(sessionStorage.systemInfo)
     let name = ''
     for (let i = 0; i < data.length; i++) {
@@ -132,7 +132,7 @@ export default class TopBar extends Vue {
     return '用户Token：' + rootStoreModule.UserState.userMessage.userToken
   }
 
-  clicklLogout(): void {
+  clickLogout(): void {
     // 清除vuex 的状态
     rootStoreModule.logout()
     // 页面跳转
@@ -140,15 +140,12 @@ export default class TopBar extends Vue {
       path: '/login'
     })
   }
-
-  // userMenu = [{ title: '注销', clickMethod: this.clicklLogout }]
-
-  // created(): void {
-  // setTimeout(() => {
-  // this.titleState = true
-  // this.userMenuState = true
-  // }, 1000)
-  // }
+  private handleNavRouter() {
+    if (this.$route.fullPath === '/statePage/welcome') {
+      return
+    }
+    this.$router.push('/statePage/welcome')
+  }
 }
 </script>
 

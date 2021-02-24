@@ -76,8 +76,8 @@
         </v-menu>
       </div>
     </div>
-    <div id="release" style="height: 91%" v-if="releaseTopicExist"></div>
-    <div v-else>
+    <div id="release" style="height: 90%" v-show="releaseTopicExist"></div>
+    <div v-show="!releaseTopicExist">
       <p style="margin-top: 150px">
         {{ `主题${releaseSystemName}在${releaseStartTime}至${releaseEndTime}没有发布主题` }}
       </p>
@@ -90,7 +90,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { returnDataType } from '@/type/http-request.type'
 import Moment from 'moment'
-import Welcome from '../welcome.vue'
+// import Welcome from '../welcome.vue'
 import util from '@/decorator/utilsDecorator'
 
 @Component
@@ -143,7 +143,7 @@ export default class ReleaseMenu extends Vue {
       },
       (result: returnDataType) => {
         // this.releaseOverlay = false
-        if (result.data.list.length > 0) {
+        if (result.data.list?.length > 0) {
           this.drawRelease(result)
         } else {
           this.releaseTopicExist = false
@@ -166,7 +166,7 @@ export default class ReleaseMenu extends Vue {
       },
       (result: returnDataType) => {
         // this.releaseOverlay = false
-        if (result.data.list.length > 0) {
+        if (result.data.list?.length > 0) {
           this.drawRelease(result)
         } else {
           this.releaseTopicExist = false
@@ -191,7 +191,7 @@ export default class ReleaseMenu extends Vue {
       },
       (result: returnDataType) => {
         // this.releaseOverlay = false
-        if (result.data.list.length > 0) {
+        if (result.data.list?.length > 0) {
           this.drawRelease(result)
         } else {
           this.releaseTopicExist = false
@@ -207,11 +207,13 @@ export default class ReleaseMenu extends Vue {
   }
 
   private drawRelease({ data }: returnDataType) {
-    console.log(data)
+    // console.log(data)
     this.releaseTopicExist = true
     this.releaseTotal = data.total
-    const parent = this.$parent as Welcome
-    parent.topicRanking('release', data, this.releaseEndTime)
+    // const parent = this.$parent as Welcome
+    // parent.topicRanking('release', data, this.releaseEndTime)
+
+    this.h_utils.topicRanking.init('release', data, this.releaseEndTime)
   }
 
   mounted(): void {

@@ -1,6 +1,6 @@
 <template>
   <div id="JsonContentDetails">
-    <v-container v-html="obj"></v-container>
+    <v-container style="max-height: 400px; overflow: auto" v-html="obj"></v-container>
   </div>
 </template>
 <script lang="ts">
@@ -16,33 +16,33 @@ export default class JsonContentDetails extends Vue {
       if (Array.isArray(item)) {
         // 数组
         html += `
-        <div style="font-size: 16px;line-height: 24px;">
-          <span>[</span>
-          <div style="margin-left:24px">${this.arrayToHTML(item)}</div>
-          <span>],</span>
+        <div style="margin-left:24px;">
+          <div>[</div>
+          <div>${this.arrayToHTML(item)}</div>
+          <div>],</div>
         </div>
         `
       } else if (Object.prototype.toString.call(item) === '[object Object]') {
         // 对象
         html += `
-        <div style="font-size: 16px;line-height: 24px;">
+        <div style="margin-left:24px;">
           <span>{</span>
-          <div style="margin-left:24px">${this.objToHTML(item)}</div>
+          <div>${this.objToHTML(item)}</div>
           <span>},</span>
         </div>
         `
       } else if (typeof item === 'string') {
         // string
         html += `
-        <div style="font-size: 16px;line-height: 24px;">
-          <span>"${item}"</span><span>,</span>
+        <span style="margin-left:24px;">
+          <span>"${item}",</span>
         </span>
         `
       } else {
-        // 其他
+        // number or other
         html += `
-        <div style="font-size: 16px;line-height: 24px;">
-          <span>${item}</span><span>,</span>
+        <span style="margin-left:24px;">
+          <span>${item},</span>
         </span>
         `
       }
@@ -54,43 +54,39 @@ export default class JsonContentDetails extends Vue {
     let html = ''
     for (const p in obj) {
       if (Array.isArray(obj[p])) {
-        // // array
-        // html += `
-        // <div style="font-size: 16px;line-height: 24px;">
-        //   <span style="font-size: 16px;over-flow: auto;">"${p}":</span>
-        //   <span>[</span>
-        //   <div style="margin-left:24px">${this.arrayToHTML(obj[p])}</div>
-        //   <span>],</span>
-        // </div>
-        // `
+        // array
+        html += `
+        <div style="margin-left:24px;">
+          <span>"${p}":</span>
+          <span>[</span>
+          <div>${this.arrayToHTML(obj[p])}</div>
+          <span>],</span>
+        </div>
+        `
       } else if (Object.prototype.toString.call(obj[p]) === '[object Object]') {
         // object
         html += `
-        <div style="font-size: 16px;line-height: 24px;">
+        <div style="margin-left:24px;">
+          <span>"${p}":</span>
           <span>{</span>
-          <div style="margin-left:24px; font-size: 16px;over-flow: auto;">"${p}":</div>
-          <div style="margin-left:48px">${this.objToHTML(obj[p])}</div>
+          <div>${this.objToHTML(obj[p])}</div>
           <span>},</span>
         </div>
         `
       } else if (typeof obj[p] === 'string') {
         // string
         html += `
-        <div style="font-size: 16px;line-height: 24px;">
-          <span>{</span>
-          <span style="font-size: 16px;over-flow: auto;">"${p}":</span>
-          <span>"${obj[p]}"</span>
-          <span>},</span>
+        <div style="margin-left:24px;">
+          <span>"${p}":</span>
+          <span>"${obj[p]}",</span>
         </div>
         `
       } else {
-        // string
+        // number or other
         html += `
-        <div style="font-size: 16px;line-height: 24px;">
-          <span>{</span>
-          <span style="font-size: 16px;over-flow: auto;">"${p}":</span>
-          <span>${obj[p]}</span>
-          <span>},</span>
+        <div style="margin-left:24px;">
+          <span>"${p}":</span>
+          <span>${obj[p]},</span>
         </div>
         `
       }
@@ -99,8 +95,14 @@ export default class JsonContentDetails extends Vue {
   }
 
   private get obj() {
-    const _obj = JSON.parse(this.rowJson)
-    return this.objToHTML(_obj)
+    if (this.rowJson !== '') {
+      const _obj = JSON.parse(this.rowJson)
+      return `<div style="font-size: 16px;line-height: 24px;">
+                {${this.objToHTML(_obj)}}
+              </div>`
+    } else {
+      return ``
+    }
   }
 }
 </script>

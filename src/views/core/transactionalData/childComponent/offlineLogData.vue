@@ -1,6 +1,6 @@
 <template>
   <div id="OfflineLogData">
-    <v-container v-html="obj"></v-container>
+    <v-container style="max-height: 400px; overflow: auto" v-html="obj"></v-container>
   </div>
 </template>
 <script lang="ts">

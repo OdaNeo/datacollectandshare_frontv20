@@ -15,6 +15,18 @@
     <!-- 表格显示 -->
     <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
       <OfflineLogData :rowJson="rowJson" />
+      <v-btn
+        slot="action-button"
+        color="primary"
+        height="35px"
+        width="95px"
+        :disabled="!rowJson"
+        text
+        v-clipboard:copy="rowJson"
+        v-clipboard:success="onCopy"
+        v-clipboard:error="onError"
+        >一键复制</v-btn
+      >
     </t-dialog>
   </div>
 </template>
@@ -117,6 +129,14 @@ export default class TransactionalDataStatistics extends Vue {
     })
   }
 
+  private onCopy() {
+    this.h_utils.alertUtil.open('复制成功', true, 'success', 1500)
+  }
+
+  private onError() {
+    this.h_utils.alertUtil.open('复制失败', true, 'error', 1500)
+  }
+
   created(): void {
     this.pageNum = 1
     this.searchMethod({
@@ -126,7 +146,7 @@ export default class TransactionalDataStatistics extends Vue {
   }
 }
 </script>
-<style scoped>
+<style>
 #TransactionalDataStatistics {
   margin-top: 10px;
 }

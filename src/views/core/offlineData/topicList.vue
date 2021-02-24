@@ -17,13 +17,23 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createDataBaseAcquisition()"
+        <v-btn
+          color="primary"
+          width="90px"
+          height="35px"
+          depressed
+          class="mr-6"
+          small
+          dark
+          @click="createDataBaseAcquisition()"
           >数据库采集</v-btn
         >
-        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createServePull()"
+        <v-btn color="primary" width="95px" height="35px" depressed class="mr-6" small dark @click="createServePull()"
           >服务主动拉取</v-btn
         >
-        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="pullFTP">拉取FTP</v-btn>
+        <v-btn color="primary" width="95px" height="35px" depressed class="mr-6" small dark @click="pullFTP"
+          >拉取FTP</v-btn
+        >
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">

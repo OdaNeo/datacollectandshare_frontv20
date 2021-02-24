@@ -104,16 +104,6 @@ const routes: Array<RouteConfig> = [
     },
     children: [
       {
-        path: 'topicList2',
-        component: () => import('@/views/core/onLineData/topicList2.vue'),
-        name: '实时主题2',
-        meta: {
-          title: '实时主题2',
-          // icon: 'mdi-folder-multiple',
-          access: false
-        }
-      },
-      {
         path: 'topicList',
         component: () => import('@/views/core/onLineData/topicList.vue'),
         name: '实时主题',

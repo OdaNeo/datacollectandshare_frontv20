@@ -1,10 +1,11 @@
 import timeUtil from './timeUtil'
 import alertUtil from './alertUtil'
-import TopicNameSwitch from './topicNameSwitch'
+import topicRanking from './topicRanking'
+
 class Utils {
   private timeutil = timeUtil
   private alertUtil = alertUtil
-  private topicNameSwitch = TopicNameSwitch
+  private topicRanking = topicRanking
 }
 
 export default Utils

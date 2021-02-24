@@ -44,7 +44,7 @@
       :total-visible="10"
       @input="handleCurrentChange"
       :value="pageNum"
-      v-if="paginationLength && pageNum"
+      v-if="paginationLength && pageNum && !loading"
     ></v-pagination>
   </div>
 </template>

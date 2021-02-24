@@ -1,8 +1,6 @@
 <template>
   <div id="SqlMaxContentDetails">
-    <v-container>
-      {{ rowJson }}
-    </v-container>
+    <v-container style="max-height: 400px; overflow: auto"> {{ rowJson }}</v-container>
   </div>
 </template>
 <script lang="ts">

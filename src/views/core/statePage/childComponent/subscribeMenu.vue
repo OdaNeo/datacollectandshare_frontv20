@@ -82,8 +82,8 @@
         </v-menu>
       </div>
     </div>
-    <div id="subscribe" style="height: 91%" v-if="subscribeTopicExist"></div>
-    <div v-else>
+    <div id="subscribe" style="height: 90%" v-show="subscribeTopicExist"></div>
+    <div v-show="!subscribeTopicExist">
       <p style="margin-top: 150px">
         {{ `主题${subscribeSystemName}在${subscribeStartTime}至${subscribeEndTime}没有发布主题` }}
       </p>
@@ -95,7 +95,7 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import { returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import Moment from 'moment'
-import Welcome from '../welcome.vue'
+// import Welcome from '../welcome.vue'
 import util from '@/decorator/utilsDecorator'
 
 @Component
@@ -136,8 +136,9 @@ export default class SubscribeMenu extends Vue {
   private drawSubscribe({ data }: returnDataType) {
     this.subscribeTopicExist = true
     this.subscribeTotal = data.total
-    const parent = this.$parent as Welcome
-    parent.topicRanking('subscribe', data, this.subscribeEndTime)
+    // const parent = this.$parent as Welcome
+    // parent.topicRanking('subscribe', data, this.subscribeEndTime)
+    this.h_utils.topicRanking.init('subscribe', data, this.subscribeEndTime)
   }
 
   private selectSubscribeSystem(system: { name: string; id: number }) {
@@ -155,7 +156,7 @@ export default class SubscribeMenu extends Vue {
       },
       (result: returnDataType) => {
         this.subscribeOverlay = false
-        if (result.data.list.length > 0) {
+        if (result.data.list?.length > 0) {
           this.drawSubscribe(result)
         } else {
           this.subscribeTopicExist = false
@@ -178,7 +179,7 @@ export default class SubscribeMenu extends Vue {
       },
       (result: returnDataType) => {
         this.subscribeOverlay = false
-        if (result.data.list.length > 0) {
+        if (result.data.list?.length > 0) {
           this.drawSubscribe(result)
         } else {
           this.subscribeTopicExist = false
@@ -203,7 +204,7 @@ export default class SubscribeMenu extends Vue {
       },
       (result: returnDataType) => {
         this.subscribeOverlay = false
-        if (result.data.list.length > 0) {
+        if (result.data.list?.length > 0) {
           this.drawSubscribe(result)
         } else {
           this.subscribeTopicExist = false

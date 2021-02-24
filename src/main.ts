@@ -6,11 +6,15 @@ import vuetify from './plugins/vuetify'
 import { rootStoreModule } from './store/modules/root'
 import { Route, NavigationGuardNext } from 'vue-router'
 import alertUtil from './utils/alertUtil'
+import VueClipboard from 'vue-clipboard2'
 import '@/utils/directive'
 
 const { UserState, logout } = rootStoreModule
 
 Vue.config.productionTip = false
+
+VueClipboard.config.autoSetContainer = true
+Vue.use(VueClipboard)
 
 router.beforeEach(
   async ({ path: toPath, name: toName, meta: toMeta }: Route, from: Route, next: NavigationGuardNext<Vue>) => {

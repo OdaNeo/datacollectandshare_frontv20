@@ -17,7 +17,16 @@
         </v-text-field>
       </v-col>
       <v-col>
-        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createTransactionalData()">
+        <v-btn
+          color="primary"
+          width="95px"
+          height="35px"
+          depressed
+          class="mr-6"
+          small
+          dark
+          @click="createTransactionalData()"
+        >
           创建事务主题
         </v-btn>
       </v-col>
@@ -67,6 +76,18 @@
     <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
       <SqlMaxContentDetails :rowJson="rowJson" v-if="tDialogShow === 1" />
       <JsonContentDetails :rowJson="rowJson" v-if="tDialogShow === 2" />
+      <v-btn
+        slot="action-button"
+        color="primary"
+        height="35px"
+        width="95px"
+        :disabled="!rowJson"
+        text
+        v-clipboard:copy="rowJson"
+        v-clipboard:success="onCopy"
+        v-clipboard:error="onError"
+        >一键复制</v-btn
+      >
     </t-dialog>
 
     <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -376,6 +397,13 @@ export default class transactionalDataList extends Vue {
       )
     }
     this.pageNum = 1
+  }
+
+  private onCopy() {
+    this.h_utils.alertUtil.open('复制成功', true, 'success', 1500)
+  }
+  private onError() {
+    this.h_utils.alertUtil.open('复制失败', true, 'error', 1500)
   }
 }
 </script>
