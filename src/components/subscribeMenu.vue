@@ -1,16 +1,5 @@
 <template>
-  <!-- <div
-    class="viewBox rightBtmView animated"
-    style="animation-duration: 2s; animation-delay: 1s"
-    :class="`${fristFlag ? 'bounceInRight' : ''} ${enterFlag ? 'enter' : ''}`"
-    @mouseenter="mouseEnterMethod()"
-    @mouseleave="mouseLeaveMethod()"
-    ref="rightBtmView"
-  > -->
-  <div class="viewBox rightBtmView" ref="rightBtmView">
-    <!-- <v-overlay :absolute="true" :value="subscribeOverlay">
-      <v-progress-circular indeterminate size="60">加载中</v-progress-circular>
-    </v-overlay> -->
+  <div class="viewBox rightBtmView">
     <div style="width: 100%; height: 8%; padding-top: 10px">
       <p>{{ `${subscribeStartTime}至${subscribeEndTime}主题${subscribeSystemName}订阅情况` }}</p>
       <div class="iconCon">
@@ -95,7 +84,6 @@ import { Component, Vue, Prop } from 'vue-property-decorator'
 import { returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import Moment from 'moment'
-// import Welcome from '../welcome.vue'
 import util from '@/decorator/utilsDecorator'
 
 @Component
@@ -103,8 +91,7 @@ import util from '@/decorator/utilsDecorator'
 @util
 export default class SubscribeMenu extends Vue {
   @Prop() private systemItems!: unknown[]
-  // private fristFlag = true
-  // private enterFlag = false
+
   private subscribeOverlay = false
   private subscribeTopicExist = true
   private subscribeStartTime: string = Moment(Moment().subtract(11, 'months').calendar(), 'MM-DD-YYYY').format(
@@ -118,16 +105,6 @@ export default class SubscribeMenu extends Vue {
   private subscribeDate: string = new Date().toISOString().substr(0, 10)
   private subscribeTime = false
 
-  // private mouseEnterMethod(): void {
-  //   // if (!this.fristFlag) {
-  //   this.enterFlag = true
-  //   // }
-  // }
-
-  // private mouseLeaveMethod(): void {
-  //   this.enterFlag = false
-  // }
-
   private async getSubscribe(params: any, callback: Function) {
     const result: returnDataType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
     callback(result)
@@ -136,8 +113,6 @@ export default class SubscribeMenu extends Vue {
   private drawSubscribe({ data }: returnDataType) {
     this.subscribeTopicExist = true
     this.subscribeTotal = data.total
-    // const parent = this.$parent as Welcome
-    // parent.topicRanking('subscribe', data, this.subscribeEndTime)
     this.h_utils.topicRanking.init('subscribe', data, this.subscribeEndTime)
   }
 
@@ -233,12 +208,6 @@ export default class SubscribeMenu extends Vue {
       (result: returnDataType) => {
         this.subscribeOverlay = false
         this.drawSubscribe(result)
-        // const el = this.$refs.rightBtmView as HTMLElement
-        // el.addEventListener('animationend', () => {
-        //   if (this.fristFlag) {
-        //     this.fristFlag = false
-        //   }
-        // })
       }
     )
   }
@@ -246,6 +215,13 @@ export default class SubscribeMenu extends Vue {
 </script>
 
 <style lang="stylus" scoped>
+.viewBox
+    width:49%
+    height:100%
+    background:#fff
+    box-shadow: 2px 6px 15px 0 rgba(69,65,78,.1)
+    border-radius: 5px
+    position: relative
 .iconCon
     position:absolute
     right:0

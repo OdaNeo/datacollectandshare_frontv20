@@ -120,7 +120,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '实时数据统计',
           // icon: 'mdi-folder-multiple',
-          access: false
+          access: true
         }
       },
       {

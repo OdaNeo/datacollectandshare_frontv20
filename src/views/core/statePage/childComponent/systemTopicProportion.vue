@@ -1,15 +1,5 @@
 <template>
-  <!-- <div
-    class="viewBox leftTopView animated"
-    :class="`${fristFlag ? 'bounceInLeft' : ''} ${enterFlag ? 'enter' : ''}`"
-    @mouseenter="mouseEnterMethod()"
-    @mouseleave="mouseLeaveMethod()"
-    ref="leftTopView"
-  > -->
   <div class="viewBox leftTopView" ref="leftTopView">
-    <!-- <v-overlay :absolute="true" :value="systemOverlay">
-      <v-progress-circular indeterminate size="60">加载中</v-progress-circular>
-    </v-overlay> -->
     <p>系统主题占比</p>
     <div id="leftTopView">
       <div class="view-box-con" ref="viewBoxCon">
@@ -39,21 +29,9 @@ import BScroll from '@better-scroll/core'
 @echarts
 @http
 export default class SystemTopicProportion extends Vue {
-  // private fristFlag = true
-  // private enterFlag = false
   private systemOverlay = false
   private topicMsgList: Array<topicMsg> = []
   private colors: Array<string> = ['#884046', '#8a7e4e', '#749f83', '#a8d8ea']
-
-  // private mouseEnterMethod(): void {
-  //   // if (!this.fristFlag) {
-  //   this.enterFlag = true
-  //   // }
-  // }
-
-  // private mouseLeaveMethod(): void {
-  //   this.enterFlag = false
-  // }
 
   private topicProportion(elementName: string, opt: topicProportionOpt): void {
     const element = document.getElementById(elementName)
@@ -187,17 +165,19 @@ export default class SystemTopicProportion extends Vue {
         color: '#195ba6'
       })
     })
-    // const el = this.$refs.leftTopView as HTMLElement
-    // el.addEventListener('animationend', () => {
-    //   if (this.fristFlag) {
-    //     this.fristFlag = false
-    //   }
+
     this.initScroll()
-    // })
   }
 }
 </script>
 <style lang="stylus" scoped>
+.viewBox
+    width:49%
+    height:100%
+    background:#fff
+    box-shadow: 2px 6px 15px 0 rgba(69,65,78,.1)
+    border-radius: 5px
+    position: relative
 .leftTopView
     overflow-y: hidden
     overflow-x: scroll

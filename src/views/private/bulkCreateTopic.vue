@@ -3,7 +3,7 @@
     <div class="mt-6">First To the Egg: {{ BRANCH }}</div>
     <div class="mt-6">First To the Key: {{ COMMITHASH }}</div>
     <v-btn class="mt-6" color="primary" height="35px" width="95px" small dark @click.stop="createTopicVideo"
-      >批量创建视频</v-btn
+      >视频</v-btn
     >
     <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <v-row no-gutters>

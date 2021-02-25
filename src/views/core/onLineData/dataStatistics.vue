@@ -1,16 +1,25 @@
 <template>
-  <div id="OnlineDataStatistics"></div>
+  <div id="OnlineDataStatistics">
+    <release-menu :systemItems="systemItems"></release-menu>
+    <subscribe-menu :systemItems="systemItems"></subscribe-menu>
+  </div>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { returnDataType } from '@/type/http-request.type'
-import util from '@/decorator/utilsDecorator'
 
-@Component
+import ReleaseMenu from '@/components/releaseMenu.vue'
+import SubscribeMenu from '@/components/subscribeMenu.vue'
+
+@Component({
+  components: {
+    ReleaseMenu,
+    SubscribeMenu
+  }
+})
 @http
-@util
 export default class OnlineDataStatistics extends Vue {
   private systemItems = []
 
@@ -26,7 +35,10 @@ export default class OnlineDataStatistics extends Vue {
 </script>
 <style scoped>
 #OnlineDataStatistics {
-  width: 100%;
-  height: 100%;
+  margin-top: 10px;
+  width: 97%;
+  height: 500px;
+  display: flex;
+  justify-content: space-between;
 }
 </style>
