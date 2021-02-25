@@ -62,7 +62,7 @@
 
     <!-- table -->
     <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
-      <cmd-information-dialog v-if="tDialogShow === 1" :headersObj="headersObj" :dessertsObj="dessertsObj" />
+      <cmd-information-dialog v-if="tDialogShow === 1" :rowDescription="rowDescription" />
       <data-structure-dialog v-if="tDialogShow === 2" :headersObj="headersObj" :dessertsObj="dessertsObj" />
     </t-dialog>
 
@@ -117,6 +117,7 @@ export default class CmdList extends Vue {
 
   private dessertsObj: Array<any> = []
   private headersObj: Array<any> = []
+  private rowDescription = ''
 
   private onlyShowOther = false // 只显示补充信息
 
@@ -301,7 +302,7 @@ export default class CmdList extends Vue {
   // 数据结构展示方法
   private consumersSystem(item: any) {
     this.tDialogFlag = true
-    this.tDialogShow = 1
+    this.tDialogShow = 2
     this.formProvide.title = '订阅系统信息详情'
     this.headersObj = [
       {
@@ -334,17 +335,10 @@ export default class CmdList extends Vue {
   }
 
   // 详情展示
-  private getCmdDescription(info: any) {
+  private getCmdDescription(info: { description: string }) {
     this.tDialogFlag = true
     this.tDialogShow = 1
-    this.dessertsObj = info
-    this.headersObj = [
-      {
-        text: '描述',
-        align: 'center',
-        value: 'description'
-      }
-    ]
+    this.rowDescription = info.description
     this.formProvide.title = '描述'
   }
 

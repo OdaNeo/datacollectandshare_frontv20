@@ -1,16 +1,6 @@
-<template>
-  <div id="JsonContentDetails">
-    <v-container style="max-height: 400px; overflow: auto" v-html="obj"></v-container>
-  </div>
-</template>
-<script lang="ts">
-import { Component, Vue, Prop } from 'vue-property-decorator'
-
-@Component({})
-export default class JsonContentDetails extends Vue {
-  @Prop() private rowJson!: string
-
-  private arrayToHTML(arr: Array<unknown>) {
+/* eslint-disable @typescript-eslint/explicit-module-boundary-types */
+class formatUtil {
+  public static arrayToHTML(arr: Array<unknown>): string {
     let html = ''
     arr.forEach((item: unknown) => {
       if (Array.isArray(item)) {
@@ -50,7 +40,7 @@ export default class JsonContentDetails extends Vue {
     return html
   }
 
-  private objToHTML(obj: any) {
+  public static objToHTML(obj: any): string {
     let html = ''
     for (const p in obj) {
       if (Array.isArray(obj[p])) {
@@ -93,16 +83,5 @@ export default class JsonContentDetails extends Vue {
     }
     return html
   }
-
-  private get obj() {
-    if (this.rowJson !== '') {
-      const _obj = JSON.parse(this.rowJson)
-      return `<div style="font-size: 16px;line-height: 24px;">
-                {${this.objToHTML(_obj)}}
-              </div>`
-    } else {
-      return ``
-    }
-  }
 }
-</script>
+export default formatUtil

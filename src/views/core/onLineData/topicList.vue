@@ -408,9 +408,6 @@ export default class OnlineDataTopicList extends Vue {
 
   // 查询通用调用方法 结构化数据
   private async searchMethod(bool: boolean, params: paramsType, tab?: boolean) {
-    // console.log(bool)
-    // console.log(params)
-    // console.log(tab)
     this.loading = true
 
     params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['多级嵌套免校验']},${topicInterFaceType['PROTOBUF']}`
@@ -425,8 +422,6 @@ export default class OnlineDataTopicList extends Vue {
       })
       this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     } else {
-      // console.log(params)
-
       const { data }: returnDataType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTTOPIC', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL', params)

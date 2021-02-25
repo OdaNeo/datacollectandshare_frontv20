@@ -126,7 +126,7 @@
     <!-- 数据发送示例 -->
     <v-col cols="12" class="d-flex mb-5">
       <label class="label mr-6">数据发送示例</label>
-      <v-btn color="grey" outlined @click="showConstruction = true">查看</v-btn>
+      <v-btn color="grey" height="34" outlined @click="showConstruction = true">查看</v-btn>
     </v-col>
 
     <v-dialog v-model="showConstruction" width="450">

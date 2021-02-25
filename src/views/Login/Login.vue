@@ -116,6 +116,7 @@ export default class Login extends Vue {
   width: 100%;
   height: 100%;
 }
+
 .bgImg {
   width: 100%;
   height: 100%;

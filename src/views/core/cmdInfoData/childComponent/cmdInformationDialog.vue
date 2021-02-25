@@ -1,19 +1,13 @@
 <template>
   <div id="cmdInformationDialog">
-    <h-table :headers="headersObj" :desserts="dessertsObj"></h-table>
+    {{ rowDescription }}
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import HTable from '@/components/h-table.vue'
 
-@Component({
-  components: {
-    HTable
-  }
-})
+@Component({})
 export default class CmdInformationDialog extends Vue {
-  @Prop() private headersObj!: any
-  @Prop() private dessertsObj!: any
+  @Prop() private rowDescription!: string
 }
 </script>

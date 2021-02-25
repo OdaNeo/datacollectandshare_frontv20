@@ -100,6 +100,7 @@ class HttpRequest {
 
       default:
         alertUtil.open('错误代码：' + code + '，错误信息：' + message, true, 'error')
+        // callback(false)
         break
     }
   }

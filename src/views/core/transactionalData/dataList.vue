@@ -74,8 +74,7 @@
 
     <!-- 表格显示 -->
     <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
-      <SqlMaxContentDetails :rowJson="rowJson" v-if="tDialogShow === 1" />
-      <JsonContentDetails :rowJson="rowJson" v-if="tDialogShow === 2" />
+      <ContentDetails :rowJson="rowJson" v-if="tDialogShow === 1" />
       <v-btn
         slot="action-button"
         color="primary"
@@ -109,8 +108,7 @@ import { FormObj } from '@/type/dialog-form.type'
 import CreateTransactionalData from './childComponent/createTransactionalData.vue'
 import { TopicAdd } from '@/type/topic-add.type'
 
-import SqlMaxContentDetails from './childComponent/sqlMaxContentDetails.vue'
-import JsonContentDetails from './childComponent/jsonContentDetails.vue'
+import ContentDetails from './childComponent/contentDetails.vue'
 
 @Component({
   components: {
@@ -119,8 +117,7 @@ import JsonContentDetails from './childComponent/jsonContentDetails.vue'
     TDialog,
     FDialog,
     CreateTransactionalData,
-    SqlMaxContentDetails,
-    JsonContentDetails
+    ContentDetails
   }
 })
 @http
@@ -178,14 +175,14 @@ export default class transactionalDataList extends Vue {
       align: 'center',
       value: 'userName'
     },
-    {
-      text: '接口类型',
-      align: 'center',
-      value: 'topicInterFaceType',
-      format: (val: number) => {
-        return topicInterFaceType[val]
-      }
-    },
+    // {
+    //   text: '接口类型',
+    //   align: 'center',
+    //   value: 'topicInterFaceType',
+    //   format: (val: number) => {
+    //     return topicInterFaceType[val]
+    //   }
+    // },
     {
       text: '运行周期',
       align: 'center',
@@ -245,8 +242,8 @@ export default class transactionalDataList extends Vue {
   // datax回显
   private jsonContentDetails(item: { jsonContent: unknown }) {
     this.tDialogFlag = true
-    this.tDialogShow = 2
-    this.formProvide.title = '自增属性查询脚本'
+    this.tDialogShow = 1
+    this.formProvide.title = 'DataX脚本'
     this.rowJson = item.jsonContent
   }
 

@@ -246,8 +246,8 @@ export default class VideoDataList extends Vue {
     const params: any = {}
     // -8小时时差
     // 2020-1-1-0时 ~ 2020-1-1-1时 视频文件数：1，overTime - beginTime=0ms
-    params.beginTime = this.h_utils.timeutil.timeToStamp(formObj.startTime, '-') + (formObj.startHour - 8) * 3600 * 1000
-    params.overTime = this.h_utils.timeutil.timeToStamp(formObj.endTime, '-') + (formObj.endHour - 8 - 1) * 3600 * 1000
+    params.beginTime = this.h_utils.timeUtil.timeToStamp(formObj.startTime, '-') + (formObj.startHour - 8) * 3600 * 1000
+    params.overTime = this.h_utils.timeUtil.timeToStamp(formObj.endTime, '-') + (formObj.endHour - 8 - 1) * 3600 * 1000
     params.topicId = this.curItem.id
     params.bucketName = this.curItem.bucketName
     // 总共显示的视频数

@@ -55,7 +55,13 @@
     <!-- 自增属性查询脚本 -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2">自增属性查询<br />脚本</label>
-      <v-textarea height="80" v-model="formProvide.formObj['sqlMaxContent']" outlined class="ml-4 mr-15"></v-textarea>
+      <v-textarea
+        auto-grow
+        rows="3"
+        v-model="formProvide.formObj['sqlMaxContent']"
+        outlined
+        class="ml-4 mr-15"
+      ></v-textarea>
     </v-col>
 
     <!-- 自增属性查询 示例 -->
@@ -94,7 +100,8 @@
       <label class="label mr-2"><span class="require-span">*</span>DataX脚本</label>
       <v-textarea
         v-model="formProvide.formObj['jsonContent']"
-        height="80"
+        auto-grow
+        rows="3"
         outlined
         :rules="[...h_validator.noEmpty('DataX脚本'), ...h_validator.isJSON()]"
         class="ml-4 mr-15"

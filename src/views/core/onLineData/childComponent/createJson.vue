@@ -54,6 +54,8 @@
       <v-textarea
         v-model="formProvide.formObj['dataStructSchema']"
         outlined
+        auto-grow
+        rows="3"
         :disabled="formProvide.formObj.canNotEdit"
         :rules="[...h_validator.noEmpty('数据结构'), ...h_validator.isJSON()]"
         class="ml-4 mr-15"

@@ -88,6 +88,8 @@
       <v-textarea
         v-model="formProvide.formObj['body']"
         outlined
+        auto-grow
+        rows="3"
         :disabled="formProvide.formObj.canNotEdit"
         :rules="[...h_validator.noEmpty('body'), ...h_validator.isJSON()]"
         class="ml-4 mr-15"

@@ -108,10 +108,10 @@ export default class SetDateRange extends Vue {
       return
     }
     const beginTime =
-      this.h_utils.timeutil.timeToStamp(this.formProvide.formObj.startTime, '-') +
+      this.h_utils.timeUtil.timeToStamp(this.formProvide.formObj.startTime, '-') +
       Number(this.formProvide.formObj.startHour) * 60 * 60 * 1000
     const afterTime =
-      this.h_utils.timeutil.timeToStamp(this.formProvide.formObj.endTime, '-') +
+      this.h_utils.timeUtil.timeToStamp(this.formProvide.formObj.endTime, '-') +
       Number(this.formProvide.formObj.endHour) * 60 * 60 * 1000
 
     if (beginTime >= afterTime) {

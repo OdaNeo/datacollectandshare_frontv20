@@ -1,6 +1,6 @@
 export const POST_LOGIN_LOGIN = '/login/login'
 
-// ------------------------权限管理----------------------------
+// -------------------------- 权限管理 ----------------------------
 export const GET_USER_FIND_ALL_USER = '/user/findAllUser'
 export const POST_ROLE_ADDROLE = '/role/addRole'
 export const PUT_ROLE_UPDATEROLE = '/role/updateRole'
@@ -27,7 +27,7 @@ export const GET_TOPICS_SELECTSUBTOPICBYID = '/topics/selectSubTopicById' // 通
 // /user/delete/* ?
 // /permission/findPermissionListByRoleId/* ?
 
-// ---------------------------实时数据-------------------------
+// --------------------------- 实时数据 -------------------------
 export const GET_TOPICS_MYTOPICS = '/topics/myTopics'
 export const POST_TOPICS_ADD = '/topics/addTopic' // 增加主题
 export const POST_TOPICS_UPDATE = '/topics/updateTopic' // 更新主题

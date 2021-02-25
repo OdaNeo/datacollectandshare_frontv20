@@ -1,6 +1,6 @@
 <template>
   <div id="dataStructureDialog">
-    <h-table :headers="tableHeader" :desserts="dessertsObj"></h-table>
+    <h-table :headers="headersObj" :desserts="dessertsObj"></h-table>
   </div>
 </template>
 <script lang="ts">
@@ -13,7 +13,7 @@ import HTable from '@/components/h-table.vue'
   }
 })
 export default class DataStructureDialog extends Vue {
-  @Prop() private headersObj!: any
-  @Prop() private dessertsObj!: any
+  @Prop() private headersObj!: unknown
+  @Prop() private dessertsObj!: unknown
 }
 </script>

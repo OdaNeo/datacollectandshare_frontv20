@@ -1,7 +1,7 @@
 <template>
   <div id="OfflineDataStatistics">
     <p style="text-align: center; color: #000; font-size: 20px; line-height: 30px">
-      {{ `${releaseStartTime}至${releaseEndTime}离线数据发布情况` }}
+      {{ `${releaseStartTime}至${releaseEndTime}主题${releaseSystemName}离线数据任务统计` }}
     </p>
     <div class="iconCon">
       <v-menu offset-y max-height="200" min-width="130" transition="slide-x-transition">
@@ -67,8 +67,8 @@
     </div>
     <div id="release" style="height: 90%" v-show="releaseTopicExist"></div>
     <div v-show="!releaseTopicExist">
-      <p style="margin-top: 250px">
-        {{ `主题${releaseSystemName}在${releaseStartTime}至${releaseEndTime}没有发布主题` }}
+      <p style="margin-top: 180px; text-align: center">
+        {{ `主题${releaseSystemName}在${releaseStartTime}至${releaseEndTime}没有任务执行` }}
       </p>
     </div>
   </div>
@@ -111,7 +111,7 @@ export default class OfflineDataStatistics extends Vue {
         startTime: this.releaseStartTime,
         endTime: this.releaseEndTime,
         systemId: this.releaseSystemId,
-        dataType: 0,
+        dataType: 4,
         pageNum: this.releasePageNum,
         pageSize: 10
       },
@@ -132,7 +132,7 @@ export default class OfflineDataStatistics extends Vue {
         startTime: this.releaseStartTime,
         endTime: this.releaseEndTime,
         systemId: this.releaseSystemId,
-        dataType: 0,
+        dataType: 4,
         pageNum: this.releasePageNum,
         pageSize: 10
       },
@@ -155,7 +155,7 @@ export default class OfflineDataStatistics extends Vue {
         startTime: this.releaseStartTime,
         endTime: this.releaseEndTime,
         systemId: this.releaseSystemId,
-        dataType: 0,
+        dataType: 4,
         pageNum: this.releasePageNum,
         pageSize: 10
       },
@@ -170,8 +170,8 @@ export default class OfflineDataStatistics extends Vue {
   }
 
   private releaseAllowedDates(time: string) {
-    const timeStamp = this.h_utils.timeutil.timeToStamp(time, '-')
-    const nowStamp = this.h_utils.timeutil.timeToStamp(Moment().format('YYYY-MM-DD'), '-')
+    const timeStamp = this.h_utils.timeUtil.timeToStamp(time, '-')
+    const nowStamp = this.h_utils.timeUtil.timeToStamp(Moment().format('YYYY-MM-DD'), '-')
     return timeStamp <= nowStamp
   }
 
@@ -193,12 +193,16 @@ export default class OfflineDataStatistics extends Vue {
         startTime: this.releaseStartTime,
         endTime: this.releaseEndTime,
         systemId: this.releaseSystemId,
-        dataType: 0,
+        dataType: 4,
         pageNum: this.releasePageNum,
         pageSize: 10
       },
       (result: returnDataType) => {
+        // if (result.data.list?.length > 0) {
         this.drawRelease(result)
+        // } else {
+        //   this.releaseTopicExist = false
+        // }
       }
     )
     this.getSysRelease()
@@ -210,12 +214,16 @@ export default class OfflineDataStatistics extends Vue {
   position: relative;
   width: 75%;
   height: 500px;
+  padding-top: 20px;
   margin-top: 20px;
+  box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, 0.1);
+  border-radius: 5px;
+  background: #fff;
 }
 .iconCon {
   position: absolute;
   right: 0;
-  top: 0;
+  top: 18px;
   width: 20%;
   display: flex;
 }

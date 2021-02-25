@@ -89,7 +89,7 @@ export default class TransactionalDataStatistics extends Vue {
       align: 'center',
       value: 'createTime',
       format: (createTime: string) => {
-        return this.h_utils.timeutil['stamptoFullTime'](new Date(createTime).getTime(), '/')
+        return this.h_utils.timeUtil['stamptoFullTime'](new Date(createTime).getTime(), '/')
       }
     },
     {

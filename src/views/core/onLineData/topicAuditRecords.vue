@@ -128,7 +128,7 @@ export default class TopicAuditRecords extends Vue {
       align: 'center',
       value: 'subscribe',
       format: (time: number): string => {
-        return this.h_utils.timeutil.stamptoTime(time, '-')
+        return this.h_utils.timeUtil.stamptoTime(time, '-')
       }
     },
     {
@@ -136,7 +136,7 @@ export default class TopicAuditRecords extends Vue {
       align: 'center',
       value: 'auditTime',
       format: (time: number): string => {
-        return time ? this.h_utils.timeutil.stamptoTime(time, '-') : ''
+        return time ? this.h_utils.timeUtil.stamptoTime(time, '-') : ''
       }
     },
     {

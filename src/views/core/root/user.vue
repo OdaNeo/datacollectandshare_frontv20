@@ -122,7 +122,7 @@ export default class User extends Vue {
       align: 'center',
       value: 'gmtCreated',
       format: (n: number) => {
-        return this.h_utils.timeutil.stamptoTime(n, '-')
+        return this.h_utils.timeUtil.stamptoTime(n, '-')
       }
     },
     {

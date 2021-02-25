@@ -214,8 +214,8 @@ export default class SubscribeMenu extends Vue {
   }
 
   private subscribeAllowedDates(time: string) {
-    const timeStamp = this.h_utils.timeutil.timeToStamp(time, '-')
-    const nowStamp = this.h_utils.timeutil.timeToStamp(Moment().format('YYYY-MM-DD'), '-')
+    const timeStamp = this.h_utils.timeUtil.timeToStamp(time, '-')
+    const nowStamp = this.h_utils.timeUtil.timeToStamp(Moment().format('YYYY-MM-DD'), '-')
     return timeStamp <= nowStamp
   }
 

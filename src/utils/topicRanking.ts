@@ -317,7 +317,7 @@ class topicRanking {
 
   private static getKeysList(list: Array<object>): Array<Array<string>> {
     return Array.from({ length: 12 }, () => {
-      return list.map(obj => {
+      return list?.map(obj => {
         return Object.keys(obj)[0]
       })
     })
@@ -325,7 +325,7 @@ class topicRanking {
 
   private static getDataList(years: string[], list: Array<userInfo>): Array<Array<number>> {
     return Array.from({ length: 12 }, (v, k) => {
-      return list.map(obj => {
+      return list?.map(obj => {
         return obj[Object.keys(obj)[0]].reduce(
           ({ count: prevcount }: topicRankingData, { time: nexttime, count: nextcount }: topicRankingData) => {
             if (nexttime.indexOf(years[k]) === -1) {
@@ -345,9 +345,9 @@ class topicRanking {
 
   private static pushOption(years: Array<string>, keysList: Array<Array<string>>, dataList: Array<Array<number>>) {
     const options = []
-    for (let n = 0; n < years.length; n++) {
+    for (let n = 0; n < years?.length; n++) {
       const res = []
-      for (let j = 0; j < dataList[n].length; j++) {
+      for (let j = 0; j < dataList[n]?.length; j++) {
         res.push({
           name: keysList[n][j],
           value: dataList[n][j]

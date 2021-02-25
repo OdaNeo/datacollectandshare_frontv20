@@ -89,7 +89,7 @@ export default class ViewLog extends Vue {
       align: 'center',
       value: 'createdate',
       format: (time: number) => {
-        return this.h_utils.timeutil.stamptoTime(time, '-')
+        return this.h_utils.timeUtil.stamptoTime(time, '-')
       }
     },
     {
@@ -116,8 +116,8 @@ export default class ViewLog extends Vue {
       pageSize: this.pageSize,
       pageNum: this.pageNum,
       username: this.queryUserName ? this.queryUserName : null,
-      startTime: this.beginDate ? this.h_utils.timeutil.timeToStamp(this.beginDate, '-') : null,
-      endTime: this.afterDate ? this.h_utils.timeutil.timeToStamp(this.afterDate, '-') : null
+      startTime: this.beginDate ? this.h_utils.timeUtil.timeToStamp(this.beginDate, '-') : null,
+      endTime: this.afterDate ? this.h_utils.timeUtil.timeToStamp(this.afterDate, '-') : null
     })
   }
   // 带入查询条件
@@ -127,8 +127,8 @@ export default class ViewLog extends Vue {
       pageSize: this.pageSize,
       pageNum: this.pageNum,
       username: this.queryUserName ? this.queryUserName : null,
-      startTime: this.beginDate ? this.h_utils.timeutil.timeToStamp(this.beginDate, '-') : null,
-      endTime: this.afterDate ? this.h_utils.timeutil.timeToStamp(this.afterDate, '-') : null
+      startTime: this.beginDate ? this.h_utils.timeUtil.timeToStamp(this.beginDate, '-') : null,
+      endTime: this.afterDate ? this.h_utils.timeUtil.timeToStamp(this.afterDate, '-') : null
     })
   }
 

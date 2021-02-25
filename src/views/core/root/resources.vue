@@ -95,7 +95,7 @@ export default class Resources extends Vue {
       align: 'center',
       value: 'gmtCreated',
       format: (time: number) => {
-        return this.h_utils.timeutil.stamptoTime(time, '-')
+        return this.h_utils.timeUtil.stamptoTime(time, '-')
       }
     },
     {
@@ -103,7 +103,7 @@ export default class Resources extends Vue {
       align: 'center',
       value: 'gmtUpdated',
       format: (time: number) => {
-        return this.h_utils.timeutil.stamptoTime(time, '-')
+        return this.h_utils.timeUtil.stamptoTime(time, '-')
       }
     },
     {

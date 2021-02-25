@@ -14,10 +14,16 @@ Vue.directive('onlyNum', {
       case 2:
         ele = ele[1]
     }
-
+    // 不能超过init最大值
     ele.oninput = function () {
       let val = ele.value
       val = val.replace(/[^\d]/g, '') // 清除"数字"和"."以外的字符
+      val = val.replace(/^0+/, '') // 首匹配去0
+
+      if (val > 2147483647) {
+        val = val.substring(0, val.length - 1) // 截取超过init的字符
+      }
+
       ele.value = val
       // if (binding.value?.bool === undefined) {
       //   let val = ele.value

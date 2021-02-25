@@ -19,7 +19,7 @@
       <v-col cols="9">
         <v-btn
           color="primary"
-          width="90px"
+          width="95px"
           height="35px"
           depressed
           class="mr-6"

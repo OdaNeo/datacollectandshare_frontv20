@@ -114,6 +114,16 @@ const routes: Array<RouteConfig> = [
         }
       },
       {
+        path: 'dataStatistics',
+        component: () => import('@/views/core/onLineData/dataStatistics.vue'),
+        name: '实时数据统计',
+        meta: {
+          title: '实时数据统计',
+          // icon: 'mdi-folder-multiple',
+          access: false
+        }
+      },
+      {
         path: 'topicSub',
         component: () => import('@/views/core/onLineData/topicSub.vue'),
         name: '主题订阅',

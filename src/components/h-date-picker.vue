@@ -56,8 +56,8 @@ export default class HDatePicker extends Vue {
     if (!this.anotherDate) {
       return true
     } else {
-      const beginTime = this.h_utils.timeutil.timeToStamp(val, '-')
-      const afterTime = this.h_utils.timeutil.timeToStamp(this.anotherDate, '-')
+      const beginTime = this.h_utils.timeUtil.timeToStamp(val, '-')
+      const afterTime = this.h_utils.timeUtil.timeToStamp(this.anotherDate, '-')
       return afterTime > beginTime
     }
   }
@@ -66,8 +66,8 @@ export default class HDatePicker extends Vue {
     if (!this.anotherDate) {
       return true
     } else {
-      const afterTime = this.h_utils.timeutil.timeToStamp(val, '-')
-      const beginTime = this.h_utils.timeutil.timeToStamp(this.anotherDate, '-')
+      const afterTime = this.h_utils.timeUtil.timeToStamp(val, '-')
+      const beginTime = this.h_utils.timeUtil.timeToStamp(this.anotherDate, '-')
       return beginTime < afterTime
     }
   }
