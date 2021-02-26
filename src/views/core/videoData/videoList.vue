@@ -10,6 +10,7 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchVideoTopic"
+          @keyup.enter="searchVideoTopic"
           @click:clear="tabChange(tab)"
           v-model="queryVideoTopicID"
           v-only-num

@@ -10,6 +10,7 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchExamine"
+          @keyup.enter="searchExamine"
           @click:clear="
             searchMethod(true, {
               pageSize: pageSize,

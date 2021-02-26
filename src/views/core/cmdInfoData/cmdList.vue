@@ -10,6 +10,7 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchCmd"
+          @keyup.enter="searchCmd"
           @click:clear="tabChange(tab)"
           v-model="queryCmdID"
           v-only-num

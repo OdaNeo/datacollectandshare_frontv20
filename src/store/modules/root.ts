@@ -2,7 +2,7 @@ import { Module, VuexModule, Mutation, Action, getModule } from 'vuex-module-dec
 import store from '@/store'
 import { returnDataType } from '../../type/http-request.type'
 import { userRootType, userMessageType } from '../../type/vuex.type'
-import { NAV_BAR_ITEM_LIST_ALL } from '@/config'
+import router from '@/router/index'
 
 type UserStateType = {
   username: string // 用户名称
@@ -111,19 +111,36 @@ export default class rootStore extends VuexModule {
     this.context.commit('MET_LOGOUT')
   }
 
-  get navMenuList(): Array<userRootType> {
+  get navMenuList(): Array<unknown> {
     if (this.UserState.userRoot.length > 0) {
-      // 根据 NAV_BAR_ITEM_LIST_ALL 排序
-      const arr1 = NAV_BAR_ITEM_LIST_ALL
-      const arr2 = this.UserState.userRoot.filter(item => {
-        return item.childrenList && item.type === 'menu' && item.childrenList.length !== 0
+      // arr1 一级路由 权限
+      // arr2 二级路由 权限
+      const arr1: Array<string> = []
+      const arr2: Array<string> = []
+      this.UserState.userRoot.forEach(item => {
+        if (item.childrenList && item.type === 'menu' && item.childrenList.length !== 0) {
+          arr1.push(item.url)
+          item.childrenList.forEach(i => {
+            arr2.push(i.url)
+          })
+        }
       })
-      arr2.sort((pre, next) => {
-        return arr1.indexOf(pre.name) - arr1.indexOf(next.name)
+      // router.options.routes 排序依据 (有序)
+      const arr: Array<unknown> = []
+      router.options.routes?.forEach(item => {
+        const _children = item.children?.filter(i => {
+          return arr2.includes(i.meta.url)
+        })
+
+        if (_children && _children.length !== 0 && item?.meta.access === true && arr1.includes(item?.meta.url)) {
+          arr.push({ ...item, childrenNavList: _children })
+        }
       })
-      return arr2
+
+      return arr
+    } else {
+      return []
     }
-    return []
   }
 }
 

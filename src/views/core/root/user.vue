@@ -11,6 +11,7 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchUserList"
+          @keyup.enter="searchUserList"
           @click:clear="
             searchMethod(false, {
               pageSize: pageSize,
@@ -24,8 +25,7 @@
         <v-btn color="primary" width="95px" height="35px" depressed small dark @click.stop="addItem">添加用户</v-btn>
       </v-col>
     </v-row>
-    <!-- <transition name="table" @after-leave="tableAfterEnter" style="background: #fff"> -->
-    <!-- <div> -->
+
     <h-table
       :headers="headers"
       :desserts="desserts"
@@ -36,19 +36,9 @@
     >
       <template v-slot:buttons="{ item }">
         <v-btn text color="primary" @click="editItem(item)">编辑</v-btn>
-        <!-- <v-icon @click="editItem(item)">mdi-pencil</v-icon> -->
-        <!-- <v-icon  @click="deleteItem(item)">mdi-delete</v-icon> -->
       </template>
     </h-table>
-    <!-- <v-pagination
-      :length="paginationLength"
-      :total-visible="7"
-      circle
-      @input="handleCurrentChange"
-      :value="pageNum"
-    ></v-pagination> -->
-    <!-- </div> -->
-    <!-- </transition> -->
+
     <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <user-dialog />
     </f-dialog>

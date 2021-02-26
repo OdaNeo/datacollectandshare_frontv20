@@ -1,11 +1,12 @@
 <template>
   <div id="h-table">
     <div class="simple-table">
-      <!-- <p class="table-title" v-if="title">
-        {{ title }}
-      </p> -->
-      <div v-if="loading" class="text-center mt-15" style="min-height: 300px">
+      <div v-if="loading" class="text-center mt-15" style="min-height: 150px">
         <v-progress-circular indeterminate color="primary"></v-progress-circular>
+      </div>
+      <div v-else-if="desserts.length === 0" class="text-center mt-15" style="min-height: 150px">
+        <v-icon color="primary lighten-3" size="50">mdi-toy-brick-remove-outline</v-icon>
+        <div style="font-size: 14px; margin-top: 5px">查无数据</div>
       </div>
       <v-simple-table v-else fixed-header>
         <template v-slot:default>
@@ -44,7 +45,7 @@
       :total-visible="10"
       @input="handleCurrentChange"
       :value="pageNum"
-      v-if="paginationLength && pageNum && !loading"
+      v-if="paginationLength && pageNum && !loading && desserts.length !== 0"
     ></v-pagination>
   </div>
 </template>

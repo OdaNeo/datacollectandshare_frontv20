@@ -10,6 +10,7 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchSystemName"
+          @keyup.enter="searchSystemName"
           @click:clear="
             searchMethod(false, {
               pageSize: pageSize,

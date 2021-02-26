@@ -49,6 +49,7 @@ const routes: Array<RouteConfig> = [
       }
     ]
   },
+  // 权限管理
   {
     path: '/rootMGT',
     name: '权限管理',
@@ -57,7 +58,8 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: '权限管理',
       icon: 'mdi-shield-lock',
-      access: true
+      access: true,
+      url: '/rootMGT'
     },
     children: [
       {
@@ -67,7 +69,8 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '用户管理',
           // icon: 'mdi-shield-account',
-          access: true
+          access: true,
+          url: '/rootMGT/userMGT'
         }
       },
       {
@@ -77,7 +80,8 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '角色管理',
           // icon: 'mdi-account-tie',
-          access: true
+          access: true,
+          url: '/rootMGT/roleMGT'
         }
       },
       {
@@ -87,11 +91,13 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '资源管理',
           // icon: 'mdi-briefcase-check',
-          access: true
+          access: true,
+          url: '/rootMGT/resourcesMGT'
         }
       }
     ]
   },
+  // 实时数据
   {
     path: '/onLineData',
     name: '实时数据',
@@ -100,7 +106,8 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: '实时数据',
       icon: 'mdi-folder-cog-outline',
-      access: true
+      access: true,
+      url: '/onLineData'
     },
     children: [
       {
@@ -110,7 +117,8 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '实时主题',
           // icon: 'mdi-folder-multiple',
-          access: true
+          access: true,
+          url: '/onLineData/topicList'
         }
       },
       {
@@ -120,7 +128,8 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '实时数据统计',
           // icon: 'mdi-folder-multiple',
-          access: true
+          access: true,
+          url: '/onLineData/dataStatistics'
         }
       },
       {
@@ -130,7 +139,8 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '主题订阅',
           // icon: 'mdi-folder-heart',
-          access: true
+          access: true,
+          url: '/onLineData/topicSub'
         }
       },
       {
@@ -140,7 +150,8 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '主题订阅审核',
           // icon: 'mdi-folder-edit',
-          access: true
+          access: true,
+          url: '/onLineData/topicSubExamine'
         }
       },
       {
@@ -150,133 +161,13 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '主题审核记录',
           // icon: 'mdi-folder-clock',
-          access: true
+          access: true,
+          url: '/onLineData/topicAuditRecords'
         }
       }
     ]
   },
-  {
-    path: '/offlineData',
-    name: '离线数据',
-    component: StatePage,
-    redirect: '/offlineData/topicList',
-    meta: {
-      title: '离线数据',
-      icon: 'mdi-file-replace-outline',
-      access: true
-    },
-    children: [
-      {
-        path: 'topicList',
-        component: () => import('@/views/core/offlineData/topicList.vue'),
-        name: '离线主题',
-        meta: {
-          title: '离线主题',
-          // icon: 'mdi-file-video',
-          access: true
-        }
-      },
-      {
-        path: 'dataStatistics',
-        component: () => import('@/views/core/offlineData/dataStatistics.vue'),
-        name: '离线数据统计',
-        meta: {
-          title: '离线数据统计',
-          // icon: 'mdi-file-video',
-          access: true
-        }
-      }
-    ]
-  },
-  {
-    path: '/logData',
-    name: '日志数据',
-    component: StatePage,
-    redirect: '/logData/dataList',
-    meta: {
-      title: '日志数据',
-      icon: 'mdi-file-table-box-outline',
-      access: false
-    },
-    children: [
-      {
-        path: 'dataList',
-        component: () => import('@/views/core/logData/dataList.vue'),
-        name: '日志主题',
-        meta: {
-          title: '日志主题',
-          // icon: 'mdi-file-video',
-          access: false
-        }
-      },
-      {
-        path: 'dataStatistics',
-        component: () => import('@/views/core/logData/dataStatistics.vue'),
-        name: '日志数据统计',
-        meta: {
-          title: '日志数据统计',
-          // icon: 'mdi-file-video',
-          access: false
-        }
-      }
-    ]
-  },
-  {
-    path: '/transactionalData',
-    name: '事务数据',
-    component: StatePage,
-    redirect: '/transactionalData/dataList',
-    meta: {
-      title: '事务数据',
-      icon: 'mdi-file-excel-box-outline',
-      access: true
-    },
-    children: [
-      {
-        path: 'dataList',
-        component: () => import('@/views/core/transactionalData/dataList.vue'),
-        name: '事务主题',
-        meta: {
-          title: '事务主题',
-          // icon: 'mdi-file-video',
-          access: true
-        }
-      },
-      {
-        path: 'dataStatistics',
-        component: () => import('@/views/core/transactionalData/dataStatistics.vue'),
-        name: '事务数据统计',
-        meta: {
-          title: '事务数据统计',
-          // icon: 'mdi-file-video',
-          access: true
-        }
-      }
-    ]
-  },
-  {
-    path: '/cmdInfoData',
-    name: '可靠通道',
-    component: StatePage,
-    redirect: '/cmdInfoData/cmdList',
-    meta: {
-      title: '可靠通道',
-      icon: 'mdi-console',
-      access: true
-    },
-    children: [
-      {
-        path: 'cmdList',
-        component: () => import('@/views/core/cmdInfoData/cmdList.vue'),
-        name: '可靠通道主题',
-        meta: {
-          title: '可靠通道主题',
-          // icon: 'mdi-console-line ',
-          access: true
-        }
-      }
-    ]
-  },
+  // 视频数据
   {
     path: '/videoData',
     name: '视频数据',
@@ -285,7 +176,8 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: '视频数据',
       icon: 'mdi-video-box',
-      access: true
+      access: true,
+      url: '/videoData'
     },
     children: [
       {
@@ -295,7 +187,8 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '视频主题',
           // icon: 'mdi-file-video',
-          access: true
+          access: true,
+          url: '/videoData/videoList'
         }
       },
       {
@@ -305,11 +198,150 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '视频数据统计',
           // icon: 'mdi-file-video',
-          access: true
+          access: true,
+          url: '/videoData/dataStatistics'
         }
       }
     ]
   },
+  // 离线数据
+  {
+    path: '/offlineData',
+    name: '离线数据',
+    component: StatePage,
+    redirect: '/offlineData/topicList',
+    meta: {
+      title: '离线数据',
+      icon: 'mdi-file-replace-outline',
+      access: true,
+      url: '/offlineData'
+    },
+    children: [
+      {
+        path: 'topicList',
+        component: () => import('@/views/core/offlineData/topicList.vue'),
+        name: '离线主题',
+        meta: {
+          title: '离线主题',
+          // icon: 'mdi-file-video',
+          access: true,
+          url: '/offlineData/topicList'
+        }
+      },
+      {
+        path: 'dataStatistics',
+        component: () => import('@/views/core/offlineData/dataStatistics.vue'),
+        name: '离线数据统计',
+        meta: {
+          title: '离线数据统计',
+          // icon: 'mdi-file-video',
+          access: true,
+          url: '/offlineData/dataStatistics'
+        }
+      }
+    ]
+  },
+  // 事务数据
+  {
+    path: '/transactionalData',
+    name: '事务数据',
+    component: StatePage,
+    redirect: '/transactionalData/dataList',
+    meta: {
+      title: '事务数据',
+      icon: 'mdi-file-excel-box-outline',
+      access: true,
+      url: '/transactionalData'
+    },
+    children: [
+      {
+        path: 'dataList',
+        component: () => import('@/views/core/transactionalData/dataList.vue'),
+        name: '事务主题',
+        meta: {
+          title: '事务主题',
+          // icon: 'mdi-file-video',
+          access: true,
+          url: '/transactionalData/dataList'
+        }
+      },
+      {
+        path: 'dataStatistics',
+        component: () => import('@/views/core/transactionalData/dataStatistics.vue'),
+        name: '事务数据统计',
+        meta: {
+          title: '事务数据统计',
+          // icon: 'mdi-file-video',
+          access: true,
+          url: '/transactionalData/dataStatistics'
+        }
+      }
+    ]
+  },
+  // 日志数据
+  {
+    path: '/logData',
+    name: '日志数据',
+    component: StatePage,
+    redirect: '/logData/dataList',
+    meta: {
+      title: '日志数据',
+      icon: 'mdi-file-table-box-outline',
+      access: false,
+      url: '/logData'
+    },
+    children: [
+      {
+        path: 'dataList',
+        component: () => import('@/views/core/logData/dataList.vue'),
+        name: '日志主题',
+        meta: {
+          title: '日志主题',
+          // icon: 'mdi-file-video',
+          access: false,
+          url: '/logData/dataList'
+        }
+      },
+      {
+        path: 'dataStatistics',
+        component: () => import('@/views/core/logData/dataStatistics.vue'),
+        name: '日志数据统计',
+        meta: {
+          title: '日志数据统计',
+          // icon: 'mdi-file-video',
+          access: false,
+          url: '/logData/dataStatistics'
+        }
+      }
+    ]
+  },
+  // 可靠通道
+  {
+    path: '/cmdInfoData',
+    name: '可靠通道',
+    component: StatePage,
+    redirect: '/cmdInfoData/cmdList',
+    meta: {
+      title: '可靠通道',
+      icon: 'mdi-console',
+      access: true,
+      url: '/cmdInfoData'
+    },
+    children: [
+      {
+        path: 'cmdList',
+        component: () => import('@/views/core/cmdInfoData/cmdList.vue'),
+        name: '可靠通道主题',
+        meta: {
+          title: '可靠通道主题',
+          // icon: 'mdi-console-line ',
+          access: true,
+          url: '/cmdInfoData/cmdList'
+        }
+      }
+    ]
+  },
+  // 系统管理
   {
     path: '/systemMGT',
     name: '系统管理',
@@ -318,7 +350,8 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: '系统管理',
       icon: 'mdi-devices ',
-      access: true
+      access: true,
+      url: '/systemMGT'
     },
     children: [
       {
@@ -328,7 +361,8 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '系统配置',
           // icon: 'mdi-monitor-edit',
-          access: true
+          access: true,
+          url: '/systemMGT/systemConfig'
         }
       },
       {
@@ -338,11 +372,13 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '绑定网络',
           // icon: 'mdi-monitor-star',
-          access: true
+          access: true,
+          url: '/systemMGT/bindNetwork'
         }
       }
     ]
   },
+  // 操作日志
   {
     path: '/logMGT',
     name: '操作日志',
@@ -351,7 +387,8 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: '操作日志',
       icon: 'mdi-clipboard-text-multiple',
-      access: true
+      access: true,
+      url: '/logMGT'
     },
     children: [
       {
@@ -361,11 +398,13 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '日志审查',
           // icon: 'mdi-clipboard-search',
-          access: true
+          access: true,
+          url: '/logMGT/viewLog'
         }
       }
     ]
   },
+  // 系统统计
   {
     path: '/dataMGT',
     name: '系统统计',
@@ -374,7 +413,8 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: '系统统计',
       icon: 'mdi-database-cog',
-      access: true
+      access: true,
+      url: '/dataMGT'
     },
     children: [
       {
@@ -384,7 +424,8 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '数据统计',
           // icon: 'mdi-database-clock',
-          access: true
+          access: true,
+          url: '/dataMGT/dataStatistics'
         }
       }
     ]

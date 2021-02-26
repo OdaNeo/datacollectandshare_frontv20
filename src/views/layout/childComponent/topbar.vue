@@ -36,43 +36,6 @@
                 </div>
               </v-list-item-content>
             </v-card>
-            <!-- <v-list subheader>
-              <v-list-item>
-                <v-list-item-title>
-                  <v-dialog v-model="dialog" width="500">
-                    <template v-slot:activator="{ on, attrs }">
-                      <div dark v-bind="attrs" v-on="on">个人信息</div>
-                    </template>
-                    <v-card>
-                      <v-card-title class="headline grey lighten-2">个人信息</v-card-title>
-                      <v-card-text style="padding-top: 20px">
-                        {{ userName }}
-                      </v-card-text>
-                      <v-card-text>
-                        {{ userType }}
-                      </v-card-text>
-                      <v-card-text>
-                        {{ userStatus }}
-                      </v-card-text>
-                      <v-card-text>
-                        {{ userSysName }}
-                      </v-card-text>
-                      <v-card-text>
-                        {{ userToken }}
-                      </v-card-text>
-                      <v-divider></v-divider>
-                      <v-card-actions>
-                        <v-spacer></v-spacer>
-                        <v-btn color="primary" text @click="dialog = false">确定</v-btn>
-                      </v-card-actions>
-                    </v-card>
-                  </v-dialog>
-                </v-list-item-title>
-              </v-list-item>
-              <v-list-item v-for="(item, index) in userMenu" :key="index" @click="item.clickMethod">
-                <v-list-item-title>{{ item.title }}</v-list-item-title>
-              </v-list-item>
-            </v-list> -->
           </v-menu>
         </v-row>
       </v-col>
@@ -82,8 +45,8 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { rootStoreModule } from '../store/modules/root'
-import http from '../decorator/httpDecorator'
+import { rootStoreModule } from '@/store/modules/root'
+import http from '@/decorator/httpDecorator'
 import { userState } from '@/enum/user-enum'
 import { PROJECT_TITLE } from '@/config'
 
@@ -186,26 +149,5 @@ export default class TopBar extends Vue {
   z-index: 7;
   top: 13px;
   left: 15px;
-  /* background: -webkit-gradient(
-    linear,
-    left top,
-    right top,
-    color-stop(0, #fff),
-    color-stop(0.4, #fff),
-    color-stop(0.5, rgb(255, 172, 20)),
-    color-stop(0.6, #fff),
-    color-stop(1, #fff)
-  );
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: animate 3s infinite; */
 }
-/* @keyframes animate {
-  from {
-    background-position: -500px;
-  }
-  to {
-    background-position: 500px;
-  }
-} */
 </style>

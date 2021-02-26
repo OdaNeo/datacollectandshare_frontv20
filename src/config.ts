@@ -15,16 +15,3 @@ export const PROJECT_TITLE = '交控科技天枢平台数据采集管理中心'
 
 // rgb 0,21,41
 export const PROJECT_BASE_COLOR = '#001529'
-
-export const NAV_BAR_ITEM_LIST_ALL = [
-  '权限管理',
-  '实时数据',
-  '视频数据',
-  '离线数据',
-  '事务数据',
-  '日志数据',
-  '可靠通道',
-  '系统管理',
-  '操作日志',
-  '系统统计'
-]

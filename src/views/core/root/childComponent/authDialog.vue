@@ -20,10 +20,3 @@ export default class AuthDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
 }
 </script>
-
-<style scoped>
-.authDialog {
-  max-height: 600px;
-  overflow-y: auto;
-}
-</style>

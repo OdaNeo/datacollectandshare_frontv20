@@ -10,6 +10,7 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchRoles"
+          @keyup.enter="searchRoles"
           @click:clear="
             searchMethod(false, {
               pageNum: pageNum,

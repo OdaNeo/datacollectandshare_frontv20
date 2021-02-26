@@ -10,6 +10,7 @@
           clearable
           append-icon="mdi-magnify"
           @click:append="searchResources"
+          @keyup.enter="searchResources"
           @click:clear="searchMethod(false)"
           v-model.trim="queryResourcesName"
         >

@@ -22,41 +22,8 @@
         </v-form>
 
         <v-switch class="mt-0 pt-3" dense v-model="remember" label="记住账号" color="white" hide-details></v-switch>
-        <v-btn depressed color="primary" width="150" class="mt-10" @click.stop="signIn">登录</v-btn>
+        <v-btn depressed color="primary" width="120" class="mt-10" @click="signIn">登录</v-btn>
       </div>
-      <!--  -->
-      <!-- <div class="loginContent2">
-        <div class="loginTitle">{{ PROJECT_TITLE }}</div>
-        <v-row justify="center">
-          <v-col cols="11">
-            <div class="loginInput">
-              <v-form ref="form" lazy-validation>
-                <v-text-field
-                  v-model="username"
-                  label="用户名"
-                  required
-                  color="#17a0df"
-                  prepend-inner-icon="mdi-account"
-                  :rules="userRules"
-                ></v-text-field>
-                <v-text-field
-                  v-model="password"
-                  label="密码"
-                  required
-                  color="#17a0df"
-                  prepend-inner-icon="mdi-lock"
-                  :type="showPass ? 'text' : 'password'"
-                  :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
-                  @click:append="showPass = !showPass"
-                  :rules="passRules"
-                ></v-text-field>
-                <v-checkbox v-model="remember" label="记住账号" required></v-checkbox>
-                <v-btn :disabled="valid" width="100%" color="primary" class="mr-4" @click="signIn">登录</v-btn>
-              </v-form>
-            </div>
-          </v-col>
-        </v-row>
-      </div> -->
     </div>
   </div>
 </template>

@@ -100,7 +100,8 @@ class HttpRequest {
 
       default:
         alertUtil.open('错误代码：' + code + '，错误信息：' + message, true, 'error')
-        // callback(false)
+        // 部分接口返回值没有data 比如搜索
+        callback({ data: { list: [] } })
         break
     }
   }
