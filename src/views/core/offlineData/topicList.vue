@@ -95,12 +95,12 @@
     </f-dialog>
 
     <!-- 表格显示 -->
-    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
+    <t-dialog v-model="tDialogFlag">
       <data-structure-dialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <topic-ancillary-information-dialog :otherObj="otherObj" v-else-if="tDialogShow === 2" />
     </t-dialog>
 
-    <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteTopic" />
+    <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
   </div>
 </template>
 <script lang="ts">

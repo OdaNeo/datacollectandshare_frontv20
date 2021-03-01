@@ -37,7 +37,7 @@
     <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <resources-dialog :desserts="desserts"></resources-dialog>
     </f-dialog>
-    <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteItem" />
+    <h-confirm v-model="HConfirmShow" @hconfirm="deleteItem" />
   </div>
 </template>
 <script lang="ts">

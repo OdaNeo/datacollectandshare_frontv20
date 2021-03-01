@@ -13,20 +13,8 @@
       </template>
     </h-table>
     <!-- 表格显示 -->
-    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
-      <OfflineLogData :rowJson="rowJson" />
-      <v-btn
-        slot="action-button"
-        color="primary"
-        height="35px"
-        width="95px"
-        :disabled="!rowJson"
-        text
-        v-clipboard:copy="rowJson"
-        v-clipboard:success="onCopy"
-        v-clipboard:error="onError"
-        >一键复制</v-btn
-      >
+    <t-dialog v-model="tDialogFlag">
+      <ContentDetails :rowJson="rowJson" />
     </t-dialog>
   </div>
 </template>
@@ -39,15 +27,15 @@ import { dataType } from '@/enum/topic-datatype-enum.ts'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
 import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
-import OfflineLogData from './childComponent/offlineLogData.vue'
 import TDialog from '@/components/t-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
+import ContentDetails from './childComponent/contentDetails.vue'
 
 @Component({
   components: {
     HTable,
-    OfflineLogData,
-    TDialog
+    TDialog,
+    ContentDetails
   }
 })
 @http

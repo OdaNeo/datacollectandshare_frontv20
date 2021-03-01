@@ -45,14 +45,25 @@
       :paginationLength="paginationLength"
     >
       <template v-slot:buttons="{ item }">
-        <v-btn text color="primary" @click="dataStructure(item)">数据结构详情</v-btn>
+        <v-btn
+          text
+          color="primary"
+          :disabled="
+            item.topicInterFaceType === 5 ||
+            item.topicInterFaceType === 6 ||
+            item.topicInterFaceType === 7 ||
+            item.topicInterFaceType === 8
+          "
+          @click="dataStructure(item)"
+          >数据结构详情</v-btn
+        >
       </template>
       <template v-slot:examineType="{}">
         <v-btn text :color="colors[btnAction]">{{ h_enum['examineType'][btnAction] }}</v-btn>
       </template>
     </h-table>
 
-    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <t-dialog v-model="dialogFlag">
       <data-structure-dialog :rowObj="rowObj"></data-structure-dialog>
     </t-dialog>
   </div>
@@ -137,7 +148,7 @@ export default class TopicAuditRecords extends Vue {
       align: 'center',
       value: 'auditTime',
       format: (time: number): string => {
-        return time ? this.h_utils.timeUtil.stamptoTime(time, '-') : ''
+        return time ? this.h_utils.timeUtil.stamptoTime(time, '-') : '-'
       }
     },
     {

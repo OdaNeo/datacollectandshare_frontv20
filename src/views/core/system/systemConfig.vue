@@ -53,7 +53,7 @@
     <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <create-configure-dialog></create-configure-dialog>
     </f-dialog>
-    <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteConfigure" />
+    <h-confirm v-model="HConfirmShow" @hconfirm="deleteConfigure" />
   </div>
 </template>
 <script lang="ts">

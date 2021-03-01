@@ -82,12 +82,13 @@ export const GET_CMD_DELETE = '/cmd/delCmdInfo'
 // ----------------------------- 视频数据 ---------------------------
 export const GET_VIDEO_ADDRESS = '/topics/getVideoAddress' // 视频数据统计
 export const GET_TOPICS_GETVIDEO = '/topics/getVideo'
-
-// ----------------------------- 事务数据 ----------------------------
+// ----------------------------- 日志数据 ---------------------------
+// ----------------------------- 数据采集监控 ------------------------
+// ----------------------------- 事务数据 ---------------------------
 export const GET_TOPICS_GETOFFLINELOG = '/topics/getOfflineLog'
 export const POST_TOPICS_UPDATETRANSACTIONALTOPIC = '/topics/updateTransactionalTopic'
 
-// ----------------------------- 内部调试页面 未配置权限 ---------------
+// ----------------------------- 内部调试页面 未配置权限 --------------
 export const POST_TRANSMISSION_ATS = '/transmission/ATS'
 export const GET_TRANSMISSION_REALTIME = '/transmission/realtime/ATS'
 export const GET_TRANSMISSION_HISTORY = '/transmission/history/ATS'

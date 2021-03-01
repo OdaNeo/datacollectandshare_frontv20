@@ -50,7 +50,7 @@
       <role-dialog v-if="dialogShow"></role-dialog>
       <auth-dialog v-else :roles="roles"></auth-dialog>
     </f-dialog>
-    <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteItem" />
+    <h-confirm v-model="HConfirmShow" @hconfirm="deleteItem" />
   </div>
 </template>
 <script lang="ts">

@@ -52,7 +52,7 @@
       </template>
     </h-table>
 
-    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <t-dialog v-model="dialogFlag">
       <data-structure-dialog :rowObj="rowObj"></data-structure-dialog>
     </t-dialog>
   </div>
@@ -113,7 +113,7 @@ export default class TopicSub extends Vue {
     {
       text: '所属用户',
       align: 'center',
-      value: 'belongUserName'
+      value: 'userName'
     },
     {
       text: '订阅用户',

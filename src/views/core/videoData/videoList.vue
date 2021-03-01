@@ -52,10 +52,13 @@
         </h-table>
       </v-tab-item>
     </v-tabs-items>
+    <!-- 表单 -->
     <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <create-video-topic-dialog v-if="dialogShow === 1" />
       <set-date-range v-else-if="dialogShow === 2" />
     </f-dialog>
+
+    <!-- 视频 -->
     <video-popup
       :videoCounts="videoCounts"
       :videoList="videoList"
@@ -64,7 +67,7 @@
       v-model="showVideoPopup"
     />
 
-    <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteVideoTopic" />
+    <h-confirm v-model="HConfirmShow" @hconfirm="deleteVideoTopic" />
   </div>
 </template>
 <script lang="ts">

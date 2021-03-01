@@ -40,6 +40,9 @@ export default class FDialog extends Vue {
 
   private defaultFormObj: any = {}
 
+  set dialog(_val: boolean) {
+    _val
+  }
   get dialog(): boolean {
     return this.checked
   }

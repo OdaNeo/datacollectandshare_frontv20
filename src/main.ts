@@ -13,7 +13,6 @@ const { UserState, logout } = rootStoreModule
 
 Vue.config.productionTip = false
 
-VueClipboard.config.autoSetContainer = true
 Vue.use(VueClipboard)
 
 router.beforeEach(

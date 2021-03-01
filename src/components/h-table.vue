@@ -148,38 +148,10 @@ export default class HTable extends Vue {
 }
 
 .simple-table {
-  /* max-height: 67vh; */
-  /* border-top: 1px solid rgba(0, 0, 0, 0.1); */
-  /* border-bottom: 1px solid rgba(0, 0, 0, 0.12); */
   border-radius: 2px;
   background-color: #fff;
-  /* border-collapse: collapse; */
-  /* box-shadow: 0px 3px 4px 0px rgba(0, 0, 0, 0.14), 0px 2px 0px 0px rgba(0, 0, 0, 0.14); */
+
   overflow-y: auto;
   overflow-x: hidden;
 }
-/* .simple-table table thead tr th {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-top: 0px !important;
-  border-left: 0px !important;
-}
-.simple-table table thead tr th:last-child {
-  border-right: 0px !important;
-}
-.simple-table table tbody tr td {
-  border: 1px solid rgba(0, 0, 0, 0.12);
-  border-top: 0px !important;
-  border-left: 0px !important;
-}
-.simple-table table tbody tr td:last-child {
-  border-right: 0px !important;
-} */
-/* .table-title {
-  height: 45px;
-  text-align: center;
-  line-height: 45px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.12);
-  font-size: 16px;
-  color: rgba(0, 0, 0, 0.6);
-} */
 </style>

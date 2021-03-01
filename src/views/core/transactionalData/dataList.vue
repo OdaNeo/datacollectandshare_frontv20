@@ -74,23 +74,11 @@
     </f-dialog>
 
     <!-- 表格显示 -->
-    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
-      <ContentDetails :rowJson="rowJson" v-if="tDialogShow === 1" />
-      <v-btn
-        slot="action-button"
-        color="primary"
-        height="35px"
-        width="95px"
-        :disabled="!rowJson"
-        text
-        v-clipboard:copy="rowJson"
-        v-clipboard:success="onCopy"
-        v-clipboard:error="onError"
-        >一键复制</v-btn
-      >
+    <t-dialog v-model="tDialogFlag">
+      <ContentDetails :rowJson="rowJson" />
     </t-dialog>
 
-    <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteTopic" />
+    <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
   </div>
 </template>
 <script lang="ts">
@@ -108,7 +96,6 @@ import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
 import { FormObj } from '@/type/dialog-form.type'
 import CreateTransactionalData from './childComponent/createTransactionalData.vue'
 import { TopicAdd } from '@/type/topic-add.type'
-
 import ContentDetails from './childComponent/contentDetails.vue'
 
 @Component({
@@ -141,7 +128,6 @@ export default class transactionalDataList extends Vue {
   private tDialogFlag = false // 表格展示
   private queryTopicID = '' // 查询主题ID input框内容
 
-  private tDialogShow = 0 // 展示哪个弹窗
   private fDialogShow = 0 // 展示哪个表单
 
   private paginationLength = 0 // 分页数
@@ -155,7 +141,7 @@ export default class transactionalDataList extends Vue {
     topicInterFaceType: 0
   }
 
-  private rowJson: unknown
+  private rowJson = ''
 
   private desserts: Array<topicTable> = [] // 数据列表
   private loading = true
@@ -233,17 +219,15 @@ export default class transactionalDataList extends Vue {
   }
 
   // 自增属性显示
-  private sqlMaxContentDetails(item: { sqlMaxContent: unknown }) {
+  private sqlMaxContentDetails(item: { sqlMaxContent: string }) {
     this.tDialogFlag = true
-    this.tDialogShow = 1
     this.formProvide.title = '自增属性查询脚本'
     this.rowJson = item.sqlMaxContent
   }
 
   // datax回显
-  private jsonContentDetails(item: { jsonContent: unknown }) {
+  private jsonContentDetails(item: { jsonContent: string }) {
     this.tDialogFlag = true
-    this.tDialogShow = 1
     this.formProvide.title = 'DataX脚本'
     this.rowJson = item.jsonContent
   }
@@ -395,13 +379,6 @@ export default class transactionalDataList extends Vue {
       )
     }
     this.pageNum = 1
-  }
-
-  private onCopy() {
-    this.h_utils.alertUtil.open('复制成功', true, 'success', 1500)
-  }
-  private onError() {
-    this.h_utils.alertUtil.open('复制失败', true, 'error', 1500)
   }
 }
 </script>

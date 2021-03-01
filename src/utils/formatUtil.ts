@@ -23,6 +23,7 @@ class formatUtil {
         `
       } else if (typeof item === 'string') {
         // string
+        item = item.replaceAll('\n', '<br />')
         html += `
         <span style="margin-left:24px;">
           <span>"${item}",</span>
@@ -65,6 +66,7 @@ class formatUtil {
         `
       } else if (typeof obj[p] === 'string') {
         // string
+        obj[p] = obj[p].replaceAll('\n', '<br />')
         html += `
         <div style="margin-left:24px;">
           <span>"${p}":</span>

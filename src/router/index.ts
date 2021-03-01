@@ -287,7 +287,7 @@ const routes: Array<RouteConfig> = [
     meta: {
       title: '日志数据',
       icon: 'mdi-file-table-box-outline',
-      access: false,
+      access: true,
       url: '/logData'
     },
     children: [
@@ -298,7 +298,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '日志主题',
           // icon: 'mdi-file-video',
-          access: false,
+          access: true,
           url: '/logData/dataList'
         }
       },
@@ -309,7 +309,7 @@ const routes: Array<RouteConfig> = [
         meta: {
           title: '日志数据统计',
           // icon: 'mdi-file-video',
-          access: false,
+          access: true,
           url: '/logData/dataStatistics'
         }
       }
@@ -334,9 +334,33 @@ const routes: Array<RouteConfig> = [
         name: '可靠通道主题',
         meta: {
           title: '可靠通道主题',
-          // icon: 'mdi-console-line ',
           access: true,
           url: '/cmdInfoData/cmdList'
+        }
+      }
+    ]
+  },
+  // 采集监控 ：时间 主题（事务 视频 日志） 服务名 状态（告警error 离线offline 警告warring） 轮询
+  {
+    path: '/dataMonitor',
+    name: '采集监控',
+    component: StatePage,
+    redirect: '/dataMonitor/dataList',
+    meta: {
+      title: '采集监控',
+      icon: 'mdi-monitor-screenshot',
+      access: true,
+      url: '/dataMonitor'
+    },
+    children: [
+      {
+        path: 'dataList',
+        component: () => import('@/views/core/dataMonitor/dataList.vue'),
+        name: '监控日志',
+        meta: {
+          title: '监控日志',
+          access: true,
+          url: '/dataMonitor/dataList'
         }
       }
     ]

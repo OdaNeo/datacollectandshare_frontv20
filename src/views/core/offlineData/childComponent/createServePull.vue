@@ -131,6 +131,7 @@
               :disabled="formProvide.formObj.canNotEdit"
               fab
               dark
+              depressed
               max-width="24"
               max-height="24"
               color="primary"
@@ -144,6 +145,7 @@
               :disabled="formProvide.formObj.canNotEdit"
               fab
               dark
+              depressed
               max-width="24"
               max-height="24"
               color="primary"
@@ -207,6 +209,7 @@
               v-if="formProvide.formObj['topicList'].length === index + 1"
               fab
               dark
+              depressed
               max-width="24"
               max-height="24"
               color="primary"
@@ -219,6 +222,7 @@
               v-if="!item.disabled && formProvide.formObj['topicList'].length > 1"
               fab
               dark
+              depressed
               max-width="24"
               max-height="24"
               color="primary"

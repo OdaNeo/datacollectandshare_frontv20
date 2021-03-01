@@ -62,12 +62,12 @@
     </f-dialog>
 
     <!-- table -->
-    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
+    <t-dialog v-model="tDialogFlag">
       <cmd-information-dialog v-if="tDialogShow === 1" :rowDescription="rowDescription" />
       <data-structure-dialog v-if="tDialogShow === 2" :headersObj="headersObj" :dessertsObj="dessertsObj" />
     </t-dialog>
 
-    <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="deleteCmd" />
+    <h-confirm v-model="HConfirmShow" @hconfirm="deleteCmd" />
   </div>
 </template>
 <script lang="ts">

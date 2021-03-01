@@ -15,6 +15,11 @@ import { Component, Vue, Model } from 'vue-property-decorator'
 @Component
 export default class HConfirm extends Vue {
   @Model('closeConfirm', { type: Boolean }) private checked!: boolean
+
+  set closeDialog(val: boolean) {
+    val
+  }
+
   get closeDialog(): boolean {
     return this.checked
   }

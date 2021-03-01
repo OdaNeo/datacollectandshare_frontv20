@@ -48,7 +48,7 @@
     <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <bind-net-dialog :networks="networks" :systems="systems" />
     </f-dialog>
-    <h-confirm v-if="HConfirmShow" v-model="HConfirmShow" @hconfirm="relieveNetWork" />
+    <h-confirm v-model="HConfirmShow" @hconfirm="relieveNetWork" />
   </div>
 </template>
 <script lang="ts">
