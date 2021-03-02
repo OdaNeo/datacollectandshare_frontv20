@@ -1,10 +1,10 @@
 <template>
   <div id="welcome">
-    <div class="topContent" style="height: 200px">
+    <div class="topContent" style="height: 190px">
       <system-topic-proportion></system-topic-proportion>
       <user-proportion></user-proportion>
     </div>
-    <div class="btmContent" style="height: 450px; margin-top: 24px">
+    <div class="btmContent" style="height: 400px; margin-top: 24px">
       <release-menu :systemItems="systemItems"></release-menu>
       <subscribe-menu :systemItems="systemItems"></subscribe-menu>
     </div>

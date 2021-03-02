@@ -17,7 +17,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" width="95px" height="35px" depressed class="mr-6" small dark @click="createLogTopic"
+        <v-btn color="primary" width="95px" height="35px" depressed class="mr-6" small dark @click="createLogTopic()"
           >创建日志主题</v-btn
         >
       </v-col>
@@ -35,8 +35,18 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
-          <template v-slot:buttons>
-            <!-- <v-btn text color="primary">操作</v-btn> -->
+          <template v-slot:buttons="{ item }">
+            <v-btn v-if="tab" text color="primary" @click="createLogTopic(item)">修改</v-btn>
+            <v-btn
+              v-if="tab"
+              text
+              color="primary"
+              @click="
+                HConfirmShow = true
+                HConfirmItem = item
+              "
+              >删除</v-btn
+            >
           </template>
         </h-table>
       </v-tab-item>
@@ -46,6 +56,8 @@
     <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
       <CreateLogTopic v-if="fDialogShow === 1" />
     </f-dialog>
+
+    <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
   </div>
 </template>
 <script lang="ts">
@@ -61,9 +73,11 @@ import { dataType } from '@/enum/topic-datatype-enum.ts'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
 import { FormObj } from '@/type/dialog-form.type'
 import CreateLogTopic from './childComponent/createLogTopic.vue'
+import HConfirm from '@/components/h-confirm.vue'
 
 @Component({
   components: {
+    HConfirm,
     HTable,
     FDialog,
     CreateLogTopic
@@ -89,6 +103,13 @@ export default class LogDataList extends Vue {
   private fDialogShow = 0
   private queryTopicID = '' // 查询主题ID input框内容
   private loading = true
+
+  private HConfirmShow = false
+  private HConfirmItem = {
+    id: '',
+    topicName: '',
+    topicInterFaceType: 0
+  }
 
   private desserts: Array<topicTable> = [] // 数据列表
   private paginationLength = 0 // 分页数
@@ -135,14 +156,20 @@ export default class LogDataList extends Vue {
   ]
 
   // 创建日志主题
-  private createLogTopic() {
+  private createLogTopic(item?: any) {
     this.fDialogFlag = true
     this.fDialogShow = 1
     this.formProvide.btnName = ['立即创建']
     this.formProvide.title = '创建日志主题'
     this.formProvide.methodName = 'addLogTopic' // 立即提交
-    this.formProvide.formObj = {
-      passWord: '******'
+    if (item) {
+      this.formProvide.formObj = {
+        canNotEdit: true,
+        id: item.id,
+        topicName: item.topicName
+      }
+    } else {
+      this.formProvide.formObj = {}
     }
   }
 
@@ -151,13 +178,13 @@ export default class LogDataList extends Vue {
     console.log(formObj)
     // const canNotEdit = formObj.canNotEdit
 
-    // const params: any = {
-    //   dataType: dataType['结构化']
-    // }
-    // params.topicName = formObj.topicName
+    const params: any = {
+      dataType: dataType['结构化']
+    }
+    params.topicName = formObj.topicName
     // params.dataBaseType = formObj.dataBaseType
     // params.dataBaseIp = formObj.dataBaseIp
-    // params.topicInterFaceType = 2
+    // params.topicInterFaceType = 8
 
     // const { success } = await this.h_request['httpPOST'](!canNotEdit ? 'POST_TOPICS_ADD' : 'POST_TOPICS_UPDATE', params)
     // if (success) {
@@ -224,6 +251,31 @@ export default class LogDataList extends Vue {
       )
     }
     this.pageNum = 1
+  }
+
+  // 删除
+  private async deleteTopic() {
+    if (this.HConfirmItem.id === undefined) {
+      return
+    }
+    const { success } = await this.h_request['httpGET']('GET_TOPICS_DELETE', {
+      topicID: this.HConfirmItem.id,
+      topicName: this.HConfirmItem.topicName,
+      topicInterFaceType: this.HConfirmItem.topicInterFaceType
+    })
+    if (success) {
+      this.HConfirmShow = false
+      this.h_utils['alertUtil'].open('主题删除成功', true, 'success')
+      this.searchMethod(
+        false,
+        {
+          pageSize: this.pageSize,
+          pageNum: 1
+        },
+        true
+      )
+      this.pageNum = 1
+    }
   }
 
   // tab切换方法

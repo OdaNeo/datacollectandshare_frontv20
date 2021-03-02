@@ -1,5 +1,4 @@
 import Vue from 'vue'
-import VueRouter, { Route } from 'vue-router'
 import { CombinedVueInstance } from 'vue/types/vue'
 import { returnDataType } from '../type/http-request.type'
 import { dialogForm } from '../type/dialog-form.type'
@@ -26,9 +25,5 @@ declare module 'vue/types/vue' {
     h_utils: any
     h_enum: any
     h_validator: any
-    $request: Request
-    // $echars:any
-    $router: VueRouter
-    $route: Route
   }
 }

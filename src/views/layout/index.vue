@@ -1,9 +1,9 @@
 <template>
   <v-app id="tct">
-    <v-app-bar app height="57" width="100%" style="left: 0px" :color="PROJECT_BASE_COLOR">
+    <v-app-bar app height="57" width="100%" style="left: 0px; z-index: 10" :color="PROJECT_BASE_COLOR">
       <TopBar />
     </v-app-bar>
-    <v-navigation-drawer class="mt-14" width="210px" app :color="PROJECT_BASE_COLOR">
+    <v-navigation-drawer style="padding-top: 57px; z-index: 9" width="210px" app :color="PROJECT_BASE_COLOR">
       <NavBar />
     </v-navigation-drawer>
 

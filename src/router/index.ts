@@ -340,7 +340,7 @@ const routes: Array<RouteConfig> = [
       }
     ]
   },
-  // 采集监控 ：时间 主题（事务 视频 日志） 服务名 状态（告警error 离线offline 警告warring） 轮询
+  // 采集监控
   {
     path: '/dataMonitor',
     name: '采集监控',

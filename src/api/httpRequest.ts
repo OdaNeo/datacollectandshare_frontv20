@@ -1,5 +1,4 @@
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse } from 'axios'
-// import RequestHelper from './requestHelper'
 import { rootStoreModule } from '../store/modules/root'
 import { httpAllParams, returnDataType, headerObj } from '../type/http-request.type'
 import alertUtil from '../utils/alertUtil'
@@ -16,8 +15,6 @@ class HttpRequest {
       }
     }
   })
-
-  // private requestHelper: RequestHelper = new RequestHelper(this.axiosIns)
 
   constructor(headers: Array<headerObj>) {
     this.axiosIns.interceptors.request.use((config: AxiosRequestConfig) => {

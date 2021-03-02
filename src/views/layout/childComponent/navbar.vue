@@ -35,10 +35,6 @@ export default class NavBar extends Vue {
 }
 </script>
 <style scoped>
-#navbar {
-  overflow-x: hidden;
-  overflow-y: auto;
-}
 #navbar >>> .v-icon.v-icon {
   font-size: 18px;
 }
