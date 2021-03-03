@@ -76,6 +76,7 @@
         v-model="formProvide.formObj['savePath']"
         outlined
         dense
+        clearable
         height="34"
         class="ml-4 mr-15"
         :rules="[...h_validator.noEmpty('日志采集路径')]"

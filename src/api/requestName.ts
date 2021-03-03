@@ -82,9 +82,14 @@ export const GET_CMD_DELETE = '/cmd/delCmdInfo'
 // ----------------------------- 视频数据 ---------------------------
 export const GET_VIDEO_ADDRESS = '/topics/getVideoAddress' // 视频数据统计
 export const GET_TOPICS_GETVIDEO = '/topics/getVideo'
+
 // ----------------------------- 日志数据 ---------------------------
 export const POST_TOPICS_ADDLOGGERTOPIC = '/topics/addLoggerTopic'
+
 // ----------------------------- 数据采集监控 ------------------------
+export const GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME = '/monitor/findAllMonitorLogByTime'
+export const GET_MONITOR_FIND_ALL_MONITOR_LOG = '/monitor/findAllMonitorLog'
+
 // ----------------------------- 事务数据 ---------------------------
 export const GET_TOPICS_GETOFFLINELOG = '/topics/getOfflineLog'
 export const POST_TOPICS_UPDATETRANSACTIONALTOPIC = '/topics/updateTransactionalTopic'
@@ -174,7 +179,9 @@ const REQUEST_NAME: REQUEST_NAME_TYPE = {
   GET_TOPICS_GETOFFLINELOG,
   GET_TOPICS_GETVIDEO,
   POST_TOPICS_UPDATETRANSACTIONALTOPIC,
-  POST_TOPICS_ADDLOGGERTOPIC
+  POST_TOPICS_ADDLOGGERTOPIC,
+  GET_MONITOR_FIND_ALL_MONITOR_LOG,
+  GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME
 }
 
 export default REQUEST_NAME
