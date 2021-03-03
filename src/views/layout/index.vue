@@ -24,7 +24,7 @@
           <br />
           <span>状态: {{ item.status }}</span>
           <br />
-          <span>服务名: {{ item.serverName }}</span>
+          <span>作业名: {{ item.serverName }}</span>
           <br />
           <span>描述: {{ item.remarks }}</span>
         </v-alert>
@@ -79,7 +79,11 @@ export default class Login extends Vue {
     //     'remarks': 'NullPointerExceptionsf'
     //   }
     // ]
-    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {})
+
+    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
+      date: new Date().getTime()
+    })
+
     if (data.length > 0) {
       this.showAlert = true
     }
@@ -95,6 +99,7 @@ export default class Login extends Vue {
         timed: true
       }
     })
+
     this.$nextTick(() => {
       this.events = _events
     })
@@ -116,16 +121,12 @@ export default class Login extends Vue {
   }
   private handleHideAlert() {
     this.showAlert = false
-    // sessionStorage.showAlert = 0
   }
 
   private handleShowAlert() {
     this.showAlert = true
-    // sessionStorage.showAlert = 1
   }
   mounted(): void {
-    // this.showAlert = JSON.parse(sessionStorage.showAlert) === 0 ? false : true
-
     this.updateRange()
     this.timer = setInterval(() => {
       this.updateRange()

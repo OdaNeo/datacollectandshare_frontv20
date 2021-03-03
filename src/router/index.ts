@@ -340,14 +340,14 @@ const routes: Array<RouteConfig> = [
       }
     ]
   },
-  // 采集监控
+  // 作业监控
   {
     path: '/dataMonitor',
-    name: '采集监控',
+    name: '作业监控',
     component: StatePage,
     redirect: '/dataMonitor/dataList',
     meta: {
-      title: '采集监控',
+      title: '作业监控',
       icon: 'mdi-monitor-screenshot',
       access: true,
       url: '/dataMonitor'

@@ -56,7 +56,7 @@
               <v-card-text>
                 <span>状态: {{ selectedEvent.status }}</span>
                 <br />
-                <span>服务名: {{ selectedEvent.serverName }}</span>
+                <span>作业名: {{ selectedEvent.serverName }}</span>
                 <br />
                 <span>描述: {{ selectedEvent.remarks }}</span>
               </v-card-text>
@@ -83,8 +83,6 @@ export default class dataMonitor extends Vue {
     'week': '周',
     'day': '日'
   }
-  private timer = 0
-  private interval = 30
 
   private selectedEvent = {}
   private selectedElement = null
@@ -178,16 +176,7 @@ export default class dataMonitor extends Vue {
   mounted(): void {
     this.calendar = this.$refs.calendar as any
     this.calendar.checkChange()
-
     this.updateRange()
-
-    this.timer = setInterval(() => {
-      this.updateRange()
-    }, this.interval * 1000)
-  }
-  beforeDestroy(): void {
-    // 销毁定时器
-    clearInterval(this.timer)
   }
 }
 </script>
