@@ -127,31 +127,46 @@ export default class dataMonitor extends Vue {
     nativeEvent.stopPropagation()
   }
 
-  private rnd(a: any, b: any) {
-    return Math.floor((b - a + 1) * Math.random()) + a
-  }
-
   private updateRange() {
-    const _events: Array<CalendarData> = []
+    const data = [
+      {
+        'id': 1,
+        'topicId': 88888888,
+        'serverName': '日志',
+        'status': 1,
+        'createTime': '1614783227618',
+        'remarks': 'NullPointerException'
+      },
+      {
+        'id': 1,
+        'topicId': 88888886,
+        'serverName': '事务',
+        'status': 3,
+        'createTime': '1614283227618',
+        'remarks': 'NullPointerException'
+      },
+      {
+        'id': 1,
+        'topicId': 88888889,
+        'serverName': '视频',
+        'status': 2,
+        'createTime': '1614094237618',
+        'remarks': 'NullPointerException'
+      }
+    ]
 
-    const min = new Date(`2021-02-01T00:00:00`)
-    const max = new Date(`2021-03-02T23:59:59`)
+    const _events: Array<CalendarData> = data.map(item => {
+      return {
+        start: new Date(Number(item['createTime'])),
+        color: calendarColorType[item['status']],
+        remarks: item['remarks'],
+        status: calendarType[item['status']],
+        name: item['topicId'].toString(),
+        serverName: item['serverName'],
+        timed: true
+      }
+    })
 
-    for (let i = 0; i < 5; i++) {
-      const firstTimestamp = this.rnd(min.getTime(), max.getTime())
-      const first = new Date(firstTimestamp - (firstTimestamp % 900000))
-
-      _events.push({
-        start: first,
-        color: calendarColorType[2],
-        timed: true,
-        remarks: 'testdf',
-        status: calendarType[2],
-        name: '13123',
-        serverName: 'serverName'
-      })
-    }
-    console.log(_events)
     this.$nextTick(() => {
       this.events = _events
     })

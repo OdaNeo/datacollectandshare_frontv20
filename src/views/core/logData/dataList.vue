@@ -136,7 +136,7 @@ export default class LogDataList extends Vue {
     {
       text: '日志采集路径',
       align: 'center',
-      value: 'topicInterFaceType'
+      value: 'savePath'
     },
     {
       text: '服务器地址',
@@ -183,7 +183,7 @@ export default class LogDataList extends Vue {
     params.topicName = formObj.topicName
     params.ip = formObj.ip
     params.userName = formObj.userName
-    params.password = formObj.password
+    params.password = formObj.password === '******' ? '' : formObj.password
     params.savePath = formObj.savePath
     params.topicInterFaceType = 9
 
