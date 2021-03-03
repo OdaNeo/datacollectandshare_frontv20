@@ -30,4 +30,6 @@ export type TopicAdd = {
   baseUrl: string
   userName: string
   password: string
+  ip: string
+  savePath: string
 }

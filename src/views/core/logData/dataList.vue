@@ -175,31 +175,37 @@ export default class LogDataList extends Vue {
 
   // 创建日志主题
   private async addLogTopic(formObj: TopicAdd) {
-    console.log(formObj)
-    // const canNotEdit = formObj.canNotEdit
+    const canNotEdit = formObj.canNotEdit
 
     const params: any = {
       dataType: dataType['结构化']
     }
     params.topicName = formObj.topicName
-    // params.dataBaseType = formObj.dataBaseType
-    // params.dataBaseIp = formObj.dataBaseIp
-    // params.topicInterFaceType = 8
+    params.ip = formObj.ip
+    params.userName = formObj.userName
+    params.password = formObj.password
+    params.savePath = formObj.savePath
+    params.topicInterFaceType = 9
 
-    // const { success } = await this.h_request['httpPOST'](!canNotEdit ? 'POST_TOPICS_ADD' : 'POST_TOPICS_UPDATE', params)
-    // if (success) {
-    //   this.h_utils['alertUtil'].open(!canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
-    //   this.searchMethod(
-    //     false,
-    //     {
-    //       pageSize: this.pageSize,
-    //       pageNum: 1
-    //     },
-    //     !!this.tab
-    //   )
-    //   this.pageNum = 1
-    //   return Promise.resolve(success)
-    // }
+    console.log(params)
+
+    const { success } = await this.h_request['httpPOST'](
+      !canNotEdit ? 'POST_TOPICS_ADDLOGGERTOPIC' : 'POST_TOPICS_UPDATE',
+      params
+    )
+    if (success) {
+      this.h_utils['alertUtil'].open(!canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
+      this.searchMethod(
+        false,
+        {
+          pageSize: this.pageSize,
+          pageNum: 1
+        },
+        !!this.tab
+      )
+      this.pageNum = 1
+      return Promise.resolve(success)
+    }
   }
 
   // 查询通用调用方法
@@ -207,7 +213,7 @@ export default class LogDataList extends Vue {
     this.loading = true
 
     params.dataType = dataType['结构化']
-    params.faceTypes = `${topicInterFaceType['数据库采集']}`
+    params.faceTypes = `${topicInterFaceType['日志主题']}`
     if (tab) {
       const { data }: returnDataType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)

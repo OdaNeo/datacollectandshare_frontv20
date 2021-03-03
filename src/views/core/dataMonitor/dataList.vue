@@ -47,25 +47,18 @@
             :type="type"
             @click:event="showEvent"
             @click:more="viewDay"
-            @click:date="viewDay"
           ></v-calendar>
           <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
             <v-card color="grey lighten-4" min-width="350px" flat>
               <v-toolbar :color="selectedEvent.color" dark>
-                <v-btn icon>
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-                <v-toolbar-title v-html="selectedEvent.name"></v-toolbar-title>
-                <v-spacer></v-spacer>
-                <v-btn icon>
-                  <v-icon>mdi-heart</v-icon>
-                </v-btn>
-                <v-btn icon>
-                  <v-icon>mdi-dots-vertical</v-icon>
-                </v-btn>
+                <v-toolbar-title>主题ID: {{ selectedEvent.name }}</v-toolbar-title>
               </v-toolbar>
               <v-card-text>
-                <span v-html="selectedEvent.details"></span>
+                <span>状态: {{ selectedEvent.status }}</span>
+                <br />
+                <span>服务名: {{ selectedEvent.serverName }}</span>
+                <br />
+                <span>描述: {{ selectedEvent.remarks }}</span>
               </v-card-text>
             </v-card>
           </v-menu>
@@ -78,6 +71,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { CalendarData } from '@/type/calendar'
+import { calendarType, calendarColorType } from '@/enum/calendar-enum'
 
 @Component
 @http
@@ -94,7 +88,6 @@ export default class dataMonitor extends Vue {
   private selectedElement = null
   private selectedOpen = false
   private events: Array<CalendarData> = []
-  private colors = ['error', 'primary', 'warning']
   private calendar: any
 
   private viewDay({ date }: { date: string }) {
@@ -149,10 +142,13 @@ export default class dataMonitor extends Vue {
       const first = new Date(firstTimestamp - (firstTimestamp % 900000))
 
       _events.push({
-        name: 'test',
         start: first,
-        color: this.colors[0],
-        timed: true
+        color: calendarColorType[2],
+        timed: true,
+        remarks: 'testdf',
+        status: calendarType[2],
+        name: '13123',
+        serverName: 'serverName'
       })
     }
     console.log(_events)

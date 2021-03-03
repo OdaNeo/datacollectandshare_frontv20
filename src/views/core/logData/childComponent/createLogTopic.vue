@@ -57,7 +57,7 @@
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>密码</label>
       <v-text-field
-        v-model="formProvide.formObj['passWord']"
+        v-model="formProvide.formObj['password']"
         :disabled="formProvide.formObj.canNotEdit"
         outlined
         dense
@@ -73,7 +73,7 @@
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>日志采集路径</label>
       <v-text-field
-        v-model="formProvide.formObj['url']"
+        v-model="formProvide.formObj['savePath']"
         outlined
         dense
         height="34"

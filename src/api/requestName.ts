@@ -83,6 +83,7 @@ export const GET_CMD_DELETE = '/cmd/delCmdInfo'
 export const GET_VIDEO_ADDRESS = '/topics/getVideoAddress' // 视频数据统计
 export const GET_TOPICS_GETVIDEO = '/topics/getVideo'
 // ----------------------------- 日志数据 ---------------------------
+export const POST_TOPICS_ADDLOGGERTOPIC = '/topics/addLoggerTopic'
 // ----------------------------- 数据采集监控 ------------------------
 // ----------------------------- 事务数据 ---------------------------
 export const GET_TOPICS_GETOFFLINELOG = '/topics/getOfflineLog'
@@ -172,7 +173,8 @@ const REQUEST_NAME: REQUEST_NAME_TYPE = {
   GET_CMD_FINDMYCMDINFOBYID,
   GET_TOPICS_GETOFFLINELOG,
   GET_TOPICS_GETVIDEO,
-  POST_TOPICS_UPDATETRANSACTIONALTOPIC
+  POST_TOPICS_UPDATETRANSACTIONALTOPIC,
+  POST_TOPICS_ADDLOGGERTOPIC
 }
 
 export default REQUEST_NAME
