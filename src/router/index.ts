@@ -354,6 +354,16 @@ const routes: Array<RouteConfig> = [
     },
     children: [
       {
+        path: 'realTime',
+        component: () => import('@/views/core/dataMonitor/realTime.vue'),
+        name: '实时监控',
+        meta: {
+          title: '实时监控',
+          access: true,
+          url: '/dataMonitor/realTime'
+        }
+      },
+      {
         path: 'dataList',
         component: () => import('@/views/core/dataMonitor/dataList.vue'),
         name: '监控日志',

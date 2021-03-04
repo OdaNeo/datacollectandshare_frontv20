@@ -26,7 +26,7 @@
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>服务器IP</label>
       <v-text-field
-        v-model="formProvide.formObj['ip']"
+        v-model="formProvide.formObj['logIp']"
         :disabled="formProvide.formObj.canNotEdit"
         outlined
         dense
@@ -41,7 +41,7 @@
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>用户名</label>
       <v-text-field
-        v-model="formProvide.formObj['userName']"
+        v-model="formProvide.formObj['logUserName']"
         :disabled="formProvide.formObj.canNotEdit"
         outlined
         dense
@@ -57,7 +57,7 @@
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>密码</label>
       <v-text-field
-        v-model="formProvide.formObj['password']"
+        v-model="formProvide.formObj['logPassWord']"
         :disabled="formProvide.formObj.canNotEdit"
         outlined
         dense

@@ -69,8 +69,8 @@ import HTable from '@/components/h-table.vue'
 import FDialog from '@/components/f-dialog.vue'
 import { TopicAdd } from '@/type/topic-add.type'
 import util from '@/decorator/utilsDecorator'
-import { dataType } from '@/enum/topic-datatype-enum.ts'
-import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
+import { dataType } from '@/enum/topic-datatype-enum'
+import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import { FormObj } from '@/type/dialog-form.type'
 import CreateLogTopic from './childComponent/createLogTopic.vue'
 import HConfirm from '@/components/h-confirm.vue'
@@ -141,12 +141,12 @@ export default class LogDataList extends Vue {
     {
       text: '服务器地址',
       align: 'center',
-      value: 'serviceUrl'
+      value: 'logIp'
     },
     {
       text: '服务器用户名',
       align: 'center',
-      value: 'serviceUserName'
+      value: 'logUserName'
     },
     {
       text: '操作',
@@ -181,9 +181,9 @@ export default class LogDataList extends Vue {
       dataType: dataType['结构化']
     }
     params.topicName = formObj.topicName
-    params.ip = formObj.ip
-    params.userName = formObj.userName
-    params.password = formObj.password === '******' ? '' : formObj.password
+    params.logIp = formObj.logIp
+    params.logUserName = formObj.logUserName
+    params.logPassWord = formObj.logPassWord === '******' ? '' : formObj.logPassWord
     params.savePath = formObj.savePath
     params.topicInterFaceType = 9
 

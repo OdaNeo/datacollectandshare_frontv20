@@ -13,8 +13,8 @@ class HttpRequest {
       post: {
         'Content-Type': 'application/json;charset=UTF-8'
       }
-    },
-    withCredentials: true
+    }
+    // withCredentials: true
   })
 
   constructor(headers: Array<headerObj>) {

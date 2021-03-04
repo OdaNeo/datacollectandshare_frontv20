@@ -29,7 +29,8 @@ export type TopicAdd = {
   host: string
   baseUrl: string
   userName: string
-  password: string
-  ip: string
+  logUserName: string
+  logPassWord: string
+  logIp: string
   savePath: string
 }
