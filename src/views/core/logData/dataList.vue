@@ -53,7 +53,7 @@
     </v-tabs-items>
 
     <!-- 表单展示 -->
-    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
+    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag" :loading="createTopicLoading">
       <CreateLogTopic v-if="fDialogShow === 1" />
     </f-dialog>
 
@@ -111,6 +111,8 @@ export default class LogDataList extends Vue {
     topicInterFaceType: 0
   }
 
+  private createTopicLoading = false
+
   private desserts: Array<topicTable> = [] // 数据列表
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
@@ -162,6 +164,7 @@ export default class LogDataList extends Vue {
     this.formProvide.btnName = ['立即创建']
     this.formProvide.title = '创建日志主题'
     this.formProvide.methodName = 'addLogTopic' // 立即提交
+    this.createTopicLoading = false
     if (item) {
       this.formProvide.formObj = {
         canNotEdit: true,
@@ -175,8 +178,9 @@ export default class LogDataList extends Vue {
 
   // 创建日志主题
   private async addLogTopic(formObj: TopicAdd) {
-    const canNotEdit = formObj.canNotEdit
+    this.createTopicLoading = true
 
+    const canNotEdit = formObj.canNotEdit
     const params: any = {
       dataType: dataType['结构化']
     }
@@ -193,6 +197,9 @@ export default class LogDataList extends Vue {
       !canNotEdit ? 'POST_TOPICS_ADDLOGGERTOPIC' : 'POST_TOPICS_UPDATE',
       params
     )
+    // 关闭loading
+    this.createTopicLoading = false
+
     if (success) {
       this.h_utils['alertUtil'].open(!canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
       this.searchMethod(

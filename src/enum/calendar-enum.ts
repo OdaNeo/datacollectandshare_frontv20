@@ -5,7 +5,7 @@ export enum calendarType {
   警告
 }
 export enum calendarColorType {
-  error = 1,
+  red = 1,
   grey,
-  warning
+  orange
 }

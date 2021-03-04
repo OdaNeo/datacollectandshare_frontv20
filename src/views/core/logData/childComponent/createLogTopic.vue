@@ -63,10 +63,10 @@
         dense
         clearable
         height="34"
-        class="ml-4 mr-3"
+        class="ml-4 mr-15"
         :rules="[...h_validator.noEmpty('密码')]"
       ></v-text-field>
-      <div style="font-size: 12px; width: 110px; line-height: 18px">如不希望暴露密码，可输入 ******</div>
+      <!-- <div style="font-size: 12px; width: 110px; line-height: 18px">如不希望暴露密码，可输入 ******</div> -->
     </v-col>
 
     <!-- 日志采集路径 -->

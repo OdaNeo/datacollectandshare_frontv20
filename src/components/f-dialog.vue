@@ -1,5 +1,11 @@
 <template>
-  <v-dialog v-model="dialog" width="700" persistent>
+  <v-dialog class="dialog" v-model="dialog" width="700" persistent>
+    <!-- 遮罩层 禁止交互 -->
+    <v-overlay :opacity="0.18" :value="loading">
+      <v-progress-circular class="loading" indeterminate color="primary"></v-progress-circular>
+      <div class="loading-text">主题创建中，请稍候……</div>
+    </v-overlay>
+    <!-- tittle form btn -->
     <v-card>
       <v-card-title>
         <span style="font-size: 18px">{{ formProvide.title }}</span>
@@ -29,7 +35,7 @@
   </v-dialog>
 </template>
 <script lang="ts">
-import { Component, Vue, Model, Inject, Ref } from 'vue-property-decorator'
+import { Component, Vue, Model, Inject, Ref, Prop } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 
 @Component
@@ -37,6 +43,7 @@ export default class FDialog extends Vue {
   @Ref('userDialogForm') readonly udf!: HTMLFormElement
   @Inject() private readonly formProvide!: H_Vue
   @Model('closedialog', { type: Boolean }) private checked!: boolean
+  @Prop({ default: false }) private loading!: boolean
 
   private defaultFormObj: any = {}
 
@@ -98,5 +105,19 @@ export default class FDialog extends Vue {
   position: absolute;
   right: 14px;
   top: 14px;
+}
+.dialog {
+  position: relative;
+}
+.loading {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
+}
+.loading-text {
+  color: #1976d2;
+  margin-top: 100px;
 }
 </style>

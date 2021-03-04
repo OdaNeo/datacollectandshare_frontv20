@@ -79,10 +79,10 @@ export default class Login extends Vue {
     //     'remarks': 'NullPointerExceptionsf'
     //   }
     // ]
-
-    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
-      date: new Date().getTime()
-    })
+    const data: Array<CalendarData> = []
+    // const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
+    //   date: new Date().getTime()
+    // })
 
     if (data.length > 0) {
       this.showAlert = true
