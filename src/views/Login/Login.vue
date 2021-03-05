@@ -22,7 +22,7 @@
         </v-form>
 
         <v-switch class="mt-0 pt-3" dense v-model="remember" label="记住账号" color="white" hide-details></v-switch>
-        <v-btn depressed color="primary" width="120" class="mt-10" @click="signIn">登录</v-btn>
+        <v-btn depressed color="primary" :loading="loading" width="120" class="mt-10" @click="signIn">登录</v-btn>
       </div>
     </div>
   </div>
@@ -36,13 +36,14 @@ import { returnDataType } from '@/type/http-request.type'
 import { userAndPassType } from '@/type/login.type'
 import { PROJECT_TITLE } from '@/config'
 
-@Component({})
+@Component
 @http
 export default class Login extends Vue {
   PROJECT_TITLE = PROJECT_TITLE
 
   private userDialogValid = true
   private showPass = false
+  private loading = false
 
   private username = ''
   private password = ''
@@ -53,6 +54,7 @@ export default class Login extends Vue {
     if (!this.username || !this.password) {
       return
     }
+    this.loading = true
     if (this.remember && !localStorage.getItem('userAndPass')) {
       localStorage.setItem('userAndPass', JSON.stringify({ user: this.username, pass: this.password }))
     } else if (this.remember && localStorage.getItem('userAndPass')) {
@@ -69,6 +71,9 @@ export default class Login extends Vue {
     // systemInfo
     const { data } = await this.h_request.httpGET('GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER', {})
     sessionStorage.systemInfo = JSON.stringify(data)
+
+    this.loading = false
+
     if (bool) {
       this.$router.replace({
         path: '/statePage/welcome'

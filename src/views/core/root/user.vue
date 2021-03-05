@@ -202,7 +202,6 @@ export default class User extends Vue {
   }
 
   // 添加用户
-  // TODO code 500但是用户可以被添加
   private async addUser(formObj: userFormObj) {
     const { loginName, loginPwd, userType, userState, systemName } = formObj
     const { success } = await this.h_request['httpPOST']<dialogRequestStructure>('POST_USER_ADD_USER', {

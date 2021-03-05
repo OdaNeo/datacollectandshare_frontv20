@@ -194,7 +194,7 @@ export default class LogDataList extends Vue {
     console.log(params)
 
     const { success } = await this.h_request['httpPOST'](
-      !canNotEdit ? 'POST_TOPICS_ADDLOGGERTOPIC' : 'POST_TOPICS_UPDATE',
+      !canNotEdit ? 'POST_TOPICS_ADDLOGGERTOPIC' : 'POST_TOPICS_UPDATELOGGERTOPIC',
       params
     )
     // 关闭loading

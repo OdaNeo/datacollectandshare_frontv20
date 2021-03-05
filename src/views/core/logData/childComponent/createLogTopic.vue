@@ -53,7 +53,6 @@
     </v-col>
 
     <!-- 密码 -->
-    <!-- ****** as '' -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>密码</label>
       <v-text-field

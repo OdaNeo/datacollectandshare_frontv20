@@ -85,6 +85,7 @@ export const GET_TOPICS_GETVIDEO = '/topics/getVideo'
 
 // ----------------------------- 日志数据 ---------------------------
 export const POST_TOPICS_ADDLOGGERTOPIC = '/topics/addLoggerTopic'
+export const POST_TOPICS_UPDATELOGGERTOPIC = '/topics/updateLoggerTopic'
 
 // ----------------------------- 数据采集监控 ------------------------
 export const GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME = '/monitor/findAllMonitorLogByTime'
@@ -181,7 +182,8 @@ const REQUEST_NAME: REQUEST_NAME_TYPE = {
   POST_TOPICS_UPDATETRANSACTIONALTOPIC,
   POST_TOPICS_ADDLOGGERTOPIC,
   GET_MONITOR_FIND_ALL_MONITOR_LOG,
-  GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME
+  GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME,
+  POST_TOPICS_UPDATELOGGERTOPIC
 }
 
 export default REQUEST_NAME

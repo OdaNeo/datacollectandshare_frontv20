@@ -433,7 +433,6 @@ export default class OnlineDataTopicList extends Vue {
     }
     this.loading = false
   }
-  //TODO 实时查询到 离线数据与事务性数据？
   // 主题查询
   private searchTopic() {
     if (!this.queryTopicID) {

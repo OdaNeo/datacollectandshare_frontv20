@@ -142,7 +142,6 @@ export default class TopicSub extends Vue {
       slot: 'operation'
     }
   ]
-  //TODO 主题订阅分页接口有问题
   private async searchMethod(bool: boolean, params: object): Promise<void> {
     this.loading = true
     const { data }: returnDataType = bool
