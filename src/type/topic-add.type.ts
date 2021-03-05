@@ -33,4 +33,5 @@ export type TopicAdd = {
   logPassWord: string
   logIp: string
   savePath: string
+  password: string
 }
