@@ -161,7 +161,7 @@ export default class LogDataList extends Vue {
   private createLogTopic(item?: any) {
     this.fDialogFlag = true
     this.fDialogShow = 1
-    this.formProvide.btnName = ['立即创建']
+    this.formProvide.btnName = item ? ['立即修改'] : ['立即创建']
     this.formProvide.title = '创建日志主题'
     this.formProvide.methodName = 'addLogTopic' // 立即提交
     this.createTopicLoading = false
@@ -169,7 +169,10 @@ export default class LogDataList extends Vue {
       this.formProvide.formObj = {
         canNotEdit: true,
         id: item.id,
-        topicName: item.topicName
+        topicName: item.topicName,
+        logIp: item.logIp,
+        logUserName: item.logUserName,
+        savePath: item.savePath
       }
     } else {
       this.formProvide.formObj = {}
@@ -178,16 +181,20 @@ export default class LogDataList extends Vue {
 
   // 创建日志主题
   private async addLogTopic(formObj: TopicAdd) {
-    this.createTopicLoading = true
-
     const canNotEdit = formObj.canNotEdit
+    // 创建主题 有loading，修改主题没有loading
+    canNotEdit ? (this.createTopicLoading = false) : (this.createTopicLoading = true)
+
     const params: any = {
       dataType: dataType['结构化']
     }
     params.topicName = formObj.topicName
     params.logIp = formObj.logIp
     params.logUserName = formObj.logUserName
-    params.logPassWord = formObj.logPassWord === '******' ? '' : formObj.logPassWord
+    // 修改不传密码
+    if (!canNotEdit) {
+      params.logPassWord = formObj.logPassWord
+    }
     params.savePath = formObj.savePath
     params.topicInterFaceType = 9
 

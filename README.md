@@ -22,10 +22,6 @@ npm run build
 
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
-## 常见问题
-
-- 新增接口后 需要在权限管理处进行配置 否则会报错 401 身份验证失败
-
 ## 3.0 重构计划
 
 1. ~~topicList 页面代码重构，去除冗余代码 1 天 !~~
@@ -46,3 +42,10 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 15. ~~侧边栏根据路由表排序~~
 16. rest 文件上传方式创建主题 文件示例
 17. ~~首页登陆以及搜索框支持 Enter~~
+
+## 常见问题
+
+- 新增接口后 需要在权限管理处进行配置 否则会报错 401 身份验证失败
+- 后端接口配置在 src/config.ts > VUE_APP_BASE_API
+- 页面左侧菜单栏顺序 配置在 src/router/index.ts > routes, 可同时修改一级列表和二级列表顺序，不依赖后端 callback 顺序
+- 线上查看 git 版本页面 /private/bulkCreateTopic

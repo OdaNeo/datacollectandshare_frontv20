@@ -53,7 +53,7 @@
     </v-col>
 
     <!-- 密码 -->
-    <v-col cols="12" class="d-flex">
+    <v-col v-if="!formProvide.formObj.canNotEdit" cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>密码</label>
       <v-text-field
         v-model="formProvide.formObj['logPassWord']"

@@ -54,8 +54,8 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import FDialog from '@/components/f-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
-import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
-import { dataType } from '@/enum/topic-datatype-enum.ts'
+import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
+import { dataType } from '@/enum/topic-datatype-enum'
 
 @Component({
   components: {
