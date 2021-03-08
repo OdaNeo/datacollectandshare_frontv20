@@ -50,7 +50,7 @@ export default class Login extends Vue {
   private remember = false
 
   // 登录方法
-  async signIn(): Promise<void> {
+  private async signIn(): Promise<void> {
     if (!this.username || !this.password) {
       return
     }
@@ -79,6 +79,23 @@ export default class Login extends Vue {
         path: '/statePage/welcome'
       })
     }
+  }
+
+  private handleEnterEvent(e: KeyboardEvent) {
+    if (e.code === 'Enter') {
+      this.signIn()
+    } else {
+      return
+    }
+  }
+
+  mounted(): void {
+    window.addEventListener('keyup', this.handleEnterEvent)
+  }
+
+  // *clear up
+  beforeDestroy(): void {
+    window.removeEventListener('keyup', this.handleEnterEvent)
   }
 }
 </script>
