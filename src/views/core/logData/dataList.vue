@@ -220,26 +220,26 @@ export default class LogDataList extends Vue {
 
     console.log(params)
 
-    // const { success } = await this.h_request['httpPOST'](
-    //   !canNotEdit ? 'POST_TOPICS_ADDLOGGERTOPIC' : 'POST_TOPICS_UPDATELOGGERTOPIC',
-    //   params
-    // )
-    // // 关闭loading
-    // this.createTopicLoading = false
+    const { success } = await this.h_request['httpPOST'](
+      !canNotEdit ? 'POST_TOPICS_ADDLOGGERTOPIC' : 'POST_TOPICS_UPDATELOGGERTOPIC',
+      params
+    )
+    // 关闭loading
+    this.createTopicLoading = false
 
-    // if (success) {
-    //   this.h_utils['alertUtil'].open(!canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
-    //   this.searchMethod(
-    //     false,
-    //     {
-    //       pageSize: this.pageSize,
-    //       pageNum: 1
-    //     },
-    //     !!this.tab
-    //   )
-    //   this.pageNum = 1
-    //   return Promise.resolve(success)
-    // }
+    if (success) {
+      this.h_utils['alertUtil'].open(!canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
+      this.searchMethod(
+        false,
+        {
+          pageSize: this.pageSize,
+          pageNum: 1
+        },
+        !!this.tab
+      )
+      this.pageNum = 1
+      return Promise.resolve(success)
+    }
   }
 
   // 查询数据详情
