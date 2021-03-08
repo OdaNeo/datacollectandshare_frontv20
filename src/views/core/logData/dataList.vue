@@ -36,6 +36,7 @@
           :paginationLength="paginationLength"
         >
           <template v-slot:buttons="{ item }">
+            <v-btn v-if="!tab" text color="primary" @click="showLogDataDetail(item)">数据详情</v-btn>
             <v-btn v-if="tab" text color="primary" @click="createLogTopic(item)">修改</v-btn>
             <v-btn
               v-if="tab"
@@ -57,6 +58,11 @@
       <CreateLogTopic v-if="fDialogShow === 1" />
     </f-dialog>
 
+    <!-- 表格显示 -->
+    <t-dialog v-model="tDialogFlag">
+      <LogDataDialog v-if="tDialogShow === 1" :headersObj="headersObj" :dessertsObj="dessertsObj" />
+    </t-dialog>
+
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
   </div>
 </template>
@@ -67,12 +73,14 @@ import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import FDialog from '@/components/f-dialog.vue'
+import TDialog from '@/components/t-dialog.vue'
 import { TopicAdd } from '@/type/topic-add.type'
 import util from '@/decorator/utilsDecorator'
 import { dataType } from '@/enum/topic-datatype-enum'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import { FormObj } from '@/type/dialog-form.type'
 import CreateLogTopic from './childComponent/createLogTopic.vue'
+import LogDataDialog from './childComponent/logDataDialog.vue'
 import HConfirm from '@/components/h-confirm.vue'
 
 @Component({
@@ -80,7 +88,9 @@ import HConfirm from '@/components/h-confirm.vue'
     HConfirm,
     HTable,
     FDialog,
-    CreateLogTopic
+    CreateLogTopic,
+    LogDataDialog,
+    TDialog
   }
 })
 @http
@@ -101,6 +111,10 @@ export default class LogDataList extends Vue {
   private items = ['所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示
   private fDialogShow = 0
+
+  private tDialogFlag = false
+  private tDialogShow = 0
+
   private queryTopicID = '' // 查询主题ID input框内容
   private loading = true
 
@@ -157,6 +171,10 @@ export default class LogDataList extends Vue {
     }
   ]
 
+  // 表格显示
+  private headersObj: Array<any> = []
+  private dessertsObj: Array<topicTable> = []
+
   // 创建日志主题
   private createLogTopic(item?: any) {
     this.fDialogFlag = true
@@ -183,7 +201,7 @@ export default class LogDataList extends Vue {
   private async addLogTopic(formObj: TopicAdd) {
     const canNotEdit = formObj.canNotEdit
     // 创建主题 有loading，修改主题没有loading
-    canNotEdit ? (this.createTopicLoading = false) : (this.createTopicLoading = true)
+    !canNotEdit ? (this.createTopicLoading = true) : (this.createTopicLoading = false)
 
     const params: any = {
       dataType: dataType['结构化']
@@ -191,35 +209,63 @@ export default class LogDataList extends Vue {
     params.topicName = formObj.topicName
     params.logIp = formObj.logIp
     params.logUserName = formObj.logUserName
-    // 修改不传密码
+    // 修改不传密码，传id
     if (!canNotEdit) {
       params.logPassWord = formObj.logPassWord
+    } else {
+      params.id = formObj.id
     }
     params.savePath = formObj.savePath
     params.topicInterFaceType = 9
 
     console.log(params)
 
-    const { success } = await this.h_request['httpPOST'](
-      !canNotEdit ? 'POST_TOPICS_ADDLOGGERTOPIC' : 'POST_TOPICS_UPDATELOGGERTOPIC',
-      params
-    )
-    // 关闭loading
-    this.createTopicLoading = false
+    // const { success } = await this.h_request['httpPOST'](
+    //   !canNotEdit ? 'POST_TOPICS_ADDLOGGERTOPIC' : 'POST_TOPICS_UPDATELOGGERTOPIC',
+    //   params
+    // )
+    // // 关闭loading
+    // this.createTopicLoading = false
 
-    if (success) {
-      this.h_utils['alertUtil'].open(!canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
-      this.searchMethod(
-        false,
-        {
-          pageSize: this.pageSize,
-          pageNum: 1
-        },
-        !!this.tab
-      )
-      this.pageNum = 1
-      return Promise.resolve(success)
-    }
+    // if (success) {
+    //   this.h_utils['alertUtil'].open(!canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
+    //   this.searchMethod(
+    //     false,
+    //     {
+    //       pageSize: this.pageSize,
+    //       pageNum: 1
+    //     },
+    //     !!this.tab
+    //   )
+    //   this.pageNum = 1
+    //   return Promise.resolve(success)
+    // }
+  }
+
+  // 查询数据详情
+  private showLogDataDetail(item: any) {
+    this.formProvide.title = '日志数据详情'
+    this.tDialogFlag = true
+    this.tDialogShow = 1
+    this.headersObj = [
+      {
+        text: '日志采集路径',
+        align: 'center',
+        value: 'savePath'
+      },
+      {
+        text: '服务器地址',
+        align: 'center',
+        value: 'logIp'
+      },
+      {
+        text: '服务器用户名',
+        align: 'center',
+        value: 'logUserName'
+      }
+    ]
+
+    this.dessertsObj = [{ ...item }]
   }
 
   // 查询通用调用方法
