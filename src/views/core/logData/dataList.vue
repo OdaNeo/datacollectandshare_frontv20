@@ -274,9 +274,12 @@ export default class LogDataList extends Vue {
 
     params.dataType = dataType['结构化']
     params.faceTypes = `${topicInterFaceType['日志主题']}`
+
     if (tab) {
       const { data }: returnDataType = bool
-        ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
+        ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', {
+            topicId: this.queryTopicID
+          })
         : await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICS', params)
       this.desserts = data.list.map((item: any) => {
         return { ...item, flag: false }
@@ -284,7 +287,9 @@ export default class LogDataList extends Vue {
       this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
     } else {
       const { data }: returnDataType = bool
-        ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTTOPIC', params)
+        ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTLOGGERTOPICBYTOPICID', {
+            topicId: this.queryTopicID
+          })
         : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL', params)
       this.desserts = data.list.map((item: any) => {
         return { ...item, flag: false }

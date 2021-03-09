@@ -40,8 +40,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 13. ~~实时主题 统计~~
 14. ~~搜索体验优化~~
 15. ~~侧边栏根据路由表排序~~
-16. rest 文件上传方式创建主题 文件示例
+16. rest protobuf 文件上传方式创建主题 文件示例
 17. ~~首页登陆以及搜索框支持 Enter~~
+18. 删除统一提示框重构
 
 ## 常见问题
 
