@@ -324,11 +324,11 @@ export default class LogDataList extends Vue {
     if (this.HConfirmItem.id === undefined) {
       return
     }
-    const { success } = await this.h_request['httpGET']('GET_TOPICS_DELETE', {
-      topicID: this.HConfirmItem.id,
-      topicName: this.HConfirmItem.topicName,
-      topicInterFaceType: this.HConfirmItem.topicInterFaceType
+
+    const { success } = await this.h_request['httpGET']('GET_TOPICS_DELETELOOGGERTOPIC', {
+      topicId: this.HConfirmItem.id
     })
+
     if (success) {
       this.HConfirmShow = false
       this.h_utils['alertUtil'].open('主题删除成功', true, 'success')

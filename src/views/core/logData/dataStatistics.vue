@@ -1,5 +1,5 @@
 <template>
-  <div>logControllerDataStatistics</div>
+  <div>logDataStatistics</div>
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
