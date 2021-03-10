@@ -277,9 +277,7 @@ export default class LogDataList extends Vue {
 
     if (tab) {
       const { data }: returnDataType = bool
-        ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', {
-            topicId: this.queryTopicID
-          })
+        ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICS', params)
       this.desserts = data.list.map((item: any) => {
         return { ...item, flag: false }
