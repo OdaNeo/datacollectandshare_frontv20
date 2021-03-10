@@ -44,6 +44,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 17. ~~首页登陆以及搜索框支持 Enter~~
 18. 删除统一提示框重构
 19. 首页请求优化 httpAll
+20. 完善 h_enum 方法
 
 ## 常见问题
 

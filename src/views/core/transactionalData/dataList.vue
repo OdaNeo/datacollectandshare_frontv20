@@ -205,16 +205,27 @@ export default class transactionalDataList extends Vue {
     this.formProvide.btnName = ['立即提交']
     this.formProvide.title = '创建事务主题'
     this.formProvide.methodName = 'addTransactionalData'
-    this.formProvide.formObj = {}
+    this.formProvide.formObj = {
+      cron: '0 时',
+      column: [
+        {
+          field: '',
+          type: 'STRING',
+          iskey: 'false',
+          disabled: false
+        }
+      ]
+    }
     if (items) {
       // 修改
+      this.formProvide.formObj.canNotEdit = true
       this.formProvide.formObj.id = items.id
       this.formProvide.formObj.topicName = items.topicName
-      this.formProvide.formObj.cron = items.cron
-      this.formProvide.formObj.sqlMaxContent = items.sqlMaxContent
       this.formProvide.formObj.maxValue = items.maxValue
-      this.formProvide.formObj.jsonContent = items.jsonContent
-      this.formProvide.formObj.canNotEdit = true
+      const _str = items.cron.replaceAll(' ', '')
+      this.formProvide.formObj.cron = `${_str.slice(2, _str.length - 3)} 时`
+      // this.formProvide.formObj.sqlMaxContent = items.sqlMaxContent
+      // this.formProvide.formObj.jsonContent = items.jsonContent
     }
   }
 
@@ -231,11 +242,55 @@ export default class transactionalDataList extends Vue {
     this.formProvide.title = 'DataX脚本'
     this.rowJson = item.jsonContent
   }
-
+  // inputContent
   // 提交事务性数据
   private async addTransactionalData(item: any) {
     const canNotEdit = item.canNotEdit
-    const { topicName, cron, sqlMaxContent, maxValue, jsonContent, id } = item
+    const params: any = {}
+    const {
+      topicName,
+      id,
+      cron,
+      column,
+      increment,
+      maxValue,
+      reader_database,
+      reader_jdbcUrl,
+      reader_password,
+      reader_table,
+      reader_username,
+      writer_database,
+      writer_table,
+      writer_zookeeper_url
+    } = item
+
+    // reader
+    params.reader = {
+      database: reader_database,
+      info: {
+        jdbcurl: `jdbc:mysql://${reader_jdbcUrl}`,
+        username: reader_username,
+        password: reader_password,
+        table: reader_table,
+        increment: increment
+      }
+    }
+    // writer
+    params.writer = {
+      database: writer_database,
+      info: {
+        zookeeper_url: writer_zookeeper_url,
+        table: writer_table
+      }
+    }
+    // column
+    params.column = column.map((item: { field: string; type: string; iskey: string }) => {
+      return {
+        'field': item.field,
+        'type': item.type,
+        'iskey': JSON.parse(item.iskey)
+      }
+    })
 
     const { success } = await this.h_request['httpPOST'](
       !canNotEdit ? 'POST_TOPICS_ADD' : 'POST_TOPICS_UPDATETRANSACTIONALTOPIC',
@@ -243,10 +298,10 @@ export default class transactionalDataList extends Vue {
         topicName,
         dataType: dataType['结构化'],
         topicInterFaceType: 8,
-        cron,
-        sqlMaxContent: sqlMaxContent ? sqlMaxContent : '',
-        maxValue: maxValue ? maxValue : '',
-        jsonContent,
+        cron: `0 0 ${cron.replaceAll(' 时', '')} * * *`,
+        sqlMaxContent: '',
+        maxValue,
+        inputContent: JSON.stringify(params),
         id
       }
     )
