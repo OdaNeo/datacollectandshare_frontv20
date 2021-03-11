@@ -71,7 +71,7 @@ Vue.directive('topicNameNoRepeat', {
         } else {
           binding.value.set([])
         }
-      }, 150)
+      }, 200)
     }
   }
 })

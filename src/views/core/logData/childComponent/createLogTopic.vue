@@ -81,6 +81,21 @@
         :rules="[...h_validator.noEmpty('日志采集路径')]"
       ></v-text-field>
     </v-col>
+    <!-- // TODO: 存储方式： 多选 elasticsearch、HDFS 必填  saveType-->
+    <!-- 存储方式 -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>存储方式</label>
+      <v-select
+        v-model="formProvide.formObj['saveType']"
+        :items="saveTypeItems"
+        dense
+        outlined
+        multiple
+        height="34"
+        class="ml-4 mr-15"
+        :rules="[...h_validator.noEmpty('存储方式')]"
+      ></v-select>
+    </v-col>
   </v-row>
 </template>
 <script lang="ts">
@@ -96,5 +111,9 @@ export default class CreateLogTopic extends Vue {
   @Inject() private readonly formProvide!: H_Vue
 
   private noRepeat: string[] = []
+  private saveTypeItems: Array<{ text: string; value: string }> = [
+    { text: 'ElasticSearch', value: 'ElasticSearch' },
+    { text: 'HDFS', value: 'HDFS' }
+  ]
 }
 </script>

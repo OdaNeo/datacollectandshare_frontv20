@@ -1,5 +1,5 @@
 <template>
-  <v-dialog class="dialog" v-model="dialog" width="700" persistent>
+  <v-dialog class="dialog" v-model="dialog" :width="width" persistent>
     <!-- 遮罩层 禁止交互 -->
     <v-overlay :opacity="0.18" :value="loading">
       <v-progress-circular class="loading" indeterminate color="primary"></v-progress-circular>
@@ -44,6 +44,7 @@ export default class FDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   @Model('closedialog', { type: Boolean }) private checked!: boolean
   @Prop({ default: false }) private loading!: boolean
+  @Prop({ default: 700 }) private width!: number
 
   private defaultFormObj: any = {}
 

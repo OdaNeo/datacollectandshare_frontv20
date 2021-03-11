@@ -61,14 +61,15 @@ export default class Login extends Vue {
       localStorage.removeItem('userAndPass')
     }
 
+    // userinfo
     const result: returnDataType = await this.h_request.httpPOST<userAndPassType>('POST_LOGIN_LOGIN', {
       username: this.username,
       password: this.password
     })
-    // userinfo
     const username = this.username
     const bool: boolean = await rootStoreModule.login({ username, result })
-    // systemInfo
+
+    // systemInfo 需要token
     const { data } = await this.h_request.httpGET('GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER', {})
     sessionStorage.systemInfo = JSON.stringify(data)
 

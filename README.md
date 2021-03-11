@@ -42,9 +42,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 15. ~~侧边栏根据路由表排序~~
 16. rest protobuf 文件上传方式创建主题 文件示例
 17. ~~首页登陆以及搜索框支持 Enter~~
-18. 删除统一提示框重构
-19. 首页请求优化 httpAll
-20. 完善 h_enum 方法
+18. this.formProvide.title 修改
 
 ## 常见问题
 

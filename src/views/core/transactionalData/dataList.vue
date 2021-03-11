@@ -70,7 +70,7 @@
     </v-tabs-items>
     <!-- 表单展示 -->
     <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
-      <CreateTransactionalData v-if="fDialogShow === 1" />
+      <CreateTransactionalData />
     </f-dialog>
 
     <!-- 表格显示 -->
@@ -127,8 +127,6 @@ export default class transactionalDataList extends Vue {
   private fDialogFlag = false // 弹窗展示
   private tDialogFlag = false // 表格展示
   private queryTopicID = '' // 查询主题ID input框内容
-
-  private fDialogShow = 0 // 展示哪个表单
 
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
@@ -201,29 +199,48 @@ export default class transactionalDataList extends Vue {
   private createTransactionalData(items?: any) {
     // 创建
     this.fDialogFlag = true
-    this.fDialogShow = 1
-    this.formProvide.btnName = ['立即提交']
-    this.formProvide.title = '创建事务主题'
+    this.formProvide.btnName = items ? ['立即修改'] : ['立即提交']
+    this.formProvide.title = items ? '修改事务主题' : '创建事务主题：基本信息'
     this.formProvide.methodName = 'addTransactionalData'
     this.formProvide.formObj = {
       cron: '0 时',
       column: [
         {
           field: '',
-          type: 'STRING',
-          iskey: 'false',
-          disabled: false
+          type: 'string',
+          iskey: 'false'
         }
       ]
     }
     if (items) {
       // 修改
-      this.formProvide.formObj.canNotEdit = true
       this.formProvide.formObj.id = items.id
+      this.formProvide.formObj.canNotEdit = true
       this.formProvide.formObj.topicName = items.topicName
       this.formProvide.formObj.maxValue = items.maxValue
       const _str = items.cron.replaceAll(' ', '')
       this.formProvide.formObj.cron = `${_str.slice(2, _str.length - 3)} 时`
+
+      const _inputContent = JSON.parse(items.inputContent)
+      console.log(_inputContent)
+      this.formProvide.formObj.increment = _inputContent.reader.info.increment
+      this.formProvide.formObj.reader_database = _inputContent.reader.database
+      this.formProvide.formObj.reader_jdbcUrl = _inputContent.reader.info.jdbcurl.replaceAll('jdbc:mysql://', '')
+      this.formProvide.formObj.reader_password = _inputContent.reader.info.password
+      this.formProvide.formObj.reader_table = _inputContent.reader.info.table
+      this.formProvide.formObj.reader_username = _inputContent.reader.info.username
+
+      this.formProvide.formObj.writer_database = _inputContent.writer.database
+      this.formProvide.formObj.writer_table = _inputContent.writer.info.table
+      this.formProvide.formObj.writer_zookeeper_url = _inputContent.writer.info.zookeeper_url
+      this.formProvide.formObj.column = _inputContent.column.map(
+        (item: { field: string; type: string; iskey: boolean }) => {
+          return {
+            ...item,
+            iskey: `${item.iskey}`
+          }
+        }
+      )
       // this.formProvide.formObj.sqlMaxContent = items.sqlMaxContent
       // this.formProvide.formObj.jsonContent = items.jsonContent
     }
@@ -242,7 +259,7 @@ export default class transactionalDataList extends Vue {
     this.formProvide.title = 'DataX脚本'
     this.rowJson = item.jsonContent
   }
-  // inputContent
+
   // 提交事务性数据
   private async addTransactionalData(item: any) {
     const canNotEdit = item.canNotEdit
@@ -286,11 +303,12 @@ export default class transactionalDataList extends Vue {
     // column
     params.column = column.map((item: { field: string; type: string; iskey: string }) => {
       return {
-        'field': item.field,
-        'type': item.type,
-        'iskey': JSON.parse(item.iskey)
+        field: item.field,
+        type: item.type,
+        iskey: JSON.parse(item.iskey)
       }
     })
+    console.log(params)
 
     const { success } = await this.h_request['httpPOST'](
       !canNotEdit ? 'POST_TOPICS_ADD' : 'POST_TOPICS_UPDATETRANSACTIONALTOPIC',

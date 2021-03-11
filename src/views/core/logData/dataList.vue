@@ -180,9 +180,10 @@ export default class LogDataList extends Vue {
     this.fDialogFlag = true
     this.fDialogShow = 1
     this.formProvide.btnName = item ? ['立即修改'] : ['立即创建']
-    this.formProvide.title = '创建日志主题'
+    this.formProvide.title = item ? '修改日志主题' : '创建日志主题'
     this.formProvide.methodName = 'addLogTopic' // 立即提交
     this.createTopicLoading = false
+
     if (item) {
       this.formProvide.formObj = {
         canNotEdit: true,
@@ -190,7 +191,8 @@ export default class LogDataList extends Vue {
         topicName: item.topicName,
         logIp: item.logIp,
         logUserName: item.logUserName,
-        savePath: item.savePath
+        savePath: item.savePath,
+        saveType: item.saveType.split(',')
       }
     } else {
       this.formProvide.formObj = {}
@@ -216,6 +218,7 @@ export default class LogDataList extends Vue {
       params.id = formObj.id
     }
     params.savePath = formObj.savePath
+    params.saveType = formObj.saveType.join(',')
     params.topicInterFaceType = 9
 
     console.log(params)
