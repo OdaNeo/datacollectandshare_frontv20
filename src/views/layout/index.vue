@@ -77,9 +77,18 @@ export default class Login extends Vue {
     //     'status': 2,
     //     'createTime': '1614094237618',
     //     'remarks': 'NullPointerExceptionsf'
+    //   },
+    //   {
+    //     'id': 3,
+    //     'topicId': 88888890,
+    //     'serverName': '事务',
+    //     'status': 3,
+    //     'createTime': '1614094237618',
+    //     'remarks': 'NullPointerExceptionsf'
     //   }
     // ]
     // const data: Array<CalendarData> = []
+
     const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
       date: new Date().getTime()
     })

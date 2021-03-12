@@ -14,7 +14,7 @@ import util from '@/decorator/utilsDecorator'
 @util
 export default class RealTime extends Vue {
   private timer = 0
-  private interval = 30
+  private interval = 10
   private times = 0
 
   private chartElement: any
@@ -143,36 +143,36 @@ export default class RealTime extends Vue {
   }
 
   private async updateRange() {
-    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
-      date: new Date().getTime()
-    })
+    // const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
+    //   date: new Date().getTime()
+    // })
 
-    // const data: any = [
-    //   {
-    //     'id': 1,
-    //     'topicId': 88888888,
-    //     'serverName': '日志',
-    //     'status': 3,
-    //     'createTime': '1614783227618',
-    //     'remarks': 'NullPointerException'
-    //   },
-    //   {
-    //     'id': 1,
-    //     'topicId': 88888886,
-    //     'serverName': '事务',
-    //     'status': 3,
-    //     'createTime': '1614783227618',
-    //     'remarks': 'NullPointerException'
-    //   },
-    //   {
-    //     'id': 1,
-    //     'topicId': 88888889,
-    //     'serverName': '视频',
-    //     'status': 1,
-    //     'createTime': '1614783227618',
-    //     'remarks': 'NullPointerException'
-    //   }
-    // ]
+    const data: any = [
+      {
+        'id': 1,
+        'topicId': 88888888,
+        'serverName': '日志',
+        'status': 3,
+        'createTime': '1614783227618',
+        'remarks': 'NullPointerException'
+      },
+      {
+        'id': 1,
+        'topicId': 88888886,
+        'serverName': '事务',
+        'status': 3,
+        'createTime': '1614783227618',
+        'remarks': 'NullPointerException'
+      },
+      {
+        'id': 1,
+        'topicId': 88888889,
+        'serverName': '视频',
+        'status': 1,
+        'createTime': '1614783227618',
+        'remarks': 'NullPointerException'
+      }
+    ]
 
     if (data.length > 0) {
       data.forEach((item: any) => {

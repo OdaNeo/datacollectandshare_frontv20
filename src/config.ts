@@ -1,4 +1,4 @@
-// VUE_APP_BASE_API = 'http://192.168.60.92:9002'
+// VUE_APP_BASE_API = 'http://192.168.59.242:8080'
 // 3.0
 // VUE_APP_BASE_API = 'http://172.51.216.106:49090'
 // ali
