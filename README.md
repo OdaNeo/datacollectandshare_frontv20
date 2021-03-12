@@ -43,6 +43,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 16. rest protobuf 文件上传方式创建主题 文件示例
 17. ~~首页登陆以及搜索框支持 Enter~~
 18. this.formProvide.title 修改
+19. h-table 动态设置 header（需要新字段）
+20. 作业实时监控 页面 重构，颜色枚举
+21. 监控日志页面 重构（同一时间 10min 段内的合并到一起）
 
 ## 常见问题
 

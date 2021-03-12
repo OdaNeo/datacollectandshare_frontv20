@@ -26,7 +26,7 @@ export default class RealTime extends Vue {
     { name: '异常', color: 'red' },
     { name: '离线', color: 'grey' },
     { name: '警告', color: 'orange' },
-    { name: '作业正常', color: '#1976d2' }
+    { name: '作业正常', color: '#2ECC71' }
   ]
 
   private renderItem(params: any, api: any) {
@@ -142,38 +142,37 @@ export default class RealTime extends Vue {
     }
   }
 
-  //  TODO: link to real service
   private async updateRange() {
-    // const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
-    //   date: new Date().getTime()
-    // })
+    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
+      date: new Date().getTime()
+    })
 
-    const data: any = [
-      {
-        'id': 1,
-        'topicId': 88888888,
-        'serverName': '日志',
-        'status': 3,
-        'createTime': '1614783227618',
-        'remarks': 'NullPointerException'
-      },
-      {
-        'id': 1,
-        'topicId': 88888886,
-        'serverName': '事务',
-        'status': 3,
-        'createTime': '1614783227618',
-        'remarks': 'NullPointerException'
-      },
-      {
-        'id': 1,
-        'topicId': 88888889,
-        'serverName': '视频',
-        'status': 1,
-        'createTime': '1614783227618',
-        'remarks': 'NullPointerException'
-      }
-    ]
+    // const data: any = [
+    //   {
+    //     'id': 1,
+    //     'topicId': 88888888,
+    //     'serverName': '日志',
+    //     'status': 3,
+    //     'createTime': '1614783227618',
+    //     'remarks': 'NullPointerException'
+    //   },
+    //   {
+    //     'id': 1,
+    //     'topicId': 88888886,
+    //     'serverName': '事务',
+    //     'status': 3,
+    //     'createTime': '1614783227618',
+    //     'remarks': 'NullPointerException'
+    //   },
+    //   {
+    //     'id': 1,
+    //     'topicId': 88888889,
+    //     'serverName': '视频',
+    //     'status': 1,
+    //     'createTime': '1614783227618',
+    //     'remarks': 'NullPointerException'
+    //   }
+    // ]
 
     if (data.length > 0) {
       data.forEach((item: any) => {

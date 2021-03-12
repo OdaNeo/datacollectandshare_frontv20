@@ -59,7 +59,6 @@ export default class Login extends Vue {
   private events: Array<CalendarData> = []
   private showAlert = false
 
-  //  TODO： link to real service
   private async updateRange() {
     // const data = [
     //   {
@@ -80,10 +79,10 @@ export default class Login extends Vue {
     //     'remarks': 'NullPointerExceptionsf'
     //   }
     // ]
-    const data: Array<CalendarData> = []
-    // const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
-    //   date: new Date().getTime()
-    // })
+    // const data: Array<CalendarData> = []
+    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
+      date: new Date().getTime()
+    })
 
     if (data.length > 0) {
       this.showAlert = true

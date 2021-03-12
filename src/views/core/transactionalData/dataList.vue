@@ -97,6 +97,7 @@ import { FormObj } from '@/type/dialog-form.type'
 import CreateTransactionalData from './childComponent/createTransactionalData.vue'
 import { TopicAdd } from '@/type/topic-add.type'
 import ContentDetails from './childComponent/contentDetails.vue'
+import { tableHeaderType } from '@/type/table.type'
 
 @Component({
   components: {
@@ -143,8 +144,7 @@ export default class transactionalDataList extends Vue {
 
   private desserts: Array<topicTable> = [] // 数据列表
   private loading = true
-  private headers = [
-    // 表头内容 所有主题
+  private headers: Array<tableHeaderType> = [
     {
       text: '主题ID',
       align: 'center',
@@ -160,14 +160,6 @@ export default class transactionalDataList extends Vue {
       align: 'center',
       value: 'userName'
     },
-    // {
-    //   text: '接口类型',
-    //   align: 'center',
-    //   value: 'topicInterFaceType',
-    //   format: (val: number) => {
-    //     return topicInterFaceType[val]
-    //   }
-    // },
     {
       text: '运行周期',
       align: 'center',
@@ -200,7 +192,7 @@ export default class transactionalDataList extends Vue {
     // 创建
     this.fDialogFlag = true
     this.formProvide.btnName = items ? ['立即修改'] : ['立即提交']
-    this.formProvide.title = items ? '修改事务主题' : '创建事务主题：基本信息'
+    this.formProvide.title = items ? '修改事务主题' : '创建事务主题'
     this.formProvide.methodName = 'addTransactionalData'
     this.formProvide.formObj = {
       cron: '0 时',

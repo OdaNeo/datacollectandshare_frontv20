@@ -1,5 +1,3 @@
-import { userFormVarDo } from '@/type/user.type'
-
 export type FormStructure = {
   text: string
   value: string

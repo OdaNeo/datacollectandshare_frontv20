@@ -1,263 +1,278 @@
 <template>
-  <v-window id="CreateTransactionalData" show-arrows @change="changeTitle" v-model="step">
-    <template v-slot:prev="{ on, attrs }">
-      <v-btn depressed fab dark small color="transparent" v-bind="attrs" v-on="on"
-        ><v-icon>mdi-chevron-left</v-icon>
-      </v-btn>
-    </template>
-    <template v-slot:next="{ on, attrs }">
-      <v-btn depressed fab dark small color="transparent" v-bind="attrs" v-on="on"
-        ><v-icon>mdi-chevron-right</v-icon>
-      </v-btn>
-    </template>
-    <v-window-item :value="1" class="ml-6" eager>
-      <!-- 主题名称 -->
-      <v-row no-gutters>
-        <!-- 1 -->
-        <v-col cols="12" class="d-flex mt-6">
-          <label class="label mr-2"><span class="require-span">*</span>主题名称</label>
-          <v-text-field
-            v-model="formProvide.formObj['topicName']"
-            :disabled="formProvide.formObj.canNotEdit"
-            outlined
-            dense
-            height="34"
-            :rules="[...h_validator.noEmpty('主题名称'), ...noRepeat]"
-            class="ml-4 mr-15"
-            v-topicNameNoRepeat="{
-              set: n => {
-                noRepeat = [...n]
-              }
-            }"
-          ></v-text-field>
-        </v-col>
-        <!-- cron -->
-        <v-col cols="12" class="d-flex">
-          <label class="label mr-2"><span class="require-span">*</span>每日运行周期</label>
-          <v-select
-            v-model="formProvide.formObj['cron']"
-            :items="cronItems"
-            outlined
-            dense
-            height="34"
-            :rules="[...h_validator.noEmpty('运行周期')]"
-            class="ml-4 mr-15"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" class="d-flex">
-          <label class="label mr-2"><span class="require-span">*</span>源数据库类型</label>
-          <v-select
-            :items="readerDatabaseItems"
-            outlined
-            dense
-            height="34"
-            label="源数据库类型"
-            :rules="[...h_validator.noEmpty('源数据库类型')]"
-            v-model="formProvide.formObj['reader_database']"
-            class="ml-4 mr-15"
-          ></v-select>
-        </v-col>
-        <v-col cols="12" class="d-flex">
-          <label class="label mr-2" style="font-size: 14px"><span class="require-span">*</span>目标数据库类型</label>
-          <v-select
-            :items="writerDatabaseItems"
-            outlined
-            dense
-            height="34"
-            label="数据库类型"
-            :rules="[...h_validator.noEmpty('数据库类型')]"
-            v-model="formProvide.formObj['writer_database']"
-            class="ml-4 mr-15"
-          ></v-select>
-        </v-col>
-      </v-row>
-    </v-window-item>
+  <div id="CreateTransactionalData">
+    <!-- 后退 -->
+    <div class="step-container">
+      <v-icon :disabled="step <= 1" class="step-icon" color="primary" @click="prevStep">mdi-chevron-left</v-icon>
+      <!-- stepTitle -->
+      <span class="step-title">{{ stepTitle }}</span>
+      <!-- 前进 -->
+      <v-icon :disabled="step >= 3" class="step-icon" color="primary" @click="nextStep">mdi-chevron-right</v-icon>
+    </div>
 
-    <v-window-item :value="2" class="ml-6" eager>
-      <v-row no-gutters>
-        <!-- 2 -->
-        <!-- 自增属性查询脚本 -->
-        <v-col cols="12" class="d-flex mt-6">
-          <label class="label mr-2">自增属性</label>
-          <v-text-field
-            outlined
-            dense
-            height="34"
-            label="自增属性字段名"
-            v-model="formProvide.formObj['increment']"
-            class="ml-4"
-          ></v-text-field>
-          <v-text-field
-            outlined
-            dense
-            height="34"
-            label="自增属性最大值"
-            v-model="formProvide.formObj['maxValue']"
-            class="ml-2 mr-15"
-          ></v-text-field>
-        </v-col>
-        <!-- 读要求 -->
-        <!-- mysql-->
-        <v-col cols="12" class="d-flex">
-          <label class="label mr-2"><span class="require-span">*</span>数据库url</label>
-          <v-text-field
-            outlined
-            dense
-            height="34"
-            label="数据库url"
-            :rules="[...h_validator.noEmpty('数据库url')]"
-            v-model="formProvide.formObj['reader_jdbcUrl']"
-            class="ml-4 mr-15"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" class="d-flex">
-          <label class="label mr-2"><span class="require-span">*</span>数据库信息</label>
-          <v-text-field
-            outlined
-            dense
-            height="34"
-            label="用户名"
-            :rules="[...h_validator.noEmpty('用户名')]"
-            v-model="formProvide.formObj['reader_username']"
-            class="ml-4"
-          ></v-text-field>
-          <v-text-field
-            outlined
-            dense
-            height="34"
-            label="密码"
-            :rules="[...h_validator.noEmpty('密码')]"
-            v-model="formProvide.formObj['reader_password']"
-            class="ml-2"
-          ></v-text-field>
-          <v-text-field
-            outlined
-            dense
-            height="34"
-            label="表名"
-            :rules="[...h_validator.noEmpty('表名')]"
-            v-model="formProvide.formObj['reader_table']"
-            class="ml-2 mr-15"
-          ></v-text-field>
-        </v-col>
-        <v-expansion-panels accordion flat :value="openPanels">
-          <v-expansion-panel>
-            <!-- <v-expansion-panel-header hide-actions class="panel-header py-0"
+    <v-window v-model="step">
+      <v-window-item :value="1" class="ml-6" eager>
+        <!-- 主题名称 -->
+        <v-row no-gutters>
+          <!-- 1 -->
+          <v-col cols="12" class="d-flex mt-6">
+            <label class="label mr-2"><span class="require-span">*</span>主题名称</label>
+            <v-text-field
+              v-model="formProvide.formObj['topicName']"
+              :disabled="formProvide.formObj.canNotEdit"
+              outlined
+              dense
+              height="34"
+              :rules="[...h_validator.noEmpty('主题名称'), ...noRepeat]"
+              class="ml-4 mr-15"
+              v-topicNameNoRepeat="{
+                set: n => {
+                  noRepeat = [...n]
+                }
+              }"
+            ></v-text-field>
+          </v-col>
+          <!-- cron -->
+          <v-col cols="12" class="d-flex">
+            <label class="label mr-2"><span class="require-span">*</span>每日运行周期</label>
+            <v-select
+              v-model="formProvide.formObj['cron']"
+              :items="cronItems"
+              outlined
+              dense
+              height="34"
+              :rules="[...h_validator.noEmpty('运行周期')]"
+              class="ml-4 mr-15"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" class="d-flex">
+            <label class="label mr-2"><span class="require-span">*</span>源数据库类型</label>
+            <v-select
+              :items="readerDatabaseItems"
+              outlined
+              dense
+              height="34"
+              label="源数据库类型"
+              :rules="[...h_validator.noEmpty('源数据库类型')]"
+              v-model="formProvide.formObj['reader_database']"
+              class="ml-4 mr-15"
+            ></v-select>
+          </v-col>
+          <v-col cols="12" class="d-flex">
+            <label class="label mr-2" style="font-size: 14px"><span class="require-span">*</span>目标数据库类型</label>
+            <v-select
+              :items="writerDatabaseItems"
+              outlined
+              dense
+              height="34"
+              label="数据库类型"
+              :rules="[...h_validator.noEmpty('数据库类型')]"
+              v-model="formProvide.formObj['writer_database']"
+              class="ml-4 mr-15"
+            ></v-select>
+          </v-col>
+        </v-row>
+      </v-window-item>
+
+      <v-window-item :value="2" class="ml-6" eager>
+        <v-row no-gutters>
+          <!-- 2 -->
+          <!-- 自增属性查询脚本 -->
+          <v-col cols="12" class="d-flex mt-6">
+            <label class="label mr-2">自增属性</label>
+            <v-text-field
+              outlined
+              dense
+              height="34"
+              label="自增属性字段名"
+              v-model="formProvide.formObj['increment']"
+              class="ml-4"
+            ></v-text-field>
+            <v-text-field
+              outlined
+              dense
+              height="34"
+              label="自增属性最大值"
+              v-model="formProvide.formObj['maxValue']"
+              class="ml-2 mr-15"
+            ></v-text-field>
+          </v-col>
+          <!-- 读要求 -->
+          <!-- mysql-->
+          <v-col cols="12" class="d-flex">
+            <label class="label mr-2"><span class="require-span">*</span>数据库url</label>
+            <v-text-field
+              outlined
+              dense
+              height="34"
+              label="数据库url"
+              :rules="[...h_validator.noEmpty('数据库url')]"
+              v-model="formProvide.formObj['reader_jdbcUrl']"
+              class="ml-4 mr-15"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" class="d-flex">
+            <label class="label mr-2"><span class="require-span">*</span>数据库信息</label>
+            <v-text-field
+              outlined
+              dense
+              height="34"
+              label="用户名"
+              :rules="[...h_validator.noEmpty('用户名')]"
+              v-model="formProvide.formObj['reader_username']"
+              class="ml-4"
+            ></v-text-field>
+            <v-text-field
+              outlined
+              dense
+              height="34"
+              label="密码"
+              :rules="[...h_validator.noEmpty('密码')]"
+              v-model="formProvide.formObj['reader_password']"
+              class="ml-2"
+            ></v-text-field>
+            <v-text-field
+              outlined
+              dense
+              height="34"
+              label="表名"
+              :rules="[...h_validator.noEmpty('表名')]"
+              v-model="formProvide.formObj['reader_table']"
+              class="ml-2 mr-15"
+            ></v-text-field>
+          </v-col>
+          <!-- action panel -->
+          <v-col cols="12" class="d-flex mb-5">
+            <label class="panels-label" @click="openPanels === 0 ? (openPanels = -1) : (openPanels = 0)">
+              <span class="require-span">*</span>
+              <span>表字段</span>
+              <v-icon
+                color="primary"
+                class="panels-icon"
+                style="transition: all 0.5s"
+                :class="openPanels === 0 ? `panels-icon-action` : ''"
+              >
+                mdi-chevron-up
+              </v-icon>
+            </label>
+          </v-col>
+          <v-expansion-panels accordion flat :value="openPanels">
+            <v-expansion-panel>
+              <!-- <v-expansion-panel-header hide-actions class="panel-header py-0"
               ><label class="panels-label mr-2"><span class="require-span">*</span>表字段</label>
               <v-spacer></v-spacer>
             </v-expansion-panel-header> -->
-            <v-expansion-panel-content eager>
-              <v-row no-gutters>
-                <v-col cols="12" class="d-flex">
-                  <div class="ml-4">
-                    <v-row
-                      class="d-flex justify-space-between"
-                      no-gutters
-                      v-for="(item, index) in formProvide.formObj['column']"
-                      :key="item.id"
-                    >
-                      <v-col class="mr-2">
-                        <v-text-field
-                          v-model="item.field"
-                          dense
-                          outlined
-                          label="字段名"
-                          :rules="[...h_validator.noEmpty('字段名'), ...noRepeatKey]"
-                          height="34"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col class="mr-2">
-                        <v-select
-                          v-model="item.type"
-                          :items="typeItems"
-                          dense
-                          outlined
-                          label="类型"
-                          :rules="[...h_validator.noEmpty('类型')]"
-                          height="34"
-                        ></v-select>
-                      </v-col>
-                      <v-col>
-                        <v-select
-                          v-model="item.iskey"
-                          dense
-                          outlined
-                          label="是否为key"
-                          :rules="[...h_validator.noEmpty('是否为key')]"
-                          height="34"
-                          :items="iskeyItems"
-                        ></v-select>
-                      </v-col>
-                      <v-col class="d-flex justify-space-around flex-grow-0" style="min-width: 60px">
-                        <v-btn
-                          v-if="formProvide.formObj['column'].length === index + 1"
-                          fab
-                          dark
-                          depressed
-                          max-width="24"
-                          max-height="24"
-                          color="primary"
-                          style="margin-top: 5px"
-                          @click.stop="add"
-                        >
-                          <v-icon dark>mdi-plus</v-icon>
-                        </v-btn>
-                        <v-btn
-                          v-if="formProvide.formObj['column'].length > 1"
-                          fab
-                          dark
-                          depressed
-                          max-width="24"
-                          max-height="24"
-                          color="primary"
-                          style="margin-top: 5px"
-                          @click.stop="minus(index)"
-                        >
-                          <v-icon dark>mdi-minus</v-icon>
-                        </v-btn>
-                      </v-col>
-                    </v-row>
-                  </div>
-                </v-col>
-              </v-row>
-            </v-expansion-panel-content>
-          </v-expansion-panel>
-        </v-expansion-panels>
-        <!-- 表字段 -->
-      </v-row>
-    </v-window-item>
+              <v-expansion-panel-content eager>
+                <v-row no-gutters>
+                  <v-col cols="12" class="d-flex">
+                    <div class="ml-4">
+                      <v-row
+                        class="d-flex justify-space-between"
+                        no-gutters
+                        v-for="(item, index) in formProvide.formObj['column']"
+                        :key="item.id"
+                      >
+                        <v-col class="d-flex justify-space-around flex-grow-0 ml-5 mr-4" style="min-width: 80px">
+                          <v-btn
+                            v-if="formProvide.formObj['column'].length === index + 1"
+                            fab
+                            dark
+                            depressed
+                            max-width="24"
+                            max-height="24"
+                            color="primary"
+                            style="margin-top: 5px"
+                            @click.stop="add"
+                          >
+                            <v-icon dark>mdi-plus</v-icon>
+                          </v-btn>
+                          <v-btn
+                            v-if="formProvide.formObj['column'].length > 1"
+                            fab
+                            dark
+                            depressed
+                            max-width="24"
+                            max-height="24"
+                            color="primary"
+                            style="margin-top: 5px"
+                            @click.stop="minus(index)"
+                          >
+                            <v-icon dark>mdi-minus</v-icon>
+                          </v-btn>
+                        </v-col>
+                        <v-col class="mr-2">
+                          <v-text-field
+                            v-model="item.field"
+                            dense
+                            outlined
+                            label="字段名"
+                            :rules="[...h_validator.noEmpty('字段名'), ...noRepeatKey]"
+                            height="34"
+                          ></v-text-field>
+                        </v-col>
+                        <v-col class="mr-2">
+                          <v-select
+                            v-model="item.type"
+                            :items="typeItems"
+                            dense
+                            outlined
+                            label="类型"
+                            :rules="[...h_validator.noEmpty('类型')]"
+                            height="34"
+                          ></v-select>
+                        </v-col>
+                        <v-col class="mr-15">
+                          <v-select
+                            v-model="item.iskey"
+                            dense
+                            outlined
+                            label="是否为key"
+                            :rules="[...h_validator.noEmpty('是否为key')]"
+                            height="34"
+                            :items="iskeyItems"
+                          ></v-select>
+                        </v-col>
+                      </v-row>
+                    </div>
+                  </v-col>
+                </v-row>
+              </v-expansion-panel-content>
+            </v-expansion-panel>
+          </v-expansion-panels>
+        </v-row>
+      </v-window-item>
 
-    <v-window-item :value="3" class="ml-6" eager>
-      <v-row no-gutters>
-        <!-- 3 -->
-        <!-- 写要求  -->
-        <v-col cols="12" class="d-flex mt-6">
-          <label class="label mr-2" style="font-size: 14px"><span class="require-span">*</span>zookeeper地址</label>
-          <v-text-field
-            outlined
-            dense
-            height="34"
-            label="zookeeper地址"
-            :rules="[...h_validator.noEmpty('zookeeper地址')]"
-            v-model="formProvide.formObj['writer_zookeeper_url']"
-            class="ml-4 mr-15"
-          ></v-text-field>
-        </v-col>
-        <v-col cols="12" class="d-flex">
-          <label class="label mr-2"><span class="require-span">*</span>表名</label>
-          <v-text-field
-            outlined
-            dense
-            height="34"
-            label="表名"
-            :rules="[...h_validator.noEmpty('表名')]"
-            v-model="formProvide.formObj['writer_table']"
-            class="ml-4 mr-15"
-          ></v-text-field>
-        </v-col>
-      </v-row>
-    </v-window-item>
-  </v-window>
+      <v-window-item :value="3" class="ml-6" eager>
+        <v-row no-gutters>
+          <!-- 3 -->
+          <!-- 写要求  -->
+          <v-col cols="12" class="d-flex mt-6">
+            <label class="label mr-2" style="font-size: 14px"><span class="require-span">*</span>zookeeper地址</label>
+            <v-text-field
+              outlined
+              dense
+              height="34"
+              label="zookeeper地址"
+              :rules="[...h_validator.noEmpty('zookeeper地址')]"
+              v-model="formProvide.formObj['writer_zookeeper_url']"
+              class="ml-4 mr-15"
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12" class="d-flex">
+            <label class="label mr-2"><span class="require-span">*</span>表名</label>
+            <v-text-field
+              outlined
+              dense
+              height="34"
+              label="表名"
+              :rules="[...h_validator.noEmpty('表名')]"
+              v-model="formProvide.formObj['writer_table']"
+              class="ml-4 mr-15"
+            ></v-text-field>
+          </v-col>
+        </v-row>
+      </v-window-item>
+    </v-window>
+  </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
@@ -278,11 +293,10 @@ export default class CreateTransactionalData extends Vue {
   private writerDatabaseItems = ['hbase']
 
   private step = 1
+  private stepTitle = ''
   // 控制打开面板
-  private openPanels = 0
+  private openPanels = -1
 
-  // private showCron = false
-  // private showSql = false
   private get cronItems() {
     const _arr = []
     for (let i = 0; i < 24; i++) {
@@ -309,22 +323,24 @@ export default class CreateTransactionalData extends Vue {
     // }
   }
 
-  private changeTitle(n: number) {
-    switch (n) {
-      case 1:
-        this.formProvide.title = '创建事务主题：基本信息'
-        return
-      case 2:
-        this.formProvide.title = '创建事务主题：源数据库信息'
-        return
-      case 3:
-        this.formProvide.title = '创建事务主题：目标数据库信息'
-        return
-      default:
-        this.formProvide.title = '创建事务主题'
-        return
+  private prevStep() {
+    if (this.step < 1) {
+      this.step = 1
+      return
+    } else {
+      this.step--
     }
   }
+
+  private nextStep() {
+    if (this.step > 3) {
+      this.step = 3
+      return
+    } else {
+      this.step++
+    }
+  }
+
   // validation topicList no-repeat-key
   @Watch('formProvide.formObj.column', { deep: true })
   private handleKeyNoRepeat(val: Array<any>) {
@@ -345,37 +361,64 @@ export default class CreateTransactionalData extends Vue {
     }
   }
 
-  // private cronDemo = '1 * * * * * ?'
-  //   private sqlDemo = `{
-  //     "type":"mysql",
-  //     "column":"id",
-  //     "sql":"select max(id) as id from video_stream_info"
-  // }`
+  @Watch('step', { immediate: true })
+  private changeTitle(n: number) {
+    switch (n) {
+      case 1:
+        this.stepTitle = '1/3 基本信息'
+        return
+      case 2:
+        this.stepTitle = '2/3 源数据库信息'
+        return
+      case 3:
+        this.stepTitle = '3/3 目标数据库信息'
+        return
+      default:
+        this.stepTitle = '基本信息'
+        return
+    }
+  }
 }
 </script>
 <style scoped>
-#CreateTransactionalData >>> .v-window__next {
-  right: -10px !important;
-}
-#CreateTransactionalData >>> .v-window__prev {
-  left: -10px !important;
-}
 #CreateTransactionalData >>> .v-expansion-panel--active > .v-expansion-panel-header {
   min-height: 30px;
 }
 #CreateTransactionalData >>> .v-expansion-panel-content__wrap {
-  padding-bottom: 0px !important;
+  padding: 0px !important;
 }
-.label-icon {
-  height: 34px;
-  font-size: 32px;
-  padding-right: 15px;
+.panels-icon {
+  height: 32px;
+  width: 60px;
+}
+.panels-icon-action {
+  transform: rotate(180deg);
 }
 .panels-label {
-  width: 110px;
+  min-width: 170px;
+  display: flex;
+  justify-content: flex-end;
   color: rgba(0, 0, 0, 0.87);
   font-size: 15px;
   line-height: 34px;
-  padding-left: 30px;
+  cursor: pointer;
+}
+.step-container {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.step-icon {
+  width: 30px;
+  height: 30px;
+  cursor: pointer;
+}
+.step-title {
+  display: inline-block;
+  width: 250px;
+  text-align: center;
+  font-size: 16px;
 }
 </style>

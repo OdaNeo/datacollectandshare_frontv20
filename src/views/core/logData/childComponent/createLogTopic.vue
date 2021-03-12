@@ -81,7 +81,6 @@
         :rules="[...h_validator.noEmpty('日志采集路径')]"
       ></v-text-field>
     </v-col>
-    <!-- // TODO: 存储方式： 多选 elasticsearch、HDFS 必填  saveType-->
     <!-- 存储方式 -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>存储方式</label>
@@ -96,6 +95,20 @@
         :rules="[...h_validator.noEmpty('存储方式')]"
       ></v-select>
     </v-col>
+    <!--TODO： 采集校验关键字 1,2,3 提示：使用逗号隔开-->
+    <!-- <v-col cols="12" class="d-flex">
+      <label class="label mr-2" style="font-size: 14px"><span class="require-span">*</span>采集校验关键字</label>
+      <v-text-field
+        v-model="formProvide.formObj['savePath']"
+        outlined
+        dense
+        clearable
+        placeholder="关键字之间使用英文逗号（,）隔开"
+        height="34"
+        class="ml-4 mr-15"
+        :rules="[...h_validator.noEmpty('采集校验关键字')]"
+      ></v-text-field>
+    </v-col> -->
   </v-row>
 </template>
 <script lang="ts">
