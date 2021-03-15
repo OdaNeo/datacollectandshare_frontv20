@@ -64,6 +64,9 @@
             >
               删除
             </v-btn>
+            <v-btn v-if="!tab" text color="primary" :disabled="topicInit">开始</v-btn>
+            <v-btn v-if="!tab" text color="primary" :disabled="!topicInit">停止</v-btn>
+            <v-btn v-if="!tab" text color="primary">重跑</v-btn>
           </template>
         </h-table>
       </v-tab-item>
@@ -128,6 +131,7 @@ export default class transactionalDataList extends Vue {
   private fDialogFlag = false // 弹窗展示
   private tDialogFlag = false // 表格展示
   private queryTopicID = '' // 查询主题ID input框内容
+  private topicInit = true
 
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页

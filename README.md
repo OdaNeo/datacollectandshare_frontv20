@@ -30,26 +30,24 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 4. ~~所有删除按钮添加弹框提示，打包 bundle 文件大小优化 1 天~~
 5. ~~eslint（代码风格、缩进）~~、自动部署、~~版本控制、线上查看版本添加 ? 天~~
 6. ~~解耦 formobj~~
-7. ~~form 结构
-   dialog(v-modal, prop(title,btn), form-slots(for headers-form), auto renew provider/reject, dynamic create form/provider)~~
-8. ~~统一非空校验~~
-9. ~~更人性化的搜索体验~~
-10. ~~table 添加 loading 图~~
-11. ~~topicTable 类型优化~~
-12. ~~统一的空数据表示（null || data.length===0 || list.length===0）~~
-13. ~~实时主题 统计~~
-14. ~~搜索体验优化~~
-15. ~~侧边栏根据路由表排序~~
-16. rest protobuf 文件上传方式创建主题 文件示例
-17. ~~首页登陆以及搜索框支持 Enter~~
-18. this.formProvide.title 修改
-19. h-table 动态设置 header（需要新字段）
-20. 作业实时监控 页面 重构，颜色枚举
-21. 监控日志页面 重构（同一时间 60min 段内的合并到一起）
-22. 日志主题创建 loading 图优化
-23. 实时数据监控：仅显示一天内的数据，纵轴显示作业 ID，横轴按照作业起止时间实时显示数据流速度，（视频 ：视频流速度；事务、日志：数据读写速度） websockit
-24. 事务数据显示作业起停
-25. 监控日志（历史）: 正常主题也纳入统计范围
+7. ~~form 结构 dialog(v-modal, prop(title,btn), form-slots(for headers-form), auto renew provider/reject, dynamic create form/provider)~~
+1. ~~统一非空校验~~
+2. ~~更人性化的搜索体验~~
+3.  ~~table 添加 loading 图~~
+4.  ~~topicTable 类型优化~~
+5.  ~~统一的空数据表示（null || data.length===0 || list.length===0）~~
+6.  ~~实时主题 统计~~
+7.  ~~搜索体验优化~~
+8.  ~~侧边栏根据路由表排序~~
+9.  rest protobuf 文件上传方式创建主题 文件示例
+10. ~~首页登陆以及搜索框支持 Enter~~
+11. ~~this.formProvide.title 优化（区分修改和创建）~~
+12. h-table 动态设置 header（需要新字段）
+13. multi-checkbox 组件构建
+14. 监控日志页面 重构（同一时间 60min 段内的合并到一起）
+15. ~~日志主题创建 loading 图优化~~
+16. 实时数据监控：仅显示一天内的数据，纵轴显示作业 ID，横轴按照作业起止时间实时显示数据流速度，（视频 ：视频流速度；事务、日志：数据读写速度） 
+17. add e2e test
 
 ## 常见问题
 

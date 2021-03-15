@@ -1,7 +1,7 @@
 <template>
   <v-dialog class="dialog" v-model="dialog" :width="width" persistent>
     <!-- 遮罩层 禁止交互 -->
-    <v-overlay :opacity="0.18" :value="loading">
+    <v-overlay :opacity="0.1" :value="loading">
       <v-progress-circular class="loading" indeterminate color="primary"></v-progress-circular>
       <div class="loading-text">主题创建中，请稍候……</div>
     </v-overlay>
@@ -94,7 +94,7 @@ export default class FDialog extends Vue {
   mounted(): void {
     // deep-copy default value
     // for (let p in this.formProvide.formObj) {
-    // this.defaultFormObj[p] = this.formProvide.formObj[p]
+    //     this.defaultFormObj[p] = this.formProvide.formObj[p]
     // }
     this.defaultFormObj = JSON.parse(JSON.stringify(this.formProvide.formObj))
   }

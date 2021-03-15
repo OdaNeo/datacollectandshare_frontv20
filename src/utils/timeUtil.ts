@@ -22,8 +22,8 @@ class timeUtil {
     const seconds: string = date.getSeconds().toString().padStart(2, '0')
 
     return Reg
-      ? year + Reg + month + Reg + day + Reg + hours + ':' + minutes + ':' + seconds
-      : year + '/' + month + '/' + day + '/' + hours + ':' + minutes + ':' + seconds
+      ? year + Reg + month + Reg + day + ' ' + hours + ':' + minutes + ':' + seconds
+      : year + '/' + month + '/' + day + ' ' + hours + ':' + minutes + ':' + seconds
   }
 }
 

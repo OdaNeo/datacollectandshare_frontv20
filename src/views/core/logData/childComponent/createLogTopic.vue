@@ -1,7 +1,5 @@
 <template>
-  <v-row no-gutters>
-    <!-- 创建主题：主题名称 服务器IP 用户名 密码（是否 ？******）-->
-    <!-- 日志采集路径：可修改 -->
+  <v-row no-gutters :style="{ opacity: loading ? 0.28 : 1 }">
     <!-- 主题名称 -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>主题名称</label>
@@ -112,7 +110,7 @@
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Inject, Vue } from 'vue-property-decorator'
+import { Component, Inject, Vue, Prop } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
@@ -122,6 +120,7 @@ import Validator from '@/decorator/validatorDecorator'
 @Validator(['noEmpty', 'realIP', 'topicNameFormatter'])
 export default class CreateLogTopic extends Vue {
   @Inject() private readonly formProvide!: H_Vue
+  @Prop({ default: false }) private loading!: boolean
 
   private noRepeat: string[] = []
   private saveTypeItems: Array<{ text: string; value: string }> = [

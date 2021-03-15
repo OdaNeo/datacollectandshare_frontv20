@@ -5,5 +5,6 @@ export type CalendarData = {
   timed: boolean
   remarks: string
   status: string
+  timeFormatter: string
   serverName: string
 }

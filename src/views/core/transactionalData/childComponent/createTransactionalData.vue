@@ -64,8 +64,8 @@
               outlined
               dense
               height="34"
-              label="数据库类型"
-              :rules="[...h_validator.noEmpty('数据库类型')]"
+              label="目标数据库类型"
+              :rules="[...h_validator.noEmpty('目标数据库类型')]"
               v-model="formProvide.formObj['writer_database']"
               class="ml-4 mr-15"
             ></v-select>

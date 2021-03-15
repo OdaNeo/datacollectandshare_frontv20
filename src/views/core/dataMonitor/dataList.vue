@@ -54,6 +54,8 @@
                 <v-toolbar-title>主题ID: {{ selectedEvent.name }}</v-toolbar-title>
               </v-toolbar>
               <v-card-text>
+                <span>时间: {{ selectedEvent.timeFormatter }}</span>
+                <br />
                 <span>状态: {{ selectedEvent.status }}</span>
                 <br />
                 <span>作业名: {{ selectedEvent.serverName }}</span>
@@ -70,11 +72,13 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
+import util from '@/decorator/utilsDecorator'
 import { CalendarData } from '@/type/calendar'
 import { calendarType, calendarColorType } from '@/enum/calendar-enum'
 
 @Component
 @http
+@util
 export default class dataMonitor extends Vue {
   private focus = ''
   private type = 'month'
@@ -149,7 +153,7 @@ export default class dataMonitor extends Vue {
     //     'id': 1,
     //     'topicId': 88888889,
     //     'serverName': '视频',
-    //     'status': 2,
+    //     'status': 4,
     //     'createTime': '1614094237618',
     //     'remarks': 'NullPointerException'
     //   }
@@ -164,9 +168,11 @@ export default class dataMonitor extends Vue {
         status: calendarType[item['status']],
         name: item['topicId'].toString(),
         serverName: item['serverName'],
-        timed: true
+        timeFormatter: this.h_utils.timeUtil.stamptoFullTime(item['createTime'], '-'),
+        timed: false
       }
     })
+    // console.log(_events)
 
     this.$nextTick(() => {
       this.events = _events

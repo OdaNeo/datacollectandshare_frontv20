@@ -55,7 +55,7 @@
 
     <!-- 表单展示 -->
     <f-dialog v-if="fDialogFlag" v-model="fDialogFlag" :loading="createTopicLoading">
-      <CreateLogTopic v-if="fDialogShow === 1" />
+      <CreateLogTopic v-if="fDialogShow === 1" :loading="createTopicLoading" />
     </f-dialog>
 
     <!-- 表格显示 -->
@@ -192,7 +192,7 @@ export default class LogDataList extends Vue {
         logIp: item.logIp,
         logUserName: item.logUserName,
         savePath: item.savePath,
-        saveType: item.saveType.split(',')
+        saveType: item.saveType?.split(';')
       }
     } else {
       this.formProvide.formObj = {}
@@ -218,7 +218,7 @@ export default class LogDataList extends Vue {
       params.id = formObj.id
     }
     params.savePath = formObj.savePath
-    params.saveType = formObj.saveType.join(',')
+    params.saveType = formObj.saveType.join(';')
     params.topicInterFaceType = 9
 
     console.log(params)

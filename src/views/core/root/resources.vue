@@ -143,7 +143,7 @@ export default class Resources extends Vue {
 
   private editItem(item: { name: string; url: string; type: string; id: string; parentid: number | null }) {
     this.dialogFlag = true
-    this.formProvide.title = '权限修改'
+    this.formProvide.title = '修改权限'
     this.formProvide.btnName = ['立即修改', '取消']
     this.formProvide.methodName = 'updataResources'
     this.formProvide.formObj = {
