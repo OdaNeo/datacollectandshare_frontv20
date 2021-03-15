@@ -23,7 +23,7 @@
                 </v-btn>
               </template>
               <v-list>
-                <v-list-item @click="type = 'day'">
+                <v-list-item @click="type = 'category'">
                   <v-list-item-title>日</v-list-item-title>
                 </v-list-item>
                 <v-list-item @click="type = 'week'">
@@ -45,9 +45,14 @@
             :events="events"
             :event-color="getEventColor"
             :type="type"
+            category-show-all
+            :categories="categories"
+            :event-more-text="`显示更多`"
             @click:event="showEvent"
             @click:more="viewDay"
-          ></v-calendar>
+            @click:date="viewDay"
+          >
+          </v-calendar>
           <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
             <v-card color="grey lighten-4" min-width="350px" flat>
               <v-toolbar :color="selectedEvent.color" dark dense flat>
@@ -58,7 +63,7 @@
                 <br />
                 <span>状态: {{ selectedEvent.status }}</span>
                 <br />
-                <span>作业名: {{ selectedEvent.serverName }}</span>
+                <span>作业名: {{ selectedEvent.category }}</span>
                 <br />
                 <span>描述: {{ selectedEvent.remarks }}</span>
               </v-card-text>
@@ -85,35 +90,38 @@ export default class dataMonitor extends Vue {
   private typeToLabel = {
     'month': '月',
     'week': '周',
-    'day': '日'
+    'category': '日'
   }
+
+  private categories = ['日志', '事务', '视频']
 
   private selectedEvent = {}
   private selectedElement = null
   private selectedOpen = false
   private events: Array<CalendarData> = []
   private calendar: any
-
+  // 按照天显示
   private viewDay({ date }: { date: string }) {
     this.focus = date
-    this.type = 'day'
+    this.type = 'category'
   }
 
   private getEventColor(event: { color: unknown }) {
     return event.color
   }
-
+  // 转到今天
   private setToday() {
     this.focus = ''
   }
-
+  // 上一条
   private prev() {
     this.calendar.prev()
   }
+  // 下一条
   private next() {
     this.calendar.next()
   }
-
+  // 显示事件详情
   private showEvent({ nativeEvent, event }: any) {
     const open = () => {
       this.selectedEvent = event
@@ -130,7 +138,7 @@ export default class dataMonitor extends Vue {
     }
     nativeEvent.stopPropagation()
   }
-
+  // 获得event
   private async updateRange() {
     // const data = [
     //   {
@@ -167,8 +175,8 @@ export default class dataMonitor extends Vue {
         remarks: item['remarks'],
         status: calendarType[item['status']],
         name: item['topicId'].toString(),
-        serverName: item['serverName'],
-        timeFormatter: this.h_utils.timeUtil.stamptoFullTime(item['createTime'], '-'),
+        category: item['serverName'],
+        timeFormatter: this.h_utils.timeUtil.stamptoFullTime(item['createTime'], '/'),
         timed: false
       }
     })

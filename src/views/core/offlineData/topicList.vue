@@ -18,7 +18,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn
+        <!-- <v-btn
           color="primary"
           width="95px"
           height="35px"
@@ -28,7 +28,7 @@
           dark
           @click="createDataBaseAcquisition()"
           >数据库采集</v-btn
-        >
+        > -->
         <v-btn color="primary" width="95px" height="35px" depressed class="mr-6" small dark @click="createServePull()"
           >服务主动拉取</v-btn
         >
@@ -204,14 +204,14 @@ export default class OfflineTopicList extends Vue {
       align: 'center',
       value: 'userName'
     },
-    {
-      text: '订阅用户',
-      align: 'center',
-      value: 'userSubNameList',
-      format: (userSubNameList: Array<string>) => {
-        return userSubNameList.toString()
-      }
-    },
+    // {
+    //   text: '订阅用户',
+    //   align: 'center',
+    //   value: 'userSubNameList',
+    //   format: (userSubNameList: Array<string>) => {
+    //     return userSubNameList.toString()
+    //   }
+    // },
     {
       text: '接口类型',
       align: 'center',

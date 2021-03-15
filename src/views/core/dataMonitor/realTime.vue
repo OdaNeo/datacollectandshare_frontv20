@@ -7,6 +7,7 @@ import http from '@/decorator/httpDecorator'
 import { calendarType } from '@/enum/calendar-enum'
 import echarts from '@/decorator/echartsDecorator'
 import util from '@/decorator/utilsDecorator'
+import { realTimeData } from '@/type/calendar'
 
 @echarts
 @Component
@@ -143,39 +144,39 @@ export default class RealTime extends Vue {
   }
 
   private async updateRange() {
-    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
-      date: new Date().getTime()
-    })
+    // const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
+    //   date: new Date().getTime()
+    // })
 
-    // const data: any = [
-    //   {
-    //     'id': 1,
-    //     'topicId': 88888888,
-    //     'serverName': '日志',
-    //     'status': 3,
-    //     'createTime': '1614783227618',
-    //     'remarks': 'NullPointerException'
-    //   },
-    //   {
-    //     'id': 1,
-    //     'topicId': 88888886,
-    //     'serverName': '事务',
-    //     'status': 3,
-    //     'createTime': '1614783227618',
-    //     'remarks': 'NullPointerException'
-    //   },
-    //   {
-    //     'id': 1,
-    //     'topicId': 88888889,
-    //     'serverName': '视频',
-    //     'status': 1,
-    //     'createTime': '1614783227618',
-    //     'remarks': 'NullPointerException'
-    //   }
-    // ]
+    const data: Array<realTimeData> = [
+      {
+        'id': 1,
+        'topicId': 88888888,
+        'serverName': '日志',
+        'status': 3,
+        'createTime': '1614783227618',
+        'remarks': 'NullPointerException'
+      },
+      {
+        'id': 1,
+        'topicId': 88888886,
+        'serverName': '事务',
+        'status': 3,
+        'createTime': '1614783227618',
+        'remarks': 'NullPointerException'
+      },
+      {
+        'id': 1,
+        'topicId': 88888889,
+        'serverName': '视频',
+        'status': 1,
+        'createTime': '1614783227618',
+        'remarks': 'NullPointerException'
+      }
+    ]
 
     if (data.length > 0) {
-      data.forEach((item: any) => {
+      data.forEach((item: realTimeData) => {
         this.qsData.push({
           name: item.serverName,
           value: [
@@ -228,10 +229,10 @@ export default class RealTime extends Vue {
     this.initECharts('realTime')
     this.updateRange()
 
-    this.timer = setInterval(() => {
-      this.times++
-      this.updateRange()
-    }, this.interval * 1000)
+    // this.timer = setInterval(() => {
+    //   this.times++
+    //   this.updateRange()
+    // }, this.interval * 1000)
   }
   // 清除timer
   beforeDestroy(): void {
@@ -242,6 +243,6 @@ export default class RealTime extends Vue {
 <style scoped>
 #realTime {
   width: 1200px;
-  height: 500px;
+  height: 800px;
 }
 </style>

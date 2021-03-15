@@ -8,3 +8,12 @@ export type CalendarData = {
   timeFormatter: string
   serverName: string
 }
+
+export type realTimeData = {
+  id: number
+  topicId: number
+  serverName: string
+  status: number
+  createTime: string
+  remarks: string
+}

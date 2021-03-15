@@ -66,6 +66,14 @@ export default class Login extends Vue {
       username: this.username,
       password: this.password
     })
+
+    // cb 登录失败
+    if (result.data?.list?.length === 0) {
+      this.loading = false
+      return
+    }
+
+    // 成功
     const username = this.username
     const bool: boolean = await rootStoreModule.login({ username, result })
 
@@ -83,10 +91,10 @@ export default class Login extends Vue {
   }
 
   private handleEnterEvent(e: KeyboardEvent) {
-    if (e.code === 'Enter') {
-      this.signIn()
-    } else {
+    if (e.code !== 'Enter') {
       return
+    } else {
+      this.signIn()
     }
   }
 
