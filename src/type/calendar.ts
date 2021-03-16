@@ -1,6 +1,6 @@
 export type CalendarData = {
   name: string
-  start: Date
+  start: string
   color: string
   timed: boolean
   remarks: string

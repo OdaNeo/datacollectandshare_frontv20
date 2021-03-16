@@ -192,7 +192,7 @@ export default class LogDataList extends Vue {
         logIp: item.logIp,
         logUserName: item.logUserName,
         savePath: item.savePath,
-        saveType: item.saveType?.split(';')
+        saveType: item.saveType?.split('+')
       }
     } else {
       this.formProvide.formObj = {}
@@ -218,7 +218,7 @@ export default class LogDataList extends Vue {
       params.id = formObj.id
     }
     params.savePath = formObj.savePath
-    params.saveType = formObj.saveType.join(';')
+    params.saveType = formObj.saveType.join('+')
     params.topicInterFaceType = 9
 
     console.log(params)

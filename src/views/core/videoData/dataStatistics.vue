@@ -16,6 +16,44 @@ export default class VideoDataStatistics extends Vue {
 
   private async getVideoAll() {
     const { data } = await this.h_request['httpGET']('GET_TOPICS_GETVIDEO', {})
+    // const data = [
+    //   {
+    //     address: '海鹰路海鹰路海鹰路海鹰路',
+    //     bucketName: 'topic9008082',
+    //     createTime: '2021-01-25T04:27:25.000+0000',
+    //     fileNum: 1,
+    //     id: 2083,
+    //     m3u8Url: '',
+    //     serverUrl: 'rtmp://127.0.0.1:1935/live/9008082',
+    //     sourceUrl: 'rtmp://58.200.131.2:1935/livetv/cctv8',
+    //     topicId: 9008082,
+    //     userId: 2
+    //   },
+    //   {
+    //     address: '海鹰路海鹰路海鹰路海鹰路',
+    //     bucketName: 'topic9008082',
+    //     createTime: '2021-01-25T04:27:25.000+0000',
+    //     fileNum: 1,
+    //     id: 2083,
+    //     m3u8Url: '',
+    //     serverUrl: 'rtmp://127.0.0.1:1935/live/9008082',
+    //     sourceUrl: 'rtmp://58.200.131.2:1935/livetv/cctv8',
+    //     topicId: 9008080,
+    //     userId: 2
+    //   },
+    //   {
+    //     address: '海鹰路海鹰路海鹰路海鹰路',
+    //     bucketName: 'topic9008082',
+    //     createTime: '2021-01-25T04:27:25.000+0000',
+    //     fileNum: 6,
+    //     id: 2083,
+    //     m3u8Url: '',
+    //     serverUrl: 'rtmp://127.0.0.1:1935/live/9008082',
+    //     sourceUrl: 'rtmp://58.200.131.2:1935/livetv/cctv8',
+    //     topicId: 90080821,
+    //     userId: 2
+    //   }
+    // ]
     this.videoList = data
     this.handelECharts('echarts1', this.getOption1(this.videoList))
     this.handelECharts('echarts2', this.getOption3(this.videoList))
@@ -41,10 +79,10 @@ export default class VideoDataStatistics extends Vue {
       },
       series: [
         {
-          name: '面积模式',
+          name: '主题面积占比',
           type: 'pie',
           radius: [20, 80],
-          center: ['75%', '50%'],
+          center: ['50%', '50%'],
           roseType: 'area',
           data: data.map(item => {
             return {
@@ -52,20 +90,20 @@ export default class VideoDataStatistics extends Vue {
               name: `主题ID：${item.topicId}`
             }
           })
-        },
-        {
-          name: '半径模式',
-          type: 'pie',
-          radius: [20, 80],
-          center: ['25%', '50%'],
-          roseType: 'radius',
-          data: data.map(item => {
-            return {
-              value: item.fileNum,
-              name: `主题ID：${item.topicId}`
-            }
-          })
         }
+        // {
+        //   name: '半径模式',
+        //   type: 'pie',
+        //   radius: [20, 80],
+        //   center: ['25%', '50%'],
+        //   roseType: 'radius',
+        //   data: data.map(item => {
+        //     return {
+        //       value: item.fileNum,
+        //       name: `主题ID：${item.topicId}`
+        //     }
+        //   })
+        // }
       ]
     }
   }
@@ -81,7 +119,7 @@ export default class VideoDataStatistics extends Vue {
       tooltip: {},
       visualMap: {
         min: 0,
-        max: 2,
+        max: 50,
         type: 'piecewise',
         orient: 'horizontal',
         left: 'center',

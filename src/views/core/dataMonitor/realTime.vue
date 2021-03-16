@@ -4,10 +4,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
-import { calendarType } from '@/enum/calendar-enum'
+// import { calendarType } from '@/enum/calendar-enum'
 import echarts from '@/decorator/echartsDecorator'
 import util from '@/decorator/utilsDecorator'
-import { realTimeData } from '@/type/calendar'
+// import { realTimeData } from '@/type/calendar'
 
 @echarts
 @Component
@@ -15,12 +15,13 @@ import { realTimeData } from '@/type/calendar'
 @util
 export default class RealTime extends Vue {
   private timer = 0
-  private interval = 10
-  private times = 0
+  private interval = 60
+  // private times = 0
 
   private chartElement: any
-  private qsData: Array<any> = []
-  private startTime = +new Date()
+  // private qsData: Array<any> = []
+  // private startTime = +new Date()
+  private zeroTimeStamp = new Date(new Date().toLocaleDateString()).getTime()
   private categories = ['日志', '事务', '视频']
 
   private types = [
@@ -30,58 +31,22 @@ export default class RealTime extends Vue {
     { name: '作业正常', color: '#2ECC71' }
   ]
 
-  private renderItem(params: any, api: any) {
-    const categoryIndex = api.value(0)
-    const start = api.coord([api.value(1), categoryIndex])
-    const end = api.coord([api.value(2), categoryIndex])
-    const height = api.size([0, 1])[1] * 0.6
+  private data: Array<any> = []
 
-    const rectShape = this.h_echarts.graphic.clipRectByRect(
-      {
-        x: start[0],
-        y: start[1] - height / 2,
-        width: end[0] - start[0],
-        height: height
-      },
-      {
-        x: params.coordSys.x,
-        y: params.coordSys.y,
-        width: params.coordSys.width,
-        height: params.coordSys.height
-      }
-    )
+  private value = Math.random() * 1000
 
-    return (
-      rectShape && {
-        type: 'rect',
-        shape: rectShape,
-        style: api.style()
-      }
-    )
+  private randomData() {
+    const now = new Date()
+    this.value = this.value + Math.random() * 21 - 10
+    return {
+      name: now.getTime(),
+      value: [now.getTime(), Math.round(this.value)]
+    }
   }
 
   // 柯里化option
   private getOption(data: any) {
     return {
-      tooltip: {
-        formatter: (params: any) => {
-          if (params.data.itemStyle.status === this.types[3].name) {
-            return params.marker + ' 作业状态: ' + params.data.itemStyle.status
-          } else {
-            return (
-              params.marker +
-              ' 作业状态: ' +
-              params.data.itemStyle.status +
-              ' 主题ID: ' +
-              params.data.itemStyle.topicId +
-              ' 创建时间: ' +
-              params.data.itemStyle.createTime +
-              ' 描述: ' +
-              params.data.itemStyle.remarks
-            )
-          }
-        }
-      },
       title: {
         text: '作业状态实时监控',
         left: 'center'
@@ -89,54 +54,35 @@ export default class RealTime extends Vue {
       dataZoom: [
         {
           type: 'slider',
-          filterMode: 'weakFilter',
-          showDataShadow: false,
-          top: 400,
-          height: 10,
-          borderColor: 'transparent',
-          backgroundColor: '#e2e2e2',
-          handleIcon:
-            'M10.7,11.9H9.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4h1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7v-1.2h6.6z M13.3,22H6.7v-1.2h6.6z M13.3,19.6H6.7v-1.2h6.6z', // jshint ignore:line
-          handleSize: 20,
-          handleStyle: {
-            shadowBlur: 6,
-            shadowOffsetX: 1,
-            shadowOffsetY: 2,
-            shadowColor: '#aaa'
-          },
-          labelFormatter: ''
+          start: 0,
+          end: 100
         },
         {
           type: 'inside',
-          filterMode: 'weakFilter'
+          start: 1,
+          end: 100
         }
       ],
-      grid: {
-        height: 300
-      },
       xAxis: {
-        min: this.startTime,
-        scale: true,
-        axisLabel: {
-          formatter: (val: number) => {
-            return Math.max(0, val - this.startTime) / 1000 + ' s'
-          }
-        }
+        type: 'time',
+        splitLine: {
+          show: false
+        },
+        min: this.zeroTimeStamp,
+        max: this.zeroTimeStamp + 24 * 60 * 60 * 1000
       },
       yAxis: {
-        data: this.categories
+        type: 'value',
+        boundaryGap: [0, '100%'],
+        splitLine: {
+          show: false
+        }
       },
       series: [
         {
-          type: 'custom',
-          renderItem: this.renderItem,
-          itemStyle: {
-            opacity: 0.8
-          },
-          encode: {
-            x: [1, 2],
-            y: 0
-          },
+          type: 'line',
+          showSymbol: false,
+          hoverAnimation: false,
           data: data
         }
       ]
@@ -148,75 +94,34 @@ export default class RealTime extends Vue {
     //   date: new Date().getTime()
     // })
 
-    const data: Array<realTimeData> = [
-      {
-        'id': 1,
-        'topicId': 88888888,
-        'serverName': '日志',
-        'status': 3,
-        'createTime': '1614783227618',
-        'remarks': 'NullPointerException'
-      },
-      {
-        'id': 1,
-        'topicId': 88888886,
-        'serverName': '事务',
-        'status': 3,
-        'createTime': '1614783227618',
-        'remarks': 'NullPointerException'
-      },
-      {
-        'id': 1,
-        'topicId': 88888889,
-        'serverName': '视频',
-        'status': 1,
-        'createTime': '1614783227618',
-        'remarks': 'NullPointerException'
-      }
-    ]
+    // const data: Array<realTimeData> = [
+    //   {
+    //     'id': 1,
+    //     'topicId': 88888888,
+    //     'serverName': '日志',
+    //     'status': 3,
+    //     'createTime': '1614783227618',
+    //     'remarks': 'NullPointerException'
+    //   },
+    //   {
+    //     'id': 1,
+    //     'topicId': 88888886,
+    //     'serverName': '事务',
+    //     'status': 3,
+    //     'createTime': '1614783227618',
+    //     'remarks': 'NullPointerException'
+    //   },
+    //   {
+    //     'id': 1,
+    //     'topicId': 88888889,
+    //     'serverName': '视频',
+    //     'status': 1,
+    //     'createTime': '1614783227618',
+    //     'remarks': 'NullPointerException'
+    //   }
+    // ]
 
-    if (data.length > 0) {
-      data.forEach((item: realTimeData) => {
-        this.qsData.push({
-          name: item.serverName,
-          value: [
-            this.categories.indexOf(item.serverName),
-            this.startTime + this.interval * this.times * 1000,
-            this.startTime + this.interval * this.times * 1000 + (this.interval - 2) * 1000,
-            (this.interval - 2) * 1000
-          ],
-          itemStyle: {
-            normal: {
-              color: this.types[item.status - 1] ? this.types[item.status - 1].color : this.types[3].color,
-              topicId: item.topicId,
-              status: calendarType[item.status],
-              createTime: this.h_utils.timeUtil.stamptoFullTime(item.createTime),
-              remarks: item.remarks
-            }
-          }
-        })
-      })
-    } else {
-      for (let i = 0; i < this.categories.length; i++) {
-        this.qsData.push({
-          name: this.categories[i],
-          value: [
-            i,
-            this.startTime + this.interval * this.times * 1000,
-            this.startTime + this.interval * this.times * 1000 + (this.interval - 2) * 1000,
-            (this.interval - 2) * 1000
-          ],
-          itemStyle: {
-            normal: {
-              color: this.types[3].color,
-              status: this.types[3].name
-            }
-          }
-        })
-      }
-    }
-
-    this.chartElement.setOption(this.getOption(this.qsData))
+    this.chartElement.setOption(this.getOption(this.data))
   }
 
   //  初始化echarts
@@ -228,11 +133,18 @@ export default class RealTime extends Vue {
   mounted(): void {
     this.initECharts('realTime')
     this.updateRange()
-
     // this.timer = setInterval(() => {
     //   this.times++
     //   this.updateRange()
     // }, this.interval * 1000)
+
+    setInterval(() => {
+      for (var i = 0; i < 5; i++) {
+        this.data.push(this.randomData())
+      }
+      // console.log(this.data)
+      this.chartElement.setOption(this.getOption(this.data))
+    }, 1000)
   }
   // 清除timer
   beforeDestroy(): void {
