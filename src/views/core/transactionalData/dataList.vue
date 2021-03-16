@@ -51,7 +51,7 @@
           <template v-slot:jsonContent="{ item }">
             <v-btn text color="primary" @click="jsonContentDetails(item)">DataX脚本</v-btn>
           </template>
-          <template v-slot:buttons="{ item }">
+          <template v-slot:buttons="{ item, index }">
             <v-btn v-if="tab" text color="primary" @click.stop="addItems(item)">修改</v-btn>
             <v-btn
               v-if="tab"
@@ -68,7 +68,7 @@
               v-if="!tab"
               text
               color="primary"
-              @click="stateOrStopTransactionalData(item.id, 1)"
+              @click="stateOrStopTransactionalData(item.id, index, 1)"
               :disabled="item.state === -1 || item.state === 1"
               >启动</v-btn
             >
@@ -77,7 +77,7 @@
               text
               color="primary"
               :disabled="item.state === -1 || item.state === 2"
-              @click="stateOrStopTransactionalData(item.id, 2)"
+              @click="stateOrStopTransactionalData(item.id, index, 2)"
               >停止</v-btn
             >
             <v-btn v-if="!tab" text color="primary" @click="reloadTransactionalData(item.id)">重跑</v-btn>
@@ -328,6 +328,7 @@ export default class transactionalDataList extends Vue {
         cron: `0 0 ${cron.replaceAll(' 时', '')} * * *`,
         sqlMaxContent: '',
         maxValue,
+        state: 1,
         inputContent: JSON.stringify(params),
         id
       }
@@ -463,26 +464,20 @@ export default class transactionalDataList extends Vue {
     this.pageNum = 1
   }
   // 启停 1启动，2停止
-  private async stateOrStopTransactionalData(topicId: number, state: number) {
+  private async stateOrStopTransactionalData(topicId: number, index: number, state: number) {
     // console.log(topicId)
-    const data = await this.h_request['httpGET']('GET_TOPICS_UPDATETRANSACTIONALTOPICSTATE', {
+    const { success } = await this.h_request['httpGET']('GET_TOPICS_UPDATETRANSACTIONALTOPICSTATE', {
       topicId,
       state
     })
-    console.log(data)
-    if (data.success) {
+    // console.log(data)
+    if (success) {
       this.h_utils['alertUtil'].open(state === 1 ? '启动成功' : '停止成功', true, 'success')
-
-      setTimeout(() => {
-        this.searchMethod(
-          false,
-          {
-            pageNum: 1,
-            pageSize: this.pageSize
-          },
-          !!this.tab
-        )
-      }, 2500)
+      // 乐观更新 防抖
+      this.$set(this.desserts, index, {
+        ...this.desserts[index],
+        state
+      })
     }
   }
   // 重跑

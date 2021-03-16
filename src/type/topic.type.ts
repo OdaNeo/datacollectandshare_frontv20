@@ -24,4 +24,5 @@ export type topicTable = {
   header?: string | null
   createTime?: string
   log?: string
+  state: number
 }
