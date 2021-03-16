@@ -64,9 +64,23 @@
             >
               删除
             </v-btn>
-            <v-btn v-if="!tab" text color="primary" :disabled="topicInit">开始</v-btn>
-            <v-btn v-if="!tab" text color="primary" :disabled="!topicInit">停止</v-btn>
-            <v-btn v-if="!tab" text color="primary">重跑</v-btn>
+            <v-btn
+              v-if="!tab"
+              text
+              color="primary"
+              @click="stateOrStopTransactionalData(item.id, 1)"
+              :disabled="item.state === -1 || item.state === 1"
+              >启动</v-btn
+            >
+            <v-btn
+              v-if="!tab"
+              text
+              color="primary"
+              :disabled="item.state === -1 || item.state === 2"
+              @click="stateOrStopTransactionalData(item.id, 2)"
+              >停止</v-btn
+            >
+            <v-btn v-if="!tab" text color="primary" @click="reloadTransactionalData(item.id)">重跑</v-btn>
           </template>
         </h-table>
       </v-tab-item>
@@ -131,7 +145,6 @@ export default class transactionalDataList extends Vue {
   private fDialogFlag = false // 弹窗展示
   private tDialogFlag = false // 表格展示
   private queryTopicID = '' // 查询主题ID input框内容
-  private topicInit = true
 
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
@@ -354,8 +367,8 @@ export default class transactionalDataList extends Vue {
 
     if (tab) {
       const { data }: returnDataType = bool
-        ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
-        : await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICS', params)
+        ? await this.h_request['httpGET']('GET_TOPICS_MYTOPICSBYID', params)
+        : await this.h_request['httpGET']('GET_TOPICS_MYTOPICS', params)
       this.desserts = data.list.map((item: any) => {
         return { ...item }
       })
@@ -364,8 +377,8 @@ export default class transactionalDataList extends Vue {
       // console.log(params)
 
       const { data }: returnDataType = bool
-        ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTTOPIC', params)
-        : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL', params)
+        ? await this.h_request['httpGET']('GET_TOPICS_SELECTTOPIC', params)
+        : await this.h_request['httpGET']('GET_TOPICS_FIND_ALL', params)
       this.desserts = data.list.map((item: any) => {
         return { ...item }
       })
@@ -448,6 +461,33 @@ export default class transactionalDataList extends Vue {
       )
     }
     this.pageNum = 1
+  }
+  // 启停 1启动，2停止
+  private async stateOrStopTransactionalData(topicId: number, state: number) {
+    // console.log(topicId)
+    const data = await this.h_request['httpGET']('GET_TOPICS_UPDATETRANSACTIONALTOPICSTATE', {
+      topicId,
+      state
+    })
+    console.log(data)
+    if (data.success) {
+      this.h_utils['alertUtil'].open(state === 1 ? '启动成功' : '停止成功', true, 'success')
+
+      setTimeout(() => {
+        this.searchMethod(
+          false,
+          {
+            pageNum: 1,
+            pageSize: this.pageSize
+          },
+          !!this.tab
+        )
+      }, 2500)
+    }
+  }
+  // 重跑
+  private reloadTransactionalData(topicId: number) {
+    console.log(topicId)
   }
 }
 </script>

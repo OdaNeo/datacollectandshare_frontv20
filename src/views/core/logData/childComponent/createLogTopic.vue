@@ -84,6 +84,7 @@
       <label class="label mr-2"><span class="require-span">*</span>存储方式</label>
       <v-select
         v-model="formProvide.formObj['saveType']"
+        :disabled="formProvide.formObj.canNotEdit"
         :items="saveTypeItems"
         dense
         outlined
@@ -94,19 +95,20 @@
       ></v-select>
     </v-col>
     <!--TODO： 采集校验关键字 1,2,3 提示：使用逗号隔开-->
-    <!-- <v-col cols="12" class="d-flex">
+    <v-col cols="12" class="d-flex">
       <label class="label mr-2" style="font-size: 14px"><span class="require-span">*</span>采集校验关键字</label>
       <v-text-field
-        v-model="formProvide.formObj['savePath']"
+        v-model="formProvide.formObj['keywords']"
+        :disabled="formProvide.formObj.canNotEdit"
         outlined
         dense
         clearable
-        placeholder="关键字之间使用英文逗号（,）隔开"
+        placeholder="关键字之间请使用英文逗号（,）隔开"
         height="34"
         class="ml-4 mr-15"
         :rules="[...h_validator.noEmpty('采集校验关键字')]"
       ></v-text-field>
-    </v-col> -->
+    </v-col>
   </v-row>
 </template>
 <script lang="ts">

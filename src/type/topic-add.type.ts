@@ -35,4 +35,5 @@ export type TopicAdd = {
   savePath: string
   password: string
   saveType: Array<number>
+  keywords: string
 }

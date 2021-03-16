@@ -165,6 +165,16 @@ export default class LogDataList extends Vue {
       value: 'logUserName'
     },
     {
+      text: '落盘策略',
+      align: 'center',
+      value: 'saveType'
+    },
+    {
+      text: '采集校验关键字',
+      align: 'center',
+      value: 'keywords'
+    },
+    {
       text: '操作',
       align: 'center',
       slot: 'buttons'
@@ -192,7 +202,8 @@ export default class LogDataList extends Vue {
         logIp: item.logIp,
         logUserName: item.logUserName,
         savePath: item.savePath,
-        saveType: item.saveType?.split('+')
+        saveType: item.saveType?.split('+'),
+        keywords: item.keywords
       }
     } else {
       this.formProvide.formObj = {}
@@ -219,6 +230,7 @@ export default class LogDataList extends Vue {
     }
     params.savePath = formObj.savePath
     params.saveType = formObj.saveType.join('+')
+    params.keywords = formObj.keywords
     params.topicInterFaceType = 9
 
     console.log(params)
