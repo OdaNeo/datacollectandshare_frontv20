@@ -69,18 +69,25 @@
               text
               color="primary"
               @click="stateOrStopTransactionalData(item.id, index, 1)"
-              :disabled="item.state === -1 || item.state === 1"
+              :disabled="!item.state || item.state === -1 || item.state === 1"
               >启动</v-btn
             >
             <v-btn
               v-if="!tab"
               text
               color="primary"
-              :disabled="item.state === -1 || item.state === 2"
+              :disabled="!item.state || item.state === -1 || item.state === 2"
               @click="stateOrStopTransactionalData(item.id, index, 2)"
               >停止</v-btn
             >
-            <v-btn v-if="!tab" text color="primary" @click="reloadTransactionalData(item.id)">重跑</v-btn>
+            <v-btn
+              v-if="!tab"
+              text
+              color="primary"
+              :disabled="!item.state || item.state === -1"
+              @click="reloadTransactionalData(item.id)"
+              >重跑</v-btn
+            >
           </template>
         </h-table>
       </v-tab-item>
@@ -325,7 +332,7 @@ export default class transactionalDataList extends Vue {
         topicName,
         dataType: dataType['结构化'],
         topicInterFaceType: 8,
-        cron: `0 0 ${cron.replaceAll(' 时', '')} * * *`,
+        cron: `0 0 ${cron.replaceAll(' 时', '')} * * ?`,
         sqlMaxContent: '',
         maxValue,
         state: 1,

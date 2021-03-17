@@ -49,6 +49,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 16. add e2e test
 17. multi-checkbox 组件构建
 18. 文件下载动画
+19. 作业监控页面keep alive 以及 data-zoom 优化
 
 ## 常见问题
 

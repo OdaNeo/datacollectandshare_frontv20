@@ -93,6 +93,7 @@
               height="34"
               label="自增属性最大值"
               v-model="formProvide.formObj['maxValue']"
+              v-only-num
               class="ml-2 mr-15"
             ></v-text-field>
           </v-col>

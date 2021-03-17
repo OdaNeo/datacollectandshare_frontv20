@@ -42,6 +42,8 @@ module.exports = {
     }
     // 添加线上环境查看git版本号
     config.plugins = config.plugins.concat([gitRevisionPlugin])
+    // 解决 keepalive 失效的问题
+    // config.optimization.minimizer[0].options.terserOptions.keep_fnames = true
   },
   // 配置环境变量
   chainWebpack: config => {

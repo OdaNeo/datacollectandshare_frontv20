@@ -1,13 +1,16 @@
 <template>
   <div id="h-table">
     <div class="simple-table">
-      <div v-if="loading" class="text-center mt-15" style="min-height: 150px">
+      <!-- 正在查询 -->
+      <div v-if="loading" class="text-center mt-15" style="min-height: 100px">
         <v-progress-circular indeterminate color="primary"></v-progress-circular>
       </div>
+      <!-- 无数据 -->
       <div v-else-if="desserts.length === 0" class="text-center mt-15" style="min-height: 150px">
         <v-icon color="primary lighten-3" size="50">mdi-toy-brick-remove-outline</v-icon>
         <div style="font-size: 14px; margin-top: 5px">查无数据</div>
       </div>
+      <!-- 有数据 -->
       <v-simple-table v-else fixed-header>
         <template v-slot:default>
           <thead>
