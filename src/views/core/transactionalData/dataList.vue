@@ -84,7 +84,7 @@
               v-if="!tab"
               text
               color="primary"
-              :disabled="!item.state || item.state === -1"
+              :disabled="item.state === -1"
               @click="reloadTransactionalData(item.id)"
               >重跑</v-btn
             >
@@ -488,8 +488,14 @@ export default class transactionalDataList extends Vue {
     }
   }
   // 重跑
-  private reloadTransactionalData(topicId: number) {
-    console.log(topicId)
+  private async reloadTransactionalData(topicId: number) {
+    const { success } = await this.h_request['httpGET']('GET_TOPICS_RUNTRANSACTIONALTOPICAGAIN', {
+      topicId
+    })
+    // console.log(success)
+    if (success) {
+      this.h_utils['alertUtil'].open(`主题${topicId}重跑成功`, true, 'success')
+    }
   }
 }
 </script>
