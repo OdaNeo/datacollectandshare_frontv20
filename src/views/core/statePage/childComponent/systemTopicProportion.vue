@@ -35,7 +35,7 @@ export default class SystemTopicProportion extends Vue {
 
   private topicProportion(elementName: string, opt: topicProportionOpt): void {
     const element = document.getElementById(elementName)
-    const chartElement = this.h_echarts.init(element as HTMLCanvasElement)
+    const chartElement = this.h_echarts.init(element as HTMLCanvasElement, 'light', { renderer: 'svg' })
     chartElement.setOption(
       {
         title: {

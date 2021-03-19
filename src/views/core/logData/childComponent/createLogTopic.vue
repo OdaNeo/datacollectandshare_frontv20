@@ -1,5 +1,5 @@
 <template>
-  <v-row no-gutters :style="{ opacity: loading ? 0.28 : 1 }">
+  <v-row no-gutters>
     <!-- 主题名称 -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>主题名称</label>
@@ -94,7 +94,7 @@
         :rules="[...h_validator.noEmpty('存储方式')]"
       ></v-select>
     </v-col>
-    <!--TODO： 采集校验关键字 1,2,3 提示：使用逗号隔开-->
+    <!-- 采集校验关键字 1,2,3 提示：使用逗号隔开-->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2" style="font-size: 14px"><span class="require-span">*</span>采集校验关键字</label>
       <v-text-field
@@ -112,7 +112,7 @@
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Inject, Vue, Prop } from 'vue-property-decorator'
+import { Component, Inject, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
@@ -122,7 +122,6 @@ import Validator from '@/decorator/validatorDecorator'
 @Validator(['noEmpty', 'realIP', 'topicNameFormatter'])
 export default class CreateLogTopic extends Vue {
   @Inject() private readonly formProvide!: H_Vue
-  @Prop({ default: false }) private loading!: boolean
 
   private noRepeat: string[] = []
   private saveTypeItems: Array<{ text: string; value: string }> = [

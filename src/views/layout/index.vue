@@ -51,7 +51,7 @@ import http from '@/decorator/httpDecorator'
   }
 })
 @http
-export default class Login extends Vue {
+export default class Layout extends Vue {
   private PROJECT_BASE_COLOR = PROJECT_BASE_COLOR
   private timer = 0
   private interval = 30

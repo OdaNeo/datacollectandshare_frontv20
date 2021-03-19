@@ -1,19 +1,23 @@
 <template>
   <v-dialog class="dialog" v-model="dialog" :width="width" persistent>
     <!-- 遮罩层 禁止交互 -->
-    <v-overlay :opacity="0.1" :value="loading">
+    <!-- <v-overlay :opacity="0.2" :value="loading">
       <v-progress-circular class="loading" indeterminate color="primary"></v-progress-circular>
-      <div class="loading-text">主题创建中，请稍候……</div>
-    </v-overlay>
+      <div class="loading-text">请稍候……</div>
+    </v-overlay> -->
     <!-- tittle form btn -->
     <v-card>
       <v-card-title>
         <span style="font-size: 18px">{{ formProvide.title }}</span>
-        <v-btn class="close-btn" icon @click="closeMethod">
+        <v-btn class="close-btn" icon :disabled="loading" @click="closeMethod">
           <v-icon>mdi-close</v-icon>
         </v-btn>
       </v-card-title>
-      <v-divider></v-divider>
+      <!-- 分割线 -->
+      <v-divider style="padding-bottom: 1px" v-if="!loading"></v-divider>
+      <!-- 进度条 -->
+      <v-progress-linear v-else color="primary" indeterminate height="2"></v-progress-linear>
+      <!-- 主题 -->
       <v-card-text class="pb-0 mt-4">
         <v-container class="pb-1">
           <v-form ref="userDialogForm" v-model="userDialogValid">
@@ -23,13 +27,18 @@
       </v-card-text>
       <v-card-actions class="pt-0 pb-4 pr-8" v-if="formProvide.btnName && formProvide.btnName.length > 0">
         <v-spacer></v-spacer>
-        <v-btn color="primary" text :disabled="!userDialogValid" v-if="formProvide.btnName[0]" @click.stop="validate">{{
-          formProvide.btnName[0]
-        }}</v-btn>
-        <v-btn color="primary" text v-if="formProvide.btnName[1]" @click.stop="closeMethod">
+        <v-btn
+          color="primary"
+          text
+          :disabled="!userDialogValid || loading"
+          v-if="formProvide.btnName[0]"
+          @click.stop="validate"
+          >{{ formProvide.btnName[0] }}</v-btn
+        >
+        <v-btn color="primary" text v-if="formProvide.btnName[1]" :disabled="loading" @click.stop="closeMethod">
           {{ formProvide.btnName[1] }}</v-btn
         >
-        <v-btn color="primary" text v-else @click.stop="reset">重置</v-btn>
+        <v-btn color="primary" text v-else :disabled="loading" @click.stop="reset">重置</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

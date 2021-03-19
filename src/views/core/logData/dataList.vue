@@ -55,7 +55,7 @@
 
     <!-- 表单展示 -->
     <f-dialog v-if="fDialogFlag" v-model="fDialogFlag" :loading="createTopicLoading">
-      <CreateLogTopic v-if="fDialogShow === 1" :loading="createTopicLoading" />
+      <CreateLogTopic v-if="fDialogShow === 1" />
     </f-dialog>
 
     <!-- 表格显示 -->
@@ -202,7 +202,7 @@ export default class LogDataList extends Vue {
         logIp: item.logIp,
         logUserName: item.logUserName,
         savePath: item.savePath,
-        saveType: item.saveType?.split('+'),
+        saveType: item.saveType?.split(','),
         keywords: item.keywords
       }
     } else {

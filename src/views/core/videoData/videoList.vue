@@ -53,14 +53,13 @@
       </v-tab-item>
     </v-tabs-items>
     <!-- 表单 -->
-    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <f-dialog v-if="dialogFlag" v-model="dialogFlag" :loading="dialogLoading">
       <create-video-topic-dialog v-if="dialogShow === 1" />
       <set-date-range v-else-if="dialogShow === 2" />
     </f-dialog>
 
     <!-- 视频 -->
     <video-popup
-      :videoCounts="videoCounts"
       :videoList="videoList"
       :videoCountsReal="videoCountsReal"
       v-if="showVideoPopup"
@@ -138,6 +137,7 @@ export default class VideoDataList extends Vue {
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
   private loading = true
+  private dialogLoading = false
 
   // 表头内容 所有主题
   private headers = [
@@ -187,12 +187,12 @@ export default class VideoDataList extends Vue {
       slot: 'buttons2'
     }
   ]
-  // 查询到视频数量（包含空视频）
+  // 查询到视频数量（不包含空视频）
   private videoList: Array<{ timer: string; url: string }> = []
 
   private curItem: any
 
-  private videoCounts = 0 // 总共应该显示多少视频
+  // private videoCounts = 0 // 总共应该显示多少视频
   private videoCountsReal = 0 // 实际视频数量
   //  创建主题
   private createTopicVideo() {
@@ -206,6 +206,7 @@ export default class VideoDataList extends Vue {
   // 时间选择弹窗
   private showDateRangePopup(item: any) {
     this.curItem = item
+    this.dialogLoading = false
     this.dialogFlag = true
     this.dialogShow = 2
     this.formProvide.title = '选择日期范围'
@@ -247,6 +248,7 @@ export default class VideoDataList extends Vue {
   private async getVideoList(formObj: any) {
     this.videoList = []
     this.videoCountsReal = 0
+    this.dialogLoading = true
     const params: any = {}
     // -8小时时差
     // 2020-1-1-0时 ~ 2020-1-1-1时 视频文件数：1，overTime - beginTime=0ms
@@ -255,7 +257,7 @@ export default class VideoDataList extends Vue {
     params.topicId = this.curItem.id
     params.bucketName = this.curItem.bucketName
     // 总共显示的视频数
-    this.videoCounts = ((params.overTime - params.beginTime) / (3600 * 1000) + 1) * 3
+    // this.videoCounts = ((params.overTime - params.beginTime) / (3600 * 1000) + 1) * 3
     const { data } = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
     // console.log(data)
     // const data = [
@@ -264,20 +266,28 @@ export default class VideoDataList extends Vue {
     //   { timer: '2021-01-01 04', url: [] }
     // ]
     data.forEach((item: { timer: string; url: Array<string> }) => {
-      if (item.url.length === 0) {
-        this.videoList.push({ timer: item.timer + '时', url: '' })
-      } else {
+      if (item.url.length !== 0) {
         item.url.forEach((_item, _index) => {
-          this.videoList.push({ timer: item.timer + '时' + '-' + (_index + 1), url: item.url[_index] })
           if (_item) {
+            this.videoList.push({ timer: item.timer + '时' + '-' + (_index + 1), url: item.url[_index] })
             this.videoCountsReal++
           }
         })
       }
+      // else {
+      //   this.videoList.push({ timer: item.timer + '时', url: '' })
+      // }
     })
+    // console.log(this.videoList)
+    this.dialogLoading = false
 
-    this.showVideoPopup = true
-    return Promise.resolve(true)
+    if (this.videoList.length > 0) {
+      this.showVideoPopup = true
+      return Promise.resolve(true)
+    } else {
+      this.h_utils['alertUtil'].open('该时间段视频不存在', true, 'error', 3000)
+      return Promise.resolve(false)
+    }
   }
 
   // 查询通用调用方法

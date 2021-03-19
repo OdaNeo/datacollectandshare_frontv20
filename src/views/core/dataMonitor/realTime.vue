@@ -36,7 +36,7 @@
           placeholder="请选择主题类型"
         ></v-select>
       </v-col>
-      <!-- TODO: 枚举 -->
+      <!-- TODO: 右上角枚举 -->
     </v-row>
     <div class="chartsContainer">
       <div class="chartElements" ref="chartElements" v-for="item in dataAll" :key="item.topicId"></div>
@@ -76,7 +76,7 @@ export default class RealTime extends Vue {
     { name: '警告', color: 'orange' },
     { name: '作业正常', color: '#2ECC71' }
   ]
-  private type = ['异常', '离线', '警告', '作业正常']
+  private type = ['异常', '离线', '警告']
 
   // 查询主题ID input框内容
   private queryTopicID = ''
@@ -90,7 +90,7 @@ export default class RealTime extends Vue {
         text: `作业ID：${data.topicId}    类型：${data.serverName}`,
         left: 'center',
         textStyle: {
-          color: `${this.types[data.status - 1]['color']}`,
+          color: `#1976d2`,
           fontSize: 13,
           fontWeight: 500,
           lineHeight: 20
@@ -163,8 +163,7 @@ export default class RealTime extends Vue {
           type: 'line',
           showSymbol: false,
           lineStyle: {
-            color: `${this.types[data.status - 1]['color']}`,
-            width: 4
+            color: `${this.types[data.status - 1]['color']}`
           },
           data: data.dataSet,
           markLine: {
@@ -304,7 +303,7 @@ export default class RealTime extends Vue {
       this.el = this.$refs.chartElements
 
       for (let i = 0; i < this.el.length; i++) {
-        this.chartElements[i] = this.h_echarts.init(this.el[i] as HTMLCanvasElement)
+        this.chartElements[i] = this.h_echarts.init(this.el[i] as HTMLCanvasElement, 'light', { renderer: 'svg' })
         this.chartElements[i].setOption(this.getOption(this.dataAll[i]))
       }
     })

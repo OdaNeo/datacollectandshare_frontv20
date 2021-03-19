@@ -42,14 +42,16 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 9.  rest protobuf 文件上传方式创建主题 文件示例
 10. ~~首页登陆以及搜索框支持 Enter~~
 11. ~~this.formProvide.title 优化（区分修改和创建）~~
-12. h-table 动态设置 header（需要新字段）
-13. 监控日志页面 重构（同一时间 60min 段内的合并到一起）(考虑手撕)
-14. 日志主题创建 loading 图优化，改的不那么浮夸
+12. ~~h-table 动态设置 header（需要新字段） 已在统一运维平台实现 ~~
+13. ~~监控日志页面 重构 (考虑手撕)~~
+14. ~~日志主题创建 loading 图优化，改的不那么浮夸~~
 15. ~~实时数据监控：仅显示一天内的数据，纵轴显示作业 ID ( 有分类 )，横轴按照作业起止时间实时显示数据流速度，（视频 ：视频流速度；事务、日志：数据读写速度） ~~
 16. add e2e test
 17. multi-checkbox 组件构建
 18. 文件下载动画
-19. 作业监控页面keep alive 以及 data-zoom 优化
+19. 作业监控页面 data-zoom 优化
+20. ~~视频监控页面修改~~
+21. ~~视频搜索页面loading~~
 
 ## 常见问题
 

@@ -44,7 +44,7 @@ export default class VideoDataStatistics extends Vue {
     //   {
     //     address: '海鹰路海鹰路海鹰路海鹰路',
     //     bucketName: 'topic9008082',
-    //     createTime: '2021-01-25T04:27:25.000+0000',
+    //     createTime: '2021-01-26T04:27:25.000+0000',
     //     fileNum: 6,
     //     id: 2083,
     //     m3u8Url: '',
@@ -79,7 +79,7 @@ export default class VideoDataStatistics extends Vue {
       },
       series: [
         {
-          name: '主题面积占比',
+          name: '视频主题文件占比',
           type: 'pie',
           radius: [20, 80],
           center: ['50%', '50%'],
@@ -109,18 +109,24 @@ export default class VideoDataStatistics extends Vue {
   }
 
   // echarts 3
-  private getOption3(data: Array<{ createTime: unknown; fileNum: unknown }>) {
+  private getOption3(data: Array<{ createTime: string; fileNum: number }>) {
+    // fileNum 最大值
+    data.sort((prev, next) => {
+      return next.fileNum - prev.fileNum
+    })
+
     return {
       title: {
         top: 30,
         left: 'center',
-        text: '2021年视频主题概况'
+        text: '2021年视频主题文件数量概况'
       },
       tooltip: {},
       visualMap: {
         min: 0,
-        max: 50,
+        max: Math.ceil(data[0].fileNum / 5) * 5,
         type: 'piecewise',
+        splitNumber: 5,
         orient: 'horizontal',
         left: 'center',
         top: 65,

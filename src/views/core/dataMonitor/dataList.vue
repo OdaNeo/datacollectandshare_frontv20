@@ -1,10 +1,29 @@
 <template>
-  <div id="dataMonitor">
+  <div id="dataMonitor" class="mb-12">
     <v-row class="fill-height">
       <v-col>
         <v-sheet height="64">
           <v-toolbar flat>
-            <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">转到今日</v-btn>
+            <v-btn
+              outlined
+              :color="type === 'category' ? `primary` : `grey darken-2`"
+              width="70px"
+              class="mr-4"
+              @click="type = 'category'"
+              >日</v-btn
+            >
+            <v-btn
+              outlined
+              :color="type === 'week' ? `primary` : `grey darken-2`"
+              width="70px"
+              class="mr-4"
+              @click="type = 'week'"
+              >周</v-btn
+            >
+            <v-btn outlined :color="type === 'month' ? `primary` : `grey darken-2`" width="70px" @click="type = 'month'"
+              >月</v-btn
+            >
+
             <v-btn class="ml-12" fab text small color="grey darken-2" @click="prev">
               <v-icon small>mdi-chevron-left</v-icon>
             </v-btn>
@@ -15,7 +34,8 @@
               {{ $refs.calendar.title }}
             </v-toolbar-title>
             <v-spacer></v-spacer>
-            <v-menu bottom right>
+            <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">转到今日</v-btn>
+            <!-- <v-menu bottom right>
               <template v-slot:activator="{ on, attrs }">
                 <v-btn outlined color="grey darken-2" v-bind="attrs" v-on="on">
                   <span>{{ typeToLabel[type] }}</span>
@@ -33,10 +53,10 @@
                   <v-list-item-title>月</v-list-item-title>
                 </v-list-item>
               </v-list>
-            </v-menu>
+            </v-menu> -->
           </v-toolbar>
         </v-sheet>
-        <v-sheet height="550">
+        <v-sheet :height="type === 'month' ? 570 : undefined">
           <v-calendar
             ref="calendar"
             v-model="focus"
@@ -46,6 +66,7 @@
             :event-color="getEventColor"
             :type="type"
             category-show-all
+            interval-width="0"
             :categories="categories"
             :event-more-text="`显示更多`"
             @click:event="showEvent"
@@ -56,7 +77,7 @@
           <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
             <v-card color="grey lighten-4" min-width="350px" flat>
               <v-toolbar :color="selectedEvent.color" dark dense flat>
-                <v-toolbar-title>主题ID: {{ selectedEvent.name }}</v-toolbar-title>
+                <v-toolbar-title> {{ selectedEvent.name }}</v-toolbar-title>
               </v-toolbar>
               <v-card-text>
                 <span>时间: {{ selectedEvent.timeFormatter }}</span>
@@ -174,7 +195,7 @@ export default class dataMonitor extends Vue {
         color: calendarColorType[item['status']],
         remarks: item['remarks'],
         status: calendarType[item['status']],
-        name: item['topicId'].toString(),
+        name: `作业ID：${item['topicId'].toString()}`,
         category: item['serverName'],
         timeFormatter: this.h_utils.timeUtil.stamptoFullTime(item['createTime'], '/'),
         timed: false
@@ -194,3 +215,8 @@ export default class dataMonitor extends Vue {
   }
 }
 </script>
+<style scoped>
+#dataMonitor >>> .v-calendar-daily__body {
+  display: none;
+}
+</style>

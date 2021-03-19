@@ -1,5 +1,5 @@
 <template>
-  <v-row no-gutters>
+  <v-row class="mt-3" no-gutters>
     <!-- dateRange类型 -->
     <v-col cols="12" class="d-flex justify-space-around">
       <label class="label"><span class="require-span">*</span>起始时间</label>

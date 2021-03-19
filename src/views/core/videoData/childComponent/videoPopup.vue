@@ -10,19 +10,22 @@
       <div style="font-size: 12px; text-align: center; user-select: none">
         该时间段（{{ formProvide.formObj.startTime }}日{{ formProvide.formObj.startHour }}时到{{
           formProvide.formObj.endTime
-        }}日{{ formProvide.formObj.endHour }}时），应有{{ videoCounts }}个视频，已查询到{{
-          videoCountsReal
-        }}个视频，正在播放第{{ curIndexReal }}个视频。
+        }}日{{ formProvide.formObj.endHour }}时），已查询到{{ videoCountsReal }}个视频，正在播放第{{
+          curIndex + 1
+        }}个视频。
       </div>
-      <v-slide-group v-model="model" class="pa-4" show-arrows>
-        <v-slide-item v-for="(item, index) in videoList" :key="item.id">
+      <v-slide-group v-model="model" class="pa-4 my-1" show-arrows center-active>
+        <v-slide-item v-for="(item, index) in videoList" :key="item.id" v-slot="{ toggle }">
           <v-btn
             class="mx-2"
             :class="{ primary: curIndex === index }"
             small
             depressed
             rounded
-            @click="handleBtnCLick(index)"
+            @click="
+              toggle()
+              handleBtnCLick(index)
+            "
           >
             {{ item.timer }}
           </v-btn>
@@ -43,7 +46,7 @@ import util from '@/decorator/utilsDecorator'
 @util
 export default class VideoPopup extends Vue {
   @Inject() private readonly formProvide!: H_Vue
-  @Prop() private videoCounts!: number
+  // @Prop() private videoCounts!: number
   @Prop() private videoCountsReal!: number
   @Prop() private videoList!: Array<any>
   @Model('closeDialog', { type: Boolean }) private checked!: boolean
@@ -62,7 +65,6 @@ export default class VideoPopup extends Vue {
   }
   private model = null
   private curIndex = 0
-  private curIndexReal = 0
 
   private playVideo(str: string) {
     // 实例化前销毁可能存在的实例
@@ -79,7 +81,6 @@ export default class VideoPopup extends Vue {
     if (!str) {
       // 视频不存在
       this.dp.pause()
-      this.h_utils['alertUtil'].close()
       this.h_utils['alertUtil'].open('该时间段视频不存在', true, 'error', 1000)
       if (this.curIndex + 1 < this.videoList.length) {
         this.toggleCurrentPlay(this.curIndex + 1)
@@ -89,7 +90,6 @@ export default class VideoPopup extends Vue {
       // 视频存在
       this.dp.play()
       this.h_utils['alertUtil'].close()
-      this.curIndexReal++
     }
 
     this.dp?.on('ended' as DPlayerEvents, () => {
@@ -109,14 +109,13 @@ export default class VideoPopup extends Vue {
     if (this.videoList[index].url) {
       this.toggleCurrentPlay(index)
     } else {
-      this.h_utils['alertUtil'].close()
       this.h_utils['alertUtil'].open('该时间段视频不存在', true, 'error', 1000)
     }
   }
 
   mounted(): void {
     this.toggleCurrentPlay(0)
-    console.log(this.videoCountsReal)
+    // console.log(this.videoCountsReal)
   }
 }
 </script>
