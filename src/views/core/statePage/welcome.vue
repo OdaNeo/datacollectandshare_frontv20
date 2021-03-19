@@ -4,7 +4,7 @@
       <system-topic-proportion></system-topic-proportion>
       <user-proportion></user-proportion>
     </div>
-    <div class="btmContent" style="height: 400px; margin-top: 24px">
+    <div class="btmContent" style="height: calc(77vh - 190px); margin-top: 24px">
       <release-menu :systemItems="systemItems"></release-menu>
       <subscribe-menu :systemItems="systemItems"></subscribe-menu>
     </div>
@@ -55,6 +55,6 @@ export default class Welcome extends Vue {
         width:100%
         display:flex
         justify-content:space-between
-::-webkit-scrollbar
-    display:none
+// ::-webkit-scrollbar
+//     display:none
 </style>

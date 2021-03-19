@@ -212,8 +212,8 @@ export default class OfflineDataStatistics extends Vue {
 <style scoped>
 #OfflineDataStatistics {
   position: relative;
-  width: 75%;
-  height: 500px;
+  width: 80%;
+  height: 75vh;
   padding-top: 20px;
   margin-top: 20px;
   box-shadow: 2px 6px 15px 0 rgba(69, 65, 78, 0.1);

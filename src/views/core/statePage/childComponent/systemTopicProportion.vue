@@ -178,10 +178,13 @@ export default class SystemTopicProportion extends Vue {
     box-shadow: 2px 6px 15px 0 rgba(69,65,78,.1)
     border-radius: 5px
     position: relative
+::-webkit-scrollbar
+    display:none
 .leftTopView
     overflow-y: hidden
     overflow-x: scroll
     white-space: nowrap
+    scrollbar-width: none
     p
         text-align: center
         color:#000

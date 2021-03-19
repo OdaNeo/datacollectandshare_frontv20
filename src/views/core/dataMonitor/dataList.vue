@@ -1,5 +1,5 @@
 <template>
-  <div id="dataMonitor" class="mb-12">
+  <div id="dataMonitor">
     <v-row class="fill-height">
       <v-col>
         <v-sheet height="64">
@@ -23,7 +23,6 @@
             <v-btn outlined :color="type === 'month' ? `primary` : `grey darken-2`" width="70px" @click="type = 'month'"
               >月</v-btn
             >
-
             <v-btn class="ml-12" fab text small color="grey darken-2" @click="prev">
               <v-icon small>mdi-chevron-left</v-icon>
             </v-btn>
@@ -56,7 +55,7 @@
             </v-menu> -->
           </v-toolbar>
         </v-sheet>
-        <v-sheet :height="type === 'month' ? 570 : undefined">
+        <v-sheet :height="type === 'month' ? '73vh' : undefined">
           <v-calendar
             ref="calendar"
             v-model="focus"

@@ -650,6 +650,7 @@ export default class OnlineDataTopicList extends Vue {
       })
       .catch(err => {
         console.log(err)
+        this.h_utils['alertUtil'].open('文件下载失败', true, 'error')
       })
   }
 }

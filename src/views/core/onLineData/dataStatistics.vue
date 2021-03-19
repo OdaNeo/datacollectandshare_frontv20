@@ -37,7 +37,7 @@ export default class OnlineDataStatistics extends Vue {
 #OnlineDataStatistics {
   margin-top: 10px;
   width: 97%;
-  height: 500px;
+  height: 76vh;
   display: flex;
   justify-content: space-between;
 }

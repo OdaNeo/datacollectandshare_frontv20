@@ -173,11 +173,11 @@ export default class VideoDataStatistics extends Vue {
 </script>
 <style scoped>
 #echarts1 {
-  height: 300px;
+  height: 40vh;
   width: 100%;
 }
 #echarts2 {
-  height: 300px;
+  height: 40vh;
   width: 80%;
   margin: 0 auto;
 }
