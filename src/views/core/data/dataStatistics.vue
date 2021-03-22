@@ -384,14 +384,14 @@ export default class DataStatistics extends Vue {
     const options = {
       tooltip: {
         formatter: (name: any) => {
-          //   const startTime = name.data.value[1]
-          //   const endTime = name.data.value[2]
+          const startTime = this.h_utils.timeUtil['stamptoFullTime'](name.data.value[1], '-')
+          const endTime = this.h_utils.timeUtil['stamptoFullTime'](name.data.value[2], '-')
           const count = name.data.value[3]
           const topicName = name.data.name
           return (
-            this.beginDate +
+            startTime +
             '至' +
-            this.afterDate +
+            endTime +
             '<br />' +
             '主题' +
             topicName +

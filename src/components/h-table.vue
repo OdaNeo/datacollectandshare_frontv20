@@ -22,7 +22,16 @@
           </thead>
           <tbody>
             <tr v-for="(item, key) in desserts2" :key="key" v-show="showFun(item.parentid)">
-              <td v-for="(header, index) in headers" :key="index" :class="'text-' + header.align">
+              <td
+                v-for="(header, index) in headers"
+                :key="index"
+                :class="'text-' + header.align"
+                :style="{
+                  minWidth: '90px',
+                  wordWrap: 'break-word',
+                  maxWidth: header.width ? header.width + 'px' : undefined
+                }"
+              >
                 <div
                   :style="
                     'margin-left:' +
@@ -53,6 +62,7 @@
   </div>
 </template>
 <script lang="ts">
+import { tableHeaderType } from '@/type/table.type'
 import { Component, Vue, Watch, Prop, Emit } from 'vue-property-decorator'
 
 @Component
@@ -62,7 +72,7 @@ export default class HTable extends Vue {
 
   @Prop() private paginationLength!: number
   @Prop() private pageNum!: number
-  @Prop() private headers!: any
+  @Prop() private headers!: tableHeaderType[]
   @Prop() private desserts!: any
   @Prop() private title!: string
   @Prop({ default: false }) private loading!: boolean

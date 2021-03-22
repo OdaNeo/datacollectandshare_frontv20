@@ -112,6 +112,7 @@ export default class SystemConfig extends Vue {
     {
       text: '配置属性',
       align: 'center',
+      width: 550,
       value: 'value'
     },
     {

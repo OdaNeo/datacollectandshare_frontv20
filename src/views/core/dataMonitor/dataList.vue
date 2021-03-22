@@ -55,7 +55,7 @@
             </v-menu> -->
           </v-toolbar>
         </v-sheet>
-        <v-sheet :height="type === 'month' ? '73vh' : undefined">
+        <v-sheet :height="type === 'month' ? '77vh' : undefined">
           <v-calendar
             ref="calendar"
             v-model="focus"

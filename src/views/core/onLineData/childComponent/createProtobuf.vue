@@ -52,12 +52,10 @@
 </template>
 <script lang="ts">
 import { Component, Inject, Vue } from 'vue-property-decorator'
-import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 
 @Component({})
-@http
 @Validator(['fileProtoValidate', 'topicNameFormatter', 'noEmpty'])
 export default class CreateProtobuf extends Vue {
   @Inject() private readonly formProvide!: H_Vue

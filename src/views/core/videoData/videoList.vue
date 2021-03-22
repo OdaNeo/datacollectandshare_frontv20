@@ -87,6 +87,7 @@ import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import FDialog from '@/components/f-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicTable } from '@/type/topic.type'
+import { tableHeaderType } from '@/type/table.type'
 
 @Component({
   components: {
@@ -140,7 +141,7 @@ export default class VideoDataList extends Vue {
   private dialogLoading = false
 
   // 表头内容 所有主题
-  private headers = [
+  private headers: tableHeaderType[] = [
     {
       text: '主题ID',
       align: 'center',
@@ -164,16 +165,19 @@ export default class VideoDataList extends Vue {
     {
       text: '本系统rtmp地址',
       align: 'center',
+      width: 220,
       value: 'serverUrl'
     },
     {
       text: '摄像头物理地址',
       align: 'center',
+      width: 220,
       value: 'address'
     },
     {
       text: '摄像头rtsp/rtmp地址',
       align: 'center',
+      width: 220,
       value: 'sourceUrl'
     },
     {
@@ -266,7 +270,9 @@ export default class VideoDataList extends Vue {
     //   { timer: '2021-01-01 04', url: [] }
     // ]
     data.forEach((item: { timer: string; url: Array<string> }) => {
-      if (item.url.length !== 0) {
+      if (item.url.length === 0) {
+        return
+      } else {
         item.url.forEach((_item, _index) => {
           if (_item) {
             this.videoList.push({ timer: item.timer + '时' + '-' + (_index + 1), url: item.url[_index] })
@@ -280,7 +286,7 @@ export default class VideoDataList extends Vue {
     })
     // console.log(this.videoList)
     this.dialogLoading = false
-
+    // 有视频，才弹出视频弹窗
     if (this.videoList.length > 0) {
       this.showVideoPopup = true
       return Promise.resolve(true)

@@ -17,7 +17,7 @@
         >
         </v-text-field>
       </v-col>
-      <v-col>
+      <v-col cols="9">
         <v-btn
           color="primary"
           width="95px"
@@ -28,8 +28,11 @@
           dark
           @click="createTransactionalData()"
         >
-          创建事务主题
+          创建事务作业
         </v-btn>
+        <v-btn color="primary" width="95px" height="35px" depressed class="mr-6" small dark @click="uploadSQL"
+          >上传SQL文件</v-btn
+        >
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -94,7 +97,8 @@
     </v-tabs-items>
     <!-- 表单展示 -->
     <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
-      <CreateTransactionalData />
+      <CreateTransactionalData v-if="dialogFlag === 1" />
+      <UploadSQL v-if="dialogFlag === 2" @transform-sql-file="transformSQLFile" />
     </f-dialog>
 
     <!-- 表格显示 -->
@@ -119,6 +123,7 @@ import { dataType } from '@/enum/topic-datatype-enum'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import { FormObj } from '@/type/dialog-form.type'
 import CreateTransactionalData from './childComponent/createTransactionalData.vue'
+import UploadSQL from './childComponent/uploadSQL.vue'
 import { TopicAdd } from '@/type/topic-add.type'
 import ContentDetails from './childComponent/contentDetails.vue'
 import { tableHeaderType } from '@/type/table.type'
@@ -130,7 +135,8 @@ import { tableHeaderType } from '@/type/table.type'
     TDialog,
     FDialog,
     CreateTransactionalData,
-    ContentDetails
+    ContentDetails,
+    UploadSQL
   }
 })
 @http
@@ -150,6 +156,7 @@ export default class transactionalDataList extends Vue {
   private tab = null
   private items = ['所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示
+  private dialogFlag = 0
   private tDialogFlag = false // 表格展示
   private queryTopicID = '' // 查询主题ID input框内容
 
@@ -165,6 +172,7 @@ export default class transactionalDataList extends Vue {
   }
 
   private rowJson = ''
+  private sqlFile: File | null = null
 
   private desserts: Array<topicTable> = [] // 数据列表
   private loading = true
@@ -215,6 +223,7 @@ export default class transactionalDataList extends Vue {
   private createTransactionalData(items?: any) {
     // 创建
     this.fDialogFlag = true
+    this.dialogFlag = 1
     this.formProvide.btnName = items ? ['立即修改'] : ['立即提交']
     this.formProvide.title = items ? '修改事务主题' : '创建事务主题'
     this.formProvide.methodName = 'addTransactionalData'
@@ -364,6 +373,28 @@ export default class transactionalDataList extends Vue {
     }
   }
 
+  // 上传SQl文件
+  private uploadSQL() {
+    this.fDialogFlag = true
+    this.dialogFlag = 2
+    this.formProvide.btnName = ['立即上传']
+    this.formProvide.title = '上传SQL文件'
+    this.formProvide.methodName = 'uploadSQLFile'
+    this.formProvide.formObj = {}
+  }
+
+  private uploadSQLFile() {
+    console.log(this.sqlFile)
+  }
+
+  // transformSQLFile
+  private transformSQLFile(e: File) {
+    if (!e) {
+      return
+    }
+    this.sqlFile = e
+  }
+
   // 查询通用调用方法 结构化数据
   private async searchMethod(bool: boolean, params: paramsType, tab?: boolean) {
     // console.log(bool)
@@ -377,7 +408,7 @@ export default class transactionalDataList extends Vue {
       const { data }: returnDataType = bool
         ? await this.h_request['httpGET']('GET_TOPICS_MYTOPICSBYID', params)
         : await this.h_request['httpGET']('GET_TOPICS_MYTOPICS', params)
-      this.desserts = data.list.map((item: any) => {
+      this.desserts = data?.list.map((item: any) => {
         return { ...item }
       })
       this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
@@ -387,7 +418,7 @@ export default class transactionalDataList extends Vue {
       const { data }: returnDataType = bool
         ? await this.h_request['httpGET']('GET_TOPICS_SELECTTOPIC', params)
         : await this.h_request['httpGET']('GET_TOPICS_FIND_ALL', params)
-      this.desserts = data.list.map((item: any) => {
+      this.desserts = data?.list.map((item: any) => {
         return { ...item }
       })
       this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1

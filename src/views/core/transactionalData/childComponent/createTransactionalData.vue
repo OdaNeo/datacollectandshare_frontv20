@@ -277,11 +277,9 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
-import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 
-@http
 @Component({})
 @Validator(['noEmpty'])
 export default class CreateTransactionalData extends Vue {

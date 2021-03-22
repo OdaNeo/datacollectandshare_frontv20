@@ -49,12 +49,9 @@
 <script lang="ts">
 import { Component, Vue, Inject } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
-
 import Validator from '@/decorator/validatorDecorator'
-import http from '@/decorator/httpDecorator'
 
 @Component
-@http
 @Validator(['topicNameFormatter', 'noEmpty'])
 export default class CreateVideoTopicDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue

@@ -47,6 +47,7 @@
         >
       </template>
       <template v-slot:operation="{ item }">
+        <!-- 订阅按钮乐观更新 -->
         <v-btn text v-if="!item.status" color="primary" class="my-2" @click="subscribe(item)">订阅</v-btn>
         <v-btn text v-if="item.status" color="warning" class="my-2" @click="cancelScribe(item)">取消订阅</v-btn>
       </template>

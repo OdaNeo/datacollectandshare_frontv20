@@ -46,12 +46,10 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { rootStoreModule } from '@/store/modules/root'
-import http from '@/decorator/httpDecorator'
 import { userState } from '@/enum/user-enum'
 import { PROJECT_TITLE } from '@/config'
 
 @Component
-@http
 export default class TopBar extends Vue {
   // private dialog = false
   // private titleState = false

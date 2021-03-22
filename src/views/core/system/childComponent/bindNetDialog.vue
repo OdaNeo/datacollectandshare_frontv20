@@ -36,12 +36,10 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Inject, Prop } from 'vue-property-decorator'
-import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 
 @Component
-@http
 @Validator(['noEmpty'])
 export default class BindNetDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue

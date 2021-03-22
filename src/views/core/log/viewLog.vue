@@ -28,7 +28,7 @@
         ></h-date-picker>
       </v-col>
       <v-col>
-        <v-btn height="35px" width="95px" color="primary" depressed small dark @click="clickSearch">查询</v-btn>
+        <v-btn height="35px" width="95px" color="primary" depressed dark @click="clickSearch">查询</v-btn>
       </v-col>
     </v-row>
     <h-table

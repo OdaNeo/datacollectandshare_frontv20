@@ -7,8 +7,9 @@
       <NavBar />
     </v-navigation-drawer>
     <v-main style="background: rgb(246, 248, 251); width: 100%; height: 100%">
-      <v-container fluid class="main-container">
-        <v-breadcrumbs :items="items"></v-breadcrumbs>
+      <v-container fluid class="main-container mt-4">
+        <!-- 面包屑导航 -->
+        <!-- <v-breadcrumbs :items="items"></v-breadcrumbs> -->
         <transition name="fade-transform" mode="out-in">
           <router-view class="main-container-inner"></router-view>
         </transition>
@@ -54,7 +55,7 @@ import http from '@/decorator/httpDecorator'
 export default class Layout extends Vue {
   private PROJECT_BASE_COLOR = PROJECT_BASE_COLOR
   private timer = 0
-  private interval = 30
+  private interval = 60
 
   private events: Array<CalendarData> = []
   private showAlert = false
@@ -113,21 +114,22 @@ export default class Layout extends Vue {
       this.events = _events
     })
   }
+  // 面包屑导航内容
+  // get items(): Array<{ text: string; disabled?: boolean; link?: boolean; to?: string }> {
+  //   if (this.$route.matched[0].meta.title === 'tct') {
+  //     return [
+  //       { text: '首页', disabled: false },
+  //       { text: this.$route.meta.title, disabled: true }
+  //     ]
+  //   } else {
+  //     return [
+  //       { text: '首页', disabled: false },
+  //       { text: this.$route.matched[0].meta.title, disabled: false },
+  //       { text: this.$route.meta.title, disabled: true }
+  //     ]
+  //   }
+  // }
 
-  get items(): Array<{ text: string; disabled?: boolean; link?: boolean; to?: string }> {
-    if (this.$route.matched[0].meta.title === 'tct') {
-      return [
-        { text: '首页', disabled: false },
-        { text: this.$route.meta.title, disabled: true }
-      ]
-    } else {
-      return [
-        { text: '首页', disabled: false },
-        { text: this.$route.matched[0].meta.title, disabled: false },
-        { text: this.$route.meta.title, disabled: true }
-      ]
-    }
-  }
   private handleHideAlert() {
     this.showAlert = false
   }
@@ -136,10 +138,15 @@ export default class Layout extends Vue {
     this.showAlert = true
   }
   mounted(): void {
-    this.updateRange()
+    // 减少首页http请求
+    // this.updateRange()
     this.timer = setInterval(() => {
       this.updateRange()
     }, this.interval * 1000)
+  }
+  // 清除timer
+  beforeDestroy(): void {
+    clearInterval(this.timer)
   }
 }
 </script>

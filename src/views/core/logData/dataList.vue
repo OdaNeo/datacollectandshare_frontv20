@@ -203,7 +203,7 @@ export default class LogDataList extends Vue {
         logUserName: item.logUserName,
         savePath: item.savePath,
         saveType: item.saveType?.split(','),
-        keywords: item.keywords
+        keywords: item.keywords ? item.keywords : ''
       }
     } else {
       this.formProvide.formObj = {}
@@ -230,7 +230,7 @@ export default class LogDataList extends Vue {
     }
     params.savePath = formObj.savePath
     params.saveType = formObj.saveType.join('+')
-    params.keywords = formObj.keywords
+    params.keywords = formObj.keywords ? formObj.keywords : ''
     params.topicInterFaceType = 9
 
     console.log(params)
