@@ -89,9 +89,10 @@ export const POST_TOPICS_UPDATELOGGERTOPIC = '/topics/updateLoggerTopic'
 export const GET_TOPICS_DELETELOOGGERTOPIC = '/topics/deleteLoggerTopic'
 export const GET_TOPICS_SELECTLOGGERTOPICBYTOPICID = '/topics/selectLoggerTopicByTopicId'
 
-// ----------------------------- 数据采集监控 ------------------------
+// ----------------------------- 作业监控 ------------------------
 export const GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME = '/monitor/findAllMonitorLogByTime'
 export const GET_MONITOR_FIND_ALL_MONITOR_LOG = '/monitor/findAllMonitorLog'
+export const POST_MONITOR_FINDLOGBYTIME = '/monitor/findLogByTime'
 
 // ----------------------------- 事务数据 ---------------------------
 export const GET_TOPICS_GETOFFLINELOG = '/topics/getOfflineLog'
@@ -191,7 +192,8 @@ const REQUEST_NAME: REQUEST_NAME_TYPE = {
   GET_TOPICS_DELETELOOGGERTOPIC,
   GET_TOPICS_SELECTLOGGERTOPICBYTOPICID,
   GET_TOPICS_UPDATETRANSACTIONALTOPICSTATE,
-  GET_TOPICS_RUNTRANSACTIONALTOPICAGAIN
+  GET_TOPICS_RUNTRANSACTIONALTOPICAGAIN,
+  POST_MONITOR_FINDLOGBYTIME
 }
 
 export default REQUEST_NAME

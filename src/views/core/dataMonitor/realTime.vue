@@ -35,10 +35,18 @@
         </div>
       </v-col>
     </v-row>
-    <div class="chartsContainer">
-      <div class="chartElements" ref="chartElements" v-for="item in dataAll" :key="item.topicId"></div>
-      <!-- TODO: 分页 -->
+    <!-- echarts -->
+    <div class="charts-container">
+      <div class="chart-elements" ref="chartElements" v-for="item in dataAll" :key="item.topicId"></div>
     </div>
+    <!--  分页 -->
+    <v-pagination
+      v-if="paginationLength !== 0"
+      :length="paginationLength"
+      :total-visible="10"
+      @input="handleCurrentChange"
+      :value="pageNum"
+    ></v-pagination>
   </div>
 </template>
 <script lang="ts">
@@ -72,6 +80,10 @@ export default class RealTime extends Vue {
     { name: '警告', color: 'orange' },
     { name: '正常', color: '#2ECC71' }
   ]
+  // 分页
+  private paginationLength = 0
+  private pageNum = 1
+  private pageSize = 8
 
   // 查询主题ID input框内容
   private queryTopicID = ''
@@ -79,6 +91,8 @@ export default class RealTime extends Vue {
 
   // 柯里化option
   private getOption(data: any) {
+    // console.log(data.dataSet)
+    // const dataSet = [{ createTime: '1616342400021', status: 1 }, { createTime: '1616382855289', status: 1 }]
     return {
       title: {
         text: `作业ID：${data.topicId}`,
@@ -90,25 +104,25 @@ export default class RealTime extends Vue {
           fontWeight: 500,
           lineHeight: 12
         },
-        padding: [15, 0, 0, 0]
+        padding: [10, 0, 0, 0]
       },
       grid: {
-        top: '15%',
+        top: '17%',
         bottom: '23%'
       },
       dataZoom: [
-        // {
-        //   type: 'inside',
-        //   filterMode: 'weakFilter',
-        //   startValue: new Date().getTime() - 0.8 * 60 * 60 * 1000,
-        //   endValue: new Date().getTime() + 0.2 * 60 * 60 * 1000
-        // },
+        {
+          type: 'inside',
+          filterMode: 'weakFilter',
+          startValue: new Date().getTime() - 0.6 * 30 * 60 * 1000,
+          endValue: new Date().getTime() + 0.4 * 30 * 60 * 1000
+        },
         {
           type: 'slider',
           filterMode: 'weakFilter',
           // 默认显示半个小时内的
-          startValue: new Date().getTime() - 0.85 * 30 * 60 * 1000,
-          endValue: new Date().getTime() + 0.15 * 30 * 60 * 1000,
+          startValue: new Date().getTime() - 0.6 * 30 * 60 * 1000,
+          endValue: new Date().getTime() + 0.4 * 30 * 60 * 1000,
           showDataShadow: false,
           top: '92%',
           height: 6,
@@ -117,10 +131,6 @@ export default class RealTime extends Vue {
           handleIcon:
             'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAARVBMVEX////R0dvN0tvL0tvL0dvM0trO2OLM09vL0dvO0dvL0trM09zM0tvM0tvL0drU2eHp6+/3+Pn9/f7N09vq7PD////y9PaQXLgBAAAADnRSTlMAHGu22fMam/xO8m79/nbCHu4AAAABYktHRACIBR1IAAAAB3RJTUUH4wcSEhgvIlxSlgAAAJtJREFUKM91kusShCAIhfGeZaamvf+jLpS7qzPx/WDGcxQQBXgQUmljtJICRqxbYmdx9q/7NQ6s/qtvIU6Ere/faXWkXEpOx+3cZyzlOWvr1JOyUR1H+tV+XOQ47JP6qW2gUm8CJOVvE1RHgsKYZiOhpEBjzLORUdJgMJbZKCgZ3mBTscXZdtkLsiPhhwg+vI+dfyj+afnP8PZ9PjqGHTJG9o2tAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE5LTA3LTE4VDEwOjI0OjQ3KzA4OjAwIkgiHgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxOS0wNy0xOFQxMDoyNDo0NyswODowMFMVmqIAAAAASUVORK5CYII=',
           handleSize: 16,
-          // handleStyle: {
-          //   shadowBlur: 4,
-          //   shadowColor: '#aaa'
-          // },
           labelFormatter: (time: number) => {
             return this.h_utils.timeUtil.stampToTodayTime(time)
           }
@@ -148,64 +158,16 @@ export default class RealTime extends Vue {
       },
       series: [
         {
-          // 正常
+          // 正常 每10分钟截取一个点，组成连线
           type: 'line',
           showSymbol: false,
           lineStyle: {
             color: `${this.types[3]['color']}`
           },
-          data: data.dataSet,
-          markLine: {
-            symbol: ['none', 'none'],
-            label: { show: false },
-            data: [{ xAxis: this.now }],
-            lineStyle: {
-              color: '#2ECC71'
-            }
-          }
-        },
-        {
-          // 异常
-          type: 'line',
-          showSymbol: false,
-          lineStyle: {
-            color: `${this.types[0]['color']}`
-          },
-          data: data.dataSet,
-          markLine: {
-            symbol: ['none', 'none'],
-            label: { show: false },
-            data: [{ xAxis: this.now }],
-            lineStyle: {
-              color: '#2ECC71'
-            }
-          }
-        },
-        {
-          // 离线
-          type: 'line',
-          showSymbol: false,
-          lineStyle: {
-            color: `${this.types[1]['color']}`
-          },
-          data: data.dataSet,
-          markLine: {
-            symbol: ['none', 'none'],
-            label: { show: false },
-            data: [{ xAxis: this.now }],
-            lineStyle: {
-              color: '#2ECC71'
-            }
-          }
-        },
-        {
-          // 警告
-          type: 'line',
-          showSymbol: false,
-          lineStyle: {
-            color: `${this.types[2]['color']}`
-          },
-          data: data.dataSet,
+          data: [
+            [new Date().getTime() - 10000, 1],
+            [new Date().getTime(), 1]
+          ],
           markLine: {
             symbol: ['none', 'none'],
             label: { show: false },
@@ -215,19 +177,63 @@ export default class RealTime extends Vue {
             }
           }
         }
+        // {
+        //   // 异常
+        //   type: 'line',
+        //   showSymbol: false,
+        //   lineStyle: {
+        //     color: `${this.types[0]['color']}`
+        //   },
+        //   data: data.dataSet,
+        //   markLine: {
+        //     symbol: ['none', 'none'],
+        //     label: { show: false },
+        //     data: [{ xAxis: this.now }],
+        //     lineStyle: {
+        //       color: '#2ECC71'
+        //     }
+        //   }
+        // },
+        // {
+        //   // 离线
+        //   type: 'line',
+        //   showSymbol: false,
+        //   lineStyle: {
+        //     color: `${this.types[1]['color']}`
+        //   },
+        //   data: data.dataSet,
+        //   markLine: {
+        //     symbol: ['none', 'none'],
+        //     label: { show: false },
+        //     data: [{ xAxis: this.now }],
+        //     lineStyle: {
+        //       color: '#2ECC71'
+        //     }
+        //   }
+        // },
+        // {
+        //   // 警告
+        //   type: 'line',
+        //   showSymbol: false,
+        //   lineStyle: {
+        //     color: `${this.types[2]['color']}`
+        //   },
+        //   data: data.dataSet,
+        //   markLine: {
+        //     symbol: ['none', 'none'],
+        //     label: { show: false },
+        //     data: [{ xAxis: this.now }],
+        //     lineStyle: {
+        //       color: '#2ECC71'
+        //     }
+        //   }
+        // }
       ]
     }
   }
 
   private async updateRange() {
     // 增量更新
-    // const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
-    //   date: new Date().getTime()
-    // })
-    // this.dataAll = data
-    this.dataAll[0].dataSet.push([new Date(), 1])
-    this.dataAll[1].dataSet.push([new Date(), 1])
-
     for (let i = 0; i < this.el.length; i++) {
       this.chartElements[i].setOption({
         series: [
@@ -254,56 +260,6 @@ export default class RealTime extends Vue {
 
   //  初始化echarts
   private initECharts(): void {
-    // 获得所有的数据
-    this.dataAll = [
-      {
-        'topicId': 88888888,
-        'serverName': '日志',
-        'dataSet': [
-          [this.now - 700000, 1],
-          [this.now - 500000, 1],
-          [this.now, 1]
-        ]
-      },
-      {
-        'topicId': 88888886,
-        'serverName': '事务',
-        'dataSet': [
-          [this.now - 1000000, 1],
-          [this.now, 1]
-        ]
-      },
-      {
-        'topicId': 88888889,
-        'serverName': '视频',
-        'dataSet': []
-      },
-      {
-        'topicId': 8884588,
-        'serverName': '日志',
-        'dataSet': []
-      },
-      {
-        'topicId': 88888123,
-        'serverName': '事务',
-        'dataSet': []
-      },
-      {
-        'topicId': 8888234889,
-        'serverName': '视频',
-        'dataSet': []
-      },
-      {
-        'topicId': 8823888888,
-        'serverName': '日志',
-        'dataSet': []
-      },
-      {
-        'topicId': 8888824886,
-        'serverName': '事务',
-        'dataSet': []
-      }
-    ]
     this.$nextTick(() => {
       this.el = this.$refs.chartElements
 
@@ -314,13 +270,40 @@ export default class RealTime extends Vue {
     })
   }
 
-  mounted(): void {
+  // 分页方法
+  private handleCurrentChange(value: number) {
+    this.pageNum = value
+    this.searchMethod({
+      pageNum: this.pageNum,
+      pageSize: this.pageSize
+    })
+  }
+
+  // 搜索方法
+  private async searchMethod(params: object) {
+    // pageNum     必填
+    // pageSize    必填
+    // serverName  选填
+    // status      选填
+    // createTime  选填
+    const { data } = await this.h_request.httpPOST<object>('POST_MONITOR_FINDLOGBYTIME', params)
+    this.paginationLength = Math.ceil(data.total / this.pageSize) || 1
+    this.dataAll = [...data.list]
     // 初始化
     this.initECharts()
+  }
+
+  mounted(): void {
+    // 获得历史数据
+    this.searchMethod({
+      pageNum: this.pageNum,
+      pageSize: this.pageSize
+    })
+
     // 更新
-    this.timer = setInterval(() => {
-      this.updateRange()
-    }, this.interval * 1000)
+    // this.timer = setInterval(() => {
+    //   this.updateRange()
+    // }, this.interval * 1000)
   }
   // 清除timer
   beforeDestroy(): void {
@@ -334,7 +317,7 @@ export default class RealTime extends Vue {
 }
 .real-time-enum {
   display: inline-block;
-  width: 100px;
+  width: 25%;
   padding-left: 25px;
   position: relative;
 }
@@ -345,14 +328,14 @@ export default class RealTime extends Vue {
   top: 18px;
   left: 0px;
 }
-.chartsContainer {
+.charts-container {
   width: 100%;
   height: 77vh;
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
 }
-.chartElements {
+.chart-elements {
   width: calc(25% - 24px);
   background-color: #fff;
   height: 46.5%;

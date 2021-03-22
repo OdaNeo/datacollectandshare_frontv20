@@ -58,6 +58,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 25. icon-font 改 svg
 26. only-number 有气泡提示
 27. 资源管理 新添权限切换 bug-fix
+28. 上传文件校验 文件名重复
+29. 侧边栏样式构建
 
 ## 常见问题
 

@@ -141,7 +141,7 @@ export default class Layout extends Vue {
     // 减少首页http请求
     // this.updateRange()
     this.timer = setInterval(() => {
-      this.updateRange()
+      // this.updateRange()
     }, this.interval * 1000)
   }
   // 清除timer
