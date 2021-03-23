@@ -6,7 +6,7 @@
         <v-progress-circular indeterminate color="primary"></v-progress-circular>
       </div>
       <!-- 无数据 -->
-      <div v-else-if="desserts.length === 0" class="text-center mt-15" style="min-height: 150px">
+      <div v-else-if="!desserts || desserts.length === 0" class="text-center mt-15" style="min-height: 150px">
         <v-icon color="primary lighten-3" size="50">mdi-toy-brick-remove-outline</v-icon>
         <div style="font-size: 14px; margin-top: 5px">查无数据</div>
       </div>

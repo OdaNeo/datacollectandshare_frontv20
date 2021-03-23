@@ -19,7 +19,7 @@ class topicRanking {
             data: years,
             axisType: 'category',
             autoPlay: true,
-            playInterval: 1500,
+            playInterval: 4500,
             left: '6%',
             right: '0%',
             width: '87%',

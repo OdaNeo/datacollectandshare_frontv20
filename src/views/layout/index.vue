@@ -140,8 +140,9 @@ export default class Layout extends Vue {
   mounted(): void {
     // 减少首页http请求
     // this.updateRange()
+    // TODO: 开发环境节流
     this.timer = setInterval(() => {
-      // this.updateRange()
+      this.updateRange()
     }, this.interval * 1000)
   }
   // 清除timer

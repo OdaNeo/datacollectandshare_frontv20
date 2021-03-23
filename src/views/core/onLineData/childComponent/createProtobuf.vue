@@ -33,6 +33,17 @@
         :thumb-size="20"
         thumb-label="always"
       >
+        <template v-slot:append>
+          <v-text-field
+            v-model="formProvide.formObj['redisTimer']"
+            class="mt-0 pt-0"
+            hide-details
+            dense
+            disabled
+            single-line
+            style="width: 30px"
+          ></v-text-field>
+        </template>
       </v-slider>
     </v-col>
 

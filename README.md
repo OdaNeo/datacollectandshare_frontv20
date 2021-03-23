@@ -31,35 +31,37 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 5. ~~eslint（代码风格、缩进）~~、自动部署、~~版本控制、线上查看版本添加 ? 天~~
 6. ~~解耦 formobj~~
 7. ~~form 结构 dialog(v-modal, prop(title,btn), form-slots(for headers-form), auto renew provider/reject, dynamic create form/provider)~~
-1. ~~统一非空校验~~
-2. ~~更人性化的搜索体验~~
-3.  ~~table 添加 loading 图~~
-4.  ~~topicTable 类型优化~~
-5.  ~~统一的空数据表示（null || data.length===0 || list.length===0）~~
-6.  ~~实时主题 统计~~
-7.  ~~搜索体验优化~~
-8.  ~~侧边栏根据路由表排序~~
-9.  rest protobuf 文件上传方式创建主题 文件示例
-10. ~~首页登陆以及搜索框支持 Enter~~
-11. ~~this.formProvide.title 优化（区分修改和创建）~~
-12. ~~h-table 动态设置 header（需要新字段） 已在统一运维平台实现~~
-13. ~~监控日志页面 重构 (考虑手撕)~~
-14. ~~日志主题创建 loading 图优化，改的不那么浮夸~~
-15. ~~实时数据监控：仅显示一天内的数据，纵轴显示作业 ID ( 有分类 )，横轴按照作业起止时间实时显示数据流速度，（视频 ：视频流速度；事务、日志：数据读写速度）~~
-16. add e2e test
-17. multi-checkbox 组件构建
-18. ~~文件下载动画，浏览器自带~~
-19. ~~作业监控页面 data-zoom 优化~~
-20. ~~视频监控页面修改~~
-21. ~~视频搜索页面loading~~
-22. ~~火狐隐藏滚轮~~
-23. ~~表格最小宽度设定~~
-24. 首页loading， 首页加载速度优化， 削减请求数量，目前有7个请求
-25. icon-font 改 svg
-26. only-number 有气泡提示
-27. 资源管理 新添权限切换 bug-fix
-28. 上传文件校验 文件名重复
-29. 侧边栏样式构建
+8. ~~上传文件校验 文件名重复~~
+9. ~~统一非空校验~~
+10. ~~更人性化的搜索体验~~
+11. ~~table 添加 loading 图~~
+12. ~~topicTable 类型优化~~
+13. ~~统一的空数据表示（null || data.length===0 || list.length===0）~~
+14. ~~实时主题 统计~~
+15. ~~搜索体验优化~~
+16. ~~侧边栏根据路由表排序~~
+17. rest protobuf 文件上传方式创建主题 文件示例
+18. ~~首页登陆以及搜索框支持 Enter~~
+19. ~~this.formProvide.title 优化（区分修改和创建）~~
+20. ~~h-table 动态设置 header（需要新字段） 已在统一运维平台实现~~
+21. ~~监控日志页面 重构 (考虑手撕)~~
+22. ~~日志主题创建 loading 图优化，改的不那么浮夸~~
+23. ~~实时数据监控：仅显示一天内的数据，纵轴显示作业 ID ( 有分类 )，横轴按照作业起止时间实时显示数据流速度，（视频 ：视频流速度；事务、日志：数据读写速度）~~
+24. add e2e test
+25. multi-checkbox 组件构建
+26. ~~文件下载动画，浏览器自带~~
+27. ~~作业监控页面 data-zoom 优化~~
+28. ~~视频监控页面修改~~
+29. ~~视频搜索页面loading~~
+30. ~~火狐隐藏滚轮~~
+31. ~~表格最小宽度设定~~
+32. 首页loading， 首页加载速度优化， 削减请求数量， 目前有7个请求
+33. icon-font 改 svg
+34. 搜索 only-number 有气泡提示
+35. 资源管理 新添权限切换 bug-fix
+36. 侧边栏样式构建
+37. 作业监控轮询 权限bugfix（vuex）
+38. 字段名 noRepeatKey 提示优化
 
 ## 常见问题
 

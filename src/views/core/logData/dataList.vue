@@ -202,7 +202,7 @@ export default class LogDataList extends Vue {
         logIp: item.logIp,
         logUserName: item.logUserName,
         savePath: item.savePath,
-        saveType: item.saveType?.split(','),
+        saveType: item.saveType?.split('+'),
         keywords: item.keywords ? item.keywords : ''
       }
     } else {

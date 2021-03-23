@@ -47,6 +47,17 @@
         :thumb-size="20"
         thumb-label="always"
       >
+        <template v-slot:append>
+          <v-text-field
+            v-model="formProvide.formObj['redisTimer']"
+            class="mt-0 pt-0"
+            hide-details
+            dense
+            disabled
+            single-line
+            style="width: 30px"
+          ></v-text-field>
+        </template>
       </v-slider>
     </v-col>
     <!-- 数据结构 -->
@@ -164,8 +175,9 @@
 import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
-
+import http from '@/decorator/httpDecorator'
 @Component
+@http
 @Validator(['noEmpty', 'topicNameFormatter'])
 export default class CreateRest extends Vue {
   @Inject() private readonly formProvide!: H_Vue
@@ -217,6 +229,18 @@ export default class CreateRest extends Vue {
       return
     } else {
       this.formProvide.formObj['topicList'].splice(index, 1)
+    }
+  }
+
+  // topicName 验重方法 用于上传文件
+  public async handleTopicNameNoRepeat(): Promise<void> {
+    const { success } = await this.h_request['httpGET']('GET_TOPICS_CHECKED', {
+      topicName: this.formProvide.formObj.topicName
+    })
+    if (success) {
+      this.noRepeat = ['主题名称已被注册']
+    } else {
+      this.noRepeat = []
     }
   }
 

@@ -78,7 +78,7 @@
 
     <!-- 表单展示 -->
     <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
-      <create-rest v-if="fDialogShow === 1" @upload-file="upLoadFile"></create-rest>
+      <create-rest v-if="fDialogShow === 1" @upload-file="upLoadFile" ref="createRest"></create-rest>
       <create-protobuf v-else-if="fDialogShow === 2" @upload-proto-file="uploadProtoFile" />
       <create-json v-else-if="fDialogShow === 3"></create-json>
     </f-dialog>
@@ -576,6 +576,9 @@ export default class OnlineDataTopicList extends Vue {
           topicList: _topicList
           // writeElasticsearch: '是'
         }
+        // 手动触发 topicName 校验方法
+        const _createRest = this.$refs.createRest as CreateRest
+        _createRest.handleTopicNameNoRepeat()
       }
     }
   }

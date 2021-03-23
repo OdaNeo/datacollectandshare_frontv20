@@ -1,7 +1,7 @@
 <template>
   <div id="realTime">
     <v-row no-gutters class="d-flex mx-3">
-      <v-col cols="2">
+      <!-- <v-col cols="2 mr-6">
         <v-text-field
           solo
           dense
@@ -13,32 +13,39 @@
           v-only-num
         >
         </v-text-field>
-      </v-col>
-      <v-col cols="2" class="ml-6">
+      </v-col> -->
+      <v-col cols="2">
         <v-select
           solo
           dense
-          :items="categories"
+          :items="serverNameCategories"
           clearable
           height="35px"
-          v-model="queryTopicType"
+          v-model="queryServerName"
+          @change="handleCurrentChange(1)"
           placeholder="请选择作业类别"
         ></v-select>
       </v-col>
       <v-col class="flex-grow-1"></v-col>
 
       <!--  右上角枚举 -->
-      <v-col cols="4" style="line-height: 42px; font-size: 15px; letter-spacing: 1px">
+      <v-col cols="3" style="line-height: 42px; font-size: 15px; letter-spacing: 1px">
         <div class="real-time-enum" v-for="item in types" :key="item.id">
           <span :style="{ backgroundColor: item.color }"></span>
           {{ item.name }}
         </div>
       </v-col>
     </v-row>
+
+    <!-- loading -->
+    <div v-if="loading" class="text-center" style="height: 200px; margin-top: 120px">
+      <v-progress-circular indeterminate color="primary"></v-progress-circular>
+    </div>
     <!-- echarts -->
-    <div class="charts-container">
+    <div v-else class="charts-container">
       <div class="chart-elements" ref="chartElements" v-for="item in dataAll" :key="item.topicId"></div>
     </div>
+
     <!--  分页 -->
     <v-pagination
       v-if="paginationLength !== 0"
@@ -61,38 +68,42 @@ import util from '@/decorator/utilsDecorator'
 @util
 export default class RealTime extends Vue {
   private timer = 0
-  private interval = 10
+  private interval = 30
   // dom
   private el: any
+  private loading = false
   // eCharts 对象
   private chartElements: Array<any> = []
   private dataAll: Array<any> = []
-  private yDataMap: Array<[number, number]> = []
 
   // 当天零点时间戳
   private zeroTimeStamp = new Date(new Date().toLocaleDateString()).getTime()
   private now = new Date().getTime()
 
-  private categories = ['日志', '事务', '视频']
+  private serverNameCategories = ['日志', '事务', '视频']
   private types = [
     { name: '异常', color: 'red' },
     { name: '离线', color: 'grey' },
-    { name: '警告', color: 'orange' },
-    { name: '正常', color: '#2ECC71' }
+    { name: '警告', color: 'orange' }
+    // { name: '正常', color: '#2ECC71' }
   ]
+
   // 分页
   private paginationLength = 0
   private pageNum = 1
-  private pageSize = 8
+  private pageSize = 4
 
   // 查询主题ID input框内容
-  private queryTopicID = ''
-  private queryTopicType = ''
+  // private queryTopicID = ''
+  private queryServerName = ''
 
   // 柯里化option
   private getOption(data: any) {
-    // console.log(data.dataSet)
-    // const dataSet = [{ createTime: '1616342400021', status: 1 }, { createTime: '1616382855289', status: 1 }]
+    // console.log(data['正常'])
+    // const dataSet = [
+    //   { createTime: '1616342400021', status: 1 },
+    //   { createTime: '1616382855289', status: 1 }
+    // ]
     return {
       title: {
         text: `作业ID：${data.topicId}`,
@@ -108,24 +119,26 @@ export default class RealTime extends Vue {
       },
       grid: {
         top: '17%',
-        bottom: '23%'
+        bottom: '17%',
+        left: '5%',
+        right: '5%'
       },
       dataZoom: [
         {
           type: 'inside',
           filterMode: 'weakFilter',
-          startValue: new Date().getTime() - 0.6 * 30 * 60 * 1000,
-          endValue: new Date().getTime() + 0.4 * 30 * 60 * 1000
+          startValue: new Date().getTime() - 0.2 * 0.5 * 60 * 60 * 1000,
+          endValue: new Date().getTime() + 0.8 * 0.5 * 60 * 60 * 1000
         },
         {
           type: 'slider',
           filterMode: 'weakFilter',
-          // 默认显示半个小时内的
-          startValue: new Date().getTime() - 0.6 * 30 * 60 * 1000,
-          endValue: new Date().getTime() + 0.4 * 30 * 60 * 1000,
+          // 默认显示1个小时内的
+          startValue: new Date().getTime() - 0.2 * 0.5 * 60 * 60 * 1000,
+          endValue: new Date().getTime() + 0.8 * 0.5 * 60 * 60 * 1000,
           showDataShadow: false,
-          top: '92%',
-          height: 6,
+          top: '82%',
+          height: 0,
           borderColor: 'transparent',
           backgroundColor: '#CBD1DA',
           handleIcon:
@@ -136,6 +149,14 @@ export default class RealTime extends Vue {
           }
         }
       ],
+      tooltip: {
+        show: true,
+        trigger: 'item',
+        position: 'top',
+        formatter: (params: any) => {
+          return this.h_utils.timeUtil.stamptoFullTime(params.data[0], '-')
+        }
+      },
       xAxis: {
         type: 'time',
         splitLine: {
@@ -158,16 +179,15 @@ export default class RealTime extends Vue {
       },
       series: [
         {
-          // 正常 每10分钟截取一个点，组成连线
+          // baseline 每n分钟截取一个点, 虚线
           type: 'line',
           showSymbol: false,
           lineStyle: {
-            color: `${this.types[3]['color']}`
+            color: `#2ECC71`,
+            width: 2,
+            type: 'dashed'
           },
-          data: [
-            [new Date().getTime() - 10000, 1],
-            [new Date().getTime(), 1]
-          ],
+          data: data['正常'],
           markLine: {
             symbol: ['none', 'none'],
             label: { show: false },
@@ -176,86 +196,122 @@ export default class RealTime extends Vue {
               color: '#2ECC71'
             }
           }
+        },
+        {
+          // 异常 点
+          type: 'scatter',
+          symbolSize: 14,
+          itemStyle: {
+            color: `${this.types[0]['color']}`
+          },
+          data: data['异常']
+        },
+        {
+          // 离线 点
+          type: 'scatter',
+          symbolSize: 14,
+          symbol: 'circle',
+          itemStyle: {
+            color: `${this.types[1]['color']}`
+          },
+          data: data['离线']
+        },
+        {
+          // 警告 点
+          type: 'scatter',
+          symbolSize: 14,
+          itemStyle: {
+            color: `${this.types[2]['color']}`
+          },
+          data: data['警告']
         }
-        // {
-        //   // 异常
-        //   type: 'line',
-        //   showSymbol: false,
-        //   lineStyle: {
-        //     color: `${this.types[0]['color']}`
-        //   },
-        //   data: data.dataSet,
-        //   markLine: {
-        //     symbol: ['none', 'none'],
-        //     label: { show: false },
-        //     data: [{ xAxis: this.now }],
-        //     lineStyle: {
-        //       color: '#2ECC71'
-        //     }
-        //   }
-        // },
-        // {
-        //   // 离线
-        //   type: 'line',
-        //   showSymbol: false,
-        //   lineStyle: {
-        //     color: `${this.types[1]['color']}`
-        //   },
-        //   data: data.dataSet,
-        //   markLine: {
-        //     symbol: ['none', 'none'],
-        //     label: { show: false },
-        //     data: [{ xAxis: this.now }],
-        //     lineStyle: {
-        //       color: '#2ECC71'
-        //     }
-        //   }
-        // },
-        // {
-        //   // 警告
-        //   type: 'line',
-        //   showSymbol: false,
-        //   lineStyle: {
-        //     color: `${this.types[2]['color']}`
-        //   },
-        //   data: data.dataSet,
-        //   markLine: {
-        //     symbol: ['none', 'none'],
-        //     label: { show: false },
-        //     data: [{ xAxis: this.now }],
-        //     lineStyle: {
-        //       color: '#2ECC71'
-        //     }
-        //   }
-        // }
       ]
     }
   }
 
-  private async updateRange() {
+  private async updateRange(params: any) {
     // 增量更新
+    const { data } = await this.h_request.httpPOST<object>('POST_MONITOR_FINDLOGBYTIME', params)
+    // console.log(data.list)
+    // console.log(this.dataAll)
     for (let i = 0; i < this.el.length; i++) {
-      this.chartElements[i].setOption({
-        series: [
-          {
-            type: 'line',
-            showSymbol: false,
-            lineStyle: {
-              color: `${this.types[1]['color']}`
-            },
-            data: this.dataAll[i].dataSet,
-            markLine: {
-              symbol: ['none', 'none'],
-              label: { show: false },
-              data: [{ xAxis: this.now }],
-              lineStyle: {
-                color: '#2ECC71'
-              }
-            }
+      //  data.list[i]['dataSet']
+
+      const _option = this.chartElements[i].getOption()
+
+      _option.series[0].data.push([new Date().getTime(), 1])
+
+      if (data.list[i]['dataSet'].length !== 0) {
+        data.list[i]['dataSet'].forEach((item: { createTime: string; status: number }) => {
+          if (item.status === 1) {
+            _option.series[1].data.push([Number(item['createTime']), 1])
           }
-        ]
-      })
+          if (item.status === 2) {
+            _option.series[2].data.push([Number(item['createTime']), 1])
+          }
+          if (item.status === 3) {
+            _option.series[3].data.push([Number(item['createTime']), 1])
+          }
+        })
+      }
+
+      this.chartElements[i].setOption(_option)
     }
+  }
+
+  // 搜索方法
+  // pageNum     必填
+  // pageSize    必填
+  // serverName  选填
+  // status      选填
+  // createTime  选填
+  private async searchMethod(params: object) {
+    this.loading = true
+
+    const { data } = await this.h_request.httpPOST<object>('POST_MONITOR_FINDLOGBYTIME', params)
+    this.loading = false
+
+    this.paginationLength = Math.ceil(data.total / this.pageSize) || 1
+    this.dataAll = data.list.map((item: any) => {
+      // baseline, 填充数据
+      let _list = []
+      let _i = 0
+      while (this.zeroTimeStamp + _i * 0.5 * 60 * 1000 < this.now) {
+        _list.push([this.zeroTimeStamp + _i * 0.5 * 60 * 1000, 1])
+        _i++
+      }
+      // 异常
+      let _list2 = []
+      // 离线
+      let _list3 = []
+      // 警告
+      let _list4 = []
+      // console.log(item.dataSet)
+      // const dataSet = [
+      //   { createTime: this.zeroTimeStamp + 20000000, status: 1 },
+      //   { createTime: this.zeroTimeStamp + 10000000, status: 2 }
+      // ]
+      for (let i = 0; i < item.dataSet.length; i++) {
+        if (item.dataSet[i]['status'] === 1) {
+          _list2.push([Number(item.dataSet[i]['createTime']), 1])
+        } else if (item.dataSet[i]['status'] === 2) {
+          _list3.push([Number(item.dataSet[i]['createTime']), 1])
+        } else if (item.dataSet[i]['status'] === 3) {
+          _list4.push([Number(item.dataSet[i]['createTime']), 1])
+        }
+      }
+
+      return {
+        '异常': _list2,
+        '离线': _list3,
+        '警告': _list4,
+        '正常': [..._list, [this.now, 1]],
+        serverName: item.serverName,
+        topicId: item.topicId
+      }
+    })
+    // 初始化
+    this.initECharts()
   }
 
   //  初始化echarts
@@ -270,27 +326,24 @@ export default class RealTime extends Vue {
     })
   }
 
-  // 分页方法
+  // 分页方法  &&  serverName 搜索方法
   private handleCurrentChange(value: number) {
     this.pageNum = value
-    this.searchMethod({
-      pageNum: this.pageNum,
-      pageSize: this.pageSize
-    })
-  }
+    // 重置now
+    this.now = new Date().getTime()
 
-  // 搜索方法
-  private async searchMethod(params: object) {
-    // pageNum     必填
-    // pageSize    必填
-    // serverName  选填
-    // status      选填
-    // createTime  选填
-    const { data } = await this.h_request.httpPOST<object>('POST_MONITOR_FINDLOGBYTIME', params)
-    this.paginationLength = Math.ceil(data.total / this.pageSize) || 1
-    this.dataAll = [...data.list]
-    // 初始化
-    this.initECharts()
+    if (!this.queryServerName) {
+      this.searchMethod({
+        pageNum: this.pageNum,
+        pageSize: this.pageSize
+      })
+    } else {
+      this.searchMethod({
+        pageNum: this.pageNum,
+        pageSize: this.pageSize,
+        serverName: this.queryServerName
+      })
+    }
   }
 
   mounted(): void {
@@ -301,10 +354,24 @@ export default class RealTime extends Vue {
     })
 
     // 更新
-    // this.timer = setInterval(() => {
-    //   this.updateRange()
-    // }, this.interval * 1000)
+    this.timer = setInterval(() => {
+      if (!this.queryServerName) {
+        this.updateRange({
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          createTime: new Date().getTime()
+        })
+      } else {
+        this.updateRange({
+          pageNum: this.pageNum,
+          pageSize: this.pageSize,
+          createTime: new Date().getTime(),
+          serverName: this.queryServerName
+        })
+      }
+    }, this.interval * 1000)
   }
+
   // 清除timer
   beforeDestroy(): void {
     clearInterval(this.timer)
@@ -317,26 +384,27 @@ export default class RealTime extends Vue {
 }
 .real-time-enum {
   display: inline-block;
-  width: 25%;
+  width: 33%;
   padding-left: 25px;
   position: relative;
 }
 .real-time-enum span {
   position: absolute;
-  width: 18px;
-  height: 3px;
-  top: 18px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  top: 12px;
   left: 0px;
 }
 .charts-container {
   width: 100%;
-  height: 77vh;
+  height: 73vh;
   display: flex;
   justify-content: flex-start;
   flex-wrap: wrap;
 }
 .chart-elements {
-  width: calc(25% - 24px);
+  width: calc(50% - 24px);
   background-color: #fff;
   height: 46.5%;
   margin: 0px 12px;

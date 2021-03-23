@@ -44,6 +44,16 @@ export default class TopicAncillaryInformationDialog extends Vue {
             text: 'url',
             align: 'center',
             value: 'url'
+          },
+          {
+            text: 'key',
+            align: 'center',
+            value: 'key'
+          },
+          {
+            text: 'value',
+            align: 'center',
+            value: 'value'
           }
         ]
       case 4:
