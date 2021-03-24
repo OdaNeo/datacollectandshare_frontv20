@@ -27,7 +27,7 @@
         class="ml-4 mr-15"
       ></v-text-field>
     </v-col>
-    <v-col cols="12" class="d-flex">
+    <!-- <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>订阅系统名</label>
       <v-select
         v-model="formProvide.formObj['consumers']"
@@ -41,6 +41,16 @@
         :items="systemList"
         class="ml-4 my-0 mr-15"
       ></v-select>
+    </v-col> -->
+    <v-col cols="12" class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>订阅系统名</label>
+      <HMultiCheckBoxes
+        class="ml-4 mr-15"
+        v-model="formProvide.formObj['consumers']"
+        :items="systemList"
+        :rules="[...h_validator.noEmpty('订阅系统名')]"
+      >
+      </HMultiCheckBoxes>
     </v-col>
     <v-col cols="12" class="d-flex">
       <label class="label mr-2">描述</label>
@@ -78,8 +88,13 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
+import HMultiCheckBoxes from '@/components/h-multi-checkboxes.vue'
 
-@Component({})
+@Component({
+  components: {
+    HMultiCheckBoxes
+  }
+})
 @http
 @Validator(['cmdNameFormatter', 'noEmpty'])
 export default class CreateCmdDialog extends Vue {

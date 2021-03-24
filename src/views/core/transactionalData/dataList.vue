@@ -127,6 +127,7 @@ import UploadSQL from './childComponent/uploadSQL.vue'
 import { TopicAdd } from '@/type/topic-add.type'
 import ContentDetails from './childComponent/contentDetails.vue'
 import { tableHeaderType } from '@/type/table.type'
+import upload from '@/decorator/uploadDecorator'
 
 @Component({
   components: {
@@ -141,6 +142,7 @@ import { tableHeaderType } from '@/type/table.type'
 })
 @http
 @util
+@upload
 export default class transactionalDataList extends Vue {
   @Provide('formProvide') private formProvide: FormObj = new Vue({
     data() {

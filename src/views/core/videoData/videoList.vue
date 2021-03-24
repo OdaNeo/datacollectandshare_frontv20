@@ -165,19 +165,19 @@ export default class VideoDataList extends Vue {
     {
       text: '本系统rtmp地址',
       align: 'center',
-      width: 220,
+      width: 200,
       value: 'serverUrl'
     },
     {
       text: '摄像头物理地址',
       align: 'center',
-      width: 220,
+      width: 200,
       value: 'address'
     },
     {
       text: '摄像头rtsp/rtmp地址',
       align: 'center',
-      width: 220,
+      width: 200,
       value: 'sourceUrl'
     },
     {

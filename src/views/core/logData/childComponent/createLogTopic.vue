@@ -79,21 +79,19 @@
         :rules="[...h_validator.noEmpty('日志采集路径')]"
       ></v-text-field>
     </v-col>
+
     <!-- 存储方式 -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>存储方式</label>
-      <v-select
+      <HMultiCheckBoxes
         v-model="formProvide.formObj['saveType']"
         :disabled="formProvide.formObj.canNotEdit"
-        :items="saveTypeItems"
-        dense
-        outlined
-        multiple
-        height="34"
         class="ml-4 mr-15"
+        :items="saveTypeItems"
         :rules="[...h_validator.noEmpty('存储方式')]"
-      ></v-select>
+      ></HMultiCheckBoxes>
     </v-col>
+
     <!-- 采集校验关键字 1,2,3 提示：使用逗号隔开-->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2" style="font-size: 14px">采集校验关键字</label>
@@ -114,8 +112,13 @@
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
+import HMultiCheckBoxes from '@/components/h-multi-checkboxes.vue'
 
-@Component
+@Component({
+  components: {
+    HMultiCheckBoxes
+  }
+})
 @Validator(['noEmpty', 'realIP', 'topicNameFormatter'])
 export default class CreateLogTopic extends Vue {
   @Inject() private readonly formProvide!: H_Vue
@@ -125,5 +128,6 @@ export default class CreateLogTopic extends Vue {
     { text: 'ElasticSearch', value: 'ElasticSearch' },
     { text: 'HDFS', value: 'HDFS' }
   ]
+  private test = []
 }
 </script>

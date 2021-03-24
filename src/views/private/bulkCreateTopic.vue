@@ -28,6 +28,7 @@
             outlined
             dense
             clearable
+            placeholder="默认地址 rtmp://58.200.131.2:1935/livetv/cctv8"
             height="34"
             class="ml-4 mr-15"
           ></v-text-field>
@@ -64,12 +65,16 @@ import { dataType } from '@/enum/topic-datatype-enum'
 })
 @http
 export default class bulkCreateTopic extends Vue {
-  @Provide('formProvide') private formProvide: FormObj = {
-    title: '' as string,
-    btnName: [] as Array<string>,
-    methodName: '' as string,
-    formObj: {}
-  }
+  @Provide('formProvide') private formProvide: FormObj = new Vue({
+    data() {
+      return {
+        title: '',
+        btnName: [] as string[],
+        methodName: '',
+        formObj: {}
+      }
+    }
+  })
   private count = 0
   private COMMITHASH = process.env.COMMITHASH
   private BRANCH = process.env.BRANCH

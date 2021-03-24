@@ -8,6 +8,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import Echarts from 'echarts'
+import Moment from 'moment'
 
 @Component
 @http
@@ -82,7 +83,7 @@ export default class VideoDataStatistics extends Vue {
           name: '视频主题文件占比',
           type: 'pie',
           radius: [20, 80],
-          center: ['50%', '50%'],
+          center: ['50%', '38%'],
           roseType: 'area',
           data: data.map(item => {
             return {
@@ -110,21 +111,49 @@ export default class VideoDataStatistics extends Vue {
 
   // echarts 3
   private getOption3(data: Array<{ createTime: string; fileNum: number }>) {
-    // fileNum 最大值
-    data.sort((prev, next) => {
-      return next.fileNum - prev.fileNum
+    // 同一天视频归到一起
+    // _dataCon key:createTime,value:fileNum
+    const _dataCon: { [key: string]: number } = {}
+    // 2021-03-24T07:06:36.000+0000
+    data.forEach(item => {
+      const _p = Moment(item.createTime).format('YYYY-MM-DD')
+
+      if (_p in _dataCon) {
+        _dataCon[_p] += item.fileNum
+      } else {
+        _dataCon[_p] = item.fileNum
+      }
     })
+
+    const _data = Object.entries(_dataCon)
+    const _time = Object.keys(_dataCon)
+
+    // 获取最大值 fileNum 最大值
+    _data.sort((prev, next) => {
+      return next[1] - prev[1]
+    })
+    const MAX = _data[0][1]
+
+    // // 获取起止时间
+    _time.sort((prev, next) => {
+      return Number(Moment(prev).format('x')) - Number(Moment(next).format('x'))
+    })
+
+    const START = Moment(_time[0]).startOf('month').format('YYYY-MM-DD')
+    const END = Moment(_time[_time.length - 1])
+      .endOf('month')
+      .format('YYYY-MM-DD')
 
     return {
       title: {
         top: 30,
         left: 'center',
-        text: '2021年视频主题文件数量概况'
+        text: '视频主题文件数量概况'
       },
       tooltip: {},
       visualMap: {
         min: 0,
-        max: Math.ceil(data[0].fileNum / 5) * 5,
+        max: Math.ceil(MAX / 5) * 5,
         type: 'piecewise',
         splitNumber: 5,
         orient: 'horizontal',
@@ -139,23 +168,29 @@ export default class VideoDataStatistics extends Vue {
         left: 30,
         right: 30,
         cellSize: ['auto', 13],
-        range: '2021',
+        range: [START, END],
         itemStyle: {
           borderWidth: 0.5
         },
-        yearLabel: { show: false }
+        yearLabel: { show: true },
+        dayLabel: {
+          nameMap: 'cn'
+        },
+        monthLabel: {
+          nameMap: 'cn'
+        }
       },
       series: {
         type: 'heatmap',
         coordinateSystem: 'calendar',
-        data: data.map(item => {
-          return [item.createTime, item.fileNum]
+        data: _data.map(item => {
+          return [item[0], item[1]]
         })
       }
     }
   }
 
-  // echart handel
+  // echart handle
   private handelECharts(ele: string, options: object) {
     this.$nextTick(() => {
       const element = document.getElementById(ele)
@@ -173,12 +208,12 @@ export default class VideoDataStatistics extends Vue {
 </script>
 <style scoped>
 #echarts1 {
-  height: 40vh;
+  height: 400px;
   width: 100%;
 }
 #echarts2 {
-  height: 40vh;
-  width: 80%;
-  margin: 0 auto;
+  height: 250px;
+  width: 95%;
+  margin: 20px auto 0 auto;
 }
 </style>

@@ -44,6 +44,7 @@ import { PROJECT_BASE_COLOR } from '@/config'
 import { CalendarData } from '@/type/calendar'
 import { calendarType, calendarColorType } from '@/enum/calendar-enum'
 import http from '@/decorator/httpDecorator'
+import util from '@/decorator/utilsDecorator'
 
 @Component({
   components: {
@@ -52,6 +53,7 @@ import http from '@/decorator/httpDecorator'
   }
 })
 @http
+@util
 export default class Layout extends Vue {
   private PROJECT_BASE_COLOR = PROJECT_BASE_COLOR
   private timer = 0
@@ -88,17 +90,25 @@ export default class Layout extends Vue {
     //     'remarks': 'NullPointerExceptionsf'
     //   }
     // ]
-    // const data: Array<CalendarData> = []
+    // const code = 200
 
-    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
+    const { code, data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
       date: new Date().getTime()
     })
 
-    if (data.length > 0) {
+    // code 不是200，说明没有权限或者没有接口，清除定时器，防止反复报错
+    if (code !== 200) {
+      this.h_utils.alertUtil.close()
+      clearInterval(this.timer)
+      return
+    } else if (data.length === 0) {
+      // data是空，直接返回
+      return
+    } else if (data.length > 0) {
       this.showAlert = true
     }
 
-    const _events: Array<CalendarData> = data?.map((item: any) => {
+    const _events: any = data?.map((item: any) => {
       return {
         start: new Date(Number(item['createTime'])),
         color: calendarColorType[item['status']],
@@ -140,10 +150,12 @@ export default class Layout extends Vue {
   mounted(): void {
     // 减少首页http请求
     // this.updateRange()
-    // TODO: 开发环境节流
-    this.timer = setInterval(() => {
-      this.updateRange()
-    }, this.interval * 1000)
+    // 开发环境不轮询
+    if (process.env.NODE_ENV !== 'development') {
+      this.timer = setInterval(() => {
+        this.updateRange()
+      }, this.interval * 1000)
+    }
   }
   // 清除timer
   beforeDestroy(): void {

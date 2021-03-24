@@ -51,20 +51,16 @@ import { H_Vue } from '@/declaration/vue-prototype'
 export default class FDialog extends Vue {
   @Ref('userDialogForm') readonly udf!: HTMLFormElement
   @Inject() private readonly formProvide!: H_Vue
-  @Model('closedialog', { type: Boolean }) private checked!: boolean
+  @Model('closedialog') private checked!: boolean
   @Prop({ default: false }) private loading!: boolean
   @Prop({ default: 700 }) private width!: number
 
   private defaultFormObj: any = {}
+  private dialog = true
 
-  set dialog(_val: boolean) {
-    _val
-  }
-  get dialog(): boolean {
-    return this.checked
-  }
   private userDialogValid = true
   private closeMethod(): void {
+    this.dialog = false
     this.$emit('closedialog')
   }
 

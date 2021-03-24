@@ -23,7 +23,7 @@ import { H_Vue } from '@/declaration/vue-prototype'
 
 @Component
 export default class TDialog extends Vue {
-  @Model('tdialog', { type: Boolean }) private checked!: boolean
+  @Model('tdialog') private checked!: boolean
   @Inject() private readonly formProvide!: H_Vue
 
   set closeDialog(val: boolean) {

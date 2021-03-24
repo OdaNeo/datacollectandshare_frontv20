@@ -99,7 +99,8 @@ class HttpRequest {
       default:
         alertUtil.open('错误代码：' + code + '，错误信息：' + message, true, 'error')
         // 部分接口返回值没有data 比如搜索、登录
-        callback({ data: { list: [] } })
+        // 部分接口需要做权限判定，比如 GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME ，故透传code
+        callback({ code, data: { list: [] } })
         break
     }
   }
