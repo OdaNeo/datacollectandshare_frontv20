@@ -8,7 +8,7 @@
           height="35px"
           placeholder="请输入查找的权限名称"
           clearable
-          append-icon="mdi-magnify"
+          :append-icon="mdiMagnify"
           @click:append="searchResources"
           @keyup.enter="searchResources"
           @click:clear="searchMethod(false)"
@@ -52,6 +52,7 @@ import util from '@/decorator/utilsDecorator'
 import HConfirm from '@/components/h-confirm.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicTable } from '@/type/topic.type'
+import { mdiMagnify } from '@mdi/js'
 
 @Component({
   components: {
@@ -74,7 +75,7 @@ export default class Resources extends Vue {
       }
     }
   })
-
+  mdiMagnify = mdiMagnify
   private queryResourcesName = ''
   private desserts: Array<topicTable> = []
   private dialogFlag = false

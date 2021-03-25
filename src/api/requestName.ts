@@ -99,6 +99,7 @@ export const GET_TOPICS_GETOFFLINELOG = '/topics/getOfflineLog'
 export const POST_TOPICS_UPDATETRANSACTIONALTOPIC = '/topics/updateTransactionalTopic'
 export const GET_TOPICS_UPDATETRANSACTIONALTOPICSTATE = '/topics/updateTransactionalTopicState'
 export const GET_TOPICS_RUNTRANSACTIONALTOPICAGAIN = '/topics/runTransactionalTopicAgain'
+export const POST_TOPICS_ADDSQLFILE = '/topics/addSqlFile'
 
 // ----------------------------- 内部调试页面 未配置权限 --------------
 export const POST_TRANSMISSION_ATS = '/transmission/ATS'
@@ -193,7 +194,8 @@ const REQUEST_NAME: REQUEST_NAME_TYPE = {
   GET_TOPICS_SELECTLOGGERTOPICBYTOPICID,
   GET_TOPICS_UPDATETRANSACTIONALTOPICSTATE,
   GET_TOPICS_RUNTRANSACTIONALTOPICAGAIN,
-  POST_MONITOR_FINDLOGBYTIME
+  POST_MONITOR_FINDLOGBYTIME,
+  POST_TOPICS_ADDSQLFILE
 }
 
 export default REQUEST_NAME

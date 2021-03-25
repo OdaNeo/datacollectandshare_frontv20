@@ -17,47 +17,10 @@ export default class VideoDataStatistics extends Vue {
 
   private async getVideoAll() {
     const { data } = await this.h_request['httpGET']('GET_TOPICS_GETVIDEO', {})
-    // const data = [
-    //   {
-    //     address: '海鹰路海鹰路海鹰路海鹰路',
-    //     bucketName: 'topic9008082',
-    //     createTime: '2021-01-25T04:27:25.000+0000',
-    //     fileNum: 1,
-    //     id: 2083,
-    //     m3u8Url: '',
-    //     serverUrl: 'rtmp://127.0.0.1:1935/live/9008082',
-    //     sourceUrl: 'rtmp://58.200.131.2:1935/livetv/cctv8',
-    //     topicId: 9008082,
-    //     userId: 2
-    //   },
-    //   {
-    //     address: '海鹰路海鹰路海鹰路海鹰路',
-    //     bucketName: 'topic9008082',
-    //     createTime: '2021-01-25T04:27:25.000+0000',
-    //     fileNum: 1,
-    //     id: 2083,
-    //     m3u8Url: '',
-    //     serverUrl: 'rtmp://127.0.0.1:1935/live/9008082',
-    //     sourceUrl: 'rtmp://58.200.131.2:1935/livetv/cctv8',
-    //     topicId: 9008080,
-    //     userId: 2
-    //   },
-    //   {
-    //     address: '海鹰路海鹰路海鹰路海鹰路',
-    //     bucketName: 'topic9008082',
-    //     createTime: '2021-01-26T04:27:25.000+0000',
-    //     fileNum: 6,
-    //     id: 2083,
-    //     m3u8Url: '',
-    //     serverUrl: 'rtmp://127.0.0.1:1935/live/9008082',
-    //     sourceUrl: 'rtmp://58.200.131.2:1935/livetv/cctv8',
-    //     topicId: 90080821,
-    //     userId: 2
-    //   }
-    // ]
+
     this.videoList = data
     this.handelECharts('echarts1', this.getOption1(this.videoList))
-    this.handelECharts('echarts2', this.getOption3(this.videoList))
+    this.handelECharts('echarts2', this.getOption2(this.videoList))
   }
 
   // echarts1
@@ -92,25 +55,12 @@ export default class VideoDataStatistics extends Vue {
             }
           })
         }
-        // {
-        //   name: '半径模式',
-        //   type: 'pie',
-        //   radius: [20, 80],
-        //   center: ['25%', '50%'],
-        //   roseType: 'radius',
-        //   data: data.map(item => {
-        //     return {
-        //       value: item.fileNum,
-        //       name: `主题ID：${item.topicId}`
-        //     }
-        //   })
-        // }
       ]
     }
   }
 
-  // echarts 3
-  private getOption3(data: Array<{ createTime: string; fileNum: number }>) {
+  // echarts 2
+  private getOption2(data: Array<{ createTime: string; fileNum: number }>) {
     // 同一天视频归到一起
     // _dataCon key:createTime,value:fileNum
     const _dataCon: { [key: string]: number } = {}
@@ -148,9 +98,15 @@ export default class VideoDataStatistics extends Vue {
       title: {
         top: 30,
         left: 'center',
-        text: '视频主题文件数量概况'
+        text: '视频文件数量概况'
       },
-      tooltip: {},
+      tooltip: {
+        show: true,
+        trigger: 'item',
+        formatter: ({ data }: { data: [string, number] }) => {
+          return `日期：${data[0]}<br />视频文件数量：${data[1]}`
+        }
+      },
       visualMap: {
         min: 0,
         max: Math.ceil(MAX / 5) * 5,
@@ -165,14 +121,14 @@ export default class VideoDataStatistics extends Vue {
       },
       calendar: {
         top: 120,
-        left: 30,
-        right: 30,
+        left: 55,
+        right: 55,
         cellSize: ['auto', 13],
         range: [START, END],
         itemStyle: {
           borderWidth: 0.5
         },
-        yearLabel: { show: true },
+        yearLabel: { show: true, position: 'right' },
         dayLabel: {
           nameMap: 'cn'
         },

@@ -8,7 +8,7 @@
           height="35px"
           placeholder="请输入要查询的订阅用户名"
           clearable
-          append-icon="mdi-magnify"
+          :append-icon="mdiMagnify"
           @click:append="searchExamine"
           @keyup.enter="searchExamine"
           @click:clear="
@@ -64,6 +64,8 @@ import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
+import { mdiMagnify } from '@mdi/js'
+
 @Component({
   components: {
     HTable,
@@ -90,7 +92,7 @@ export default class TopicSubExamine extends Vue {
       }
     }
   })
-
+  mdiMagnify = mdiMagnify
   private desserts: Array<topicTable> = []
   private rowObj: object = {}
   private pageNum = 1

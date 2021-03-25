@@ -8,7 +8,7 @@
           height="35px"
           placeholder="请输入查找的日志主题ID"
           clearable
-          append-icon="mdi-magnify"
+          :append-icon="mdiMagnify"
           @click:append="searchTopic"
           @click:clear="tabChange(tab)"
           v-model="queryTopicID"
@@ -82,7 +82,7 @@ import { FormObj } from '@/type/dialog-form.type'
 import CreateLogTopic from './childComponent/createLogTopic.vue'
 import LogDataDialog from './childComponent/logDataDialog.vue'
 import HConfirm from '@/components/h-confirm.vue'
-
+import { mdiMagnify } from '@mdi/js'
 @Component({
   components: {
     HConfirm,
@@ -106,7 +106,7 @@ export default class LogDataList extends Vue {
       }
     }
   })
-
+  mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示

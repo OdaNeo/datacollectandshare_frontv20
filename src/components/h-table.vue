@@ -7,7 +7,7 @@
       </div>
       <!-- 无数据 -->
       <div v-else-if="!desserts || desserts.length === 0" class="text-center mt-15" style="min-height: 150px">
-        <v-icon color="primary lighten-3" size="50">mdi-toy-brick-remove-outline</v-icon>
+        <v-icon color="primary lighten-3" size="50">{{ mdiToyBrickRemoveOutline }}</v-icon>
         <div style="font-size: 14px; margin-top: 5px">查无数据</div>
       </div>
       <!-- 有数据 -->
@@ -39,9 +39,9 @@
                     'px'
                   "
                 >
-                  <v-icon v-if="header.expand && item.icon" @click="expandMethod(item)" :style="expandStyle(item)"
-                    >mdi-chevron-right</v-icon
-                  >
+                  <v-icon v-if="header.expand && item.icon" @click="expandMethod(item)" :style="expandStyle(item)">
+                    {{ mdiChevronRight }}
+                  </v-icon>
                   {{ header.format ? header.format(item[header.value]) : item[header.value] }}
                   <slot :name="header.slot" v-if="header.slot" :item="item" :index="key"></slot>
                 </div>
@@ -64,18 +64,21 @@
 <script lang="ts">
 import { tableHeaderType } from '@/type/table.type'
 import { Component, Vue, Watch, Prop, Emit } from 'vue-property-decorator'
+import { mdiToyBrickRemoveOutline, mdiChevronRight } from '@mdi/js'
 
 @Component
 export default class HTable extends Vue {
-  private desserts2: Array<unknown> = []
-  private expanded: Array<any> = []
-
   @Prop() private paginationLength!: number
   @Prop() private pageNum!: number
   @Prop() private headers!: tableHeaderType[]
   @Prop() private desserts!: any
   @Prop() private title!: string
   @Prop({ default: false }) private loading!: boolean
+
+  private desserts2: Array<unknown> = []
+  private expanded: Array<any> = []
+  private mdiToyBrickRemoveOutline = mdiToyBrickRemoveOutline
+  private mdiChevronRight = mdiChevronRight
 
   @Watch('desserts')
   private dessertsChanged(val: any): void {

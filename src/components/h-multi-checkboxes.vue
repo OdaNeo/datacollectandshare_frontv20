@@ -9,7 +9,7 @@
         color="primary"
         :value="item.value"
         class="mt-0 mb-2"
-        :hide-details="index === ((Math.ceil(items.length / 3) || 1) - 1) * 3 ? false : true"
+        :hide-details="index === ((Math.ceil(items.length / (12 / cols)) || 1) - 1) * (12 / cols) ? false : true"
         @change="$emit('input', ex4)"
       ></v-checkbox>
     </v-col>

@@ -5,11 +5,9 @@
       <!-- <label class="label mr-5"><span class="require-span">*</span>上传文件</label> -->
       <v-file-input
         class="mt-2 pt-0 mx-12"
-        label="支持.*格式的单文件上传"
+        label="支持.sql格式的单文件上传"
         clearable
-        accept=".*"
         @change="$emit('transform-sql-file', $event)"
-        :rules="[...h_validator.fileSQLValidate()]"
       ></v-file-input>
     </v-col>
   </v-row>

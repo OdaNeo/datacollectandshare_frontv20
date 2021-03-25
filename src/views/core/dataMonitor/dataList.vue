@@ -24,10 +24,10 @@
               >月</v-btn
             >
             <v-btn class="ml-12" fab text small color="grey darken-2" @click="prev">
-              <v-icon small>mdi-chevron-left</v-icon>
+              <v-icon small>{{ mdiChevronLeft }}</v-icon>
             </v-btn>
             <v-btn fab text small color="grey darken-2" @click="next">
-              <v-icon small>mdi-chevron-right</v-icon>
+              <v-icon small>{{ mdiChevronRight }}</v-icon>
             </v-btn>
             <v-toolbar-title v-if="$refs.calendar">
               {{ $refs.calendar.title }}
@@ -100,7 +100,7 @@ import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
 import { CalendarData } from '@/type/calendar'
 import { calendarType, calendarColorType } from '@/enum/calendar-enum'
-
+import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
 @Component
 @http
 @util
@@ -112,6 +112,9 @@ export default class dataMonitor extends Vue {
     'week': '周',
     'category': '日'
   }
+
+  private mdiChevronLeft = mdiChevronLeft
+  private mdiChevronRight = mdiChevronRight
 
   private categories = ['日志', '事务', '视频']
 

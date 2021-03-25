@@ -1,15 +1,16 @@
 <template>
   <div id="OfflineDataStatistics">
-    <p style="text-align: center; color: #000; font-size: 20px; line-height: 30px">
+    <HOverLay :loading="loading" />
+    <p v-if="!loading" style="text-align: center; color: #000; font-size: 20px; line-height: 30px">
       {{ `${releaseStartTime}至${releaseEndTime}主题${releaseSystemName}离线数据任务统计` }}
     </p>
-    <div class="iconCon">
+    <div v-if="!loading" class="iconCon">
       <v-menu offset-y max-height="200" min-width="130" transition="slide-x-transition">
         <template v-slot:activator="{ on: menu, attrs }">
           <v-tooltip bottom>
             <template v-slot:activator="{ on: tooltip }">
               <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                <v-icon>mdi-shield-lock</v-icon>
+                <v-icon>{{ mdiShieldLock }}</v-icon>
               </v-btn>
             </template>
             <span>系统名称选项</span>
@@ -26,7 +27,7 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on: tooltip }">
               <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                <v-icon>mdi-shield-lock</v-icon>
+                <v-icon>{{ mdiShieldLock }}</v-icon>
               </v-btn>
             </template>
             <span>分页选项</span>
@@ -52,7 +53,7 @@
           <v-tooltip bottom>
             <template v-slot:activator="{ on: tooltip }">
               <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                <v-icon>mdi-shield-lock</v-icon>
+                <v-icon>{{ mdiShieldLock }}</v-icon>
               </v-btn>
             </template>
             <span>时间选项</span>
@@ -80,16 +81,25 @@ import http from '@/decorator/httpDecorator'
 import { returnDataType } from '@/type/http-request.type'
 import Moment from 'moment'
 import util from '@/decorator/utilsDecorator'
+import HOverLay from '@/components/h-overlay.vue'
+import { mdiShieldLock } from '@mdi/js'
 
-@Component
+@Component({
+  components: {
+    HOverLay
+  }
+})
 @http
 @util
 export default class OfflineDataStatistics extends Vue {
   private systemItems = []
+  private loading = true
   private releaseTopicExist = true
   private releaseStartTime: string = Moment(Moment().subtract(11, 'months').calendar(), 'MM-DD-YYYY').format(
     'YYYY-MM-DD'
   )
+
+  private mdiShieldLock = mdiShieldLock
   private releaseEndTime: string = Moment().format('YYYY-MM-DD')
   private releasePageNum = 1
   private releaseSystemId = 1
@@ -99,7 +109,9 @@ export default class OfflineDataStatistics extends Vue {
   private releaseTime = false
 
   private async getRelease(params: any, callback: Function) {
+    this.loading = true
     const result: returnDataType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
+    this.loading = false
     callback(result)
   }
 

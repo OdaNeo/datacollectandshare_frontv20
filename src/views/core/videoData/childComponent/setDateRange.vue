@@ -14,7 +14,7 @@
         <template v-slot:activator="{ on, attrs }">
           <v-text-field
             v-model="formProvide.formObj.startTime"
-            prepend-icon="mdi-calendar"
+            :prepend-icon="mdiCalendar"
             :rules="[...h_validator.noEmpty('起始时间'), ...startEndDateValidator]"
             readonly
             outlined
@@ -57,7 +57,7 @@
           <v-text-field
             v-model="formProvide.formObj.endTime"
             :rules="[...h_validator.noEmpty('截止时间'), ...startEndDateValidator]"
-            prepend-icon="mdi-calendar"
+            :prepend-icon="mdiCalendar"
             readonly
             dense
             outlined
@@ -92,12 +92,15 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import validator from '@/decorator/validatorDecorator'
 import util from '@/decorator/utilsDecorator'
+import { mdiCalendar } from '@mdi/js'
 
 @Component
 @util
 @validator(['noEmpty'])
 export default class SetDateRange extends Vue {
   @Inject() private readonly formProvide!: H_Vue
+
+  mdiCalendar = mdiCalendar
   private menuStart = false
   private menuEnd = false
   private hours = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]

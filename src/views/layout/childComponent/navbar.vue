@@ -4,8 +4,8 @@
       :value="$route.matched[0].name === item.name"
       v-for="item in navMenu"
       :key="item.id"
-      append-icon="mdi-menu-up"
-      :prepend-icon="item.meta.icon"
+      :append-icon="mdiMenuUp"
+      :prepend-icon="mdiShieldLock"
       no-action
       color="white"
     >
@@ -26,16 +26,14 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import { rootStoreModule } from '@/store/modules/root'
+import { mdiShieldLock, mdiMenuUp } from '@mdi/js'
 
 @Component
 export default class NavBar extends Vue {
+  mdiShieldLock = mdiShieldLock
+  mdiMenuUp = mdiMenuUp
   get navMenu(): unknown {
     return rootStoreModule.navMenuList
   }
 }
 </script>
-<style scoped>
-#navbar >>> .v-icon.v-icon {
-  font-size: 18px;
-}
-</style>

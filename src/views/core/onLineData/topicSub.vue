@@ -8,7 +8,7 @@
           height="35px"
           placeholder="请输入查找的主题ID"
           clearable
-          append-icon="mdi-magnify"
+          :append-icon="mdiMagnify"
           @click:append="searchTopic"
           @keyup.enter="searchTopic"
           @click:clear="
@@ -67,6 +67,7 @@ import HTable from '@/components/h-table.vue'
 import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
+import { mdiMagnify } from '@mdi/js'
 @Component({
   components: {
     HTable,
@@ -92,6 +93,7 @@ export default class TopicSub extends Vue {
       }
     }
   })
+  mdiMagnify = mdiMagnify
   private desserts: Array<topicTable> = []
   private rowObj: object = {}
   private pageNum = 1

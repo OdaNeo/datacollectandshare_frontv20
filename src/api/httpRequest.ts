@@ -8,7 +8,7 @@ import { VUE_APP_BASE_API } from '@/config'
 class HttpRequest {
   private axiosIns: AxiosInstance = axios.create({
     baseURL: VUE_APP_BASE_API,
-    timeout: 300000,
+    timeout: 30000,
     headers: {
       post: {
         'Content-Type': 'application/json;charset=UTF-8'

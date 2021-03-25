@@ -17,8 +17,8 @@ class TopicValidator {
 
   public readonly fileSQLValidate = (): ValidatorType => {
     return [
-      (v: File): boolean | string => !!v || '请上传.proto文件',
-      (v: File): boolean | string => !!(v && v.name.match('.proto')) || '文件格式错误'
+      (v: File): boolean | string => !!v || '请上传.sql文件',
+      (v: File): boolean | string => !!(v && v.name.match('.sql')) || '文件格式错误'
     ]
   }
 }

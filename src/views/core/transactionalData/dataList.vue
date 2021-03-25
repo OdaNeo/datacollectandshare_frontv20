@@ -8,7 +8,7 @@
           height="35px"
           placeholder="请输入查找的事务主题ID"
           clearable
-          append-icon="mdi-magnify"
+          :append-icon="mdiMagnify"
           @click:append="searchTopic"
           @keyup.enter="searchTopic"
           @click:clear="tabChange(tab)"
@@ -96,7 +96,7 @@
       </v-tab-item>
     </v-tabs-items>
     <!-- 表单展示 -->
-    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
+    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag" :loading="SQLLoading">
       <CreateTransactionalData v-if="dialogFlag === 1" />
       <UploadSQL v-if="dialogFlag === 2" @transform-sql-file="transformSQLFile" />
     </f-dialog>
@@ -128,6 +128,7 @@ import { TopicAdd } from '@/type/topic-add.type'
 import ContentDetails from './childComponent/contentDetails.vue'
 import { tableHeaderType } from '@/type/table.type'
 import upload from '@/decorator/uploadDecorator'
+import { mdiMagnify } from '@mdi/js'
 
 @Component({
   components: {
@@ -154,7 +155,7 @@ export default class transactionalDataList extends Vue {
       }
     }
   })
-
+  mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示
@@ -173,8 +174,12 @@ export default class transactionalDataList extends Vue {
     topicInterFaceType: 0
   }
 
+  private sqlTimer = 0
+
   private rowJson = ''
   private sqlFile: File | null = null
+  private sqlForms = new FormData()
+  private SQLLoading = false
 
   private desserts: Array<topicTable> = [] // 数据列表
   private loading = true
@@ -385,8 +390,51 @@ export default class transactionalDataList extends Vue {
     this.formProvide.formObj = {}
   }
 
-  private uploadSQLFile() {
+  private async uploadSQLFile() {
+    if (!this.sqlFile) {
+      return
+    }
+    this.SQLLoading = true
     console.log(this.sqlFile)
+
+    this.sqlForms = new FormData()
+    this.sqlForms.append('ddlFile', this.sqlFile)
+
+    const data = await this.h_upload.httpPOST('POST_TOPICS_ADDSQLFILE', this.sqlForms)
+
+    console.log(data)
+
+    // if (success) {
+    //   // this.h_utils['alertUtil'].open('SQL文件上传成功', true, 'success')
+    //   const _success = await this.getSQLFileLog()
+
+    //   if (_success) {
+    //     this.searchMethod(
+    //       false,
+    //       {
+    //         pageSize: this.pageSize,
+    //         pageNum: 1
+    //       },
+    //       !!this.tab
+    //     )
+    //     this.pageNum = 1
+    //     return Promise.resolve(true)
+    //   }
+    // }
+  }
+
+  // 轮询上传文件日志
+  private getSQLFileLog(): Promise<boolean> | void {
+    this.sqlTimer = setInterval(async () => {
+      const data = await this.h_request.httpGET('POST_TOPICS_ADDSQLFILE', {})
+      console.log(data)
+
+      if (data.success) {
+        clearInterval(this.sqlTimer)
+        this.SQLLoading = false
+        return Promise.resolve(true)
+      }
+    }, 30000)
   }
 
   // transformSQLFile

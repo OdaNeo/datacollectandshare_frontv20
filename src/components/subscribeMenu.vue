@@ -1,6 +1,7 @@
 <template>
   <div class="viewBox rightBtmView">
-    <div style="width: 100%; height: 8%; padding-top: 10px">
+    <HOverLay :loading="loading" />
+    <div v-if="!loading" style="width: 100%; height: 8%; padding-top: 10px">
       <p>{{ `${subscribeStartTime}至${subscribeEndTime}主题${subscribeSystemName}订阅情况` }}</p>
       <div class="iconCon">
         <v-menu offset-y max-height="200" min-width="130" transition="slide-x-transition">
@@ -8,7 +9,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                  <v-icon>mdi-shield-lock</v-icon>
+                  <v-icon>{{ mdiShieldLock }}</v-icon>
                 </v-btn>
               </template>
               <span>系统名称选项</span>
@@ -25,7 +26,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                  <v-icon>mdi-shield-lock</v-icon>
+                  <v-icon>{{ mdiShieldLock }}</v-icon>
                 </v-btn>
               </template>
               <span>分页选项</span>
@@ -51,7 +52,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                  <v-icon>mdi-shield-lock</v-icon>
+                  <v-icon>{{ mdiShieldLock }}</v-icon>
                 </v-btn>
               </template>
               <span>时间选项</span>
@@ -85,14 +86,21 @@ import { returnDataType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import Moment from 'moment'
 import util from '@/decorator/utilsDecorator'
+import HOverLay from '@/components/h-overlay.vue'
+import { mdiShieldLock } from '@mdi/js'
 
-@Component
+@Component({
+  components: {
+    HOverLay
+  }
+})
 @http
 @util
 export default class SubscribeMenu extends Vue {
   @Prop() private systemItems!: unknown[]
+  private loading = true
+  private mdiShieldLock = mdiShieldLock
 
-  private subscribeOverlay = false
   private subscribeTopicExist = true
   private subscribeStartTime: string = Moment(Moment().subtract(11, 'months').calendar(), 'MM-DD-YYYY').format(
     'YYYY-MM-DD'
@@ -106,7 +114,10 @@ export default class SubscribeMenu extends Vue {
   private subscribeTime = false
 
   private async getSubscribe(params: any, callback: Function) {
+    this.loading = true
     const result: returnDataType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
+
+    this.loading = false
     callback(result)
   }
 
@@ -119,7 +130,6 @@ export default class SubscribeMenu extends Vue {
   private selectSubscribeSystem(system: { name: string; id: number }) {
     this.subscribeSystemName = system.name
     this.subscribeSystemId = system.id
-    this.subscribeOverlay = true
     this.getSubscribe(
       {
         startTime: this.subscribeStartTime,
@@ -130,7 +140,6 @@ export default class SubscribeMenu extends Vue {
         pageSize: 10
       },
       (result: returnDataType) => {
-        this.subscribeOverlay = false
         if (result.data.list?.length > 0) {
           this.drawSubscribe(result)
         } else {
@@ -142,7 +151,6 @@ export default class SubscribeMenu extends Vue {
 
   private selectSubscribePage(pageNum: number) {
     this.subscribePageNum = pageNum
-    this.subscribeOverlay = true
     this.getSubscribe(
       {
         startTime: this.subscribeStartTime,
@@ -153,7 +161,6 @@ export default class SubscribeMenu extends Vue {
         pageSize: 10
       },
       (result: returnDataType) => {
-        this.subscribeOverlay = false
         if (result.data.list?.length > 0) {
           this.drawSubscribe(result)
         } else {
@@ -167,7 +174,6 @@ export default class SubscribeMenu extends Vue {
     this.subscribeTime = false
     this.subscribeStartTime = Moment(this.subscribeDate).subtract(11, 'months').format('YYYY-MM-DD')
     this.subscribeEndTime = this.subscribeDate
-    this.subscribeOverlay = true
     this.getSubscribe(
       {
         startTime: this.subscribeStartTime,
@@ -178,7 +184,6 @@ export default class SubscribeMenu extends Vue {
         pageSize: 10
       },
       (result: returnDataType) => {
-        this.subscribeOverlay = false
         if (result.data.list?.length > 0) {
           this.drawSubscribe(result)
         } else {
@@ -195,7 +200,6 @@ export default class SubscribeMenu extends Vue {
   }
 
   mounted(): void {
-    this.subscribeOverlay = true
     this.getSubscribe(
       {
         startTime: this.subscribeStartTime,
@@ -206,7 +210,6 @@ export default class SubscribeMenu extends Vue {
         pageSize: 10
       },
       (result: returnDataType) => {
-        this.subscribeOverlay = false
         this.drawSubscribe(result)
       }
     )

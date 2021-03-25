@@ -1,7 +1,10 @@
 <template>
   <div class="viewBox leftTopView" ref="leftTopView">
-    <p>系统主题占比</p>
-    <div id="leftTopView">
+    <!-- loading -->
+    <HOverLay :loading="loading" />
+    <!-- !loading -->
+    <p v-if="!loading">系统主题占比</p>
+    <div v-if="!loading" id="leftTopView">
       <div class="view-box-con" ref="viewBoxCon">
         <div>
           <div id="topicTotal" style="width: 150px; height: 150px"></div>
@@ -23,15 +26,21 @@ import { topicMsg, topicProportionOpt } from '@/type/welcome.type'
 import http from '@/decorator/httpDecorator'
 import { returnDataType } from '@/type/http-request.type'
 import echarts from '@/decorator/echartsDecorator'
+import HOverLay from '@/components/h-overlay.vue'
 import BScroll from '@better-scroll/core'
 
-@Component
+@Component({
+  components: {
+    HOverLay
+  }
+})
 @echarts
 @http
 export default class SystemTopicProportion extends Vue {
   private systemOverlay = false
   private topicMsgList: Array<topicMsg> = []
   private colors: Array<string> = ['#884046', '#8a7e4e', '#749f83', '#a8d8ea']
+  private loading = true
 
   private topicProportion(elementName: string, opt: topicProportionOpt): void {
     const element = document.getElementById(elementName)
@@ -140,9 +149,9 @@ export default class SystemTopicProportion extends Vue {
   }
 
   async mounted(): Promise<void> {
-    this.systemOverlay = true
+    this.loading = true
     const { data }: returnDataType = await this.h_request.httpGET('GET_STATISTICS_STAT_SYS_TOPIC', {})
-    this.systemOverlay = false
+    this.loading = false
     this.topicMsgList = data
     const { count: countTotal }: topicMsg = this.topicMsgList.reduce(
       ({ count: prevcount }: topicMsg, { count: nextcount }: topicMsg) => {

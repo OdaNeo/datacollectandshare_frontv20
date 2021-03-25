@@ -57,7 +57,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/rootMGT/userMGT',
     meta: {
       title: '权限管理',
-      icon: 'mdi-shield-lock',
+      icon: 'mdiShieldLock',
       access: true,
       url: '/rootMGT'
     },
@@ -105,7 +105,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/onLineData/topicList',
     meta: {
       title: '实时数据',
-      icon: 'mdi-folder-cog-outline',
+      icon: 'mdiFolderCogOutline',
       access: true,
       url: '/onLineData'
     },
@@ -175,7 +175,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/videoData/videoList',
     meta: {
       title: '视频数据',
-      icon: 'mdi-video-box',
+      icon: 'mdiVideoBox',
       access: true,
       url: '/videoData'
     },
@@ -212,7 +212,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/offlineData/topicList',
     meta: {
       title: '离线数据',
-      icon: 'mdi-file-replace-outline',
+      icon: 'mdiFileReplaceOutline',
       access: true,
       url: '/offlineData'
     },
@@ -249,7 +249,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/transactionalData/dataList',
     meta: {
       title: '事务数据',
-      icon: 'mdi-file-excel-box-outline',
+      icon: 'mdiFileExcelBoxOutline',
       access: true,
       url: '/transactionalData'
     },
@@ -286,7 +286,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/logData/dataList',
     meta: {
       title: '日志数据',
-      icon: 'mdi-file-table-box-outline',
+      icon: 'mdiFileTableBoxOutline',
       access: true,
       url: '/logData'
     },
@@ -323,7 +323,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/cmdInfoData/cmdList',
     meta: {
       title: '可靠通道',
-      icon: 'mdi-console',
+      icon: 'mdiConsole',
       access: true,
       url: '/cmdInfoData'
     },
@@ -348,7 +348,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/dataMonitor/dataList',
     meta: {
       title: '作业监控',
-      icon: 'mdi-monitor-screenshot',
+      icon: 'mdiMonitorScreenshot',
       access: true,
       url: '/dataMonitor'
     },
@@ -383,7 +383,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/systemMGT/systemConfig',
     meta: {
       title: '系统管理',
-      icon: 'mdi-devices ',
+      icon: 'mdiDevices ',
       access: true,
       url: '/systemMGT'
     },
@@ -420,7 +420,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/logMGT/viewLog',
     meta: {
       title: '操作日志',
-      icon: 'mdi-clipboard-text-multiple',
+      icon: 'mdiClipboardTextMultiple',
       access: true,
       url: '/logMGT'
     },
@@ -446,7 +446,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/dataMGT/dataStatistics',
     meta: {
       title: '系统统计',
-      icon: 'mdi-database-cog',
+      icon: 'mdiDatabaseCog',
       access: true,
       url: '/dataMGT'
     },

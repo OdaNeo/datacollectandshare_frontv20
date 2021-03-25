@@ -1,7 +1,8 @@
 <template>
   <div class="viewBox rightTopView" ref="rightTopView">
-    <p>用户占比</p>
-    <div id="rightTopView">
+    <HOverLay :loading="loading" />
+    <p v-if="!loading">用户占比</p>
+    <div v-if="!loading" id="rightTopView">
       <div id="userRoolProportion" :style="{ width: '175px', height: '175px' }"></div>
       <div id="userSystemProportion" :style="{ width: '175px', height: '175px' }"></div>
       <div id="userStateProportion" :style="{ width: '175px', height: '175px' }"></div>
@@ -16,8 +17,13 @@ import { userProportion, topicRankingInfo } from '@/type/welcome.type'
 import { userInfo } from '@/type/user.type'
 import echarts from '@/decorator/echartsDecorator'
 import Enum from '@/decorator/enumDecorator'
+import HOverLay from '@/components/h-overlay.vue'
 
-@Component
+@Component({
+  components: {
+    HOverLay
+  }
+})
 @echarts
 @http
 @Enum([
@@ -27,7 +33,7 @@ import Enum from '@/decorator/enumDecorator'
   }
 ])
 export default class UserProportion extends Vue {
-  private userOverlay = false
+  private loading = true
 
   private getUserProportionList(data: topicRankingInfo, str: string): Array<userProportion> {
     const roolList: Array<userProportion> = []
@@ -108,12 +114,12 @@ export default class UserProportion extends Vue {
   }
 
   async mounted(): Promise<void> {
-    this.userOverlay = true
+    this.loading = true
     const { data }: returnDataType = await this.h_request.httpGET('GET_USER_FIND_ALL_USER', {
       pageSize: 100,
       pageNum: 1
     })
-    this.userOverlay = false
+    this.loading = false
     this.$nextTick(() => {
       this.userProportion('userRoolProportion', this.getUserProportionList(data, 'phone'), '角色占比')
       this.userProportion('userSystemProportion', this.getUserProportionList(data, 'systemName'), '系统占比')

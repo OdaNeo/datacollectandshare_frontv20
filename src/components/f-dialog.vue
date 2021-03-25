@@ -10,7 +10,7 @@
       <v-card-title>
         <span style="font-size: 18px">{{ formProvide.title }}</span>
         <v-btn class="close-btn" icon @click="closeMethod">
-          <v-icon>mdi-close</v-icon>
+          <v-icon>{{ mdiClose }}</v-icon>
         </v-btn>
       </v-card-title>
       <!-- 分割线 -->
@@ -46,6 +46,7 @@
 <script lang="ts">
 import { Component, Vue, Model, Inject, Ref, Prop } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
+import { mdiClose } from '@mdi/js'
 
 @Component
 export default class FDialog extends Vue {
@@ -57,6 +58,7 @@ export default class FDialog extends Vue {
 
   private defaultFormObj: any = {}
   private dialog = true
+  private mdiClose = mdiClose
 
   private userDialogValid = true
   private closeMethod(): void {

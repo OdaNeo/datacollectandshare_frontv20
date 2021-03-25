@@ -8,7 +8,7 @@
           height="35px"
           placeholder="请输入查找的离线主题ID"
           clearable
-          append-icon="mdi-magnify"
+          :append-icon="mdiMagnify"
           @click:append="searchTopic"
           @keyup.enter="searchTopic"
           @click:clear="tabChange(tab)"
@@ -125,6 +125,7 @@ import PullFTP from './childComponent/pullFTP.vue'
 
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInformationDialog.vue'
+import { mdiMagnify } from '@mdi/js'
 @Component({
   components: {
     HTable,
@@ -157,7 +158,7 @@ export default class OfflineTopicList extends Vue {
       }
     }
   })
-
+  mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示

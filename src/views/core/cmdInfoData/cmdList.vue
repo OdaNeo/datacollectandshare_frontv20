@@ -8,7 +8,7 @@
           height="35px"
           placeholder="请输入查找的命令ID"
           clearable
-          append-icon="mdi-magnify"
+          :append-icon="mdiMagnify"
           @click:append="searchCmd"
           @keyup.enter="searchCmd"
           @click:clear="tabChange(tab)"
@@ -86,6 +86,7 @@ import { FormObj } from '@/type/dialog-form.type'
 import CmdInformationDialog from './childComponent/cmdInformationDialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import { topicTable } from '@/type/topic.type'
+import { mdiMagnify } from '@mdi/js'
 
 @Component({
   components: {
@@ -111,6 +112,7 @@ export default class CmdList extends Vue {
       }
     }
   })
+  mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有命令', '我的命令']
   private dialogFlag = false // 弹窗展示

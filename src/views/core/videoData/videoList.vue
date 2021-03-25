@@ -8,7 +8,7 @@
           height="35px"
           placeholder="请输入查找的非结构化主题ID"
           clearable
-          append-icon="mdi-magnify"
+          :append-icon="mdiMagnify"
           @click:append="searchVideoTopic"
           @keyup.enter="searchVideoTopic"
           @click:clear="tabChange(tab)"
@@ -88,6 +88,7 @@ import FDialog from '@/components/f-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicTable } from '@/type/topic.type'
 import { tableHeaderType } from '@/type/table.type'
+import { mdiMagnify } from '@mdi/js'
 
 @Component({
   components: {
@@ -118,7 +119,7 @@ export default class VideoDataList extends Vue {
       }
     }
   })
-
+  mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
   private dialogFlag = false // 弹窗展示

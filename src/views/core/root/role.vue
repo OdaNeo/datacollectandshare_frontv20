@@ -8,7 +8,7 @@
           height="35px"
           placeholder="请输入查找的角色名称"
           clearable
-          append-icon="mdi-magnify"
+          :append-icon="mdiMagnify"
           @click:append="searchRoles"
           @keyup.enter="searchRoles"
           @click:clear="
@@ -66,6 +66,7 @@ import AuthDialog from './childComponent/authDialog.vue'
 import HConfirm from '@/components/h-confirm.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicTable } from '@/type/topic.type'
+import { mdiMagnify } from '@mdi/js'
 
 @Component({
   components: {
@@ -89,7 +90,7 @@ export default class Role extends Vue {
       }
     }
   })
-
+  mdiMagnify = mdiMagnify
   private dialogFlag = false
   private dialogShow = true
   private pageNum = 1

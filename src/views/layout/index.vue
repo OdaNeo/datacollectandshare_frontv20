@@ -3,7 +3,12 @@
     <v-app-bar app height="57" width="100%" style="left: 0px; z-index: 10" :color="PROJECT_BASE_COLOR">
       <TopBar />
     </v-app-bar>
-    <v-navigation-drawer style="padding-top: 57px; z-index: 9" width="210px" app :color="PROJECT_BASE_COLOR">
+    <v-navigation-drawer
+      style="padding-top: 57px; z-index: 9; max-width: 210px"
+      width="15%"
+      app
+      :color="PROJECT_BASE_COLOR"
+    >
       <NavBar />
     </v-navigation-drawer>
     <v-main style="background: rgb(246, 248, 251); width: 100%; height: 100%">
@@ -18,7 +23,7 @@
     <div v-if="events.length > 0">
       <div v-if="showAlert" id="alert">
         <v-btn class="close-btn" icon color="white" @click="handleHideAlert" small>
-          <v-icon>mdi-close</v-icon>
+          <v-icon>{{ mdiClose }}</v-icon>
         </v-btn>
         <v-alert style="font-size: 13px" v-for="item in events" :key="item.id" :color="item.color" dark dense>
           <span>主题ID: {{ item.name }}</span>
@@ -45,6 +50,7 @@ import { CalendarData } from '@/type/calendar'
 import { calendarType, calendarColorType } from '@/enum/calendar-enum'
 import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
+import { mdiClose } from '@mdi/js'
 
 @Component({
   components: {
@@ -55,6 +61,8 @@ import util from '@/decorator/utilsDecorator'
 @http
 @util
 export default class Layout extends Vue {
+  mdiClose = mdiClose
+
   private PROJECT_BASE_COLOR = PROJECT_BASE_COLOR
   private timer = 0
   private interval = 60
@@ -148,10 +156,9 @@ export default class Layout extends Vue {
     this.showAlert = true
   }
   mounted(): void {
-    // 减少首页http请求
-    // this.updateRange()
     // 开发环境不轮询
     if (process.env.NODE_ENV !== 'development') {
+      // this.updateRange()  // 减少首页http请求
       this.timer = setInterval(() => {
         this.updateRange()
       }, this.interval * 1000)

@@ -8,7 +8,7 @@
           height="35px"
           placeholder="请输入查找的系统名称"
           clearable
-          append-icon="mdi-magnify"
+          :append-icon="mdiMagnify"
           @click:append="searchSystemName"
           @keyup.enter="searchSystemName"
           @click:clear="
@@ -63,6 +63,7 @@ import HConfirm from '@/components/h-confirm.vue'
 import util from '@/decorator/utilsDecorator'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicTable } from '@/type/topic.type'
+import { mdiMagnify } from '@mdi/js'
 
 @Component({
   components: {
@@ -85,7 +86,7 @@ export default class BindNetwork extends Vue {
       }
     }
   })
-
+  mdiMagnify = mdiMagnify
   private networks: Array<{ value: string; text: string }> = []
   private systems: Array<{ value: string; text: string }> = []
 

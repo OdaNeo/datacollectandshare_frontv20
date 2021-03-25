@@ -15,7 +15,7 @@
             dense
             color="white"
             class="my-4"
-            :append-icon="showPass ? 'mdi-eye' : 'mdi-eye-off'"
+            :append-icon="showPass ? `${mdiEye}` : `${mdiEyeOff}`"
             :type="showPass ? 'text' : 'password'"
             @click:append="showPass = !showPass"
           ></v-text-field>
@@ -35,12 +35,15 @@ import http from '@/decorator/httpDecorator'
 import { returnDataType } from '@/type/http-request.type'
 import { userAndPassType } from '@/type/login.type'
 import { PROJECT_TITLE } from '@/config'
+import { mdiEye, mdiEyeOff } from '@mdi/js'
 
 @Component
 @http
 export default class Login extends Vue {
   PROJECT_TITLE = PROJECT_TITLE
 
+  private mdiEye = mdiEye
+  private mdiEyeOff = mdiEyeOff
   private userDialogValid = true
   private showPass = false
   private loading = false

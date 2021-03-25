@@ -9,7 +9,7 @@
             <template v-slot:activator="{ on }">
               <div class="userMenuBtn" v-on="on">
                 <v-avatar color="white" size="30" class="ml-4">
-                  <v-icon>mdi-account</v-icon>
+                  <v-icon size="24">{{ mdiAccount }}</v-icon>
                 </v-avatar>
                 <div class="userName">{{ username }}</div>
               </div>
@@ -48,6 +48,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import { rootStoreModule } from '@/store/modules/root'
 import { userState } from '@/enum/user-enum'
 import { PROJECT_TITLE } from '@/config'
+import { mdiAccount } from '@mdi/js'
 
 @Component
 export default class TopBar extends Vue {
@@ -55,6 +56,7 @@ export default class TopBar extends Vue {
   // private titleState = false
   // private userMenuState = false
   private userInfoObj = rootStoreModule.UserState
+  private mdiAccount = mdiAccount
 
   private PROJECT_TITLE = PROJECT_TITLE
 

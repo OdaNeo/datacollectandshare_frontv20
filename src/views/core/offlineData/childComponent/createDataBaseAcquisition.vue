@@ -102,7 +102,7 @@
               style="margin-top: 5px"
               @click.stop="add"
             >
-              <v-icon dark>mdi-plus</v-icon>
+              <v-icon dark>{{ mdiPlus }}</v-icon>
             </v-btn>
             <v-btn
               v-if="!item.disabled && formProvide.formObj['topicList'].length > 1"
@@ -115,7 +115,7 @@
               style="margin-top: 5px"
               @click.stop="minus(index, item.disabled)"
             >
-              <v-icon dark>mdi-minus</v-icon>
+              <v-icon dark>{{ mdiMinus }}</v-icon>
             </v-btn>
           </v-col>
         </v-row>
@@ -127,11 +127,14 @@
 import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
+import { mdiPlus, mdiMinus } from '@mdi/js'
 
 @Component({})
 @Validator(['topicNameFormatter', 'noEmpty'])
 export default class CreateDataBaseAcquisition extends Vue {
   @Inject() private readonly formProvide!: H_Vue
+  private mdiPlus = mdiPlus
+  private mdiMinus = mdiMinus
   private noRepeat: string[] = []
   private noRepeatKey: string[] = []
   private items = ['Mysql', 'Oracle', 'Sql Server']

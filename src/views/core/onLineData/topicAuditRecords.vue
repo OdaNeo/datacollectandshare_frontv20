@@ -8,7 +8,7 @@
           height="35px"
           placeholder="请输入要查询的主题ID"
           clearable
-          append-icon="mdi-magnify"
+          :append-icon="mdiMagnify"
           @click:append="searchTopicID"
           @keyup.enter="searchTopicID"
           @click:clear="
@@ -78,6 +78,8 @@ import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
+
+import { mdiMagnify } from '@mdi/js'
 @Component({
   components: {
     HTable,
@@ -108,6 +110,8 @@ export default class TopicAuditRecords extends Vue {
       }
     }
   })
+
+  mdiMagnify = mdiMagnify
   private desserts: Array<topicTable> = []
   private btnNames: Array<string> = ['未审核', '已通过', '已拒绝']
   private colors: Array<string> = ['warning', 'primary', 'error']

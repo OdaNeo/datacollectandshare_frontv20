@@ -1,6 +1,7 @@
 <template>
   <div class="viewBox leftBtmView">
-    <div style="width: 100%; height: 8%; padding-top: 10px">
+    <HOverLay :loading="loading" />
+    <div v-if="!loading" style="width: 100%; height: 8%; padding-top: 10px">
       <p>{{ `${releaseStartTime}至${releaseEndTime} ${releaseSystemName}系统主题消息发布情况` }}</p>
       <div class="iconCon">
         <v-menu offset-y max-height="200" min-width="130" transition="slide-x-transition">
@@ -8,7 +9,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                  <v-icon>mdi-shield-lock</v-icon>
+                  <v-icon>{{ mdiShieldLock }}</v-icon>
                 </v-btn>
               </template>
               <span>系统名称选项</span>
@@ -25,7 +26,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                  <v-icon>mdi-shield-lock</v-icon>
+                  <v-icon>{{ mdiShieldLock }}</v-icon>
                 </v-btn>
               </template>
               <span>分页选项</span>
@@ -51,7 +52,7 @@
             <v-tooltip bottom>
               <template v-slot:activator="{ on: tooltip }">
                 <v-btn color="primary" dark icon v-bind="attrs" v-on="{ ...tooltip, ...menu }">
-                  <v-icon>mdi-shield-lock</v-icon>
+                  <v-icon>{{ mdiShieldLock }}</v-icon>
                 </v-btn>
               </template>
               <span>时间选项</span>
@@ -80,12 +81,20 @@ import http from '@/decorator/httpDecorator'
 import { returnDataType } from '@/type/http-request.type'
 import Moment from 'moment'
 import util from '@/decorator/utilsDecorator'
+import HOverLay from '@/components/h-overlay.vue'
+import { mdiShieldLock } from '@mdi/js'
 
-@Component
+@Component({
+  components: {
+    HOverLay
+  }
+})
 @http
 @util
 export default class ReleaseMenu extends Vue {
   @Prop() private systemItems!: unknown[]
+  private loading = true
+  private mdiShieldLock = mdiShieldLock
 
   private releaseTopicExist = true
   private releaseStartTime: string = Moment(Moment().subtract(11, 'months').calendar(), 'MM-DD-YYYY').format(
@@ -100,7 +109,9 @@ export default class ReleaseMenu extends Vue {
   private releaseTime = false
 
   private async getRelease(params: any, callback: Function) {
+    this.loading = true
     const result: returnDataType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
+    this.loading = false
     callback(result)
   }
 

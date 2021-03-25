@@ -9,7 +9,7 @@
           height="35px"
           placeholder="请输入查找的账号名称"
           clearable
-          append-icon="mdi-magnify"
+          :append-icon="mdiMagnify"
           @click:append="searchUserList"
           @keyup.enter="searchUserList"
           @click:clear="
@@ -61,6 +61,7 @@ import UserDialog from './childComponent/userDialog.vue'
 import FDialog from '@/components/f-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import HTable from '@/components/h-table.vue'
+import { mdiMagnify } from '@mdi/js'
 
 @Component({
   components: {
@@ -88,7 +89,7 @@ export default class User extends Vue {
       }
     }
   })
-
+  mdiMagnify = mdiMagnify
   private dialogFlag = false
   private desserts: Array<userInfo> = []
   private pageNum = 1

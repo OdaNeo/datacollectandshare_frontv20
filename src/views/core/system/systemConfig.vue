@@ -8,7 +8,7 @@
           height="35px"
           placeholder="请输入查找的配置名称"
           clearable
-          append-icon="mdi-magnify"
+          :append-icon="mdiMagnify"
           @click:append="searchSystem"
           @keyup.enter="searchSystem"
           @click:clear="
@@ -68,6 +68,7 @@ import HConfirm from '@/components/h-confirm.vue'
 import util from '@/decorator/utilsDecorator'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicTable } from '@/type/topic.type'
+import { mdiMagnify } from '@mdi/js'
 
 @Component({
   components: {
@@ -90,7 +91,7 @@ export default class SystemConfig extends Vue {
       }
     }
   })
-
+  mdiMagnify = mdiMagnify
   private pageSize = 20
   private pageNum = 1
   private desserts: Array<topicTable> = []

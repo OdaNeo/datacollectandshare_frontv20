@@ -4,7 +4,7 @@
       <v-card-title>
         <p class="mb-0" style="user-select: none">视频列表</p>
         <v-btn icon class="close-btn" @click.stop="closeMethod">
-          <v-icon>mdi-close</v-icon>
+          <v-icon>{{ mdiClose }}</v-icon>
         </v-btn>
       </v-card-title>
       <div style="font-size: 12px; text-align: center; user-select: none">
@@ -41,6 +41,7 @@ import { Component, Vue, Model, Prop, Inject } from 'vue-property-decorator'
 import DPlayer, { DPlayerEvents } from 'dplayer'
 import { H_Vue } from '@/declaration/vue-prototype'
 import util from '@/decorator/utilsDecorator'
+import { mdiClose } from '@mdi/js'
 
 @Component
 @util
@@ -50,6 +51,7 @@ export default class VideoPopup extends Vue {
   @Prop() private videoCountsReal!: number
   @Prop() private videoList!: Array<any>
   @Model('closeDialog', { type: Boolean }) private checked!: boolean
+  mdiClose = mdiClose
 
   private video: HTMLVideoElement | undefined
   public dp: DPlayer | undefined

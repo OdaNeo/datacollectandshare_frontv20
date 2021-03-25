@@ -15,7 +15,7 @@
         height="35px"
         :placeholder="placeholder"
         readonly
-        prepend-inner-icon="mdi-magnify"
+        :prepend-inner-icon="mdiMagnify"
         v-bind="attrs"
         v-on="on"
       ></v-text-field>
@@ -37,6 +37,7 @@
 <script lang="ts">
 import { Component, Vue, Prop, Emit } from 'vue-property-decorator'
 import util from '@/decorator/utilsDecorator'
+import { mdiMagnify } from '@mdi/js'
 
 @Component
 @util
@@ -45,6 +46,7 @@ export default class HDatePicker extends Vue {
   @Prop() private begin!: string
   @Prop() private anotherDate!: null | string
 
+  mdiMagnify = mdiMagnify
   private menu = false
   private date: string | null = null
 

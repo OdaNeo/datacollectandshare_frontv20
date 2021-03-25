@@ -56,13 +56,14 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 30. ~~视频搜索页面loading~~
 31. ~~火狐隐藏滚轮~~
 32. ~~表格最小宽度设定~~
-33. 首页loading， 首页加载速度优化， 削减请求数量， 目前有7个请求
+33. ~~首页loading， 首页加载速度优化， 削减请求数量， 目前有7个请求~~
 34. icon-font 改 svg
 35. 资源管理 新添权限切换 bug-fix
 36. 侧边栏样式构建
 37. ~~作业监控轮询 权限bugfix~~
 38. 字段名 noRepeatKey 提示优化
 39. 如果表单内没有修改，禁止提交
+40. 使用 非prop $attr，抽象表单内组件
 
 ## 常见问题
 

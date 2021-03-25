@@ -2,11 +2,11 @@
   <div id="CreateTransactionalData">
     <!-- 后退 -->
     <div class="step-container">
-      <v-icon :disabled="step <= 1" class="step-icon" color="primary" @click="prevStep">mdi-chevron-left</v-icon>
+      <v-icon :disabled="step <= 1" class="step-icon" color="primary" @click="prevStep">{{ mdiChevronLeft }}</v-icon>
       <!-- stepTitle -->
       <span class="step-title">{{ stepTitle }}</span>
       <!-- 前进 -->
-      <v-icon :disabled="step >= 3" class="step-icon" color="primary" @click="nextStep">mdi-chevron-right</v-icon>
+      <v-icon :disabled="step >= 3" class="step-icon" color="primary" @click="nextStep">{{ mdiChevronRight }}</v-icon>
     </div>
 
     <v-window v-model="step">
@@ -152,7 +152,7 @@
                 style="transition: all 0.5s"
                 :class="openPanels === 0 ? `panels-icon-action` : ''"
               >
-                mdi-chevron-up
+                {{ mdiChevronUp }}
               </v-icon>
             </label>
           </v-col>
@@ -184,7 +184,7 @@
                             style="margin-top: 5px"
                             @click.stop="add"
                           >
-                            <v-icon dark>mdi-plus</v-icon>
+                            <v-icon dark>{{ mdiPlus }}</v-icon>
                           </v-btn>
                           <v-btn
                             v-if="formProvide.formObj['column'].length > 1"
@@ -197,7 +197,7 @@
                             style="margin-top: 5px"
                             @click.stop="minus(index)"
                           >
-                            <v-icon dark>mdi-minus</v-icon>
+                            <v-icon dark>{{ mdiMinus }}</v-icon>
                           </v-btn>
                         </v-col>
                         <v-col class="mr-2">
@@ -279,11 +279,18 @@
 import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
+import { mdiChevronRight, mdiChevronLeft, mdiPlus, mdiMinus, mdiChevronUp } from '@mdi/js'
 
 @Component({})
 @Validator(['noEmpty'])
 export default class CreateTransactionalData extends Vue {
   @Inject() private readonly formProvide!: H_Vue
+  mdiChevronRight = mdiChevronRight
+  mdiChevronLeft = mdiChevronLeft
+  mdiPlus = mdiPlus
+  mdiMinus = mdiMinus
+  mdiChevronUp = mdiChevronUp
+
   private noRepeat: Array<string> = []
   private noRepeatKey: string[] = []
   private typeItems = ['boolean', 'short', 'int', 'long', 'float', 'double', 'string']
