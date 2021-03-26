@@ -80,15 +80,6 @@ input:-internal-autofill-previewed, input:-internal-autofill-selected {
     margin-top: 6px !important;
 }
 
-.v-icon.notranslate.v-icon--link.theme--light {
-    width: 20px !important;
-    height: 20px !important;
-}
-
-.v-input__icon {
-    min-width: 0px !important;
-}
-
 .v-form .v-text-field--outlined.v-input--dense .v-label {
     top: 7px !important;
 }

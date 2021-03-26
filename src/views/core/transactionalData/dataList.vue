@@ -98,7 +98,7 @@
     <!-- 表单展示 -->
     <f-dialog v-if="fDialogFlag" v-model="fDialogFlag" :loading="SQLLoading">
       <CreateTransactionalData v-if="dialogFlag === 1" />
-      <UploadSQL v-if="dialogFlag === 2" @transform-sql-file="transformSQLFile" />
+      <UploadSQL v-if="dialogFlag === 2" @transform-sql-file="transformSQLFile" :message="sqlFileMessage" />
     </f-dialog>
 
     <!-- 表格显示 -->
@@ -175,7 +175,9 @@ export default class transactionalDataList extends Vue {
   }
 
   private sqlTimer = 0
+  private sqlFileMessage = ''
 
+  // '文件存储成功/n临时数据库创建成功/nsql文件执行成功/n准备处理表:topicinfo/n查询出表:topicinfo有:126条数据/n开始异步存储表:topicinfo数据至es。。。/n准备处理表:url_topic_info/n查询出表:url_topic_info有:6条数据/n开始异步存储表:url_topic_info数据至es。。。/nsql数据查询完毕，异步导入es中。。。'
   private rowJson = ''
   private sqlFile: File | null = null
   private sqlForms = new FormData()
@@ -388,6 +390,7 @@ export default class transactionalDataList extends Vue {
     this.formProvide.title = '上传SQL文件'
     this.formProvide.methodName = 'uploadSQLFile'
     this.formProvide.formObj = {}
+    this.sqlFileMessage = ''
   }
 
   private async uploadSQLFile() {
@@ -395,46 +398,52 @@ export default class transactionalDataList extends Vue {
       return
     }
     this.SQLLoading = true
-    console.log(this.sqlFile)
+    // console.log(this.sqlFile)
 
     this.sqlForms = new FormData()
     this.sqlForms.append('ddlFile', this.sqlFile)
 
-    const data = await this.h_upload.httpPOST('POST_TOPICS_ADDSQLFILE', this.sqlForms)
+    const { success, data } = await this.h_upload.httpPOST('POST_TOPICS_ADDSQLFILE', this.sqlForms)
 
+    // const success = true
     console.log(data)
 
-    // if (success) {
-    //   // this.h_utils['alertUtil'].open('SQL文件上传成功', true, 'success')
-    //   const _success = await this.getSQLFileLog()
-
-    //   if (_success) {
-    //     this.searchMethod(
-    //       false,
-    //       {
-    //         pageSize: this.pageSize,
-    //         pageNum: 1
-    //       },
-    //       !!this.tab
-    //     )
-    //     this.pageNum = 1
-    //     return Promise.resolve(true)
-    //   }
-    // }
+    if (success) {
+      this.h_utils['alertUtil'].open('SQL文件上传成功，正在查询日志', true, 'success', 4000)
+      this.getSQLFileLog(data)
+      // if (_success) {
+      //   this.searchMethod(
+      //     false,
+      //     {
+      //       pageSize: this.pageSize,
+      //       pageNum: 1
+      //     },
+      //     !!this.tab
+      //   )
+      //   this.pageNum = 1
+      //   return Promise.resolve(true)
+      // }
+    }
+    this.SQLLoading = false
   }
 
   // 轮询上传文件日志
-  private getSQLFileLog(): Promise<boolean> | void {
-    this.sqlTimer = setInterval(async () => {
-      const data = await this.h_request.httpGET('POST_TOPICS_ADDSQLFILE', {})
-      console.log(data)
+  private async getSQLFileLog(id: unknown) {
+    clearInterval(this.sqlTimer)
+    this.SQLLoading = true
 
-      if (data.success) {
+    // 0: 进行 1：完成
+    this.sqlTimer = setInterval(async () => {
+      const { data, message } = await this.h_request.httpGET('GET_TOPICS_SELECTSQLFILELOG', { id })
+
+      console.log(message)
+
+      if (data === 1) {
+        this.sqlFileMessage = message
         clearInterval(this.sqlTimer)
         this.SQLLoading = false
-        return Promise.resolve(true)
       }
-    }, 30000)
+    }, 5000)
   }
 
   // transformSQLFile

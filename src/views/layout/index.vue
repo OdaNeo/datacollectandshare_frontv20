@@ -157,6 +157,8 @@ export default class Layout extends Vue {
   }
   mounted(): void {
     // 开发环境不轮询
+    // this.updateRange()
+
     if (process.env.NODE_ENV !== 'development') {
       // this.updateRange()  // 减少首页http请求
       this.timer = setInterval(() => {

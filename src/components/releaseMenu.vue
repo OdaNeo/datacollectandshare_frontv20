@@ -234,7 +234,7 @@ export default class ReleaseMenu extends Vue {
     position:absolute
     right:0
     top:5px
-    width:20%
+    width:18%
     display:flex
 .leftBtmView
     p

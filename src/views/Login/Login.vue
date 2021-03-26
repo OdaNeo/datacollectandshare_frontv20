@@ -133,9 +133,9 @@ export default class Login extends Vue {
   height: 100%;
   background: linear-gradient(to left, rgba(0, 21, 41, 0), rgba(0, 21, 41, 1));
 }
-#login >>> .v-icon.v-icon {
+/* #login >>> .v-icon.v-icon {
   font-size: 16px;
-}
+} */
 #login >>> input {
   -webkit-text-fill-color: #fff !important;
 }

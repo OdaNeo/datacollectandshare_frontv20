@@ -2,6 +2,19 @@ import Vue from 'vue'
 import VueRouter, { RouteConfig } from 'vue-router'
 import Login from '@/views/Login/Login.vue'
 import StatePage from '@/views/layout/index.vue'
+import {
+  mdiShieldLock,
+  mdiFolderCogOutline,
+  mdiVideoBox,
+  mdiFileReplaceOutline,
+  mdiFileExcelBoxOutline,
+  mdiFileTableBoxOutline,
+  mdiConsole,
+  mdiMonitorScreenshot,
+  mdiDevices,
+  mdiClipboardTextMultiple,
+  mdiDatabaseCog
+} from '@mdi/js'
 
 Vue.use(VueRouter)
 
@@ -57,7 +70,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/rootMGT/userMGT',
     meta: {
       title: '权限管理',
-      icon: 'mdiShieldLock',
+      icon: mdiShieldLock,
       access: true,
       url: '/rootMGT'
     },
@@ -105,7 +118,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/onLineData/topicList',
     meta: {
       title: '实时数据',
-      icon: 'mdiFolderCogOutline',
+      icon: mdiFolderCogOutline,
       access: true,
       url: '/onLineData'
     },
@@ -175,7 +188,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/videoData/videoList',
     meta: {
       title: '视频数据',
-      icon: 'mdiVideoBox',
+      icon: mdiVideoBox,
       access: true,
       url: '/videoData'
     },
@@ -212,7 +225,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/offlineData/topicList',
     meta: {
       title: '离线数据',
-      icon: 'mdiFileReplaceOutline',
+      icon: mdiFileReplaceOutline,
       access: true,
       url: '/offlineData'
     },
@@ -249,7 +262,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/transactionalData/dataList',
     meta: {
       title: '事务数据',
-      icon: 'mdiFileExcelBoxOutline',
+      icon: mdiFileExcelBoxOutline,
       access: true,
       url: '/transactionalData'
     },
@@ -286,7 +299,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/logData/dataList',
     meta: {
       title: '日志数据',
-      icon: 'mdiFileTableBoxOutline',
+      icon: mdiFileTableBoxOutline,
       access: true,
       url: '/logData'
     },
@@ -323,7 +336,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/cmdInfoData/cmdList',
     meta: {
       title: '可靠通道',
-      icon: 'mdiConsole',
+      icon: mdiConsole,
       access: true,
       url: '/cmdInfoData'
     },
@@ -348,7 +361,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/dataMonitor/dataList',
     meta: {
       title: '作业监控',
-      icon: 'mdiMonitorScreenshot',
+      icon: mdiMonitorScreenshot,
       access: true,
       url: '/dataMonitor'
     },
@@ -383,7 +396,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/systemMGT/systemConfig',
     meta: {
       title: '系统管理',
-      icon: 'mdiDevices ',
+      icon: mdiDevices,
       access: true,
       url: '/systemMGT'
     },
@@ -420,7 +433,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/logMGT/viewLog',
     meta: {
       title: '操作日志',
-      icon: 'mdiClipboardTextMultiple',
+      icon: mdiClipboardTextMultiple,
       access: true,
       url: '/logMGT'
     },
@@ -446,7 +459,7 @@ const routes: Array<RouteConfig> = [
     redirect: '/dataMGT/dataStatistics',
     meta: {
       title: '系统统计',
-      icon: 'mdiDatabaseCog',
+      icon: mdiDatabaseCog,
       access: true,
       url: '/dataMGT'
     },

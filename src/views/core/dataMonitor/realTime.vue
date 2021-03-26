@@ -68,7 +68,9 @@ import util from '@/decorator/utilsDecorator'
 @util
 export default class RealTime extends Vue {
   private timer = 0
-  private interval = 30
+  private interval = 10
+
+  private timeRange = 10 * 60 * 1000 // 10分钟
   // dom
   private el: any
   private loading = false
@@ -127,15 +129,15 @@ export default class RealTime extends Vue {
         {
           type: 'inside',
           filterMode: 'weakFilter',
-          startValue: new Date().getTime() - 0.2 * 0.5 * 60 * 60 * 1000,
-          endValue: new Date().getTime() + 0.8 * 0.5 * 60 * 60 * 1000
+          startValue: new Date().getTime() - 0.1 * this.timeRange,
+          endValue: new Date().getTime() + 0.9 * this.timeRange
         },
         {
           type: 'slider',
           filterMode: 'weakFilter',
-          // 默认显示1个小时内的
-          startValue: new Date().getTime() - 0.2 * 0.5 * 60 * 60 * 1000,
-          endValue: new Date().getTime() + 0.8 * 0.5 * 60 * 60 * 1000,
+          // 默认显示10min内的
+          startValue: new Date().getTime() - 0.1 * this.timeRange,
+          endValue: new Date().getTime() + 0.9 * this.timeRange,
           showDataShadow: false,
           top: '82%',
           height: 0,
@@ -189,6 +191,7 @@ export default class RealTime extends Vue {
           },
           data: data['正常'],
           markLine: {
+            silent: true,
             symbol: ['none', 'none'],
             label: { show: false },
             data: [{ xAxis: this.now }],
@@ -236,10 +239,47 @@ export default class RealTime extends Vue {
     // console.log(this.dataAll)
     for (let i = 0; i < this.el.length; i++) {
       //  data.list[i]['dataSet']
-
+      // 获得旧option
       const _option = this.chartElements[i].getOption()
+      // 获得当前时间戳
+      const _time = Number(new Date().getTime())
+      // 获得原始endValue
+      const _endValue = _option.dataZoom[0].endValue
+      // 获得原始startValue
+      const _startValue = _option.dataZoom[0].startValue
+      //
+      const timeRange = _endValue - _startValue
+      // 自动延长横轴可视区域
 
-      _option.series[0].data.push([new Date().getTime(), 1])
+      if (_time >= _startValue + 0.9 * timeRange && _time <= _endValue + 0.05 * timeRange) {
+        _option.dataZoom = [
+          {
+            type: 'inside',
+            filterMode: 'weakFilter',
+            startValue: _endValue - 0.1 * timeRange,
+            endValue: _endValue + 0.9 * timeRange
+          },
+          {
+            type: 'slider',
+            filterMode: 'weakFilter',
+            showDataShadow: false,
+            top: '82%',
+            height: 0,
+            borderColor: 'transparent',
+            backgroundColor: '#CBD1DA',
+            handleIcon:
+              'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAARVBMVEX////R0dvN0tvL0tvL0dvM0trO2OLM09vL0dvO0dvL0trM09zM0tvM0tvL0drU2eHp6+/3+Pn9/f7N09vq7PD////y9PaQXLgBAAAADnRSTlMAHGu22fMam/xO8m79/nbCHu4AAAABYktHRACIBR1IAAAAB3RJTUUH4wcSEhgvIlxSlgAAAJtJREFUKM91kusShCAIhfGeZaamvf+jLpS7qzPx/WDGcxQQBXgQUmljtJICRqxbYmdx9q/7NQ6s/qtvIU6Ere/faXWkXEpOx+3cZyzlOWvr1JOyUR1H+tV+XOQ47JP6qW2gUm8CJOVvE1RHgsKYZiOhpEBjzLORUdJgMJbZKCgZ3mBTscXZdtkLsiPhhwg+vI+dfyj+afnP8PZ9PjqGHTJG9o2tAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE5LTA3LTE4VDEwOjI0OjQ3KzA4OjAwIkgiHgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxOS0wNy0xOFQxMDoyNDo0NyswODowMFMVmqIAAAAASUVORK5CYII=',
+            handleSize: 16,
+            labelFormatter: (time: number) => {
+              return this.h_utils.timeUtil.stampToTodayTime(time)
+            },
+            startValue: _endValue - 0.1 * timeRange,
+            endValue: _endValue + 0.9 * timeRange
+          }
+        ]
+      }
+
+      _option.series[0].data.push([_time, 1])
 
       if (data.list[i]['dataSet'].length !== 0) {
         data.list[i]['dataSet'].forEach((item: { createTime: string; status: number }) => {
@@ -276,8 +316,9 @@ export default class RealTime extends Vue {
       // baseline, 填充数据
       let _list = []
       let _i = 0
-      while (this.zeroTimeStamp + _i * 0.5 * 60 * 1000 < this.now) {
-        _list.push([this.zeroTimeStamp + _i * 0.5 * 60 * 1000, 1])
+      // 10秒 一个点
+      while (this.zeroTimeStamp + _i * 10 * 1000 < this.now) {
+        _list.push([this.zeroTimeStamp + _i * 10 * 1000, 1])
         _i++
       }
       // 异常

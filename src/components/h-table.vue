@@ -166,7 +166,6 @@ export default class HTable extends Vue {
 .simple-table {
   border-radius: 2px;
   background-color: #fff;
-
   overflow-y: auto;
   overflow-x: hidden;
 }

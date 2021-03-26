@@ -10,7 +10,7 @@
       <v-card-title>
         <span style="font-size: 18px">{{ formProvide.title }}</span>
         <v-btn class="close-btn" icon @click="closeMethod">
-          <v-icon>{{ mdiClose }}</v-icon>
+          <v-icon size="20">{{ mdiClose }}</v-icon>
         </v-btn>
       </v-card-title>
       <!-- 分割线 -->

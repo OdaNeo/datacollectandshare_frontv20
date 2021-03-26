@@ -5,7 +5,7 @@
       v-for="item in navMenu"
       :key="item.id"
       :append-icon="mdiMenuUp"
-      :prepend-icon="mdiShieldLock"
+      :prepend-icon="item.meta.icon"
       no-action
       color="white"
     >
@@ -37,3 +37,9 @@ export default class NavBar extends Vue {
   }
 }
 </script>
+<style scoped>
+#navbar >>> .v-icon__svg {
+  height: 20px !important;
+  width: 20px !important;
+}
+</style>
