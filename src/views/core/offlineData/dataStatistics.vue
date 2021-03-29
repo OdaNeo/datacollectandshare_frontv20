@@ -112,7 +112,9 @@ export default class OfflineDataStatistics extends Vue {
     this.loading = true
     const result: returnType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
     this.loading = false
-    callback(result)
+    if (result.data) {
+      callback(result)
+    }
   }
 
   private selectReleaseSystem(system: { name: string; id: number }) {

@@ -91,7 +91,7 @@ export default class userDialog extends Vue {
   // private editDialog = false
   private timer = 0
 
-  private getUserRoot({ data }: returnType) {
+  private getUserRoot(data: Array<{ name: string; id: number }>) {
     this.userRoots = data.map((s: { name: string; id: number }) => {
       return {
         text: s.name,
@@ -99,7 +99,7 @@ export default class userDialog extends Vue {
       }
     })
   }
-  private getSystemName({ data }: returnType) {
+  private getSystemName(data: Array<{ name: string; id: number }>) {
     this.systemNames = data.map((s: { name: string; id: number }) => {
       return {
         text: s.name,
@@ -109,7 +109,7 @@ export default class userDialog extends Vue {
   }
 
   private async httpAll() {
-    const results = await this.h_request['httpAll']([
+    const [{ data: data1 }, { data: data2 }]: Array<returnType> = await this.h_request['httpAll']([
       {
         name: 'GET_USER_ADDUSER_FIND_ALL_ROLE',
         method: 'get',
@@ -121,8 +121,9 @@ export default class userDialog extends Vue {
         data: {}
       }
     ])
-    this.getUserRoot(results[0])
-    this.getSystemName(results[1])
+
+    data1 && this.getUserRoot(data1)
+    data2 && this.getSystemName(data2)
   }
 
   private async loginNameNoRepeat(val: string) {

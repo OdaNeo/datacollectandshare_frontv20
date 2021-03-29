@@ -9,7 +9,11 @@
 // VUE_APP_BASE_API = 'http://8.131.247.200:49090'
 // 2.0
 // VUE_APP_BASE_API = 'http://172.51.216.106:9002'
-export const VUE_APP_BASE_API = 'http://172.51.216.106:49090'
+
+// staging 预发布渠道
+export const VUE_APP_BASE_API = process.env.VUE_APP_NINJA_CAT
+  ? localStorage.getItem('staging') || undefined
+  : 'http://172.51.216.106:49090'
 
 export const BASE_REQUEST_TIME_OUT = 60000
 

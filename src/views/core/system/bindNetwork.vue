@@ -228,13 +228,13 @@ export default class BindNetwork extends Vue {
 
   public async getNetworksAndSystems(): Promise<void> {
     const { data } = await this.h_request['httpGET']('GET_SYSNET_GETSYSNETLIST', {})
-    this.networks = data.network.map((n: { name: string; id: string }) => {
+    this.networks = data?.network.map((n: { name: string; id: string }) => {
       return {
         text: n.name,
         value: n.id
       }
     })
-    this.systems = data.system.map((n: { name: string; id: string }) => {
+    this.systems = data?.system.map((n: { name: string; id: string }) => {
       return {
         text: n.name,
         value: n.id

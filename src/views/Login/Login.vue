@@ -102,6 +102,17 @@ export default class Login extends Vue {
   }
 
   mounted(): void {
+    // staging 环境下用户可以自定义后端服务IP及端口
+    if (process.env.VUE_APP_NINJA_CAT) {
+      const _url = window.prompt('staging', '172.51.216.106:49090')
+
+      if (_url) {
+        localStorage.setItem('staging', `http://${_url}`)
+      } else {
+        localStorage.setItem('staging', 'http://172.51.216.106:49090')
+      }
+    }
+
     window.addEventListener('keyup', this.handleEnterEvent)
   }
 

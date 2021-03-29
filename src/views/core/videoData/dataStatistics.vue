@@ -19,8 +19,8 @@ export default class VideoDataStatistics extends Vue {
     const { data } = await this.h_request['httpGET']('GET_TOPICS_GETVIDEO', {})
 
     this.videoList = data
-    this.handelECharts('echarts1', this.getOption1(this.videoList))
-    this.handelECharts('echarts2', this.getOption2(this.videoList))
+    data && this.handelECharts('echarts1', this.getOption1(this.videoList))
+    data && this.handelECharts('echarts2', this.getOption2(this.videoList))
   }
 
   // echarts1

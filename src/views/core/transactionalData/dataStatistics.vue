@@ -94,17 +94,16 @@ export default class TransactionalDataStatistics extends Vue {
     this.rowJson = item.log
   }
 
-  // 查询通用调用方法 结构化数据
+  // 查询通用调用方法
   private async searchMethod(params: paramsType) {
     this.loading = true
     params.faceTypes = `${topicInterFaceType['事务数据']}`
     params.dataType = dataType['结构化']
 
     const { data }: returnType = await this.h_request['httpGET']<object>('GET_TOPICS_GETOFFLINELOG', params)
-    this.desserts = data.list.map((item: any) => {
-      return { ...item }
-    })
-    this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
+
+    this.desserts = data ? [...data.list] : []
+    this.paginationLength = Math.ceil(data?.['total'] / this.pageSize) || 1
     this.loading = false
   }
 

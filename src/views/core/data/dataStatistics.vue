@@ -639,7 +639,7 @@ export default class DataStatistics extends Vue {
     this.echartsProport = this.h_echarts.init(doc)
     const { data }: returnType = await this.h_request['httpGET']('GET_STATISTICS_STAT_SYS_TOPIC', {})
     // 判断是否显示
-    if (data.length > 0) {
+    if (data) {
       this.noMsg = true
       this.painting(this.genData(data))
     } else {
@@ -648,7 +648,9 @@ export default class DataStatistics extends Vue {
   }
   private async getSystemItems(params: any, callback: Function) {
     const result: returnType = await this.h_request['httpGET']('GET_SYSTEM_GETSYSTEMINFO', params)
-    callback(result)
+    if (result.data) {
+      callback(result)
+    }
   }
   // 获取系统占比数据
   async mounted(): Promise<void> {

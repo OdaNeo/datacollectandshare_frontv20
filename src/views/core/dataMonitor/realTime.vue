@@ -310,49 +310,54 @@ export default class RealTime extends Vue {
 
     const { data } = await this.h_request.httpPOST<object>('POST_MONITOR_FINDLOGBYTIME', params)
     this.loading = false
-
-    this.paginationLength = Math.ceil(data.total / this.pageSize) || 1
-    this.dataAll = data.list.map((item: any) => {
-      // baseline, 填充数据
-      let _list = []
-      let _i = 0
-      // 10秒 一个点
-      while (this.zeroTimeStamp + _i * 10 * 1000 < this.now) {
-        _list.push([this.zeroTimeStamp + _i * 10 * 1000, 1])
-        _i++
-      }
-      // 异常
-      let _list2 = []
-      // 离线
-      let _list3 = []
-      // 警告
-      let _list4 = []
-      // console.log(item.dataSet)
-      // const dataSet = [
-      //   { createTime: this.zeroTimeStamp + 20000000, status: 1 },
-      //   { createTime: this.zeroTimeStamp + 10000000, status: 2 }
-      // ]
-      for (let i = 0; i < item.dataSet.length; i++) {
-        if (item.dataSet[i]['status'] === 1) {
-          _list2.push([Number(item.dataSet[i]['createTime']), 1])
-        } else if (item.dataSet[i]['status'] === 2) {
-          _list3.push([Number(item.dataSet[i]['createTime']), 1])
-        } else if (item.dataSet[i]['status'] === 3) {
-          _list4.push([Number(item.dataSet[i]['createTime']), 1])
+    // 如果有data
+    if (data) {
+      this.paginationLength = Math.ceil(data.total / this.pageSize) || 1
+      this.dataAll = data.list.map((item: any) => {
+        // baseline, 填充数据
+        let _list = []
+        let _i = 0
+        // 10秒 一个点
+        while (this.zeroTimeStamp + _i * 10 * 1000 < this.now) {
+          _list.push([this.zeroTimeStamp + _i * 10 * 1000, 1])
+          _i++
         }
-      }
+        // 异常
+        let _list2 = []
+        // 离线
+        let _list3 = []
+        // 警告
+        let _list4 = []
+        // console.log(item.dataSet)
+        // const dataSet = [
+        //   { createTime: this.zeroTimeStamp + 20000000, status: 1 },
+        //   { createTime: this.zeroTimeStamp + 10000000, status: 2 }
+        // ]
+        for (let i = 0; i < item.dataSet.length; i++) {
+          if (item.dataSet[i]['status'] === 1) {
+            _list2.push([Number(item.dataSet[i]['createTime']), 1])
+          } else if (item.dataSet[i]['status'] === 2) {
+            _list3.push([Number(item.dataSet[i]['createTime']), 1])
+          } else if (item.dataSet[i]['status'] === 3) {
+            _list4.push([Number(item.dataSet[i]['createTime']), 1])
+          }
+        }
 
-      return {
-        '异常': _list2,
-        '离线': _list3,
-        '警告': _list4,
-        '正常': [..._list, [this.now, 1]],
-        serverName: item.serverName,
-        topicId: item.topicId
-      }
-    })
-    // 初始化
-    this.initECharts()
+        return {
+          '异常': _list2,
+          '离线': _list3,
+          '警告': _list4,
+          '正常': [..._list, [this.now, 1]],
+          serverName: item.serverName,
+          topicId: item.topicId
+        }
+      })
+      // 初始化
+      this.initECharts()
+    } else {
+      // 如果没数据清除定时器
+      clearInterval(this.timer)
+    }
   }
 
   //  初始化echarts
