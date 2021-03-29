@@ -104,22 +104,12 @@
 </template>
 <script lang="ts">
 import http from '@/decorator/httpDecorator'
-import http2 from '@/decorator/httpDecorator2'
 import util from '@/decorator/utilsDecorator'
 import { Component, Vue } from 'vue-property-decorator'
 import RequestData from '@/api'
 
 @Component
 @http
-@http2({
-  methodName: 'h_request2',
-  header: [
-    {
-      headerKey: 'x-auth-token',
-      headerVal: 1234
-    }
-  ]
-})
 @util
 export default class TopicProducerAndConsume extends Vue {
   private producerForm = true
@@ -182,12 +172,15 @@ export default class TopicProducerAndConsume extends Vue {
 
   private async sendMsg(callback?: Function) {
     if (this.userToken) {
-      const h_request3 = new RequestData([
-        {
-          headerKey: 'x-auth-token',
-          headerVal: this.userToken
-        }
-      ])
+      const h_request3 = new RequestData(
+        [
+          {
+            headerKey: 'x-auth-token',
+            headerVal: this.userToken
+          }
+        ],
+        300000
+      )
       if (this.collectiveState === '1') {
         const { success } = await h_request3.httpPOST(
           'POST_TRANSMISSION_ATS',
@@ -226,12 +219,15 @@ export default class TopicProducerAndConsume extends Vue {
 
   private async consumeRealtimeMethod(id: string, token: string) {
     if (id && token) {
-      const h_request3 = new RequestData([
-        {
-          headerKey: 'x-auth-token',
-          headerVal: token
-        }
-      ])
+      const h_request3 = new RequestData(
+        [
+          {
+            headerKey: 'x-auth-token',
+            headerVal: token
+          }
+        ],
+        300000
+      )
       const response = await h_request3.httpGET('GET_TRANSMISSION_REALTIME', {}, id)
       this.consumeBox = JSON.stringify(response, null, '\t')
     } else {
@@ -241,12 +237,15 @@ export default class TopicProducerAndConsume extends Vue {
 
   private async consumeHistoryMethod(id: string, token: string) {
     if (id && token) {
-      const h_request3 = new RequestData([
-        {
-          headerKey: 'x-auth-token',
-          headerVal: token
-        }
-      ])
+      const h_request3 = new RequestData(
+        [
+          {
+            headerKey: 'x-auth-token',
+            headerVal: token
+          }
+        ],
+        300000
+      )
       const response = await h_request3.httpPOST(
         'GET_TRANSMISSION_HISTORY',
         {

@@ -45,7 +45,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import NavBar from './childComponent/navbar.vue'
 import TopBar from './childComponent/topbar.vue'
-import { PROJECT_BASE_COLOR } from '@/config'
+import { PROJECT_BASE_COLOR } from '../../../config'
 import { CalendarData } from '@/type/calendar'
 import { calendarType, calendarColorType } from '@/enum/calendar-enum'
 import http from '@/decorator/httpDecorator'
@@ -100,12 +100,11 @@ export default class Layout extends Vue {
     // ]
     // const code = 200
 
-    const { code, data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
+    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
       date: new Date().getTime()
     })
-
-    // code 不是200，说明没有权限或者没有接口，清除定时器，防止反复报错
-    if (code !== 200) {
+    // 如果 data 不存在，说明没有权限或者http请求出错
+    if (data === undefined) {
       this.h_utils.alertUtil.close()
       clearInterval(this.timer)
       return

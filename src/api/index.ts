@@ -1,43 +1,55 @@
 import HttpRequest from './httpRequest'
 import REQUEST_NAME from './requestName'
-import { returnDataType, httpAllParams, headerObj } from '../type/http-request.type'
+import { returnType, httpAllParams, headerObj } from '../type/http-request.type'
 
 class RequestData {
   public httpRequest: HttpRequest
-  constructor(headers: Array<headerObj>) {
-    this.httpRequest = new HttpRequest(headers)
+  constructor(headers: Array<headerObj>, timeout: number) {
+    this.httpRequest = new HttpRequest(headers, timeout)
   }
 
-  public httpGET = <T>(requestName: string, params: T, ...urlArr: Array<string>): Promise<returnDataType> => {
+  public httpGET = <T>(
+    requestName: keyof typeof REQUEST_NAME,
+    params: T,
+    ...urlArr: Array<string>
+  ): Promise<returnType> => {
     const url = this.urlFormat(REQUEST_NAME[requestName], [...urlArr])
     return new Promise(resolve => {
-      this.httpRequest.get<T>(url, params, (data: returnDataType) => {
+      this.httpRequest.get<T>(url, params, (data: returnType) => {
         resolve(data)
       })
     })
   }
 
-  public httpPOST = <T>(requestName: string, params: T, ...urlArr: Array<string>): Promise<returnDataType> => {
+  public httpPOST = <T>(
+    requestName: keyof typeof REQUEST_NAME,
+    params: T,
+    ...urlArr: Array<string>
+  ): Promise<returnType> => {
     const url = this.urlFormat(REQUEST_NAME[requestName], [...urlArr])
     return new Promise(resolve => {
-      this.httpRequest.post<T>(url, params, (data: returnDataType) => {
+      this.httpRequest.post<T>(url, params, (data: returnType) => {
         resolve(data)
       })
     })
   }
 
-  public httpPUT = <T>(requestName: string, params: T, ...urlArr: Array<string>): Promise<returnDataType> => {
+  public httpPUT = <T>(
+    requestName: keyof typeof REQUEST_NAME,
+    params: T,
+    ...urlArr: Array<string>
+  ): Promise<returnType> => {
     const url = this.urlFormat(REQUEST_NAME[requestName], [...urlArr])
     return new Promise(resolve => {
-      this.httpRequest.put<T>(url, params, (data: returnDataType) => {
+      this.httpRequest.put<T>(url, params, (data: returnType) => {
         resolve(data)
       })
     })
   }
 
-  public httpAll = (params: Array<httpAllParams>): Promise<returnDataType[]> => {
+  public httpAll = (params: Array<httpAllParams>): Promise<returnType[]> => {
     return new Promise(resolve => {
-      this.httpRequest.all<httpAllParams>(params, (data: Array<returnDataType>) => {
+      this.httpRequest.all<httpAllParams>(params, (data: Array<returnType>) => {
         resolve(data)
       })
     })

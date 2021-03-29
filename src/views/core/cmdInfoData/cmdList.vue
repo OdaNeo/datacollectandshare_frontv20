@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="3">
         <v-text-field
-          solo
+          outlined
           dense
           height="35px"
           placeholder="请输入查找的命令ID"
@@ -72,7 +72,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import { returnDataType } from '@/type/http-request.type'
+import { returnType, returnTypeData } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import HConfirm from '@/components/h-confirm.vue'
 import FDialog from '@/components/f-dialog.vue'
@@ -231,25 +231,23 @@ export default class CmdList extends Vue {
   // 查询通用调用方法
   private async searchMethod(bool: boolean, params: object, tab?: boolean) {
     this.loading = true
+    let _data: returnTypeData
+
     if (tab) {
-      const { data }: returnDataType = bool
+      const { data }: returnType = bool
         ? await this.h_request.httpGET<object>('GET_CMD_FINDMYCMDINFOBYID', params)
         : await this.h_request.httpGET<object>('GET_CMD_MYCMD', params)
-      data.list &&
-        (this.desserts = data.list.map((item: any) => {
-          return { ...item, flag: false }
-        }))
-      this.paginationLength = Math.ceil(data.total / this.pageSize) || 1
+
+      _data = data ? { ...data } : undefined
     } else {
-      const { data }: returnDataType = bool
+      const { data }: returnType = bool
         ? await this.h_request.httpGET<object>('GET_CMD_SELECTCMD', params)
         : await this.h_request.httpGET<object>('GET_CMD_FIND_ALL', params)
-      data.list &&
-        (this.desserts = data.list.map((item: any) => {
-          return { ...item, flag: false }
-        }))
-      this.paginationLength = Math.ceil(data.total / this.pageSize) || 1
+
+      _data = data ? { ...data } : undefined
     }
+    this.desserts = _data ? [..._data.list] : []
+    this.paginationLength = Math.ceil(_data?.total / this.pageSize) || 1
     this.loading = false
   }
 

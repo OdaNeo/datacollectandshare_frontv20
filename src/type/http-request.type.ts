@@ -1,3 +1,6 @@
+import REQUEST_NAME from '@/api/requestName'
+import { topicTable } from './topic.type'
+
 export type paramsType = {
   pageSize: number
   pageNum: number
@@ -10,15 +13,22 @@ export type paramsType = {
   topicID?: string
 }
 
-export type returnDataType = {
+export type returnTypeData = {
+  list: Array<topicTable>
+  total: number
+  pageNum: number
+  pageSize: number
+}
+
+export type returnType = {
   code: number
-  data: any
+  data: any | returnTypeData
   message: string
   success: boolean
 }
 
 export type httpAllParams = {
-  name: string
+  name: keyof typeof REQUEST_NAME
   method: string
   data: any
 }

@@ -47,7 +47,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { rootStoreModule } from '@/store/modules/root'
 import { userState } from '@/enum/user-enum'
-import { PROJECT_TITLE } from '@/config'
+import { PROJECT_TITLE } from '../../../../config'
 import { mdiAccount } from '@mdi/js'
 
 @Component

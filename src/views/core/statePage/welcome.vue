@@ -12,7 +12,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
-import { returnDataType } from '@/type/http-request.type'
+import { returnType } from '@/type/http-request.type'
 
 import SystemTopicProportion from './childComponent/systemTopicProportion.vue'
 import UserProportion from './childComponent/userProportion.vue'
@@ -34,12 +34,12 @@ export default class Welcome extends Vue {
   private systemItems = []
 
   private async getRelease(params: any, callback: Function) {
-    const result: returnDataType = await this.h_request.httpGET('GET_SYSTEM_GETSYSTEMINFO', params)
+    const result: returnType = await this.h_request.httpGET('GET_SYSTEM_GETSYSTEMINFO', params)
     callback(result)
   }
 
   mounted(): void {
-    this.getRelease({}, (result: returnDataType) => {
+    this.getRelease({}, (result: returnType) => {
       this.systemItems = result.data
     })
   }

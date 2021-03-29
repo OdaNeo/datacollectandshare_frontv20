@@ -1,17 +1,18 @@
 <template>
   <div id="viewLog">
     <v-row>
-      <v-col>
+      <v-col cols="2">
         <v-text-field
-          solo
+          outlined
           dense
           height="35px"
           placeholder="请输入查找的用户名"
           clearable
+          @click:clear="clickSearch(true)"
           v-model="queryUserName"
         ></v-text-field>
       </v-col>
-      <v-col>
+      <v-col cols="2">
         <h-date-picker
           placeholder="选择查询起始时间"
           :begin="true"
@@ -19,7 +20,7 @@
           @pickerDate="time => (beginDate = time)"
         ></h-date-picker>
       </v-col>
-      <v-col>
+      <v-col cols="2">
         <h-date-picker
           placeholder="选择查询截止时间"
           :begin="false"
@@ -28,7 +29,7 @@
         ></h-date-picker>
       </v-col>
       <v-col>
-        <v-btn height="35px" width="95px" color="primary" depressed dark @click="clickSearch">查询</v-btn>
+        <v-btn height="35px" color="primary" depressed dark @click="clickSearch(false)">查询</v-btn>
       </v-col>
     </v-row>
     <h-table
@@ -45,7 +46,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
 import http from '@/decorator/httpDecorator'
-import { returnDataType } from '@/type/http-request.type'
+import { returnType } from '@/type/http-request.type'
 import util from '@/decorator/utilsDecorator'
 import HDatePicker from '@/components/h-date-picker.vue'
 import { topicTable } from '@/type/topic.type'
@@ -101,12 +102,10 @@ export default class ViewLog extends Vue {
 
   private async searchMethod(params: object) {
     this.loading = true
-    const { data }: returnDataType = await this.h_request['httpGET']<object>(
-      'GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG',
-      params
-    )
-    this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
-    this.desserts = data['list']
+    const { data }: returnType = await this.h_request['httpGET']<object>('GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG', params)
+
+    this.desserts = data ? [...data.list] : []
+    this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
     this.loading = false
   }
 
@@ -121,12 +120,12 @@ export default class ViewLog extends Vue {
     })
   }
   // 带入查询条件
-  private clickSearch() {
+  private clickSearch(clear: boolean) {
     this.pageNum = 1
     this.searchMethod({
       pageSize: this.pageSize,
       pageNum: this.pageNum,
-      username: this.queryUserName ? this.queryUserName : null,
+      username: clear ? null : this.queryUserName ? this.queryUserName : null,
       startTime: this.beginDate ? this.h_utils.timeUtil.timeToStamp(this.beginDate, '-') : null,
       endTime: this.afterDate ? this.h_utils.timeUtil.timeToStamp(this.afterDate, '-') : null
     })

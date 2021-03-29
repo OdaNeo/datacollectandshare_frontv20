@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="2">
         <v-select
-          solo
+          outlined
           dense
           height="35px"
           v-model="systemValue"
@@ -23,7 +23,7 @@
         >
           <template v-slot:activator="{ on, attrs }">
             <v-text-field
-              solo
+              outlined
               dense
               height="35px"
               v-model="beginDate"
@@ -49,7 +49,7 @@
       </v-col>
       <v-col cols="2">
         <v-select
-          solo
+          outlined
           dense
           height="35px"
           v-model="currentSelectMonth"
@@ -159,7 +159,7 @@
 import { Component, Vue, Watch } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
-import { returnDataType } from '@/type/http-request.type'
+import { returnType } from '@/type/http-request.type'
 import echarts from '@/decorator/echartsDecorator'
 import moment from 'moment'
 @Component
@@ -523,7 +523,7 @@ export default class DataStatistics extends Vue {
         pageNum: this.releasePageNum,
         pageSize: 10
       },
-      (result: returnDataType) => {
+      (result: returnType) => {
         this.showEchartsBox = true
         this.startTimeRelease = this.beginDate
         this.startTimeSubscribe = this.beginDate
@@ -568,7 +568,7 @@ export default class DataStatistics extends Vue {
 
   // 获取主题
   private async getRelease(params: any, callback: Function) {
-    const result: returnDataType = await this.h_request['httpGET']('GET_STATISTICS_STAT_TOPIC_DATA', params)
+    const result: returnType = await this.h_request['httpGET']('GET_STATISTICS_STAT_TOPIC_DATA', params)
     callback(result)
   }
   // 处理系统主题占比
@@ -637,7 +637,7 @@ export default class DataStatistics extends Vue {
   private async getData() {
     const doc = document.getElementById('canvasPackProportion')
     this.echartsProport = this.h_echarts.init(doc)
-    const { data }: returnDataType = await this.h_request['httpGET']('GET_STATISTICS_STAT_SYS_TOPIC', {})
+    const { data }: returnType = await this.h_request['httpGET']('GET_STATISTICS_STAT_SYS_TOPIC', {})
     // 判断是否显示
     if (data.length > 0) {
       this.noMsg = true
@@ -647,12 +647,12 @@ export default class DataStatistics extends Vue {
     }
   }
   private async getSystemItems(params: any, callback: Function) {
-    const result: returnDataType = await this.h_request['httpGET']('GET_SYSTEM_GETSYSTEMINFO', params)
+    const result: returnType = await this.h_request['httpGET']('GET_SYSTEM_GETSYSTEMINFO', params)
     callback(result)
   }
   // 获取系统占比数据
   async mounted(): Promise<void> {
-    this.getSystemItems({}, (result: returnDataType) => {
+    this.getSystemItems({}, (result: returnType) => {
       this.systemItems = []
       result.data.forEach((currentItem: any) => {
         this.systemItems.push({

@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="3">
         <v-text-field
-          solo
+          outlined
           dense
           height="35px"
           placeholder="请输入查找的权限名称"
@@ -42,7 +42,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import { returnDataType } from '@/type/http-request.type'
+import { returnType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import HTable from '@/components/h-table.vue'
 import FDialog from '@/components/f-dialog.vue'
@@ -119,10 +119,11 @@ export default class Resources extends Vue {
 
   private async searchMethod(bool: boolean, params?: object) {
     this.loading = true
-    const { data }: returnDataType = bool
+    const { data }: returnType = bool
       ? await this.h_request['httpGET']<object>('GET_PERMISSION_FIND_ALL_PERMISSION_BY_PARAM', params as object)
       : await this.h_request['httpGET']('GET_PERMISSION_FIND_ALL_PERMISSION', {})
-    this.desserts = data
+
+    this.desserts = data ? [...data] : []
     this.loading = false
   }
 

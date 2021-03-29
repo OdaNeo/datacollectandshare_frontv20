@@ -22,7 +22,7 @@
 import { Component, Vue, Provide } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
 import { topicTable } from '@/type/topic.type'
-import { paramsType, returnDataType } from '@/type/http-request.type'
+import { paramsType, returnType } from '@/type/http-request.type'
 import { dataType } from '@/enum/topic-datatype-enum'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import http from '@/decorator/httpDecorator'
@@ -100,7 +100,7 @@ export default class TransactionalDataStatistics extends Vue {
     params.faceTypes = `${topicInterFaceType['事务数据']}`
     params.dataType = dataType['结构化']
 
-    const { data }: returnDataType = await this.h_request['httpGET']<object>('GET_TOPICS_GETOFFLINELOG', params)
+    const { data }: returnType = await this.h_request['httpGET']<object>('GET_TOPICS_GETOFFLINELOG', params)
     this.desserts = data.list.map((item: any) => {
       return { ...item }
     })

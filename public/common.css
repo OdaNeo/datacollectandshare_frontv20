@@ -14,6 +14,8 @@ button {
     outline: none;
 }
 
+/* 浏览器自动填充 */
+
 input:-internal-autofill-previewed, input:-internal-autofill-selected {
     -webkit-text-fill-color: #FFFFFF !important;
     transition: background-color 5000s ease-in-out 0s !important;
@@ -76,17 +78,13 @@ input:-internal-autofill-previewed, input:-internal-autofill-selected {
     font-size: 14px !important;
 }
 
-.v-form .v-input__append-inner {
+.v-input__append-inner {
     margin-top: 6px !important;
 }
 
-.v-form .v-text-field--outlined.v-input--dense .v-label {
+/* .v-form .v-text-field--outlined.v-input--dense .v-label {
     top: 7px !important;
-}
-
-.v-text-field.v-text-field--solo:not(.v-text-field--solo-flat)>.v-input__control>.v-input__slot {
-    box-shadow: 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
-}
+} */
 
 .v-pagination__item, .v-pagination__item--active, .v-pagination__navigation {
     box-shadow: 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;

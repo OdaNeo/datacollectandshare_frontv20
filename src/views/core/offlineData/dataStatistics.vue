@@ -2,7 +2,7 @@
   <div id="OfflineDataStatistics">
     <HOverLay :loading="loading" />
     <p v-if="!loading" style="text-align: center; color: #000; font-size: 20px; line-height: 30px">
-      {{ `${releaseStartTime}至${releaseEndTime}主题${releaseSystemName}离线数据任务统计` }}
+      {{ `${releaseStartTime}至${releaseEndTime}系统${releaseSystemName}离线数据任务统计` }}
     </p>
     <div v-if="!loading" class="iconCon">
       <v-menu offset-y max-height="200" min-width="130" transition="slide-x-transition">
@@ -78,7 +78,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
-import { returnDataType } from '@/type/http-request.type'
+import { returnType } from '@/type/http-request.type'
 import Moment from 'moment'
 import util from '@/decorator/utilsDecorator'
 import HOverLay from '@/components/h-overlay.vue'
@@ -110,7 +110,7 @@ export default class OfflineDataStatistics extends Vue {
 
   private async getRelease(params: any, callback: Function) {
     this.loading = true
-    const result: returnDataType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
+    const result: returnType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
     this.loading = false
     callback(result)
   }
@@ -127,7 +127,7 @@ export default class OfflineDataStatistics extends Vue {
         pageNum: this.releasePageNum,
         pageSize: 10
       },
-      (result: returnDataType) => {
+      (result: returnType) => {
         if (result.data.list?.length > 0) {
           this.drawRelease(result)
         } else {
@@ -148,7 +148,7 @@ export default class OfflineDataStatistics extends Vue {
         pageNum: this.releasePageNum,
         pageSize: 10
       },
-      (result: returnDataType) => {
+      (result: returnType) => {
         if (result.data.list?.length > 0) {
           this.drawRelease(result)
         } else {
@@ -171,7 +171,7 @@ export default class OfflineDataStatistics extends Vue {
         pageNum: this.releasePageNum,
         pageSize: 10
       },
-      (result: returnDataType) => {
+      (result: returnType) => {
         if (result.data.list?.length > 0) {
           this.drawRelease(result)
         } else {
@@ -187,7 +187,7 @@ export default class OfflineDataStatistics extends Vue {
     return timeStamp <= nowStamp
   }
 
-  private drawRelease({ data }: returnDataType) {
+  private drawRelease({ data }: returnType) {
     this.releaseTopicExist = true
     this.releaseTotal = data.total
 
@@ -195,7 +195,7 @@ export default class OfflineDataStatistics extends Vue {
   }
 
   private async getSysRelease() {
-    const result: returnDataType = await this.h_request.httpGET('GET_SYSTEM_GETSYSTEMINFO', {})
+    const result: returnType = await this.h_request.httpGET('GET_SYSTEM_GETSYSTEMINFO', {})
     this.systemItems = result.data
   }
 
@@ -209,7 +209,7 @@ export default class OfflineDataStatistics extends Vue {
         pageNum: this.releasePageNum,
         pageSize: 10
       },
-      (result: returnDataType) => {
+      (result: returnType) => {
         // if (result.data.list?.length > 0) {
         this.drawRelease(result)
         // } else {

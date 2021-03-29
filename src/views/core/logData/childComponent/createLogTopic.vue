@@ -97,7 +97,6 @@
       <label class="label mr-2" style="font-size: 14px">采集校验关键字</label>
       <v-text-field
         v-model="formProvide.formObj['keywords']"
-        :disabled="formProvide.formObj.canNotEdit"
         outlined
         dense
         clearable

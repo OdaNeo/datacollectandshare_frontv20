@@ -1,6 +1,6 @@
 import { Module, VuexModule, Mutation, Action, getModule } from 'vuex-module-decorators'
 import store from '@/store'
-import { returnDataType } from '../../type/http-request.type'
+import { returnType } from '../../type/http-request.type'
 import { userRootType, userMessageType } from '../../type/vuex.type'
 import router from '@/router/index'
 
@@ -27,7 +27,7 @@ type UserLocalType = {
 
 type login = {
   username: string
-  result: returnDataType
+  result: returnType
 }
 
 @Module({

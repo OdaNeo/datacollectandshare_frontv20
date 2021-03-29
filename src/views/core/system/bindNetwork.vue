@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="3">
         <v-text-field
-          solo
+          outlined
           dense
           height="35px"
           placeholder="请输入查找的系统名称"
@@ -54,7 +54,7 @@
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
-import { returnDataType } from '@/type/http-request.type'
+import { returnType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import FDialog from '@/components/f-dialog.vue'
 import BindNetDialog from './childComponent/bindNetDialog.vue'
@@ -130,15 +130,13 @@ export default class BindNetwork extends Vue {
 
   async searchMethod(bool: boolean, params: object): Promise<void> {
     this.loading = true
-    const { data }: returnDataType = bool
+    const { data }: returnType = bool
       ? await this.h_request['httpGET']<object>('GET_SYSNET_GETBINDBYNAME', params)
       : await this.h_request['httpGET']<object>('GET_SYSNET_GETBINDLIST', params)
 
-    if (data) {
-      this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
-      this.desserts = data['list']
-      this.loading = false
-    }
+    this.desserts = data ? [...data.list] : []
+    this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
+    this.loading = false
   }
 
   private searchSystemName() {

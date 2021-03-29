@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="3">
         <v-text-field
-          solo
+          outlined
           dense
           height="35px"
           placeholder="请输入查找的事务主题ID"
@@ -111,7 +111,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import { paramsType, returnDataType } from '@/type/http-request.type'
+import { paramsType, returnType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
@@ -464,23 +464,19 @@ export default class transactionalDataList extends Vue {
     params.dataType = dataType['结构化']
 
     if (tab) {
-      const { data }: returnDataType = bool
+      const { data }: returnType = bool
         ? await this.h_request['httpGET']('GET_TOPICS_MYTOPICSBYID', params)
         : await this.h_request['httpGET']('GET_TOPICS_MYTOPICS', params)
-      this.desserts = data?.list.map((item: any) => {
-        return { ...item }
-      })
-      this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
+      this.desserts = data ? [...data.list] : []
+      this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
     } else {
       // console.log(params)
-
-      const { data }: returnDataType = bool
+      const { data }: returnType = bool
         ? await this.h_request['httpGET']('GET_TOPICS_SELECTTOPIC', params)
         : await this.h_request['httpGET']('GET_TOPICS_FIND_ALL', params)
-      this.desserts = data?.list.map((item: any) => {
-        return { ...item }
-      })
-      this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
+
+      this.desserts = data ? [...data.list] : []
+      this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
     }
     this.loading = false
   }

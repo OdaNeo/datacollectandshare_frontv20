@@ -82,7 +82,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
-import { returnDataType } from '@/type/http-request.type'
+import { returnType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import Moment from 'moment'
 import util from '@/decorator/utilsDecorator'
@@ -115,13 +115,17 @@ export default class SubscribeMenu extends Vue {
 
   private async getSubscribe(params: any, callback: Function) {
     this.loading = true
-    const result: returnDataType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
+    const result: returnType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
 
     this.loading = false
-    callback(result)
+    if (!result.data) {
+      return
+    } else {
+      callback(result)
+    }
   }
 
-  private drawSubscribe({ data }: returnDataType) {
+  private drawSubscribe({ data }: returnType) {
     this.subscribeTopicExist = true
     this.subscribeTotal = data.total
     this.h_utils.topicRanking.init('subscribe', data, this.subscribeEndTime)
@@ -139,7 +143,7 @@ export default class SubscribeMenu extends Vue {
         pageNum: this.subscribePageNum,
         pageSize: 10
       },
-      (result: returnDataType) => {
+      (result: returnType) => {
         if (result.data.list?.length > 0) {
           this.drawSubscribe(result)
         } else {
@@ -160,7 +164,7 @@ export default class SubscribeMenu extends Vue {
         pageNum: this.subscribePageNum,
         pageSize: 10
       },
-      (result: returnDataType) => {
+      (result: returnType) => {
         if (result.data.list?.length > 0) {
           this.drawSubscribe(result)
         } else {
@@ -183,7 +187,7 @@ export default class SubscribeMenu extends Vue {
         pageNum: this.subscribePageNum,
         pageSize: 10
       },
-      (result: returnDataType) => {
+      (result: returnType) => {
         if (result.data.list?.length > 0) {
           this.drawSubscribe(result)
         } else {
@@ -209,7 +213,7 @@ export default class SubscribeMenu extends Vue {
         pageNum: this.subscribePageNum,
         pageSize: 10
       },
-      (result: returnDataType) => {
+      (result: returnType) => {
         this.drawSubscribe(result)
       }
     )

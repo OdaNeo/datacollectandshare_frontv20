@@ -8,7 +8,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
-import { returnDataType } from '@/type/http-request.type'
+import { returnType } from '@/type/http-request.type'
 
 import ReleaseMenu from '@/components/releaseMenu.vue'
 import SubscribeMenu from '@/components/subscribeMenu.vue'
@@ -24,7 +24,7 @@ export default class OnlineDataStatistics extends Vue {
   private systemItems = []
 
   private async getSysRelease() {
-    const result: returnDataType = await this.h_request.httpGET('GET_SYSTEM_GETSYSTEMINFO', {})
+    const result: returnType = await this.h_request.httpGET('GET_SYSTEM_GETSYSTEMINFO', {})
     this.systemItems = result.data
   }
 

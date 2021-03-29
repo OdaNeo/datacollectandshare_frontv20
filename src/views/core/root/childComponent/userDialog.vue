@@ -71,7 +71,7 @@
 import { Component, Vue, Inject } from 'vue-property-decorator'
 import { userFormVar } from '@/type/user.type'
 import http from '@/decorator/httpDecorator'
-import { returnDataType, httpAllParams } from '@/type/http-request.type'
+import { returnType } from '@/type/http-request.type'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 
@@ -91,7 +91,7 @@ export default class userDialog extends Vue {
   // private editDialog = false
   private timer = 0
 
-  private getUserRoot({ data }: returnDataType) {
+  private getUserRoot({ data }: returnType) {
     this.userRoots = data.map((s: { name: string; id: number }) => {
       return {
         text: s.name,
@@ -99,7 +99,7 @@ export default class userDialog extends Vue {
       }
     })
   }
-  private getSystemName({ data }: returnDataType) {
+  private getSystemName({ data }: returnType) {
     this.systemNames = data.map((s: { name: string; id: number }) => {
       return {
         text: s.name,
@@ -109,7 +109,7 @@ export default class userDialog extends Vue {
   }
 
   private async httpAll() {
-    const results = await this.h_request['httpAll']<httpAllParams>([
+    const results = await this.h_request['httpAll']([
       {
         name: 'GET_USER_ADDUSER_FIND_ALL_ROLE',
         method: 'get',

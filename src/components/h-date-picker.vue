@@ -10,7 +10,7 @@
     <template v-slot:activator="{ on, attrs }">
       <v-text-field
         v-model="date"
-        solo
+        outlined
         dense
         height="35px"
         :placeholder="placeholder"

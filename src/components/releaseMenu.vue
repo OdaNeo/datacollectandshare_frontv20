@@ -78,7 +78,7 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
-import { returnDataType } from '@/type/http-request.type'
+import { returnType } from '@/type/http-request.type'
 import Moment from 'moment'
 import util from '@/decorator/utilsDecorator'
 import HOverLay from '@/components/h-overlay.vue'
@@ -110,9 +110,14 @@ export default class ReleaseMenu extends Vue {
 
   private async getRelease(params: any, callback: Function) {
     this.loading = true
-    const result: returnDataType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
+    const result: returnType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
     this.loading = false
-    callback(result)
+
+    if (!result.data) {
+      return
+    } else {
+      callback(result)
+    }
   }
 
   private selectReleaseSystem(system: { name: string; id: number }) {
@@ -127,7 +132,7 @@ export default class ReleaseMenu extends Vue {
         pageNum: this.releasePageNum,
         pageSize: 10
       },
-      (result: returnDataType) => {
+      (result: returnType) => {
         if (result.data.list?.length > 0) {
           this.drawRelease(result)
         } else {
@@ -148,7 +153,7 @@ export default class ReleaseMenu extends Vue {
         pageNum: this.releasePageNum,
         pageSize: 10
       },
-      (result: returnDataType) => {
+      (result: returnType) => {
         if (result.data.list?.length > 0) {
           this.drawRelease(result)
         } else {
@@ -171,7 +176,7 @@ export default class ReleaseMenu extends Vue {
         pageNum: this.releasePageNum,
         pageSize: 10
       },
-      (result: returnDataType) => {
+      (result: returnType) => {
         if (result.data.list?.length > 0) {
           this.drawRelease(result)
         } else {
@@ -187,7 +192,7 @@ export default class ReleaseMenu extends Vue {
     return timeStamp <= nowStamp
   }
 
-  private drawRelease({ data }: returnDataType) {
+  private drawRelease({ data }: returnType) {
     // console.log(data)
     this.releaseTopicExist = true
     this.releaseTotal = data.total
@@ -208,7 +213,7 @@ export default class ReleaseMenu extends Vue {
         pageNum: this.releasePageNum,
         pageSize: 10
       },
-      (result: returnDataType) => {
+      (result: returnType) => {
         // this.releaseOverlay = false
         this.drawRelease(result)
         // const el = this.$refs.leftBtmView as HTMLElement

@@ -12,7 +12,7 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
-import { returnDataType } from '@/type/http-request.type'
+import { returnType } from '@/type/http-request.type'
 import { userProportion, topicRankingInfo } from '@/type/welcome.type'
 import { userInfo } from '@/type/user.type'
 import echarts from '@/decorator/echartsDecorator'
@@ -115,16 +115,18 @@ export default class UserProportion extends Vue {
 
   async mounted(): Promise<void> {
     this.loading = true
-    const { data }: returnDataType = await this.h_request.httpGET('GET_USER_FIND_ALL_USER', {
+    const { data }: returnType = await this.h_request.httpGET('GET_USER_FIND_ALL_USER', {
       pageSize: 100,
       pageNum: 1
     })
     this.loading = false
-    this.$nextTick(() => {
-      this.userProportion('userRoolProportion', this.getUserProportionList(data, 'phone'), '角色占比')
-      this.userProportion('userSystemProportion', this.getUserProportionList(data, 'systemName'), '系统占比')
-      this.userProportion('userStateProportion', this.getUserProportionList(data, 'userState'), '状态占比')
-    })
+    if (data) {
+      this.$nextTick(() => {
+        this.userProportion('userRoolProportion', this.getUserProportionList(data, 'phone'), '角色占比')
+        this.userProportion('userSystemProportion', this.getUserProportionList(data, 'systemName'), '系统占比')
+        this.userProportion('userStateProportion', this.getUserProportionList(data, 'userState'), '状态占比')
+      })
+    }
   }
 }
 </script>

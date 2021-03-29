@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="3">
         <v-text-field
-          solo
+          outlined
           dense
           height="35px"
           placeholder="请输入查找的非结构化主题ID"
@@ -71,7 +71,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import { paramsType } from '@/type/http-request.type'
+import { paramsType, returnTypeData } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
@@ -300,6 +300,7 @@ export default class VideoDataList extends Vue {
   // 查询通用调用方法
   private async searchMethod(bool: boolean, params: paramsType, tab?: boolean) {
     this.loading = true
+    let _data: returnTypeData
     // 非结构化数据
     params.dataType = dataType['非结构化']
     params.faceTypes = topicInterFaceType['VIDEO']
@@ -308,23 +309,16 @@ export default class VideoDataList extends Vue {
       const { data } = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICS', params)
-      data.list &&
-        (this.desserts = data.list.map((item: any) => {
-          return { ...item, flag: false }
-        }))
 
-      this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
+      _data = data ? { ...data } : undefined
     } else {
       const { data } = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTTOPIC', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL', params)
-      data.list &&
-        (this.desserts = data.list.map((item: any) => {
-          return { ...item, flag: false }
-        }))
-
-      this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
+      _data = data ? { ...data } : undefined
     }
+    this.desserts = _data ? [..._data.list] : []
+    this.paginationLength = Math.ceil(_data?.total / this.pageSize) || 1
     this.loading = false
   }
 

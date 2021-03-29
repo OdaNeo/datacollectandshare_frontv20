@@ -3,8 +3,8 @@
     <v-row>
       <v-col cols="3">
         <v-text-field
-          v-model.trim="queryUserName"
-          solo
+          v-model="queryUserName"
+          outlined
           dense
           height="35px"
           placeholder="请输入查找的账号名称"
@@ -46,7 +46,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import { paramsType, returnDataType } from '@/type/http-request.type'
+import { paramsType, returnType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import {
   userInfo,
@@ -171,11 +171,12 @@ export default class User extends Vue {
 
   private async searchMethod(bool: boolean, params: paramsType): Promise<void> {
     this.loading = true
-    const { data }: returnDataType = bool
+
+    const { data }: returnType = bool
       ? await this.h_request['httpGET']<paramsType>('GET_USER_FIND_ALL_USER_BY_PARAM', params)
       : await this.h_request['httpGET']<paramsType>('GET_USER_FIND_ALL_USER', params)
-    this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
-    this.desserts = data['list']
+    this.desserts = data ? [...data.list] : []
+    this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
     this.loading = false
   }
 
@@ -253,20 +254,3 @@ export default class User extends Vue {
   }
 }
 </script>
-
-<style scoped>
-/* .table-leave-to {
-  opacity: 0;
-  transform: translate3d(800px, 0, 0);
-}
-.table-enter {
-  opacity: 0;
-  transform: translate3d(800px, 0, 0);
-}
-.table-leave-active {
-  transition: 0.5s all ease;
-}
-.table-enter-active {
-  transition: 0.5s all ease;
-} */
-</style>

@@ -32,9 +32,9 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { rootStoreModule } from '@/store/modules/root'
 import http from '@/decorator/httpDecorator'
-import { returnDataType } from '@/type/http-request.type'
+import { returnType } from '@/type/http-request.type'
 import { userAndPassType } from '@/type/login.type'
-import { PROJECT_TITLE } from '@/config'
+import { PROJECT_TITLE } from '../../../config'
 import { mdiEye, mdiEyeOff } from '@mdi/js'
 
 @Component
@@ -65,13 +65,13 @@ export default class Login extends Vue {
     }
 
     // userinfo
-    const result: returnDataType = await this.h_request.httpPOST<userAndPassType>('POST_LOGIN_LOGIN', {
+    const result: returnType = await this.h_request.httpPOST<userAndPassType>('POST_LOGIN_LOGIN', {
       username: this.username,
       password: this.password
     })
 
     // cb 登录失败
-    if (result.data?.list?.length === 0) {
+    if (!result) {
       this.loading = false
       return
     }

@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="3">
         <v-text-field
-          solo
+          outlined
           dense
           height="35px"
           placeholder="请输入查找的离线主题ID"
@@ -105,7 +105,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import { paramsType, returnDataType } from '@/type/http-request.type'
+import { paramsType, returnType, returnTypeData } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
@@ -526,26 +526,23 @@ export default class OfflineTopicList extends Vue {
     // console.log(params)
     // console.log(tab)
     this.loading = true
+    let _data: returnTypeData
 
     params.dataType = dataType['结构化']
     params.faceTypes = `${topicInterFaceType['数据库采集']},${topicInterFaceType['服务主动拉取']},${topicInterFaceType['拉取FTP']}`
     if (tab) {
-      const { data }: returnDataType = bool
+      const { data }: returnType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICS', params)
-      this.desserts = data.list.map((item: any) => {
-        return { ...item, flag: false }
-      })
-      this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
+      _data = data ? { ...data } : undefined
     } else {
-      const { data }: returnDataType = bool
+      const { data }: returnType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTTOPIC', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL', params)
-      this.desserts = data.list.map((item: any) => {
-        return { ...item, flag: false }
-      })
-      this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
+      _data = data ? { ...data } : undefined
     }
+    this.desserts = _data ? [..._data.list] : []
+    this.paginationLength = Math.ceil(_data?.total / this.pageSize) || 1
     this.loading = false
   }
 

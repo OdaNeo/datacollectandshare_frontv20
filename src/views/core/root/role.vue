@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="3">
         <v-text-field
-          solo
+          outlined
           dense
           height="35px"
           placeholder="请输入查找的角色名称"
@@ -58,7 +58,6 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
 import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
-import { httpAllParams } from '@/type/http-request.type'
 import FDialog from '@/components/f-dialog.vue'
 import RoleDialog from './childComponent/roleDialog.vue'
 import { RoleFormObj } from '@/type/role.type'
@@ -141,9 +140,10 @@ export default class Role extends Vue {
     const { data } = bool
       ? await this.h_request['httpGET']<object>('GET_ROLE_FIND_ALL_ROLE_BY_PARAM', params as object)
       : await this.h_request['httpGET']<object>('GET_ROLE_FIND_ALL_ROLE', params as object)
-    const { list, total } = data
-    this.desserts = list
-    this.paginationLength = Math.ceil(total / this.pageSize) || 1
+
+    this.desserts = data ? [...data.list] : []
+    this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
+
     this.loading = false
   }
 
@@ -284,7 +284,7 @@ export default class Role extends Vue {
 
   async created(): Promise<void> {
     this.loading = true
-    const [{ data: data1 }, { data: data2 }] = await this.h_request['httpAll']<httpAllParams>([
+    const [{ data: data1 }, { data: data2 }] = await this.h_request['httpAll']([
       {
         name: 'GET_ROLE_FIND_ALL_ROLE',
         method: 'get',
@@ -299,9 +299,10 @@ export default class Role extends Vue {
         data: {}
       }
     ])
-    this.desserts = data1.list
-    this.paginationLength = Math.ceil(data1['total'] / this.pageSize) || 1
-    this.roles = this.getRoles(data2)
+
+    this.desserts = data1 ? data1.list : []
+    this.paginationLength = Math.ceil(data1?.total / this.pageSize) || 1
+    data2 && (this.roles = this.getRoles(data2))
     this.loading = false
   }
 }

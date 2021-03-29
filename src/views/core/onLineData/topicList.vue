@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="3">
         <v-text-field
-          solo
+          outlined
           dense
           height="35px"
           placeholder="请输入查找的实时主题ID"
@@ -94,7 +94,7 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
-import { paramsType, returnDataType } from '@/type/http-request.type'
+import { paramsType, returnType, returnTypeData } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import upload from '@/decorator/uploadDecorator'
 import { topicTable } from '@/type/topic.type'
@@ -111,7 +111,7 @@ import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import axios from 'axios'
 import { rootStoreModule } from '@/store/modules/root'
 import XLSX from 'xlsx'
-import { VUE_APP_BASE_API } from '@/config'
+import { VUE_APP_BASE_API } from '../../../../config'
 
 import { FormObj } from '@/type/dialog-form.type'
 import CreateRest from './childComponent/createRest.vue'
@@ -412,27 +412,24 @@ export default class OnlineDataTopicList extends Vue {
   // 查询通用调用方法 结构化数据
   private async searchMethod(bool: boolean, params: paramsType, tab?: boolean) {
     this.loading = true
+    let _data: returnTypeData
 
     params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['多级嵌套免校验']},${topicInterFaceType['PROTOBUF']}`
     params.dataType = dataType['结构化']
 
     if (tab) {
-      const { data }: returnDataType = bool
+      const { data }: returnType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICS', params)
-      this.desserts = data.list.map((item: any) => {
-        return { ...item }
-      })
-      this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
+      _data = data ? { ...data } : undefined
     } else {
-      const { data }: returnDataType = bool
+      const { data }: returnType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTTOPIC', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL', params)
-      this.desserts = data.list.map((item: any) => {
-        return { ...item }
-      })
-      this.paginationLength = Math.ceil(data['total'] / this.pageSize) || 1
+      _data = data ? { ...data } : undefined
     }
+    this.desserts = _data ? [..._data.list] : []
+    this.paginationLength = Math.ceil(_data?.total / this.pageSize) || 1
     this.loading = false
   }
   // 主题查询

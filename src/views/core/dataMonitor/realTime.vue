@@ -16,7 +16,7 @@
       </v-col> -->
       <v-col cols="2">
         <v-select
-          solo
+          outlined
           dense
           :items="serverNameCategories"
           clearable

@@ -11,7 +11,11 @@
 // VUE_APP_BASE_API = 'http://172.51.216.106:9002'
 export const VUE_APP_BASE_API = 'http://172.51.216.106:49090'
 
-export const PROJECT_TITLE = '交控科技天枢平台数据采集管理中心'
+export const BASE_REQUEST_TIME_OUT = 60000
+
+export const PROJECT_TITLE = process.env.VUE_APP_NINJA_CAT
+  ? `测试服务器地址${VUE_APP_BASE_API}`
+  : '交控科技天枢平台数据采集管理中心'
 
 // rgb 0,21,41
 export const PROJECT_BASE_COLOR = '#001529'

@@ -24,7 +24,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { topicMsg, topicProportionOpt } from '@/type/welcome.type'
 import http from '@/decorator/httpDecorator'
-import { returnDataType } from '@/type/http-request.type'
+import { returnType } from '@/type/http-request.type'
 import echarts from '@/decorator/echartsDecorator'
 import HOverLay from '@/components/h-overlay.vue'
 import BScroll from '@better-scroll/core'
@@ -150,32 +150,34 @@ export default class SystemTopicProportion extends Vue {
 
   async mounted(): Promise<void> {
     this.loading = true
-    const { data }: returnDataType = await this.h_request.httpGET('GET_STATISTICS_STAT_SYS_TOPIC', {})
+    const { data }: returnType = await this.h_request.httpGET('GET_STATISTICS_STAT_SYS_TOPIC', {})
     this.loading = false
-    this.topicMsgList = data
-    const { count: countTotal }: topicMsg = this.topicMsgList.reduce(
-      ({ count: prevcount }: topicMsg, { count: nextcount }: topicMsg) => {
-        return { count: prevcount + nextcount, SystemName: '' }
-      }
-    )
-    this.$nextTick(() => {
-      this.topicMsgList.forEach(({ count, SystemName }: topicMsg, index: number) => {
-        this.topicProportion(SystemName + 'Total', {
-          text: ((count / countTotal) * 100).toFixed(2) + '%',
-          subtext: `系统${SystemName}主题占比`,
-          proportion: (count / countTotal).toFixed(4),
-          color: this.colors[index]
+    if (data) {
+      this.topicMsgList = data
+      const { count: countTotal }: topicMsg = this.topicMsgList.reduce(
+        ({ count: prevcount }: topicMsg, { count: nextcount }: topicMsg) => {
+          return { count: prevcount + nextcount, SystemName: '' }
+        }
+      )
+      this.$nextTick(() => {
+        this.topicMsgList.forEach(({ count, SystemName }: topicMsg, index: number) => {
+          this.topicProportion(SystemName + 'Total', {
+            text: ((count / countTotal) * 100).toFixed(2) + '%',
+            subtext: `系统${SystemName}主题占比`,
+            proportion: (count / countTotal).toFixed(4),
+            color: this.colors[index]
+          })
+        })
+        this.topicProportion('topicTotal', {
+          text: countTotal + '',
+          subtext: '主题数据总数',
+          proportion: '1',
+          color: '#195ba6'
         })
       })
-      this.topicProportion('topicTotal', {
-        text: countTotal + '',
-        subtext: '主题数据总数',
-        proportion: '1',
-        color: '#195ba6'
-      })
-    })
 
-    this.initScroll()
+      this.initScroll()
+    }
   }
 }
 </script>
