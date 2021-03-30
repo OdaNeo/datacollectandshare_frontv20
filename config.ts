@@ -9,16 +9,22 @@
 // VUE_APP_BASE_API = 'http://8.131.247.200:49090'
 // 2.0
 // VUE_APP_BASE_API = 'http://172.51.216.106:9002'
+// staging 环境下用户可以自定义后端服务IP及端口
+if (process.env.VUE_APP_NINJA_CAT && !sessionStorage.getItem('staging')) {
+  const _url = window.prompt('staging')
+  if (_url) {
+    sessionStorage.setItem('staging', `http://${_url}`)
+  }
+}
 
-// staging 预发布渠道
 export const VUE_APP_BASE_API = process.env.VUE_APP_NINJA_CAT
-  ? localStorage.getItem('staging') || undefined
-  : 'http://172.51.216.106:49090'
+  ? sessionStorage.getItem('staging') || undefined
+  : 'http://192.168.56.158:8070'
 
 export const BASE_REQUEST_TIME_OUT = 60000
 
 export const PROJECT_TITLE = process.env.VUE_APP_NINJA_CAT
-  ? `测试服务器地址${VUE_APP_BASE_API}`
+  ? `当前服务器地址${VUE_APP_BASE_API}，页面上次更新${new Date()}`
   : '交控科技天枢平台数据采集管理中心'
 
 // rgb 0,21,41

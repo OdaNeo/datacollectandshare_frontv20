@@ -101,6 +101,7 @@ export const GET_TOPICS_UPDATETRANSACTIONALTOPICSTATE = '/topics/updateTransacti
 export const GET_TOPICS_RUNTRANSACTIONALTOPICAGAIN = '/topics/runTransactionalTopicAgain'
 export const POST_TOPICS_ADDSQLFILE = '/topics/addSqlFile'
 export const GET_TOPICS_SELECTSQLFILELOG = '/topics/selectSqlFileLog'
+export const GET_TOPICS_SQLFILERECORD = '/topics/getSqlFileRecord'
 
 // ----------------------------- 内部调试页面 未配置权限 --------------
 export const POST_TRANSMISSION_ATS = '/transmission/ATS'
@@ -190,7 +191,8 @@ const REQUEST_NAME = {
   GET_TOPICS_RUNTRANSACTIONALTOPICAGAIN,
   POST_MONITOR_FINDLOGBYTIME,
   POST_TOPICS_ADDSQLFILE,
-  GET_TOPICS_SELECTSQLFILELOG
+  GET_TOPICS_SELECTSQLFILELOG,
+  GET_TOPICS_SQLFILERECORD
 }
 
 export default REQUEST_NAME

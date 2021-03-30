@@ -237,65 +237,66 @@ export default class RealTime extends Vue {
     const { data } = await this.h_request.httpPOST<object>('POST_MONITOR_FINDLOGBYTIME', params)
     // console.log(data.list)
     // console.log(this.dataAll)
-    for (let i = 0; i < this.el.length; i++) {
-      //  data.list[i]['dataSet']
-      // 获得旧option
-      const _option = this.chartElements[i].getOption()
-      // 获得当前时间戳
-      const _time = Number(new Date().getTime())
-      // 获得原始endValue
-      const _endValue = _option.dataZoom[0].endValue
-      // 获得原始startValue
-      const _startValue = _option.dataZoom[0].startValue
-      //
-      const timeRange = _endValue - _startValue
-      // 自动延长横轴可视区域
+    if (data) {
+      for (let i = 0; i < this.el.length; i++) {
+        //  data.list[i]['dataSet']
+        // 获得旧option
+        const _option = this.chartElements[i].getOption()
+        // 获得当前时间戳
+        const _time = Number(new Date().getTime())
+        // 获得原始endValue
+        const _endValue = _option.dataZoom[0].endValue
+        // 获得原始startValue
+        const _startValue = _option.dataZoom[0].startValue
+        //
+        const timeRange = _endValue - _startValue
+        // 自动延长横轴可视区域
 
-      if (_time >= _startValue + 0.9 * timeRange && _time <= _endValue + 0.05 * timeRange) {
-        _option.dataZoom = [
-          {
-            type: 'inside',
-            filterMode: 'weakFilter',
-            startValue: _endValue - 0.1 * timeRange,
-            endValue: _endValue + 0.9 * timeRange
-          },
-          {
-            type: 'slider',
-            filterMode: 'weakFilter',
-            showDataShadow: false,
-            top: '82%',
-            height: 0,
-            borderColor: 'transparent',
-            backgroundColor: '#CBD1DA',
-            handleIcon:
-              'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAARVBMVEX////R0dvN0tvL0tvL0dvM0trO2OLM09vL0dvO0dvL0trM09zM0tvM0tvL0drU2eHp6+/3+Pn9/f7N09vq7PD////y9PaQXLgBAAAADnRSTlMAHGu22fMam/xO8m79/nbCHu4AAAABYktHRACIBR1IAAAAB3RJTUUH4wcSEhgvIlxSlgAAAJtJREFUKM91kusShCAIhfGeZaamvf+jLpS7qzPx/WDGcxQQBXgQUmljtJICRqxbYmdx9q/7NQ6s/qtvIU6Ere/faXWkXEpOx+3cZyzlOWvr1JOyUR1H+tV+XOQ47JP6qW2gUm8CJOVvE1RHgsKYZiOhpEBjzLORUdJgMJbZKCgZ3mBTscXZdtkLsiPhhwg+vI+dfyj+afnP8PZ9PjqGHTJG9o2tAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE5LTA3LTE4VDEwOjI0OjQ3KzA4OjAwIkgiHgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxOS0wNy0xOFQxMDoyNDo0NyswODowMFMVmqIAAAAASUVORK5CYII=',
-            handleSize: 16,
-            labelFormatter: (time: number) => {
-              return this.h_utils.timeUtil.stampToTodayTime(time)
+        if (_time >= _startValue + 0.9 * timeRange && _time <= _endValue + 0.05 * timeRange) {
+          _option.dataZoom = [
+            {
+              type: 'inside',
+              filterMode: 'weakFilter',
+              startValue: _endValue - 0.1 * timeRange,
+              endValue: _endValue + 0.9 * timeRange
             },
-            startValue: _endValue - 0.1 * timeRange,
-            endValue: _endValue + 0.9 * timeRange
-          }
-        ]
+            {
+              type: 'slider',
+              filterMode: 'weakFilter',
+              showDataShadow: false,
+              top: '82%',
+              height: 0,
+              borderColor: 'transparent',
+              backgroundColor: '#CBD1DA',
+              handleIcon:
+                'image://data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAMAAADXqc3KAAAABGdBTUEAALGPC/xhBQAAACBjSFJNAAB6JgAAgIQAAPoAAACA6AAAdTAAAOpgAAA6mAAAF3CculE8AAAARVBMVEX////R0dvN0tvL0tvL0dvM0trO2OLM09vL0dvO0dvL0trM09zM0tvM0tvL0drU2eHp6+/3+Pn9/f7N09vq7PD////y9PaQXLgBAAAADnRSTlMAHGu22fMam/xO8m79/nbCHu4AAAABYktHRACIBR1IAAAAB3RJTUUH4wcSEhgvIlxSlgAAAJtJREFUKM91kusShCAIhfGeZaamvf+jLpS7qzPx/WDGcxQQBXgQUmljtJICRqxbYmdx9q/7NQ6s/qtvIU6Ere/faXWkXEpOx+3cZyzlOWvr1JOyUR1H+tV+XOQ47JP6qW2gUm8CJOVvE1RHgsKYZiOhpEBjzLORUdJgMJbZKCgZ3mBTscXZdtkLsiPhhwg+vI+dfyj+afnP8PZ9PjqGHTJG9o2tAAAAJXRFWHRkYXRlOmNyZWF0ZQAyMDE5LTA3LTE4VDEwOjI0OjQ3KzA4OjAwIkgiHgAAACV0RVh0ZGF0ZTptb2RpZnkAMjAxOS0wNy0xOFQxMDoyNDo0NyswODowMFMVmqIAAAAASUVORK5CYII=',
+              handleSize: 16,
+              labelFormatter: (time: number) => {
+                return this.h_utils.timeUtil.stampToTodayTime(time)
+              },
+              startValue: _endValue - 0.1 * timeRange,
+              endValue: _endValue + 0.9 * timeRange
+            }
+          ]
+        }
+
+        _option.series[0].data.push([_time, 1])
+
+        if (data.list[i]['dataSet'].length !== 0) {
+          data.list[i]['dataSet'].forEach((item: { createTime: string; status: number }) => {
+            if (item.status === 1) {
+              _option.series[1].data.push([Number(item['createTime']), 1])
+            }
+            if (item.status === 2) {
+              _option.series[2].data.push([Number(item['createTime']), 1])
+            }
+            if (item.status === 3) {
+              _option.series[3].data.push([Number(item['createTime']), 1])
+            }
+          })
+        }
+        this.chartElements[i].setOption(_option)
       }
-
-      _option.series[0].data.push([_time, 1])
-
-      if (data.list[i]['dataSet'].length !== 0) {
-        data.list[i]['dataSet'].forEach((item: { createTime: string; status: number }) => {
-          if (item.status === 1) {
-            _option.series[1].data.push([Number(item['createTime']), 1])
-          }
-          if (item.status === 2) {
-            _option.series[2].data.push([Number(item['createTime']), 1])
-          }
-          if (item.status === 3) {
-            _option.series[3].data.push([Number(item['createTime']), 1])
-          }
-        })
-      }
-
-      this.chartElements[i].setOption(_option)
     }
   }
 

@@ -1,5 +1,5 @@
 <template>
-  <div id="TransactionalDataStatistics">
+  <div id="SqlStatistics">
     <h-table
       :headers="headers"
       :desserts="desserts"
@@ -9,12 +9,12 @@
       :paginationLength="paginationLength"
     >
       <template v-slot:buttons="{ item }">
-        <v-btn text color="primary" @click.stop="offlineLogDetails(item)">查看离线日志详情</v-btn>
+        <v-btn text color="primary" @click.stop="sqlLogDetails(item)">查看SQL日志详情</v-btn>
       </template>
     </h-table>
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
-      <ContentDetails :rowJson="rowJson" />
+      <SqlDetails :str="str" />
     </t-dialog>
   </div>
 </template>
@@ -23,24 +23,22 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
 import { topicTable } from '@/type/topic.type'
 import { paramsType, returnType } from '@/type/http-request.type'
-import { dataType } from '@/enum/topic-datatype-enum'
-import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
-import ContentDetails from './childComponent/contentDetails.vue'
+import SqlDetails from './childComponent/sqlDetails.vue'
 
 @Component({
   components: {
     HTable,
     TDialog,
-    ContentDetails
+    SqlDetails
   }
 })
 @http
 @util
-export default class TransactionalDataStatistics extends Vue {
+export default class SqlStatistics extends Vue {
   @Provide('formProvide') private formProvide: FormObj = new Vue({
     data() {
       return {
@@ -53,7 +51,7 @@ export default class TransactionalDataStatistics extends Vue {
   })
 
   private tDialogFlag = false
-  private rowJson = ''
+  private str = ''
 
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
@@ -68,17 +66,43 @@ export default class TransactionalDataStatistics extends Vue {
       value: 'id'
     },
     {
-      text: '主题ID',
+      text: '文件路径',
       align: 'center',
-      value: 'topicId'
+      value: 'filePath'
+    },
+    {
+      text: '上传文件名',
+      align: 'center',
+      value: 'originalFileName'
+    },
+    {
+      text: '状态',
+      align: 'center',
+      value: 'status',
+      format: (status: number) => {
+        switch (status) {
+          case 0:
+            return `正在执行`
+          case 1:
+            return `成功`
+          case 2:
+            return `失败`
+          case 3:
+            return `正在执行`
+          default:
+            return `正在执行`
+        }
+      }
+    },
+    {
+      text: '上传文件名',
+      align: 'center',
+      value: 'originalFileName'
     },
     {
       text: '创建时间',
       align: 'center',
-      value: 'createTime',
-      format: (createTime: string) => {
-        return this.h_utils.timeUtil['stamptoFullTime'](new Date(createTime).getTime(), '/')
-      }
+      value: 'createTime'
     },
     {
       text: '日志',
@@ -86,22 +110,21 @@ export default class TransactionalDataStatistics extends Vue {
       slot: 'buttons'
     }
   ]
-
+  // 正在执行,
+  //   成功,
+  //   失败
+  // }
   // 查看日志详情
-  private offlineLogDetails(item: { log: string }) {
+  private sqlLogDetails(item: { log: string }) {
+    this.str = item.log
     this.tDialogFlag = true
-    this.formProvide.title = '查看离线日志详情'
-    this.rowJson = item.log
+    this.formProvide.title = '查看SQL日志详情'
   }
 
   // 查询通用调用方法
   private async searchMethod(params: paramsType) {
     this.loading = true
-    params.faceTypes = `${topicInterFaceType['事务数据']}`
-    params.dataType = dataType['结构化']
-
-    const { data }: returnType = await this.h_request['httpGET']<object>('GET_TOPICS_GETOFFLINELOG', params)
-
+    const { data }: returnType = await this.h_request['httpGET']('GET_TOPICS_SQLFILERECORD', params)
     this.desserts = data ? [...data.list] : []
     this.paginationLength = Math.ceil(data?.['total'] / this.pageSize) || 1
     this.loading = false
@@ -126,7 +149,7 @@ export default class TransactionalDataStatistics extends Vue {
 }
 </script>
 <style>
-#TransactionalDataStatistics {
+#SqlStatistics {
   margin-top: 10px;
 }
 </style>

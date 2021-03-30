@@ -1,5 +1,5 @@
 class timeUtil {
-  public static stamptoTime = (stamp: string, Reg: string): string => {
+  public static stamptoTime = (stamp: string | number, Reg: string): string => {
     const date: Date = new Date(Number(stamp))
     const year: number = date.getFullYear()
     const month: string = (date.getMonth() + 1).toString().padStart(2, '0')
@@ -7,7 +7,7 @@ class timeUtil {
     return Reg ? year + Reg + month + Reg + day : year + '/' + month + '/' + day
   }
 
-  public static stampToTodayTime = (stamp: string): string => {
+  public static stampToTodayTime = (stamp: string | number): string => {
     const date: Date = new Date(Number(stamp))
     const hours: string = date.getHours().toString().padStart(2, '0')
     const minutes: string = date.getMinutes().toString().padStart(2, '0')
@@ -20,7 +20,7 @@ class timeUtil {
     return new Date(date).getTime()
   }
 
-  public static stamptoFullTime = (stamp: string, Reg: string): string => {
+  public static stamptoFullTime = (stamp: string | number, Reg: string): string => {
     const date: Date = new Date(Number(stamp))
     const year: number = date.getFullYear()
     const month: string = (date.getMonth() + 1).toString().padStart(2, '0')

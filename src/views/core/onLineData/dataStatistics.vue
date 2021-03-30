@@ -25,7 +25,9 @@ export default class OnlineDataStatistics extends Vue {
 
   private async getSysRelease() {
     const result: returnType = await this.h_request.httpGET('GET_SYSTEM_GETSYSTEMINFO', {})
-    this.systemItems = result.data
+    if (result.data) {
+      this.systemItems = result.data
+    }
   }
 
   mounted(): void {

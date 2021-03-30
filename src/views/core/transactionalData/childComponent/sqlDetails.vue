@@ -1,5 +1,5 @@
 <template>
-  <div id="ContentDetails">
+  <div id="SqlDetails">
     <div
       style="max-height: 400px; overflow: auto; margin-bottom: 15px; font-size: 16px; line-height: 24px"
       v-html="obj"
@@ -10,9 +10,9 @@
       <v-btn
         color="primary"
         height="35px"
-        :disabled="!rowJson"
+        :disabled="!str"
         text
-        v-clipboard:copy="rowJson"
+        v-clipboard:copy="str"
         v-clipboard:success="onCopy"
         v-clipboard:error="onError"
         >一键复制</v-btn
@@ -26,13 +26,12 @@ import util from '@/decorator/utilsDecorator'
 
 @util
 @Component({})
-export default class ContentDetails extends Vue {
-  @Prop() private rowJson!: string
+export default class SqlDetails extends Vue {
+  @Prop() private str!: string
 
   private get obj() {
-    if (this.rowJson !== '') {
-      const _obj = JSON.parse(this.rowJson)
-      return `{${this.h_utils['formatUtil'].objToHTML(_obj)}}`
+    if (this.str) {
+      return this.str.replaceAll('/n', '<br />')
     } else {
       return ``
     }

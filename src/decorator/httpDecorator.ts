@@ -1,8 +1,8 @@
 import { VueConstructor } from 'vue'
-import HttpInit from '../api/httpDecoratorInit'
+import RequestData from '../api/index'
 
 const http = (target: VueConstructor): void => {
-  target.prototype.h_request = new HttpInit().httpRequestInit()
+  target.prototype.h_request = new RequestData()
 }
 
 export default http

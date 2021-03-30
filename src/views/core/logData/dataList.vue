@@ -18,7 +18,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" width="95px" height="35px" depressed class="mr-6" small dark @click="createLogTopic()"
+        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createLogTopic()"
           >创建日志主题</v-btn
         >
       </v-col>

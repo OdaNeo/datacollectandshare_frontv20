@@ -82,6 +82,10 @@ input:-internal-autofill-previewed, input:-internal-autofill-selected {
     margin-top: 6px !important;
 }
 
+.v-input__prepend-outer {
+    margin-top: 6px !important;
+}
+
 /* .v-form .v-text-field--outlined.v-input--dense .v-label {
     top: 7px !important;
 } */

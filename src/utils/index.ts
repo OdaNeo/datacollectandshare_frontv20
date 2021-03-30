@@ -4,10 +4,10 @@ import formatUtil from './formatUtil'
 import topicRanking from './topicRanking'
 
 class Utils {
-  private timeUtil = timeUtil
-  private alertUtil = alertUtil
-  private formatUtil = formatUtil
-  private topicRanking = topicRanking
+  public timeUtil = timeUtil
+  public alertUtil = alertUtil
+  public formatUtil = formatUtil
+  public topicRanking = topicRanking
 }
 
 export default Utils

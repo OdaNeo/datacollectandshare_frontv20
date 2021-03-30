@@ -116,8 +116,11 @@ export default class CreateCmdDialog extends Vue {
       data = res.data
       sessionStorage.systemInfo = JSON.stringify(data)
     }
-    for (let i = 0; i < data.length; i++) {
-      this.systemList.push({ text: data[i].name, value: data[i].name })
+
+    if (data) {
+      for (let i = 0; i < data.length; i++) {
+        this.systemList.push({ text: data[i].name, value: data[i].name })
+      }
     }
   }
 

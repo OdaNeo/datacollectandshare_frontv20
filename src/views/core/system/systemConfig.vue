@@ -22,9 +22,7 @@
         </v-text-field>
       </v-col>
       <v-col>
-        <v-btn height="35px" width="95px" color="primary" depressed small dark @click.stop="addConfigure"
-          >添加配置</v-btn
-        >
+        <v-btn height="35px" color="primary" depressed small dark @click.stop="addConfigure">添加配置</v-btn>
       </v-col>
     </v-row>
     <h-table

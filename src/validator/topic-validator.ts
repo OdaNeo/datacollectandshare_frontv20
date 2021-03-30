@@ -18,7 +18,8 @@ class TopicValidator {
   public readonly fileSQLValidate = (): ValidatorType => {
     return [
       (v: File): boolean | string => !!v || '请上传.sql文件',
-      (v: File): boolean | string => !!(v && v.name.match('.sql')) || '文件格式错误'
+      (v: File): boolean | string => !!(v && v.name.match('.sql')) || '文件格式错误',
+      (v: File): boolean | string => !!(v && v.size < 20 * 1024 * 1000) || '文件不能超过100M'
     ]
   }
 }

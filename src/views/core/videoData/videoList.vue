@@ -18,9 +18,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" height="35px" width="95px" depressed dark small @click.stop="createTopicVideo"
-          >创建主题</v-btn
-        >
+        <v-btn color="primary" height="35px" depressed dark small @click.stop="createTopicVideo">创建主题</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">

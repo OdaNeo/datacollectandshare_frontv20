@@ -20,7 +20,7 @@
       <v-col cols="9">
         <v-btn
           color="primary"
-          width="95px"
+          width="100px"
           height="35px"
           depressed
           class="mr-6"
@@ -28,9 +28,9 @@
           dark
           @click="createTransactionalData()"
         >
-          创建事务作业
+          创建事务主题
         </v-btn>
-        <v-btn color="primary" width="95px" height="35px" depressed class="mr-6" small dark @click="uploadSQL"
+        <v-btn color="primary" width="100px" height="35px" depressed class="mr-6" small dark @click="uploadSQL"
           >上传SQL文件</v-btn
         >
       </v-col>
@@ -48,11 +48,9 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
-          <template v-slot:sqlMaxContent="{ item }">
-            <v-btn text color="primary" @click="sqlMaxContentDetails(item)">自增属性查询脚本</v-btn>
-          </template>
-          <template v-slot:jsonContent="{ item }">
-            <v-btn text color="primary" @click="jsonContentDetails(item)">DataX脚本</v-btn>
+          <template v-slot:content="{ item }">
+            <v-btn text color="primary" @click="sqlMaxContentDetails(item)">自增属性</v-btn>
+            <v-btn text color="primary" @click="jsonContentDetails(item)">DataX</v-btn>
           </template>
           <template v-slot:buttons="{ item, index }">
             <v-btn v-if="tab" text color="primary" @click.stop="addItems(item)">修改</v-btn>
@@ -92,18 +90,23 @@
               >重跑</v-btn
             >
           </template>
+          <template v-slot:log="{ item, index }">
+            <v-btn text color="primary" @click.stop="currentLog(item, index)">最新日志</v-btn>
+            <v-btn text color="primary" @click.stop="historyLog(item, index)">历史日志</v-btn>
+          </template>
         </h-table>
       </v-tab-item>
     </v-tabs-items>
     <!-- 表单展示 -->
     <f-dialog v-if="fDialogFlag" v-model="fDialogFlag" :loading="SQLLoading">
       <CreateTransactionalData v-if="dialogFlag === 1" />
-      <UploadSQL v-if="dialogFlag === 2" @transform-sql-file="transformSQLFile" :message="sqlFileMessage" />
+      <UploadSQL v-if="dialogFlag === 2" @change="transformSQLFile" />
     </f-dialog>
 
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
-      <ContentDetails :rowJson="rowJson" />
+      <ContentDetails v-if="dialogFlag === 3" :rowJson="rowJson" />
+      <SqlDetails v-if="dialogFlag === 4" :str="str" />
     </t-dialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -129,6 +132,7 @@ import ContentDetails from './childComponent/contentDetails.vue'
 import { tableHeaderType } from '@/type/table.type'
 import upload from '@/decorator/uploadDecorator'
 import { mdiMagnify } from '@mdi/js'
+import SqlDetails from './childComponent/sqlDetails.vue'
 
 @Component({
   components: {
@@ -138,7 +142,8 @@ import { mdiMagnify } from '@mdi/js'
     FDialog,
     CreateTransactionalData,
     ContentDetails,
-    UploadSQL
+    UploadSQL,
+    SqlDetails
   }
 })
 @http
@@ -175,10 +180,10 @@ export default class transactionalDataList extends Vue {
   }
 
   private sqlTimer = 0
-  private sqlFileMessage = ''
 
   // '文件存储成功/n临时数据库创建成功/nsql文件执行成功/n准备处理表:topicinfo/n查询出表:topicinfo有:126条数据/n开始异步存储表:topicinfo数据至es。。。/n准备处理表:url_topic_info/n查询出表:url_topic_info有:6条数据/n开始异步存储表:url_topic_info数据至es。。。/nsql数据查询完毕，异步导入es中。。。'
   private rowJson = ''
+  private str = ''
   private sqlFile: File | null = null
   private sqlForms = new FormData()
   private SQLLoading = false
@@ -211,21 +216,20 @@ export default class transactionalDataList extends Vue {
       align: 'center',
       value: 'maxValue'
     },
-
     {
-      text: '自增属性',
+      text: '脚本',
       align: 'center',
-      slot: 'sqlMaxContent'
-    },
-    {
-      text: 'DataX脚本',
-      align: 'center',
-      slot: 'jsonContent'
+      slot: 'content'
     },
     {
       text: '操作',
       align: 'center',
       slot: 'buttons'
+    },
+    {
+      text: '日志',
+      align: 'center',
+      slot: 'log'
     }
   ]
   // 创建 修改事务性数据
@@ -284,6 +288,7 @@ export default class transactionalDataList extends Vue {
   private sqlMaxContentDetails(item: { sqlMaxContent: string }) {
     this.tDialogFlag = true
     this.formProvide.title = '自增属性查询脚本'
+    this.dialogFlag = 3
     this.rowJson = item.sqlMaxContent
   }
 
@@ -291,7 +296,26 @@ export default class transactionalDataList extends Vue {
   private jsonContentDetails(item: { jsonContent: string }) {
     this.tDialogFlag = true
     this.formProvide.title = 'DataX脚本'
+    this.dialogFlag = 3
     this.rowJson = item.jsonContent
+  }
+
+  // 最新日志
+  private currentLog(item: unknown, index: number) {
+    this.tDialogFlag = true
+    this.formProvide.title = '最新日志'
+    this.dialogFlag = 3
+    console.log(item)
+    console.log(index)
+  }
+
+  // 历史日志
+  private historyLog(item: unknown, index: number) {
+    this.tDialogFlag = true
+    this.formProvide.title = '历史日志'
+    this.dialogFlag = 3
+    console.log(item)
+    console.log(index)
   }
 
   // 提交事务性数据
@@ -390,7 +414,6 @@ export default class transactionalDataList extends Vue {
     this.formProvide.title = '上传SQL文件'
     this.formProvide.methodName = 'uploadSQLFile'
     this.formProvide.formObj = {}
-    this.sqlFileMessage = ''
   }
 
   private async uploadSQLFile() {
@@ -398,31 +421,16 @@ export default class transactionalDataList extends Vue {
       return
     }
     this.SQLLoading = true
-    // console.log(this.sqlFile)
-
     this.sqlForms = new FormData()
     this.sqlForms.append('ddlFile', this.sqlFile)
 
     const { success, data } = await this.h_upload.httpPOST('POST_TOPICS_ADDSQLFILE', this.sqlForms)
 
-    // const success = true
-    console.log(data)
-
     if (success) {
-      this.h_utils['alertUtil'].open('SQL文件上传成功，正在查询日志', true, 'success', 4000)
+      this.h_utils['alertUtil'].open('SQL文件上传成功，正在后台查询日志', true, 'success')
       this.getSQLFileLog(data)
-      // if (_success) {
-      //   this.searchMethod(
-      //     false,
-      //     {
-      //       pageSize: this.pageSize,
-      //       pageNum: 1
-      //     },
-      //     !!this.tab
-      //   )
-      //   this.pageNum = 1
-      //   return Promise.resolve(true)
-      // }
+      this.SQLLoading = false
+      return Promise.resolve(success)
     }
     this.SQLLoading = false
   }
@@ -430,18 +438,18 @@ export default class transactionalDataList extends Vue {
   // 轮询上传文件日志
   private async getSQLFileLog(id: unknown) {
     clearInterval(this.sqlTimer)
-    this.SQLLoading = true
-
     // 0: 进行 1：完成
     this.sqlTimer = setInterval(async () => {
       const { data, message } = await this.h_request.httpGET('GET_TOPICS_SELECTSQLFILELOG', { id })
 
-      console.log(message)
-
       if (data === 1) {
-        this.sqlFileMessage = message
+        // SQL日志详情
+        this.str = message
+        this.tDialogFlag = true
+        this.dialogFlag = 4
+        this.formProvide.title = 'SQL日志详情'
+
         clearInterval(this.sqlTimer)
-        this.SQLLoading = false
       }
     }, 5000)
   }
@@ -566,7 +574,7 @@ export default class transactionalDataList extends Vue {
     // console.log(data)
     if (success) {
       this.h_utils['alertUtil'].open(state === 1 ? '启动成功' : '停止成功', true, 'success')
-      // 乐观更新 防抖
+      // 乐观更新
       this.$set(this.desserts, index, {
         ...this.desserts[index],
         state
@@ -581,7 +589,17 @@ export default class transactionalDataList extends Vue {
     // console.log(success)
     if (success) {
       this.h_utils['alertUtil'].open(`主题${topicId}重跑成功`, true, 'success')
+      // 乐观更新
+      // this.$set(this.desserts, index, {
+      //   ...this.desserts[index],
+      //   currentLogFlag: true
+      // })
     }
+  }
+
+  // 清除timer
+  beforeDestroy(): void {
+    clearInterval(this.sqlTimer)
   }
 }
 </script>

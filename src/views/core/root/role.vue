@@ -22,7 +22,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn height="35px" width="95px" color="primary" small depressed dark @click.stop="addItem">添加角色</v-btn>
+        <v-btn height="35px" color="primary" small depressed dark @click.stop="addItem">添加角色</v-btn>
       </v-col>
     </v-row>
     <h-table

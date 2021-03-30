@@ -17,7 +17,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn height="35px" width="95px" color="primary" depressed small dark @click.stop="addItem">添加权限</v-btn>
+        <v-btn height="35px" color="primary" depressed small dark @click.stop="addItem">添加权限</v-btn>
       </v-col>
     </v-row>
     <h-table :headers="headers" :desserts="desserts" :loading="loading">
@@ -96,7 +96,7 @@ export default class Resources extends Vue {
       text: '创建时间',
       align: 'center',
       value: 'gmtCreated',
-      format: (time: number) => {
+      format: (time: string) => {
         return this.h_utils.timeUtil.stamptoTime(time, '-')
       }
     },
@@ -104,7 +104,7 @@ export default class Resources extends Vue {
       text: '更新时间',
       align: 'center',
       value: 'gmtUpdated',
-      format: (time: number) => {
+      format: (time: string) => {
         return this.h_utils.timeUtil.stamptoTime(time, '-')
       }
     },

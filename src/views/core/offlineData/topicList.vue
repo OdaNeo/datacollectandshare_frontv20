@@ -20,7 +20,7 @@
       <v-col cols="9">
         <!-- <v-btn
           color="primary"
-          width="95px"
+          width="100px"
           height="35px"
           depressed
           class="mr-6"
@@ -29,10 +29,10 @@
           @click="createDataBaseAcquisition()"
           >数据库采集</v-btn
         > -->
-        <v-btn color="primary" width="95px" height="35px" depressed class="mr-6" small dark @click="createServePull()"
+        <v-btn color="primary" width="100px" height="35px" depressed class="mr-6" small dark @click="createServePull()"
           >服务主动拉取</v-btn
         >
-        <v-btn color="primary" width="95px" height="35px" depressed class="mr-6" small dark @click="pullFTP"
+        <v-btn color="primary" width="100px" height="35px" depressed class="mr-6" small dark @click="pullFTP"
           >拉取FTP</v-btn
         >
       </v-col>
@@ -606,13 +606,13 @@ export default class OfflineTopicList extends Vue {
 
   private async getTopicInformation(item: any, index: number) {
     if (!this.desserts[index].flag) {
-      const { data }: any = await this.h_request['httpGET']('GET_TOPICS_INFORMATION', {
+      const { data } = await this.h_request['httpGET']('GET_TOPICS_INFORMATION', {
         topicID: item.id,
         topicName: item.topicName,
         topicInterFaceType: item.topicInterFaceType
       })
 
-      if (data.length > 0) {
+      if (data && data.length > 0) {
         this.desserts[index].dataBaseIp = data[0].dataBaseIp
         this.desserts[index].dataBaseType = data[0].dataBaseType
         this.desserts[index].url = data[0].url

@@ -569,7 +569,9 @@ export default class DataStatistics extends Vue {
   // 获取主题
   private async getRelease(params: any, callback: Function) {
     const result: returnType = await this.h_request['httpGET']('GET_STATISTICS_STAT_TOPIC_DATA', params)
-    callback(result)
+    if (result.data) {
+      callback(result)
+    }
   }
   // 处理系统主题占比
   private genData(data: Array<any>) {

@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import HttpInit from '@/api/httpDecoratorInit'
+import RequestData from '@/api/index'
 
-const request = new HttpInit().httpRequestInit()
+const request = new RequestData()
 
 // 搜索框仅数字
 Vue.directive('onlyNum', {

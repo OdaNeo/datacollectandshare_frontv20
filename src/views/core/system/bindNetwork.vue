@@ -22,7 +22,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn height="35px" width="95px" color="primary" depressed small dark @click.stop="bindNet">绑定网络</v-btn>
+        <v-btn height="35px" color="primary" depressed small dark @click.stop="bindNet">绑定网络</v-btn>
       </v-col>
     </v-row>
     <h-table

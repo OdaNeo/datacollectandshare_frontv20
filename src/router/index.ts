@@ -288,6 +288,17 @@ const routes: Array<RouteConfig> = [
           access: true,
           url: '/transactionalData/dataStatistics'
         }
+      },
+      {
+        path: 'sqlStatistics',
+        component: () => import('@/views/core/transactionalData/sqlStatistics.vue'),
+        name: '上传历史',
+        meta: {
+          title: '上传历史',
+          // icon: 'mdi-file-video',
+          access: true,
+          url: '/transactionalData/sqlStatistics'
+        }
       }
     ]
   },
