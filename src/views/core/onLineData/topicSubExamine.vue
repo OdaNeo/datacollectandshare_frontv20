@@ -30,16 +30,7 @@
       :paginationLength="paginationLength"
     >
       <template v-slot:buttons="{ item }">
-        <v-btn
-          :disabled="
-            item.topicInterFaceType === 5 ||
-            item.topicInterFaceType === 6 ||
-            item.topicInterFaceType === 7 ||
-            item.topicInterFaceType === 8
-          "
-          text
-          color="primary"
-          @click="dataStructure(item)"
+        <v-btn :disabled="item.topicInterFaceType === 6" text color="primary" @click="dataStructure(item)"
           >数据结构详情</v-btn
         >
       </template>

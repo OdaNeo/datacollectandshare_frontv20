@@ -1,68 +1,29 @@
 <template>
   <v-row no-gutters>
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>命令名称</label>
-      <v-text-field
-        v-model="formProvide.formObj['cmdName']"
-        :disabled="formProvide.formObj.canNotEdit"
-        outlined
-        dense
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty('命令名称'), ...noRepeat]"
-        @input="handleCmdNameNoRepeat"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>生产系统名</label>
-      <v-text-field
-        v-model="formProvide.formObj['producer']"
-        outlined
-        dense
-        disabled
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty('生产系统名')]"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
-    <!-- <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>订阅系统名</label>
-      <v-select
-        v-model="formProvide.formObj['consumers']"
-        outlined
-        dense
-        clearable
-        multiple
-        height="34"
-        label="请选择订阅系统名"
-        :rules="[...h_validator.noEmpty('订阅系统名')]"
-        :items="systemList"
-        class="ml-4 my-0 mr-15"
-      ></v-select>
-    </v-col> -->
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>订阅系统名</label>
-      <HMultiCheckBoxes
-        class="ml-4 mr-15"
-        v-model="formProvide.formObj['consumers']"
-        :items="systemList"
-        :rules="[...h_validator.noEmpty('订阅系统名')]"
-      >
-      </HMultiCheckBoxes>
-    </v-col>
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2">描述</label>
-      <v-text-field
-        v-model="formProvide.formObj['description']"
-        outlined
-        dense
-        clearable
-        height="34"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
+    <HSimpleInput
+      v-model="formProvide.formObj['cmdName']"
+      :disabled="formProvide.formObj.canNotEdit"
+      :rules="[...h_validator.noEmpty('命令名称'), ...noRepeat]"
+      @input="handleCmdNameNoRepeat"
+      :description="`命令名称`"
+    />
+
+    <HSimpleInput
+      v-model="formProvide.formObj['producer']"
+      disabled
+      :rules="[...h_validator.noEmpty('生产系统名')]"
+      :description="`生产系统名`"
+    />
+
+    <HMultiCheckBoxes
+      v-model="formProvide.formObj['consumers']"
+      :items="systemList"
+      :description="`订阅系统名`"
+      :rules="[...h_validator.noEmpty('订阅系统名')]"
+    />
+
+    <HSimpleInput v-model="formProvide.formObj['description']" :required="false" :description="`描述`" />
+
     <!-- body示例及弹窗 -->
     <label class="label mr-6">Body示例</label>
     <v-btn color="grey" outlined @click="showConstruction = true">查看</v-btn>
@@ -89,10 +50,12 @@ import http from '@/decorator/httpDecorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import HMultiCheckBoxes from '@/components/h-multi-checkboxes.vue'
+import HSimpleInput from '@/components/h-simple-input.vue'
 
 @Component({
   components: {
-    HMultiCheckBoxes
+    HMultiCheckBoxes,
+    HSimpleInput
   }
 })
 @http

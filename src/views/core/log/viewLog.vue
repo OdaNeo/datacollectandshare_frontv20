@@ -8,6 +8,7 @@
           height="35px"
           placeholder="请输入查找的用户名"
           clearable
+          :clear-icon="mdiCloseCircleOutline"
           @click:clear="clickSearch(true)"
           v-model="queryUserName"
         ></v-text-field>
@@ -29,7 +30,7 @@
         ></h-date-picker>
       </v-col>
       <v-col>
-        <v-btn height="35px" color="primary" depressed dark @click="clickSearch(false)">查询</v-btn>
+        <v-btn height="35px" color="primary" small depressed dark @click="clickSearch(false)">查询</v-btn>
       </v-col>
     </v-row>
     <h-table
@@ -50,7 +51,7 @@ import { returnType } from '@/type/http-request.type'
 import util from '@/decorator/utilsDecorator'
 import HDatePicker from '@/components/h-date-picker.vue'
 import { topicTable } from '@/type/topic.type'
-
+import { mdiCloseCircleOutline } from '@mdi/js'
 @Component({
   components: {
     HTable,
@@ -60,6 +61,7 @@ import { topicTable } from '@/type/topic.type'
 @http
 @util
 export default class ViewLog extends Vue {
+  mdiCloseCircleOutline = mdiCloseCircleOutline
   private pageSize = 20
   private pageNum = 1
   private desserts: Array<topicTable> = []

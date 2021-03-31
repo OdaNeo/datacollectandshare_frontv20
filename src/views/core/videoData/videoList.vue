@@ -18,7 +18,7 @@
         </v-text-field>
       </v-col>
       <v-col cols="9">
-        <v-btn color="primary" height="35px" depressed dark small @click.stop="createTopicVideo">创建主题</v-btn>
+        <v-btn color="primary" height="35px" depressed dark small @click.stop="createTopicVideo">创建视频主题</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -201,7 +201,7 @@ export default class VideoDataList extends Vue {
   private createTopicVideo() {
     this.dialogFlag = true
     this.dialogShow = 1
-    this.formProvide.title = '创建非结构化主题'
+    this.formProvide.title = '创建视频主题'
     this.formProvide.btnName = ['立即提交']
     this.formProvide.methodName = 'addVideoTopic'
     this.formProvide.formObj = {}

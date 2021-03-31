@@ -4,8 +4,7 @@
     <HFileUpLoad
       accept=".sql"
       label="支持.sql格式的单文件上传"
-      require
-      clearable
+      outlined
       description="上传文件"
       :rules="[...h_validator.fileSQLValidate()]"
       @change="$emit('change', $event)"
@@ -16,9 +15,8 @@
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
-import util from '@/decorator/utilsDecorator'
 import HFileUpLoad from '@/components/h-file-upload.vue'
-@util
+
 @Component({
   components: {
     HFileUpLoad

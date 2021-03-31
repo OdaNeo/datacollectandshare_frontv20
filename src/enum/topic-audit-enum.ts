@@ -4,3 +4,9 @@ export enum examineType {
   已通过,
   已拒绝
 }
+
+export enum examineTypeColor {
+  warning,
+  primary,
+  error
+}

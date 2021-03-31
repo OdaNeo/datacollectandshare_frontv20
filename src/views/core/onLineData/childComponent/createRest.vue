@@ -1,24 +1,17 @@
 <template>
   <v-row no-gutters>
     <!-- 主题名称 -->
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>主题名称</label>
-      <v-text-field
-        v-model="formProvide.formObj['topicName']"
-        :disabled="formProvide.formObj.canNotEdit"
-        outlined
-        dense
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
-        class="ml-4 mr-15"
-        v-topicNameNoRepeat="{
-          set: n => {
-            noRepeat = [...n]
-          }
-        }"
-      ></v-text-field>
-    </v-col>
+    <HSimpleInput
+      v-model="formProvide.formObj['topicName']"
+      :disabled="formProvide.formObj.canNotEdit"
+      :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
+      :description="`主题名称`"
+      v-topicNameNoRepeat="{
+        set: n => {
+          noRepeat = [...n]
+        }
+      }"
+    />
     <!-- 消息类型 -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>消息类型</label>
@@ -158,17 +151,15 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
-
-    <v-col v-if="!formProvide.formObj.canNotEdit" cols="12" class="d-flex justify-space-around">
-      <label class="label mr-5">通过文件创建</label>
-      <v-file-input
-        class="mt-0 pt-0 mr-12"
-        label="支持.xls, .xlsx格式的单文件上传"
-        clearable
-        accept=".xls,.xlsx"
-        @change="$emit('upload-file', $event)"
-      ></v-file-input>
-    </v-col>
+    <!-- 文件上传 -->
+    <HFileUpLoad
+      v-if="!formProvide.formObj.canNotEdit"
+      :required="false"
+      :description="`通过文件创建`"
+      label="支持.xls, .xlsx格式的单文件上传"
+      accept=".xls,.xlsx"
+      @change="$emit('upload-file', $event)"
+    />
   </v-row>
 </template>
 <script lang="ts">
@@ -177,8 +168,14 @@ import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import http from '@/decorator/httpDecorator'
 import { mdiPlus, mdiMinus } from '@mdi/js'
-
-@Component
+import HFileUpLoad from '@/components/h-file-upload.vue'
+import HSimpleInput from '@/components/h-simple-input.vue'
+@Component({
+  components: {
+    HFileUpLoad,
+    HSimpleInput
+  }
+})
 @http
 @Validator(['noEmpty', 'topicNameFormatter'])
 export default class CreateRest extends Vue {

@@ -45,21 +45,12 @@
       :paginationLength="paginationLength"
     >
       <template v-slot:buttons="{ item }">
-        <v-btn
-          text
-          color="primary"
-          :disabled="
-            item.topicInterFaceType === 5 ||
-            item.topicInterFaceType === 6 ||
-            item.topicInterFaceType === 7 ||
-            item.topicInterFaceType === 8
-          "
-          @click="dataStructure(item)"
+        <v-btn text color="primary" :disabled="item.topicInterFaceType === 6" @click="dataStructure(item)"
           >数据结构详情</v-btn
         >
       </template>
       <template v-slot:examineType="{}">
-        <v-btn text :color="colors[btnAction]">{{ h_enum['examineType'][btnAction] }}</v-btn>
+        <v-btn text :color="h_enum['examineTypeColor'][btnAction]">{{ h_enum['examineType'][btnAction] }}</v-btn>
       </template>
     </h-table>
 
@@ -78,8 +69,8 @@ import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
-
 import { mdiMagnify } from '@mdi/js'
+
 @Component({
   components: {
     HTable,
@@ -97,6 +88,10 @@ import { mdiMagnify } from '@mdi/js'
   {
     tsFileName: 'topic-audit-enum',
     enumName: 'examineType'
+  },
+  {
+    tsFileName: 'topic-audit-enum',
+    enumName: 'examineTypeColor'
   }
 ])
 export default class TopicAuditRecords extends Vue {
@@ -111,10 +106,10 @@ export default class TopicAuditRecords extends Vue {
     }
   })
 
-  mdiMagnify = mdiMagnify
+  private mdiMagnify = mdiMagnify
   private desserts: Array<topicTable> = []
   private btnNames: Array<string> = ['未审核', '已通过', '已拒绝']
-  private colors: Array<string> = ['warning', 'primary', 'error']
+
   private btnAction = 0
   private rowObj: object = {}
   private pageNum = 1

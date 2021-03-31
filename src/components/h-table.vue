@@ -6,8 +6,13 @@
         <v-progress-circular indeterminate color="primary"></v-progress-circular>
       </div>
       <!-- 无数据 -->
-      <div v-else-if="!desserts || desserts.length === 0" class="text-center mt-15" style="min-height: 150px">
-        <v-icon color="primary lighten-3" size="50">{{ mdiToyBrickRemoveOutline }}</v-icon>
+      <div
+        id="h-table-no-data"
+        v-else-if="!desserts || desserts.length === 0"
+        class="text-center mt-15"
+        style="min-height: 150px"
+      >
+        <v-icon color="primary lighten-3">{{ mdiToyBrickRemoveOutline }}</v-icon>
         <div style="font-size: 14px; margin-top: 5px">查无数据</div>
       </div>
       <!-- 有数据 -->
@@ -15,7 +20,7 @@
         <template v-slot:default>
           <thead>
             <tr>
-              <th v-for="(header, index) in headers" :key="index" :class="'text-' + header.align">
+              <th v-for="(header, index) in realHeaders" :key="index" :class="'text-' + header.align">
                 {{ header.text }}
               </th>
             </tr>
@@ -23,13 +28,14 @@
           <tbody>
             <tr v-for="(item, key) in desserts2" :key="key" v-show="showFun(item.parentid)">
               <td
-                v-for="(header, index) in headers"
+                v-for="(header, index) in realHeaders"
                 :key="index"
                 :class="'text-' + header.align"
                 :style="{
                   minWidth: '90px',
                   wordWrap: 'break-word',
-                  maxWidth: header.width ? header.width + 'px' : undefined
+                  maxWidth: header.width ? header.width + 'px' : undefined,
+                  color: header.color ? header.color : undefined
                 }"
               >
                 <div
@@ -99,6 +105,12 @@ export default class HTable extends Vue {
     })
   }
 
+  private get realHeaders(): Array<tableHeaderType> {
+    return this.headers.filter((item: tableHeaderType) => {
+      return !item.isHide
+    })
+  }
+
   private showFun(parentid: number) {
     if (parentid == null) {
       return true
@@ -161,6 +173,10 @@ export default class HTable extends Vue {
 }
 .v-pagination {
   background: transparent !important;
+}
+#h-table-no-data >>> .v-icon__svg {
+  height: 50px !important;
+  width: 50px !important;
 }
 
 .simple-table {

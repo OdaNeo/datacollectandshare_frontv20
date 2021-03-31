@@ -109,6 +109,7 @@ import { dataType } from '@/enum/topic-datatype-enum'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 
 import axios from 'axios'
+import { GET_TOPICS_PROTOBUFDOWNLOAD } from '@/api/requestName'
 import { rootStoreModule } from '@/store/modules/root'
 import XLSX from 'xlsx'
 import { VUE_APP_BASE_API } from '../../../../config'
@@ -156,7 +157,7 @@ export default class OnlineDataTopicList extends Vue {
       }
     }
   })
-  mdiMagnify = mdiMagnify
+  private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示
@@ -609,6 +610,7 @@ export default class OnlineDataTopicList extends Vue {
 
   // uploadProtoFile
   private uploadProtoFile(e: File) {
+    console.log(e)
     if (!e) {
       return
     }
@@ -616,10 +618,11 @@ export default class OnlineDataTopicList extends Vue {
   }
 
   // 下载 proto
+  // TODO:下载重构
   private async downloadFile(item: any) {
     axios({
       method: 'get',
-      url: VUE_APP_BASE_API + '/topics/protobufDownload',
+      url: VUE_APP_BASE_API + GET_TOPICS_PROTOBUFDOWNLOAD,
       params: { id: item.id },
       timeout: 500000,
       responseType: 'blob',

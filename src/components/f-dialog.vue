@@ -19,8 +19,8 @@
       <v-progress-linear v-else color="primary" indeterminate height="2"></v-progress-linear>
       <!-- 主题 -->
       <v-card-text class="pb-0 mt-4">
-        <v-container class="pb-1">
-          <v-form ref="userDialogForm" v-model="userDialogValid">
+        <v-container class="pb-0 pt-5">
+          <v-form ref="userDialogForm" :disabled="loading" v-model="userDialogValid">
             <slot />
           </v-form>
         </v-container>

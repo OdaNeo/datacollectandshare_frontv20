@@ -4,5 +4,7 @@ export type tableHeaderType = {
   value?: string
   width?: number
   slot?: string
-  format?: (n: any) => string
+  isHide?: boolean
+  color?: string
+  format?: (n: any) => string | number
 }

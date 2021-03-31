@@ -1,136 +1,14 @@
 <template>
-  <!-- <v-row no-gutters>
-    <v-col cols="11">
-      <v-text-field
-        single-line
-        outlined
-        clearable
-        dense
-        solo
-        class="dialogInput"
-        v-model="formProvide.formObj.name"
-        :rules="nameRules"
-        required
-      >
-        <template v-slot:prepend>
-          <div class="text-label">
-            <p class="require-span">*</p>
-            <label>权限名称：</label>
-          </div>
-        </template>
-      </v-text-field>
-    </v-col>
-    <v-col cols="11">
-      <v-text-field
-        single-line
-        outlined
-        clearable
-        dense
-        solo
-        class="dialogInput"
-        v-model="formProvide.formObj.url"
-        required
-      >
-        <template v-slot:prepend>
-          <div class="text-label">
-            <label>权限地址：</label>
-          </div>
-        </template>
-      </v-text-field>
-    </v-col>
-    <v-col cols="11">
-      <v-radio-group
-        v-model="formProvide.formObj.type"
-        single-line
-        outlined
-        dense
-        class="dialogInput"
-        solo
-        row
-        :rules="typeRules"
-        required
-      >
-        <template v-slot:prepend>
-          <div class="text-label">
-            <p class="require-span">*</p>
-            <label>权限类型：</label>
-          </div>
-        </template>
-        <v-radio v-for="n in types" :key="n.value" :label="`${n.text}`" :value="n.value"></v-radio>
-      </v-radio-group>
-    </v-col>
-    <v-col cols="6" style="position: relative" v-show="formProvide.formObj.type">
-      <v-text-field
-        single-line
-        outlined
-        :clearable="selectModel ? true : false"
-        dense
-        solo
-        class="dialogInput selectInput"
-        required
-        placeholder="请选择父节点"
-        readonly
-        v-model="selectModel"
-        :rules="formProvide.formObj.type === 'button' ? parentRules : []"
-        @click.stop="selectShow = !selectShow"
-      >
-        <template v-slot:append>
-          <v-icon @click.stop="selectShow = !selectShow" :style="selectShow ? 'transform:rotate(180deg)' : ''"
-            >mdi-chevron-down</v-icon
-          >
-        </template>
-        <template v-slot:prepend>
-          <div class="text-label">
-            <p class="require-span" v-show="formProvide.formObj.type === 'button'">*</p>
-            <label>父节点名称：</label>
-          </div>
-        </template>
-      </v-text-field>
-      <div v-show="selectShow" class="selectCon">
-        <ul>
-          <li
-            v-for="(item, index) in desserts"
-            :key="index"
-            @click.stop="formProvide.formObj.type === 'menu' ? choiceLi(item) : ''"
-            @mouseenter="formProvide.formObj.type === 'button' ? selectEnter(item, index) : ''"
-            :class="actionSelect == index ? 'actionSelect' : ''"
-          >
-            {{ item.name }}
-            <v-icon class="selectConIcon" v-show="formProvide.formObj.type == 'button'">mdi-chevron-right</v-icon>
-          </li>
-        </ul>
-        <ul class="selectChildCon" v-show="selectChildShow">
-          <li v-for="(child, index) in selectChild.childrenList" :key="index" @click="choiceLi(child, selectChild)">
-            {{ child.name }}
-          </li>
-        </ul>
-      </div>
-    </v-col>
-  </v-row> -->
   <v-row no-gutters>
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>权限名称</label>
-      <v-text-field
-        v-model="formProvide.formObj['name']"
-        outlined
-        dense
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty('权限名称')]"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2">权限地址</label>
-      <v-text-field
-        v-model="formProvide.formObj['url']"
-        outlined
-        dense
-        clearable
-        height="34"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
+    <!-- 权限名称 -->
+    <HSimpleInput
+      v-model="formProvide.formObj['name']"
+      :rules="[...h_validator.noEmpty('权限名称')]"
+      :description="`权限名称`"
+    />
+    <!-- 权限名称 -->
+    <HSimpleInput v-model="formProvide.formObj['url']" :required="false" :description="`权限地址`" />
+
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>权限类型</label>
       <v-radio-group
@@ -195,8 +73,12 @@ import { Component, Vue, Prop, Inject, Watch } from 'vue-property-decorator'
 import { userFormVar, userFormVarDo } from '@/type/user.type'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
-
-@Component({})
+import HSimpleInput from '@/components/h-simple-input.vue'
+@Component({
+  components: {
+    HSimpleInput
+  }
+})
 @Validator(['noEmpty'])
 export default class ResourcesDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
@@ -209,69 +91,6 @@ export default class ResourcesDialog extends Vue {
     { text: '菜单', value: 'menu' },
     { text: '按钮', value: 'button' }
   ]
-
-  // private formTypeObj: Array<InputType> = [
-  //   {
-  //     label: '权限名称',
-  //     valueName: 'name',
-  //     type: 'input',
-  //     require: true
-  //   },
-  //   {
-  //     label: '权限地址',
-  //     valueName: 'url',
-  //     type: 'input',
-  //     require: false
-  //   },
-  //   {
-  //     label: '权限类型',
-  //     valueName: 'type',
-  //     type: 'radioGroup',
-  //     items: this.types,
-  //     require: true
-  //   },
-  //   {
-  //     label: '父节点名称',
-  //     valueName: '',
-  //     type: '',
-  //     items: this.dessertsList,
-  //     require: false
-  //   },
-  //   {
-  //     valueName: '',
-  //     type: '',
-  //     items: [],
-  //     require: false
-  //   }
-  // ]
-
-  // @Watch('formProvide.formObj.type')
-  // private typesChange(val: string, oldVal: string) {
-  //   // if (val === 'menu') {
-  //   //   //   //   this.formTypeObj[3].valueName = 'parentid'
-  //   //   //   //   this.formTypeObj[3].type = 'select'
-  //   //   //   //   this.formTypeObj[3].items = this.dessertsList
-  //   //   //   //   this.formTypeObj[3].require = false
-  //   //   //   //   this.formTypeObj[4].valueName = ''
-  //   //   //   //   this.formTypeObj[4].type = ''
-  //   //   //   //   this.formTypeObj[4].items = []
-  //   //   //   //   this.formTypeObj[4].require = false
-  //   //   //   // 解决 formProvide.formObj.type 切换的时候 parentid不渲染的问题
-  //   //   oldVal && (this.formProvide.formObj.parentid = this.formProvide.formObj.grandparentid)
-  //   // } else if (val === 'button') {
-  //   //   //   // this.formTypeObj[3].valueName = 'grandparentid'
-  //   //   //   // this.formTypeObj[3].type = 'select'
-  //   //   //   // this.formTypeObj[3].items = this.dessertsList
-  //   //   //   // this.formTypeObj[3].require = true
-  //   //   //   // this.formTypeObj[4].valueName = 'parentid'
-  //   //   //   // this.formTypeObj[4].type = 'select'
-  //   //   //   // this.formTypeObj[4].items = []
-  //   //   //   // this.formTypeObj[4].require = true
-  //   //   //   // 解决切换type后 this.formTypeObj[4].items为空的bug
-  //   //   this.selectChange(this.formProvide.formObj.grandparentid)
-  //   // }
-  //   console.log(this.formProvide.formObj)
-  // }
 
   // toggle 下拉框
   @Watch('formProvide.formObj.grandparentid', { immediate: true })

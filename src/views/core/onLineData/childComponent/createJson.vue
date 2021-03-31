@@ -1,23 +1,17 @@
 <template>
   <v-row no-gutters>
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>主题名称</label>
-      <v-text-field
-        v-model="formProvide.formObj['topicName']"
-        :disabled="formProvide.formObj.canNotEdit"
-        outlined
-        dense
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
-        class="ml-4 mr-15"
-        v-topicNameNoRepeat="{
-          set: n => {
-            noRepeat = [...n]
-          }
-        }"
-      ></v-text-field>
-    </v-col>
+    <!-- 主题名称 -->
+    <HSimpleInput
+      v-model="formProvide.formObj['topicName']"
+      :disabled="formProvide.formObj.canNotEdit"
+      :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
+      :description="`主题名称`"
+      v-topicNameNoRepeat="{
+        set: n => {
+          noRepeat = [...n]
+        }
+      }"
+    />
     <!-- 消息类型 -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>消息类型</label>
@@ -99,8 +93,12 @@
 import { Component, Inject, Vue } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
-
-@Component
+import HSimpleInput from '@/components/h-simple-input.vue'
+@Component({
+  components: {
+    HSimpleInput
+  }
+})
 @Validator(['noEmpty', 'isJSON', 'topicNameFormatter'])
 export default class CreateJson extends Vue {
   @Inject() private readonly formProvide!: H_Vue

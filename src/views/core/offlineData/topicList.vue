@@ -541,7 +541,14 @@ export default class OfflineTopicList extends Vue {
         : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL', params)
       _data = data ? { ...data } : undefined
     }
-    this.desserts = _data ? [..._data.list] : []
+    // flag用于标识是否已经拉取附加信息
+    this.desserts = _data
+      ? [
+          ..._data.list.map(item => {
+            return { ...item, flag: false }
+          })
+        ]
+      : []
     this.paginationLength = Math.ceil(_data?.total / this.pageSize) || 1
     this.loading = false
   }

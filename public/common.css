@@ -70,6 +70,11 @@ input:-internal-autofill-previewed, input:-internal-autofill-selected {
     font-size: 14px !important;
 }
 
+.v-icon__svg {
+    height: 20px !important;
+    width: 20px !important;
+}
+
 .v-input {
     font-size: 14px !important;
 }

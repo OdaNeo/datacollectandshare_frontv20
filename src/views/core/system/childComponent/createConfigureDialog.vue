@@ -21,18 +21,13 @@
       </v-radio-group>
     </v-col>
     <!-- typeInput -->
-    <v-col v-if="formProvide.formObj['type'] === '其他'" cols="12" class="d-flex">
-      <label class="label mr-2"></label>
-      <v-text-field
-        v-model="formProvide.formObj['typeInput']"
-        outlined
-        dense
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty(), ...h_validator.typeInputRules()]"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
+    <HSimpleInput
+      v-if="formProvide.formObj['type'] === '其他'"
+      :required="false"
+      v-model="formProvide.formObj['typeInput']"
+      :rules="[...h_validator.noEmpty(), ...h_validator.typeInputRules()]"
+    />
+
     <!-- 配置名称 -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>配置名称</label>
@@ -54,39 +49,31 @@
       </v-radio-group>
     </v-col>
     <!-- nameInput -->
-    <v-col v-if="formProvide.formObj['name'] === '其他'" cols="12" class="d-flex">
-      <label class="label mr-2"></label>
-      <v-text-field
-        v-model="formProvide.formObj['nameInput']"
-        outlined
-        dense
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty(), ...h_validator.nameInputRules()]"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
+    <HSimpleInput
+      v-if="formProvide.formObj['name'] === '其他'"
+      :required="false"
+      v-model="formProvide.formObj['nameInput']"
+      :rules="[...h_validator.noEmpty(), ...h_validator.nameInputRules()]"
+    />
+
     <!-- 配置属性 -->
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>配置属性</label>
-      <v-text-field
-        v-model="formProvide.formObj['value']"
-        outlined
-        dense
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty('配置属性'), ...h_validator.valueRules()]"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
+    <HSimpleInput
+      v-model="formProvide.formObj['value']"
+      :description="`配置属性`"
+      :rules="[...h_validator.noEmpty('配置属性'), ...h_validator.valueRules()]"
+    />
   </v-row>
 </template>
 <script lang="ts">
 import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
-
-@Component({})
+import HSimpleInput from '@/components/h-simple-input.vue'
+@Component({
+  components: {
+    HSimpleInput
+  }
+})
 @Validator(['typeInputRules', 'nameInputRules', 'valueRules', 'noEmpty'])
 export default class CreateConfigureDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue

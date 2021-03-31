@@ -1,31 +1,21 @@
 <template>
   <v-row no-gutters>
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>用户名</label>
-      <v-text-field
-        v-model="formProvide.formObj['loginName']"
-        :disabled="formProvide.formObj.canNotEdit"
-        outlined
-        dense
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty('用户名'), ...noRepeat]"
-        @input="loginNameNoRepeat"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
-    <v-col v-if="!formProvide.formObj.canNotEdit" cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>密码</label>
-      <v-text-field
-        v-model="formProvide.formObj['loginPwd']"
-        outlined
-        dense
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty('密码')]"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
+    <!-- 用户名 -->
+    <HSimpleInput
+      v-model="formProvide.formObj['loginName']"
+      :disabled="formProvide.formObj.canNotEdit"
+      :rules="[...h_validator.noEmpty('用户名'), ...noRepeat]"
+      @input="loginNameNoRepeat"
+      :description="`用户名`"
+    />
+    <!-- 密码 -->
+    <HSimpleInput
+      v-if="!formProvide.formObj.canNotEdit"
+      v-model="formProvide.formObj['loginPwd']"
+      :rules="[...h_validator.noEmpty('密码')]"
+      :description="`密码`"
+    />
+
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>用户类型</label>
       <v-select
@@ -33,6 +23,7 @@
         outlined
         dense
         height="34"
+        :loading="userRoots.length === 0"
         label="请选择用户类型"
         :items="userRoots"
         :rules="[...h_validator.noEmpty('用户类型')]"
@@ -58,6 +49,7 @@
         v-model="formProvide.formObj['systemName']"
         outlined
         dense
+        :loading="userRoots.length === 0"
         height="34"
         label="请选择系统名称"
         :items="systemNames"
@@ -74,9 +66,13 @@ import http from '@/decorator/httpDecorator'
 import { returnType } from '@/type/http-request.type'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
-
+import HSimpleInput from '@/components/h-simple-input.vue'
 @http
-@Component({})
+@Component({
+  components: {
+    HSimpleInput
+  }
+})
 @Validator(['noEmpty'])
 export default class userDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue

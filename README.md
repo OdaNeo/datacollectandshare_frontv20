@@ -75,7 +75,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 49. HConfirm 重构
 50. 刷新logout 会重置session?
 51. H_Vue 类型修改
-52. 主题名创建重复
+52. 主题名创建重复bug fix
+53. ~~button 添加loading（附加信息）~~
+54. Body示例整合？
 
 ## 常见问题
 

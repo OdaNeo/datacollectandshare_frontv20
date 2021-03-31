@@ -1,24 +1,18 @@
 <template>
   <v-row no-gutters>
     <!-- 主题 -->
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>主题名称</label>
-      <v-text-field
-        v-model="formProvide.formObj['topicName']"
-        :disabled="formProvide.formObj.canNotEdit"
-        outlined
-        dense
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
-        v-topicNameNoRepeat="{
-          set: n => {
-            noRepeat = [...n]
-          }
-        }"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
+    <HSimpleInput
+      v-model="formProvide.formObj['topicName']"
+      :description="`主题名称`"
+      :disabled="formProvide.formObj.canNotEdit"
+      :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
+      v-topicNameNoRepeat="{
+        set: n => {
+          noRepeat = [...n]
+        }
+      }"
+    />
+
     <!--AuthorizationObj  -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2">Authorization</label>
@@ -53,19 +47,12 @@
       </div>
     </v-col>
     <!-- url -->
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>URL</label>
-      <v-text-field
-        v-model="formProvide.formObj['url']"
-        :disabled="formProvide.formObj.canNotEdit"
-        outlined
-        dense
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty('URL')]"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
+    <HSimpleInput
+      v-model="formProvide.formObj['url']"
+      :description="`URL`"
+      :disabled="formProvide.formObj.canNotEdit"
+      :rules="[...h_validator.noEmpty('URL')]"
+    />
     <!--请求类型-->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>请求类型</label>
@@ -242,8 +229,12 @@ import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import { mdiPlus, mdiMinus } from '@mdi/js'
-
-@Component
+import HSimpleInput from '@/components/h-simple-input.vue'
+@Component({
+  components: {
+    HSimpleInput
+  }
+})
 @Validator(['noEmpty', 'isJSON', 'topicNameFormatter'])
 export default class CreateServePull extends Vue {
   @Inject() private readonly formProvide!: H_Vue

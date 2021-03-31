@@ -14,23 +14,19 @@
         <!-- 主题名称 -->
         <v-row no-gutters>
           <!-- 1 -->
-          <v-col cols="12" class="d-flex mt-6">
-            <label class="label mr-2"><span class="require-span">*</span>主题名称</label>
-            <v-text-field
-              v-model="formProvide.formObj['topicName']"
-              :disabled="formProvide.formObj.canNotEdit"
-              outlined
-              dense
-              height="34"
-              :rules="[...h_validator.noEmpty('主题名称'), ...noRepeat]"
-              class="ml-4 mr-15"
-              v-topicNameNoRepeat="{
-                set: n => {
-                  noRepeat = [...n]
-                }
-              }"
-            ></v-text-field>
-          </v-col>
+
+          <HSimpleInput
+            class="mt-5"
+            v-model="formProvide.formObj['topicName']"
+            :disabled="formProvide.formObj.canNotEdit"
+            :description="`主题名称`"
+            :rules="[...h_validator.noEmpty('主题名称'), ...noRepeat]"
+            v-topicNameNoRepeat="{
+              set: n => {
+                noRepeat = [...n]
+              }
+            }"
+          />
           <!-- cron -->
           <v-col cols="12" class="d-flex">
             <label class="label mr-2"><span class="require-span">*</span>每日运行周期</label>
@@ -99,18 +95,12 @@
           </v-col>
           <!-- 读要求 -->
           <!-- mysql-->
-          <v-col cols="12" class="d-flex">
-            <label class="label mr-2"><span class="require-span">*</span>数据库url</label>
-            <v-text-field
-              outlined
-              dense
-              height="34"
-              label="数据库url"
-              :rules="[...h_validator.noEmpty('数据库url')]"
-              v-model="formProvide.formObj['reader_jdbcUrl']"
-              class="ml-4 mr-15"
-            ></v-text-field>
-          </v-col>
+          <HSimpleInput
+            v-model="formProvide.formObj['reader_jdbcUrl']"
+            :description="`数据库url`"
+            :rules="[...h_validator.noEmpty('数据库url')]"
+          />
+
           <v-col cols="12" class="d-flex">
             <label class="label mr-2"><span class="require-span">*</span>数据库信息</label>
             <v-text-field
@@ -246,30 +236,18 @@
         <v-row no-gutters>
           <!-- 3 -->
           <!-- 写要求  -->
-          <v-col cols="12" class="d-flex mt-6">
-            <label class="label mr-2" style="font-size: 14px"><span class="require-span">*</span>zookeeper地址</label>
-            <v-text-field
-              outlined
-              dense
-              height="34"
-              label="zookeeper地址"
-              :rules="[...h_validator.noEmpty('zookeeper地址')]"
-              v-model="formProvide.formObj['writer_zookeeper_url']"
-              class="ml-4 mr-15"
-            ></v-text-field>
-          </v-col>
-          <v-col cols="12" class="d-flex">
-            <label class="label mr-2"><span class="require-span">*</span>表名</label>
-            <v-text-field
-              outlined
-              dense
-              height="34"
-              label="表名"
-              :rules="[...h_validator.noEmpty('表名')]"
-              v-model="formProvide.formObj['writer_table']"
-              class="ml-4 mr-15"
-            ></v-text-field>
-          </v-col>
+          <HSimpleInput
+            class="mt-6"
+            v-model="formProvide.formObj['writer_zookeeper_url']"
+            :description="`zookeeper地址`"
+            :rules="[...h_validator.noEmpty('zookeeper地址')]"
+          />
+
+          <HSimpleInput
+            v-model="formProvide.formObj['writer_table']"
+            :description="`表名`"
+            :rules="[...h_validator.noEmpty('表名')]"
+          />
         </v-row>
       </v-window-item>
     </v-window>
@@ -280,8 +258,13 @@ import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import { mdiChevronRight, mdiChevronLeft, mdiPlus, mdiMinus, mdiChevronUp } from '@mdi/js'
+import HSimpleInput from '@/components/h-simple-input.vue'
 
-@Component({})
+@Component({
+  components: {
+    HSimpleInput
+  }
+})
 @Validator(['noEmpty'])
 export default class CreateTransactionalData extends Vue {
   @Inject() private readonly formProvide!: H_Vue

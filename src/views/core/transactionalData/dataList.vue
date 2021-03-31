@@ -30,7 +30,16 @@
         >
           创建事务主题
         </v-btn>
-        <v-btn color="primary" width="100px" height="35px" depressed class="mr-6" small dark @click="uploadSQL"
+        <v-btn
+          color="primary"
+          width="100px"
+          height="35px"
+          :loading="uploadBtnLoading"
+          depressed
+          class="mr-6"
+          small
+          dark
+          @click="uploadSQL"
           >上传SQL文件</v-btn
         >
       </v-col>
@@ -179,14 +188,13 @@ export default class transactionalDataList extends Vue {
     topicInterFaceType: 0
   }
 
-  private sqlTimer = 0
-
-  // '文件存储成功/n临时数据库创建成功/nsql文件执行成功/n准备处理表:topicinfo/n查询出表:topicinfo有:126条数据/n开始异步存储表:topicinfo数据至es。。。/n准备处理表:url_topic_info/n查询出表:url_topic_info有:6条数据/n开始异步存储表:url_topic_info数据至es。。。/nsql数据查询完毕，异步导入es中。。。'
   private rowJson = ''
   private str = ''
   private sqlFile: File | null = null
   private sqlForms = new FormData()
   private SQLLoading = false
+  private sqlTimer = 0
+  private uploadBtnLoading = false
 
   private desserts: Array<topicTable> = [] // 数据列表
   private loading = true
@@ -407,13 +415,22 @@ export default class transactionalDataList extends Vue {
   }
 
   // 上传SQl文件
-  private uploadSQL() {
-    this.fDialogFlag = true
-    this.dialogFlag = 2
-    this.formProvide.btnName = ['立即上传']
-    this.formProvide.title = '上传SQL文件'
-    this.formProvide.methodName = 'uploadSQLFile'
-    this.formProvide.formObj = {}
+  private async uploadSQL() {
+    // 查询当前是否有任务在执行
+    this.uploadBtnLoading = true
+    const { data } = await this.h_request.httpGET('GET_TOPICS_CHECKUSERUPLOADTASKSTATUS', {})
+    this.uploadBtnLoading = false
+
+    if (data === true) {
+      this.fDialogFlag = true
+      this.dialogFlag = 2
+      this.formProvide.btnName = ['立即上传']
+      this.formProvide.title = '上传SQL文件'
+      this.formProvide.methodName = 'uploadSQLFile'
+      this.formProvide.formObj = {}
+    } else if (data === false) {
+      this.h_utils['alertUtil'].open('当前用户已有任务在后台运行，请稍候', true, 'error')
+    }
   }
 
   private async uploadSQLFile() {
