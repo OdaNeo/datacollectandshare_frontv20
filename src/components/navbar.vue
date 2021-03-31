@@ -58,7 +58,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { rootStoreModule } from '../store/modules/root'
 import { Route } from 'vue-router'
-import { userRootType } from '@/type/vuex.type.ts'
+import { userRootType } from '@/type/vuex.type'
 
 @Component
 export default class NavBar extends Vue {

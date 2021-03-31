@@ -1,22 +1,10 @@
 # tctdatacenter
 
-## Project setup
-
-```bash
-npm install
-```
-
-### Compiles and hot-reloads for development
-
-```bash
-npm run serve
-```
-
-### Compiles and minifies for production
-
-```bash
+## 生产环境
 npm run build
-```
+
+## 测试预发布环境staging， 后端接口需要配置
+npm run staging
 
 ### Customize configuration
 
@@ -32,8 +20,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 2. ~~cmdList videoList 页面创建主题代码重构 1 天 !~~
 3. http 接口是否可用 1 天 !
 4. ~~所有删除按钮添加弹框提示，打包 bundle 文件大小优化 1 天~~
-5. ~~eslint（代码风格、缩进）~~、自动部署、版本控制、线上查看版本添加 ? 天
+5. ~~eslint（代码风格、缩进、自动部署、版本控制、线上查看版本添加 ? 天~~
 6. ~~解耦 formobj~~
-7. ~~form 结构
-   dialog(v-modal, prop(title,btn), form-slots(for headers-form), auto renew provider/reject, dynamic create form/provider)~~
+7. ~~form 结构 dialog(v-modal, prop(title,btn), form-slots(for headers-form), auto renew provider/reject, dynamic create form/provider)~~
 8. ~~统一非空校验~~

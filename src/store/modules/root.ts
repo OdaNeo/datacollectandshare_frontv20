@@ -2,7 +2,7 @@ import { Module, VuexModule, Mutation, Action, getModule } from 'vuex-module-dec
 import store from '@/store'
 import { returnDataType } from '../../type/http-request.type'
 import { userRootType, userMessageType } from '../../type/vuex.type'
-import { NAV_BAR_ITEM_LIST_ALL } from '@/config'
+import { NAV_BAR_ITEM_LIST_ALL } from '../../../config'
 
 type UserStateType = {
   username: string // 用户名称

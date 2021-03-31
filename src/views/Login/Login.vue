@@ -43,7 +43,7 @@ import { rootStoreModule } from '@/store/modules/root'
 import http from '@/decorator/httpDecorator'
 import { returnDataType } from '@/type/http-request.type'
 import { userAndPassType } from '@/type/login.type'
-import { PROJECT_TITLE } from '@/config'
+import { PROJECT_TITLE } from '../../../config'
 @Component
 @http
 export default class Login extends Vue {

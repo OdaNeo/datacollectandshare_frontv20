@@ -148,12 +148,12 @@ import { TopicAdd } from '@/type/topic-add.type'
 import TopicAncilaryInformationDialog from './childComponent/topicAncilaryInformationDialog.vue'
 import util from '@/decorator/utilsDecorator'
 import alertUtil from '@/utils/alertUtil'
-import { dataType } from '@/enum/topic-datatype-enum.ts'
-import { topicInterFaceType } from '@/enum/topic-interfacetype-enum.ts'
+import { dataType } from '@/enum/topic-datatype-enum'
+import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import axios from 'axios'
 import { rootStoreModule } from '@/store/modules/root'
 import XLSX from 'xlsx'
-import { VUE_APP_BASE_API } from '@/config'
+import { VUE_APP_BASE_API } from '../../../../config'
 
 @Component({
   components: {
