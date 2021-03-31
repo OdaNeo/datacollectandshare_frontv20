@@ -24,7 +24,7 @@ export const VUE_APP_BASE_API = process.env.VUE_APP_NINJA_CAT
 export const BASE_REQUEST_TIME_OUT = 60000
 
 export const PROJECT_TITLE = process.env.VUE_APP_NINJA_CAT
-  ? `当前服务器地址${VUE_APP_BASE_API}，页面上次更新${new Date()}`
+  ? `${VUE_APP_BASE_API}，最近更新${new Date()}`
   : '交控科技天枢平台数据采集管理中心'
 
 // rgb 0,21,41
