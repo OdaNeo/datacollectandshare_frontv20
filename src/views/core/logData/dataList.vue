@@ -1,26 +1,17 @@
 <template>
   <div id="LogDataList">
     <v-row>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入查找的日志主题ID"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchTopic"
-          @keyup.enter="searchTopic"
-          @click:clear="tabChange(tab)"
-          v-model="queryTopicID"
-          v-only-num
-        >
-        </v-text-field>
-      </v-col>
-      <v-col cols="9">
-        <v-btn color="primary" height="35px" depressed class="mr-6" small dark @click="createLogTopic()"
-          >创建日志主题</v-btn
-        >
+      <HSearch
+        v-model="queryTopicID"
+        pl
+        placeholder="请输入查找的日志主题ID"
+        @append="searchTopic"
+        @enter="searchTopic"
+        @clear="tabChange(tab)"
+        v-only-num
+      />
+      <v-col>
+        <v-btn color="primary" depressed class="mr-6" small dark @click="createLogTopic()">创建日志主题</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -84,6 +75,8 @@ import CreateLogTopic from './childComponent/createLogTopic.vue'
 import LogDataDialog from './childComponent/logDataDialog.vue'
 import HConfirm from '@/components/h-confirm.vue'
 import { mdiMagnify } from '@mdi/js'
+import HSearch from '@/components/h-search.vue'
+
 @Component({
   components: {
     HConfirm,
@@ -91,7 +84,8 @@ import { mdiMagnify } from '@mdi/js'
     FDialog,
     CreateLogTopic,
     LogDataDialog,
-    TDialog
+    TDialog,
+    HSearch
   }
 })
 @http

@@ -1,24 +1,16 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入查找的非结构化主题ID"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchVideoTopic"
-          @keyup.enter="searchVideoTopic"
-          @click:clear="tabChange(tab)"
-          v-model="queryVideoTopicID"
-          v-only-num
-        >
-        </v-text-field>
-      </v-col>
-      <v-col cols="9">
-        <v-btn color="primary" height="35px" depressed dark small @click.stop="createTopicVideo">创建视频主题</v-btn>
+      <HSearch
+        v-model="queryVideoTopicID"
+        v-only-num
+        placeholder="请输入查找的视频主题ID"
+        @append="searchVideoTopic"
+        @enter="searchVideoTopic"
+        @clear="tabChange(tab)"
+      />
+      <v-col>
+        <v-btn color="primary" depressed dark small @click.stop="createTopicVideo">创建视频主题</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -81,12 +73,12 @@ import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
 import { dataType } from '@/enum/topic-datatype-enum'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
-
 import FDialog from '@/components/f-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicTable } from '@/type/topic.type'
 import { tableHeaderType } from '@/type/table.type'
 import { mdiMagnify } from '@mdi/js'
+import HSearch from '@/components/h-search.vue'
 
 @Component({
   components: {
@@ -95,7 +87,8 @@ import { mdiMagnify } from '@mdi/js'
     CreateVideoTopicDialog,
     VideoPopup,
     SetDateRange,
-    FDialog
+    FDialog,
+    HSearch
   }
 })
 @http

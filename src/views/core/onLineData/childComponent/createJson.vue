@@ -3,7 +3,6 @@
     <!-- 主题名称 -->
     <HSimpleInput
       v-model="formProvide.formObj['topicName']"
-      :disabled="formProvide.formObj.canNotEdit"
       :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
       :description="`主题名称`"
       v-topicNameNoRepeat="{
@@ -13,58 +12,29 @@
       }"
     />
     <!-- 消息类型 -->
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>消息类型</label>
-      <v-radio-group
-        v-model="formProvide.formObj['queneType']"
-        :disabled="formProvide.formObj.canNotEdit"
-        row
-        dense
-        height="34"
-        :rules="[...h_validator.noEmpty('消息类型')]"
-        class="ml-4 my-0 pt-0 flex-grow-1"
-      >
-        <v-radio v-for="n in queneTypeItem" :key="n.value" :label="`${n.text}`" :value="n.value"></v-radio>
-      </v-radio-group>
-    </v-col>
+    <HRadioGroup
+      :description="`消息类型`"
+      v-model="formProvide.formObj['queneType']"
+      :rules="[...h_validator.noEmpty('消息类型')]"
+      :items="queneTypeItem"
+    />
+
     <!-- 内存过期时间 -->
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2">内存过期时间</label>
-      <v-slider
-        v-model="formProvide.formObj['redisTimer']"
-        :disabled="formProvide.formObj.canNotEdit"
-        class="align-center ml-4 mb-4 mr-15"
-        :max="30"
-        :min="5"
-        hide-details
-        :thumb-size="20"
-        thumb-label="always"
-        ><template v-slot:append>
-          <v-text-field
-            v-model="formProvide.formObj['redisTimer']"
-            class="mt-0 pt-0"
-            hide-details
-            dense
-            disabled
-            single-line
-            style="width: 30px"
-          ></v-text-field>
-        </template>
-      </v-slider>
-    </v-col>
+    <HSlider
+      v-model="formProvide.formObj['redisTimer']"
+      :description="`内存过期时间`"
+      :max="30"
+      :min="5"
+      :required="false"
+    />
+
     <!-- 数据结构 -->
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>数据结构</label>
-      <v-textarea
-        v-model="formProvide.formObj['dataStructSchema']"
-        outlined
-        auto-grow
-        rows="3"
-        :disabled="formProvide.formObj.canNotEdit"
-        :rules="[...h_validator.noEmpty('数据结构'), ...h_validator.isJSON()]"
-        class="ml-4 mr-15"
-      ></v-textarea>
-    </v-col>
+    <HTextArea
+      v-model="formProvide.formObj['dataStructSchema']"
+      :description="`数据结构`"
+      :rules="[...h_validator.noEmpty('数据结构'), ...h_validator.isJSON()]"
+    />
+
     <!--  -->
     <v-col cols="12" class="d-flex mb-6">
       <label class="label mr-6">数据发送示例</label>
@@ -94,9 +64,16 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import HSimpleInput from '@/components/h-simple-input.vue'
+import HSlider from '@/components/h-slider.vue'
+import HRadioGroup from '@/components/h-radio-group.vue'
+import HTextArea from '@/components/h-textarea.vue'
+
 @Component({
   components: {
-    HSimpleInput
+    HSimpleInput,
+    HSlider,
+    HRadioGroup,
+    HTextArea
   }
 })
 @Validator(['noEmpty', 'isJSON', 'topicNameFormatter'])

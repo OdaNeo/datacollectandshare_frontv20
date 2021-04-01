@@ -1,28 +1,20 @@
 <template>
   <div id="systemConfig">
     <v-row>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入查找的配置名称"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchSystem"
-          @keyup.enter="searchSystem"
-          @click:clear="
-            searchMethod(false, {
-              pageSize: pageSize,
-              pageNum: pageNum
-            })
-          "
-          v-model.trim="querySystemName"
-        >
-        </v-text-field>
-      </v-col>
+      <HSearch
+        v-model="querySystemName"
+        placeholder="请输入查找的配置名称"
+        @append="searchSystem"
+        @enter="searchSystem"
+        @clear="
+          searchMethod(false, {
+            pageSize: pageSize,
+            pageNum: pageNum
+          })
+        "
+      />
       <v-col>
-        <v-btn height="35px" color="primary" depressed small dark @click.stop="addConfigure">添加配置</v-btn>
+        <v-btn color="primary" depressed small dark @click.stop="addConfigure">添加配置</v-btn>
       </v-col>
     </v-row>
     <h-table
@@ -67,13 +59,15 @@ import util from '@/decorator/utilsDecorator'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicTable } from '@/type/topic.type'
 import { mdiMagnify } from '@mdi/js'
+import HSearch from '@/components/h-search.vue'
 
 @Component({
   components: {
     HTable,
     FDialog,
     CreateConfigureDialog,
-    HConfirm
+    HConfirm,
+    HSearch
   }
 })
 @http

@@ -104,9 +104,6 @@ export default class TopBar extends Vue {
     })
   }
   private handleNavRouter() {
-    if (this.$route.fullPath === '/statePage/welcome') {
-      return
-    }
     this.$router.push('/statePage/welcome')
   }
 }

@@ -8,7 +8,10 @@
           <v-icon size="20">{{ mdiClose }}</v-icon>
         </v-btn>
       </v-card-title>
-      <v-divider></v-divider>
+      <!-- 分割线 -->
+      <v-divider style="padding-bottom: 1px" v-if="!loading"></v-divider>
+      <!-- 进度条 -->
+      <v-progress-linear v-else color="primary" indeterminate height="2"></v-progress-linear>
       <v-card-text class="pb-0 mt-4 pb-6">
         <v-container class="pb-1">
           <slot />
@@ -18,12 +21,13 @@
   </v-dialog>
 </template>
 <script lang="ts">
-import { Component, Vue, Model, Inject } from 'vue-property-decorator'
+import { Component, Vue, Model, Inject, Prop } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import { mdiClose } from '@mdi/js'
 
 @Component
 export default class TDialog extends Vue {
+  @Prop({ default: false }) private loading!: boolean
   @Model('tdialog') private checked!: boolean
   @Inject() private readonly formProvide!: H_Vue
   private mdiClose = mdiClose

@@ -1,23 +1,15 @@
 <template>
   <div id="resources">
     <v-row>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入查找的权限名称"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchResources"
-          @keyup.enter="searchResources"
-          @click:clear="searchMethod(false)"
-          v-model.trim="queryResourcesName"
-        >
-        </v-text-field>
-      </v-col>
-      <v-col cols="9">
-        <v-btn height="35px" color="primary" depressed small dark @click.stop="addItem">添加权限</v-btn>
+      <HSearch
+        v-model="queryResourcesName"
+        placeholder="请输入查找的权限名称"
+        @append="searchResources"
+        @enter="searchResources"
+        @clear="searchMethod(false)"
+      />
+      <v-col>
+        <v-btn color="primary" depressed small dark @click.stop="addItem">添加权限</v-btn>
       </v-col>
     </v-row>
     <h-table :headers="headers" :desserts="desserts" :loading="loading">
@@ -53,13 +45,15 @@ import HConfirm from '@/components/h-confirm.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicTable } from '@/type/topic.type'
 import { mdiMagnify } from '@mdi/js'
+import HSearch from '@/components/h-search.vue'
 
 @Component({
   components: {
     HTable,
     FDialog,
     ResourcesDialog,
-    HConfirm
+    HConfirm,
+    HSearch
   }
 })
 @http

@@ -1,4 +1,5 @@
 // VUE_APP_BASE_API = 'http://192.168.56.158:8070'
+// VUE_APP_BASE_API = 'http://192.168.58.0:8080'
 // 3.0
 // VUE_APP_BASE_API = 'http://172.51.216.106:49090'
 // ali
@@ -9,6 +10,7 @@
 // VUE_APP_BASE_API = 'http://8.131.247.200:49090'
 // 2.0
 // VUE_APP_BASE_API = 'http://172.51.216.106:9002'
+
 // staging 环境下用户可以自定义后端服务IP及端口
 if (process.env.VUE_APP_NINJA_CAT && !sessionStorage.getItem('staging')) {
   const _url = window.prompt('staging')

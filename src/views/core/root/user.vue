@@ -1,28 +1,20 @@
 <template>
   <div id="user">
     <v-row>
-      <v-col cols="3">
-        <v-text-field
-          v-model="queryUserName"
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入查找的账号名称"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchUserList"
-          @keyup.enter="searchUserList"
-          @click:clear="
-            searchMethod(false, {
-              pageSize: pageSize,
-              pageNum: pageNum
-            })
-          "
-        >
-        </v-text-field>
-      </v-col>
-      <v-col cols="9">
-        <v-btn color="primary" height="35px" depressed small dark @click.stop="addItem">添加用户</v-btn>
+      <HSearch
+        v-model="queryUserName"
+        placeholder="请输入查找的账号名称"
+        @append="searchUserList"
+        @enter="searchUserList"
+        @clear="
+          searchMethod(false, {
+            pageSize: pageSize,
+            pageNum: pageNum
+          })
+        "
+      />
+      <v-col>
+        <v-btn color="primary" depressed small dark @click.stop="addItem">添加用户</v-btn>
       </v-col>
     </v-row>
 
@@ -61,13 +53,15 @@ import UserDialog from './childComponent/userDialog.vue'
 import FDialog from '@/components/f-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import HTable from '@/components/h-table.vue'
+import HSearch from '@/components/h-search.vue'
 import { mdiMagnify } from '@mdi/js'
 
 @Component({
   components: {
     UserDialog,
     FDialog,
-    HTable
+    HTable,
+    HSearch
   }
 })
 @http

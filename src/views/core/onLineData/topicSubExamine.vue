@@ -1,26 +1,18 @@
 <template>
   <div id="topicSubExamine">
     <v-row>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入要查询的订阅用户名"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchExamine"
-          @keyup.enter="searchExamine"
-          @click:clear="
-            searchMethod(true, {
-              pageSize: pageSize,
-              pageNum: pageNum
-            })
-          "
-          v-model.trim="queryExamineUser"
-        >
-        </v-text-field>
-      </v-col>
+      <HSearch
+        v-model="queryExamineUser"
+        placeholder="请输入要查询的订阅用户名"
+        @append="searchExamine"
+        @enter="searchExamine"
+        @clear="
+          searchMethod(true, {
+            pageSize: pageSize,
+            pageNum: pageNum
+          })
+        "
+      />
     </v-row>
     <h-table
       :headers="headers"
@@ -56,12 +48,13 @@ import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import { mdiMagnify } from '@mdi/js'
-
+import HSearch from '@/components/h-search.vue'
 @Component({
   components: {
     HTable,
     TDialog,
-    DataStructureDialog
+    DataStructureDialog,
+    HSearch
   }
 })
 @http

@@ -8,6 +8,7 @@
       @input="loginNameNoRepeat"
       :description="`用户名`"
     />
+
     <!-- 密码 -->
     <HSimpleInput
       v-if="!formProvide.formObj.canNotEdit"
@@ -16,47 +17,33 @@
       :description="`密码`"
     />
 
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>用户类型</label>
-      <v-select
-        v-model="formProvide.formObj['userType']"
-        outlined
-        dense
-        height="34"
-        :loading="userRoots.length === 0"
-        label="请选择用户类型"
-        :items="userRoots"
-        :rules="[...h_validator.noEmpty('用户类型')]"
-        class="ml-4 my-0 mr-15"
-      ></v-select>
-    </v-col>
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>用户状态</label>
-      <v-radio-group
-        v-model="formProvide.formObj['userState']"
-        row
-        dense
-        height="34"
-        :rules="[...h_validator.noEmpty('用户状态')]"
-        class="ml-4 my-0 pt-0 flex-grow-1 mr-15"
-      >
-        <v-radio v-for="n in userStates" :key="n.value" :label="`${n.text}`" :value="n.value"></v-radio>
-      </v-radio-group>
-    </v-col>
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>系统名称</label>
-      <v-select
-        v-model="formProvide.formObj['systemName']"
-        outlined
-        dense
-        :loading="userRoots.length === 0"
-        height="34"
-        label="请选择系统名称"
-        :items="systemNames"
-        :rules="[...h_validator.noEmpty('系统名称')]"
-        class="ml-4 my-0 mr-15"
-      ></v-select>
-    </v-col>
+    <!-- 用户类型 -->
+    <HSelect
+      :description="`用户类型`"
+      placeholder="请选择用户类型"
+      :loading="userRoots.length === 0"
+      v-model="formProvide.formObj['userType']"
+      :rules="[...h_validator.noEmpty('用户类型')]"
+      :items="userRoots"
+    />
+
+    <!-- 用户状态 -->
+    <HRadioGroup
+      :description="`用户状态`"
+      v-model="formProvide.formObj['userState']"
+      :rules="[...h_validator.noEmpty('用户状态')]"
+      :items="userStates"
+    />
+
+    <!-- 系统名称 -->
+    <HSelect
+      :description="`系统名称`"
+      placeholder="请选择系统名称"
+      :loading="systemNames.length === 0"
+      v-model="formProvide.formObj['systemName']"
+      :rules="[...h_validator.noEmpty('系统名称')]"
+      :items="systemNames"
+    />
   </v-row>
 </template>
 <script lang="ts">
@@ -67,10 +54,14 @@ import { returnType } from '@/type/http-request.type'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import HSimpleInput from '@/components/h-simple-input.vue'
+import HRadioGroup from '@/components/h-radio-group.vue'
+import HSelect from '@/components/h-select.vue'
 @http
 @Component({
   components: {
-    HSimpleInput
+    HSimpleInput,
+    HRadioGroup,
+    HSelect
   }
 })
 @Validator(['noEmpty'])

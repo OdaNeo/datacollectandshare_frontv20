@@ -28,44 +28,29 @@
             }"
           />
           <!-- cron -->
-          <v-col cols="12" class="d-flex">
-            <label class="label mr-2"><span class="require-span">*</span>每日运行周期</label>
-            <v-select
-              v-model="formProvide.formObj['cron']"
-              :items="cronItems"
-              outlined
-              dense
-              height="34"
-              :rules="[...h_validator.noEmpty('运行周期')]"
-              class="ml-4 mr-15"
-            ></v-select>
-          </v-col>
-          <v-col cols="12" class="d-flex">
-            <label class="label mr-2"><span class="require-span">*</span>源数据库类型</label>
-            <v-select
-              :items="readerDatabaseItems"
-              outlined
-              dense
-              height="34"
-              label="源数据库类型"
-              :rules="[...h_validator.noEmpty('源数据库类型')]"
-              v-model="formProvide.formObj['reader_database']"
-              class="ml-4 mr-15"
-            ></v-select>
-          </v-col>
-          <v-col cols="12" class="d-flex">
-            <label class="label mr-2" style="font-size: 14px"><span class="require-span">*</span>目标数据库类型</label>
-            <v-select
-              :items="writerDatabaseItems"
-              outlined
-              dense
-              height="34"
-              label="目标数据库类型"
-              :rules="[...h_validator.noEmpty('目标数据库类型')]"
-              v-model="formProvide.formObj['writer_database']"
-              class="ml-4 mr-15"
-            ></v-select>
-          </v-col>
+          <HSelect
+            :description="`每日运行周期`"
+            v-model="formProvide.formObj['cron']"
+            :rules="[...h_validator.noEmpty('运行周期')]"
+            :items="cronItems"
+          />
+
+          <HSelect
+            :description="`源数据库类型`"
+            placeholder="源数据库类型"
+            v-model="formProvide.formObj['reader_database']"
+            :rules="[...h_validator.noEmpty('源数据库类型')]"
+            :items="readerDatabaseItems"
+          />
+
+          <HSelect
+            :description="`目标数据库类型`"
+            placeholder="目标数据库类型"
+            :fontSize="14"
+            v-model="formProvide.formObj['writer_database']"
+            :rules="[...h_validator.noEmpty('目标数据库类型')]"
+            :items="writerDatabaseItems"
+          />
         </v-row>
       </v-window-item>
 
@@ -78,16 +63,16 @@
             <v-text-field
               outlined
               dense
-              height="34"
-              label="自增属性字段名"
+              height="35"
+              placeholder="自增属性字段名"
               v-model="formProvide.formObj['increment']"
               class="ml-4"
             ></v-text-field>
             <v-text-field
               outlined
               dense
-              height="34"
-              label="自增属性最大值"
+              height="35"
+              placeholder="自增属性最大值"
               v-model="formProvide.formObj['maxValue']"
               v-only-num
               class="ml-2 mr-15"
@@ -106,8 +91,8 @@
             <v-text-field
               outlined
               dense
-              height="34"
-              label="用户名"
+              height="35"
+              placeholder="用户名"
               :rules="[...h_validator.noEmpty('用户名')]"
               v-model="formProvide.formObj['reader_username']"
               class="ml-4"
@@ -115,8 +100,8 @@
             <v-text-field
               outlined
               dense
-              height="34"
-              label="密码"
+              height="35"
+              placeholder="密码"
               :rules="[...h_validator.noEmpty('密码')]"
               v-model="formProvide.formObj['reader_password']"
               class="ml-2"
@@ -124,8 +109,8 @@
             <v-text-field
               outlined
               dense
-              height="34"
-              label="表名"
+              height="35"
+              placeholder="表名"
               :rules="[...h_validator.noEmpty('表名')]"
               v-model="formProvide.formObj['reader_table']"
               class="ml-2 mr-15"
@@ -195,9 +180,9 @@
                             v-model="item.field"
                             dense
                             outlined
-                            label="字段名"
+                            placeholder="字段名"
                             :rules="[...h_validator.noEmpty('字段名'), ...noRepeatKey]"
-                            height="34"
+                            height="35"
                           ></v-text-field>
                         </v-col>
                         <v-col class="mr-2">
@@ -206,9 +191,9 @@
                             :items="typeItems"
                             dense
                             outlined
-                            label="类型"
+                            placeholder="类型"
                             :rules="[...h_validator.noEmpty('类型')]"
-                            height="34"
+                            height="35"
                           ></v-select>
                         </v-col>
                         <v-col class="mr-15">
@@ -216,9 +201,9 @@
                             v-model="item.iskey"
                             dense
                             outlined
-                            label="是否为key"
+                            placeholder="是否为key"
                             :rules="[...h_validator.noEmpty('是否为key')]"
-                            height="34"
+                            height="35"
                             :items="iskeyItems"
                           ></v-select>
                         </v-col>
@@ -259,10 +244,12 @@ import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import { mdiChevronRight, mdiChevronLeft, mdiPlus, mdiMinus, mdiChevronUp } from '@mdi/js'
 import HSimpleInput from '@/components/h-simple-input.vue'
+import HSelect from '@/components/h-select.vue'
 
 @Component({
   components: {
-    HSimpleInput
+    HSimpleInput,
+    HSelect
   }
 })
 @Validator(['noEmpty'])
@@ -389,7 +376,7 @@ export default class CreateTransactionalData extends Vue {
   justify-content: flex-end;
   color: rgba(0, 0, 0, 0.87);
   font-size: 15px;
-  line-height: 34px;
+  line-height: 35px;
   cursor: pointer;
 }
 .step-container {

@@ -1,5 +1,15 @@
 <template>
   <div id="TransactionalDataStatistics">
+    <v-row>
+      <HSearch
+        v-model="currentTopicId"
+        @append="changeQuery"
+        @enter="changeQuery"
+        @clear="clearInput"
+        placeholder="请输入查找的事务主题ID"
+        v-only-num
+      />
+    </v-row>
     <h-table
       :headers="headers"
       :desserts="desserts"
@@ -9,7 +19,7 @@
       :paginationLength="paginationLength"
     >
       <template v-slot:buttons="{ item }">
-        <v-btn text color="primary" @click.stop="offlineLogDetails(item)">查看离线日志详情</v-btn>
+        <v-btn text color="primary" @click="offlineLogDetails(item)">查看离线日志详情</v-btn>
       </template>
     </h-table>
     <!-- 表格显示 -->
@@ -19,7 +29,7 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Provide } from 'vue-property-decorator'
+import { Component, Vue, Provide, Watch } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
 import { topicTable } from '@/type/topic.type'
 import { paramsType, returnType } from '@/type/http-request.type'
@@ -30,11 +40,12 @@ import util from '@/decorator/utilsDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import ContentDetails from './childComponent/contentDetails.vue'
-
+import HSearch from '@/components/h-search.vue'
 @Component({
   components: {
     HTable,
     TDialog,
+    HSearch,
     ContentDetails
   }
 })
@@ -54,10 +65,11 @@ export default class TransactionalDataStatistics extends Vue {
 
   private tDialogFlag = false
   private rowJson = ''
+  private currentTopicId = ''
 
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
-  private pageSize = 20 // 每页展示多少条数据
+  private pageSize = 10 // 每页展示多少条数据
   private desserts: Array<topicTable> = [] // 数据列表
   private loading = true
   private headers = [
@@ -95,38 +107,71 @@ export default class TransactionalDataStatistics extends Vue {
   }
 
   // 查询通用调用方法
-  private async searchMethod(params: paramsType) {
+  private async searchMethod(params: paramsType, topicId: string) {
     this.loading = true
-    params.faceTypes = `${topicInterFaceType['事务数据']}`
-    params.dataType = dataType['结构化']
 
-    const { data }: returnType = await this.h_request['httpGET']<object>('GET_TOPICS_GETOFFLINELOG', params)
-
-    this.desserts = data ? [...data.list] : []
-    this.paginationLength = Math.ceil(data?.['total'] / this.pageSize) || 1
+    if (!topicId) {
+      // 获得全部
+      params.faceTypes = `${topicInterFaceType['事务数据']}`
+      params.dataType = dataType['结构化']
+      const { data }: returnType = await this.h_request['httpGET']<object>('GET_TOPICS_GETOFFLINELOG', params)
+      this.desserts = data ? [...data.list] : []
+      this.paginationLength = Math.ceil(data?.['total'] / this.pageSize) || 1
+    } else {
+      // 按照topicId查询
+      const { data } = await this.h_request['httpGET']('GET_TOPICS_GETOFFLINELOGBYTOPICID', { topicId, num: -1 })
+      this.desserts = data ? [...data.list] : []
+      this.paginationLength = Math.ceil(data?.['total'] / this.pageSize) || 1
+    }
     this.loading = false
+  }
+
+  // 改变query
+  private changeQuery() {
+    // 防止路由重复点击报错
+    this.$router.replace({
+      query: {
+        topicId: this.currentTopicId ? this.currentTopicId : undefined
+      }
+    })
+  }
+
+  // 清空搜索栏
+  private clearInput() {
+    this.$router.replace({
+      query: {
+        topicId: undefined
+      }
+    })
   }
 
   // 分页方法
   private PaginationNow(page: number) {
     this.pageNum = page
-    this.searchMethod({
-      pageSize: this.pageSize,
-      pageNum: this.pageNum
-    })
+    this.searchMethod(
+      {
+        pageSize: this.pageSize,
+        pageNum: this.pageNum
+      },
+      this.$route.query.topicId ? this.$route.query.topicId.toString() : ''
+    )
+  }
+
+  @Watch(`$route.query.topicId`, { immediate: true })
+  private test(val: string) {
+    this.currentTopicId = val
+    this.pageNum = 1
+    this.searchMethod(
+      {
+        pageSize: this.pageSize,
+        pageNum: this.pageNum
+      },
+      val
+    )
   }
 
   created(): void {
-    this.pageNum = 1
-    this.searchMethod({
-      pageSize: this.pageSize,
-      pageNum: this.pageNum
-    })
+    this.currentTopicId = this.$route.query.topicId ? this.$route.query.topicId.toString() : ''
   }
 }
 </script>
-<style>
-#TransactionalDataStatistics {
-  margin-top: 10px;
-}
-</style>

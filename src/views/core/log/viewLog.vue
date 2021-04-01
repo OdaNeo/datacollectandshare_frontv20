@@ -1,18 +1,13 @@
 <template>
   <div id="viewLog">
     <v-row>
-      <v-col cols="2">
-        <v-text-field
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入查找的用户名"
-          clearable
-          :clear-icon="mdiCloseCircleOutline"
-          @click:clear="clickSearch(true)"
-          v-model="queryUserName"
-        ></v-text-field>
-      </v-col>
+      <HSearch
+        :cols="2"
+        v-model="queryUserName"
+        placeholder="请输入用户名"
+        :showAppEnd="false"
+        @clear="clickSearch(true)"
+      />
       <v-col cols="2">
         <h-date-picker
           placeholder="选择查询起始时间"
@@ -30,7 +25,7 @@
         ></h-date-picker>
       </v-col>
       <v-col>
-        <v-btn height="35px" color="primary" small depressed dark @click="clickSearch(false)">查询</v-btn>
+        <v-btn color="primary" small depressed dark @click="clickSearch(false)">查询</v-btn>
       </v-col>
     </v-row>
     <h-table
@@ -52,10 +47,13 @@ import util from '@/decorator/utilsDecorator'
 import HDatePicker from '@/components/h-date-picker.vue'
 import { topicTable } from '@/type/topic.type'
 import { mdiCloseCircleOutline } from '@mdi/js'
+import HSearch from '@/components/h-search.vue'
+
 @Component({
   components: {
     HTable,
-    HDatePicker
+    HDatePicker,
+    HSearch
   }
 })
 @http
@@ -131,6 +129,11 @@ export default class ViewLog extends Vue {
       startTime: this.beginDate ? this.h_utils.timeUtil.timeToStamp(this.beginDate, '-') : null,
       endTime: this.afterDate ? this.h_utils.timeUtil.timeToStamp(this.afterDate, '-') : null
     })
+  }
+
+  //
+  private searchUserName() {
+    console.log(2)
   }
 
   created(): void {

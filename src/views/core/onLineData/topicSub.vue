@@ -1,22 +1,14 @@
 <template>
   <div id="topicSub">
     <v-row>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入查找的主题ID"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchTopic"
-          @keyup.enter="searchTopic"
-          @click:clear="tabChange(tab)"
-          v-model="queryTopicID"
-          v-only-num
-        >
-        </v-text-field>
-      </v-col>
+      <HSearch
+        v-model="queryTopicID"
+        placeholder="请输入查找的主题ID"
+        @append="searchTopic"
+        @enter="searchTopic"
+        @clear="tabChange(tab)"
+        v-only-num
+      />
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
       <v-tab v-for="item in items" :key="item">{{ item }}</v-tab>
@@ -73,12 +65,14 @@ import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import { mdiMagnify } from '@mdi/js'
 import { tableHeaderType } from '@/type/table.type'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
+import HSearch from '@/components/h-search.vue'
 // topicInterFaceType = 1，4，6
 @Component({
   components: {
     HTable,
     TDialog,
-    DataStructureDialog
+    DataStructureDialog,
+    HSearch
   }
 })
 @http

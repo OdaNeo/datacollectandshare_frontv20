@@ -1,40 +1,18 @@
 <template>
   <div id="offLineTopicList">
     <v-row>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入查找的离线主题ID"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchTopic"
-          @keyup.enter="searchTopic"
-          @click:clear="tabChange(tab)"
-          v-model="queryTopicID"
-          v-only-num
-        >
-        </v-text-field>
-      </v-col>
-      <v-col cols="9">
-        <!-- <v-btn
-          color="primary"
-          width="100px"
-          height="35px"
-          depressed
-          class="mr-6"
-          small
-          dark
-          @click="createDataBaseAcquisition()"
-          >数据库采集</v-btn
-        > -->
-        <v-btn color="primary" width="100px" height="35px" depressed class="mr-6" small dark @click="createServePull()"
-          >服务主动拉取</v-btn
-        >
-        <v-btn color="primary" width="100px" height="35px" depressed class="mr-6" small dark @click="pullFTP"
-          >拉取FTP</v-btn
-        >
+      <HSearch
+        v-model="queryTopicID"
+        v-only-num
+        placeholder="请输入查找的离线主题ID"
+        @append="searchTopic"
+        @enter="searchTopic"
+        @clear="tabChange(tab)"
+      />
+      <v-col>
+        <!-- <v-btn color="primary" depressed class="mr-6" small dark @click="createDataBaseAcquisition()">数据库采集</v-btn> -->
+        <v-btn color="primary" depressed class="mr-6" small dark @click="createServePull()">服务主动拉取</v-btn>
+        <v-btn color="primary" depressed class="mr-6" small dark @click="pullFTP">拉取FTP</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -122,7 +100,7 @@ import { FormObj } from '@/type/dialog-form.type'
 import CreateDataBaseAcquisition from './childComponent/createDataBaseAcquisition.vue'
 import CreateServePull from './childComponent/createServePull.vue'
 import PullFTP from './childComponent/pullFTP.vue'
-
+import HSearch from '@/components/h-search.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInformationDialog.vue'
 import { mdiMagnify } from '@mdi/js'
@@ -136,7 +114,8 @@ import { mdiMagnify } from '@mdi/js'
     CreateServePull,
     PullFTP,
     DataStructureDialog,
-    TopicAncillaryInformationDialog
+    TopicAncillaryInformationDialog,
+    HSearch
   }
 })
 @http

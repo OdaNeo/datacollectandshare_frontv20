@@ -1,5 +1,5 @@
 import Vue from 'vue'
-import VueRouter, { RouteConfig } from 'vue-router'
+import VueRouter, { RouteConfig, RawLocation } from 'vue-router'
 import Login from '@/views/Login/Login.vue'
 import StatePage from '@/views/layout/index.vue'
 import {
@@ -17,6 +17,17 @@ import {
 } from '@mdi/js'
 
 Vue.use(VueRouter)
+
+// 解决重复点击报错的问题 push replace
+const VueRouterPush = VueRouter.prototype.push
+const VueRouterReplace = VueRouter.prototype.replace
+
+VueRouter.prototype.push = function push(toLocation: RawLocation) {
+  return (VueRouterPush.call(this, toLocation) as any).catch((err: Error) => err)
+}
+VueRouter.prototype.replace = function push(toLocation: RawLocation) {
+  return (VueRouterReplace.call(this, toLocation) as any).catch((err: Error) => err)
+}
 
 const routes: Array<RouteConfig> = [
   {

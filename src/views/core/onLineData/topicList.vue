@@ -1,32 +1,18 @@
 <template>
   <div id="onLineTopicList">
     <v-row>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入查找的实时主题ID"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchTopic"
-          @keyup.enter="searchTopic"
-          @click:clear="tabChange(tab)"
-          v-model="queryTopicID"
-          v-only-num
-        >
-        </v-text-field>
-      </v-col>
-      <v-col cols="9">
-        <v-btn color="primary" width="100px" height="35px" depressed class="mr-6" small dark @click="createRest()"
-          >创建REST</v-btn
-        >
-        <v-btn color="primary" width="100px" height="35px" depressed class="mr-6" small dark @click="createJson"
-          >创建JSON</v-btn
-        >
-        <v-btn color="primary" width="100px" height="35px" depressed class="mr-6" small dark @click="createProtobuf"
-          >创建PROTO</v-btn
-        >
+      <HSearch
+        v-model="queryTopicID"
+        placeholder="请输入查找的实时主题ID"
+        @append="searchTopic"
+        @enter="searchTopic"
+        @clear="tabChange(tab)"
+        v-only-num
+      />
+      <v-col>
+        <v-btn color="primary" depressed class="mr-6" small dark @click="createRest()">创建REST</v-btn>
+        <v-btn color="primary" depressed class="mr-6" small dark @click="createJson">创建JSON</v-btn>
+        <v-btn color="primary" depressed class="mr-6" small dark @click="createProtobuf">创建PROTO</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -67,7 +53,7 @@
             >
               删除
             </v-btn>
-            <v-btn :disabled="item.topicInterFaceType !== 6" text color="primary" @click.stop="downloadFile(item)"
+            <v-btn :disabled="item.topicInterFaceType !== 6" text color="primary" @click.stop="downloadFile(item.id)"
               >下载</v-btn
             >
             <v-btn text color="primary" @click="getTopicInformation(item, index)">附加信息</v-btn>
@@ -121,7 +107,7 @@ import createJson from './childComponent/createJson.vue'
 
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInformationDialog.vue'
-
+import HSearch from '@/components/h-search.vue'
 import { mdiMagnify } from '@mdi/js'
 
 @Component({
@@ -134,7 +120,8 @@ import { mdiMagnify } from '@mdi/js'
     CreateProtobuf,
     createJson,
     DataStructureDialog,
-    TopicAncillaryInformationDialog
+    TopicAncillaryInformationDialog,
+    HSearch
   }
 })
 @http
@@ -618,12 +605,11 @@ export default class OnlineDataTopicList extends Vue {
   }
 
   // 下载 proto
-  // TODO:下载重构
-  private async downloadFile(item: any) {
+  private async downloadFile(id: number) {
     axios({
       method: 'get',
       url: VUE_APP_BASE_API + GET_TOPICS_PROTOBUFDOWNLOAD,
-      params: { id: item.id },
+      params: { id: id },
       timeout: 500000,
       responseType: 'blob',
       headers: {

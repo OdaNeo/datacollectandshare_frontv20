@@ -1,24 +1,16 @@
 <template>
   <div>
     <v-row>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入查找的命令ID"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchCmd"
-          @keyup.enter="searchCmd"
-          @click:clear="tabChange(tab)"
-          v-model="queryCmdID"
-          v-only-num
-        >
-        </v-text-field>
-      </v-col>
-      <v-col cols="9">
-        <v-btn color="primary" depressed height="35px" small dark @click.stop="createCommend(false)">创建命令</v-btn>
+      <HSearch
+        v-model="queryCmdID"
+        placeholder="请输入查找的命令ID"
+        @append="searchCmd"
+        @enter="searchCmd"
+        @clear="tabChange(tab)"
+        v-only-num
+      />
+      <v-col>
+        <v-btn color="primary" depressed small dark @click.stop="createCommend(false)">创建命令</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -85,6 +77,7 @@ import CmdInformationDialog from './childComponent/cmdInformationDialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import { topicTable } from '@/type/topic.type'
 import { mdiMagnify } from '@mdi/js'
+import HSearch from '@/components/h-search.vue'
 
 @Component({
   components: {
@@ -94,7 +87,8 @@ import { mdiMagnify } from '@mdi/js'
     HConfirm,
     CreateCmdDialog,
     CmdInformationDialog,
-    DataStructureDialog
+    DataStructureDialog,
+    HSearch
   }
 })
 @http

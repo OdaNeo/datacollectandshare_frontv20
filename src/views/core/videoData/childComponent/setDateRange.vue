@@ -1,5 +1,5 @@
 <template>
-  <v-row class="mt-3" no-gutters>
+  <v-row no-gutters>
     <!-- dateRange类型 -->
     <v-col cols="12" class="d-flex justify-space-around">
       <label class="label"><span class="require-span">*</span>起始时间</label>
@@ -20,7 +20,7 @@
             outlined
             dense
             class="mx-4"
-            height="34"
+            height="35"
             v-bind="attrs"
             v-on="on"
           ></v-text-field>
@@ -38,7 +38,7 @@
         class="mx-3"
         dense
         outlined
-        height="34"
+        height="35"
         :items="hours"
       ></v-select>
       <label class="label-end">时</label>
@@ -62,7 +62,7 @@
             dense
             outlined
             class="mx-4"
-            height="34"
+            height="35"
             v-bind="attrs"
             v-on="on"
           ></v-text-field>
@@ -79,7 +79,7 @@
         style="width: 50px"
         class="mx-3"
         dense
-        height="34"
+        height="35"
         outlined
         :items="hours2"
       ></v-select>

@@ -1,31 +1,21 @@
 <template>
   <div id="realTime">
     <v-row no-gutters class="d-flex mx-3">
-      <!-- <v-col cols="2 mr-6">
-        <v-text-field
-          solo
-          dense
-          height="35px"
-          placeholder="请输入查找的主题ID"
-          clearable
-          append-icon="mdi-magnify"
-          v-model="queryTopicID"
-          v-only-num
-        >
-        </v-text-field>
-      </v-col> -->
-      <v-col cols="2">
+      <!-- 搜索 -->
+      <v-col cols="3">
         <v-select
           outlined
           dense
           :items="serverNameCategories"
           clearable
+          :clear-icon="mdiCloseCircleOutline"
           height="35px"
           v-model="queryServerName"
           @change="handleCurrentChange(1)"
           placeholder="请选择作业类别"
         ></v-select>
       </v-col>
+      <!-- 分割 -->
       <v-col class="flex-grow-1"></v-col>
 
       <!--  右上角枚举 -->
@@ -41,6 +31,17 @@
     <div v-if="loading" class="text-center" style="height: 200px; margin-top: 120px">
       <v-progress-circular indeterminate color="primary"></v-progress-circular>
     </div>
+
+    <!-- noData -->
+    <div
+      v-else-if="dataAll.length === 0"
+      class="text-center"
+      id="realTimeNoData"
+      style="height: 200px; margin-top: 120px"
+    >
+      <v-icon color="primary lighten-3">{{ mdiToyBrickRemoveOutline }}</v-icon>
+      <div style="font-size: 14px; margin-top: 5px">查无数据</div>
+    </div>
     <!-- echarts -->
     <div v-else class="charts-container">
       <div class="chart-elements" ref="chartElements" v-for="item in dataAll" :key="item.topicId"></div>
@@ -48,7 +49,7 @@
 
     <!--  分页 -->
     <v-pagination
-      v-if="paginationLength !== 0"
+      v-if="!loading && dataAll.length !== 0 && paginationLength !== 0"
       :length="paginationLength"
       :total-visible="10"
       @input="handleCurrentChange"
@@ -61,7 +62,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import echarts from '@/decorator/echartsDecorator'
 import util from '@/decorator/utilsDecorator'
-
+import { mdiToyBrickRemoveOutline, mdiCloseCircleOutline } from '@mdi/js'
 @echarts
 @Component
 @http
@@ -69,6 +70,8 @@ import util from '@/decorator/utilsDecorator'
 export default class RealTime extends Vue {
   private timer = 0
   private interval = 10
+  private mdiToyBrickRemoveOutline = mdiToyBrickRemoveOutline
+  private mdiCloseCircleOutline = mdiCloseCircleOutline
 
   private timeRange = 10 * 60 * 1000 // 10分钟
   // dom
@@ -429,6 +432,11 @@ export default class RealTime extends Vue {
 #realTime {
   width: 98.5%;
 }
+#realTimeNoData >>> .v-icon__svg {
+  height: 50px !important;
+  width: 50px !important;
+}
+
 .real-time-enum {
   display: inline-block;
   width: 33%;

@@ -33,7 +33,7 @@ input:-internal-autofill-previewed, input:-internal-autofill-selected {
     display: flex;
     justify-content: flex-end;
     color: rgba(0, 0, 0, 0.87);
-    font-size: 15px;
+    font-size: 14px;
     line-height: 34px;
 }
 
@@ -91,10 +91,14 @@ input:-internal-autofill-previewed, input:-internal-autofill-selected {
     margin-top: 6px !important;
 }
 
-/* .v-form .v-text-field--outlined.v-input--dense .v-label {
-    top: 7px !important;
-} */
+.v-input__prepend-inner {
+    margin-top: 6px !important;
+}
 
 .v-pagination__item, .v-pagination__item--active, .v-pagination__navigation {
     box-shadow: 0px 1px 5px 0px rgb(0 0 0 / 12%) !important;
+}
+
+.v-btn.v-btn--has-bg.theme--dark {
+    height: 35px !important;
 }

@@ -1,14 +1,16 @@
 <template>
-  <v-col id="HSearchInput" :cols="cols" class="d-flex">
-    <v-text-field
+  <v-col cols="12" class="HSelect d-flex">
+    <label class="label mr-2"><span v-if="required" class="require-span">*</span>{{ description }}</label>
+    <v-select
       v-bind="$attrs"
       outlined
       dense
       clearable
       :clear-icon="mdiCloseCircleOutline"
       height="35px"
-      @input="$emit('input', $event)"
-    ></v-text-field>
+      class="ml-4 mr-15"
+      @change="$emit('input', $event)"
+    ></v-select>
   </v-col>
 </template>
 <script lang="ts">
@@ -20,8 +22,9 @@ import { mdiCloseCircleOutline } from '@mdi/js'
 @Component({
   inheritAttrs: false
 })
-export default class HSearchInput extends Vue {
-  @Prop({ default: 12 }) private cols!: number
+export default class HSelect extends Vue {
+  @Prop() private description!: string
+  @Prop({ default: true }) private required!: boolean
   private mdiCloseCircleOutline = mdiCloseCircleOutline
 }
 </script>

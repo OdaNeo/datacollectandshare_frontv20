@@ -16,8 +16,15 @@ class RequestData {
     // withCredentials: true
   })
 
-  constructor(headers: Array<headerObj> = [], timeout: number = BASE_REQUEST_TIME_OUT) {
+  private DEFAULT_CONFIG = {
+    timeout: BASE_REQUEST_TIME_OUT
+  }
+
+  constructor(headers: Array<headerObj> = [], otherConfig?: AxiosRequestConfig) {
     this.axiosIns.interceptors.request.use((config: AxiosRequestConfig) => {
+      // 合并用户配置与默认配置
+      config = { ...config, ...this.DEFAULT_CONFIG, ...otherConfig }
+
       if (headers?.length > 0) {
         // 自定义headers
         headers.forEach((header: headerObj) => {
@@ -27,7 +34,7 @@ class RequestData {
         // 默认发token
         config.headers['Authorization'] = rootStoreModule.UserState.token
       }
-      config.timeout = timeout
+
       return config
     })
 
@@ -216,6 +223,9 @@ class RequestData {
         break
       case 405:
         _message = `HTTP_ERROR：${err.code}，错误信息：请求方法错误`
+        break
+      case 408:
+        _message = `HTTP_ERROR：${err.code}，请求超时，请重试`
         break
       case 500:
         _message = `HTTP_ERROR：${err.code}，错误信息：服务器错误`

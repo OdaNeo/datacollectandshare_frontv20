@@ -32,8 +32,8 @@
               v-model="item[ftpItem[0].value]"
               dense
               outlined
-              :label="ftpItem[0].text"
-              height="34"
+              :placeholder="ftpItem[0].text"
+              height="35"
               :rules="[...h_validator.noEmpty('host')]"
             ></v-text-field>
           </v-col>
@@ -42,9 +42,9 @@
               v-model="item[ftpItem[1].value]"
               dense
               outlined
-              :label="ftpItem[1].text"
+              :placeholder="ftpItem[1].text"
               :rules="[...h_validator.noEmpty('post'), ...h_validator.isNumber()]"
-              height="34"
+              height="35"
             ></v-text-field>
           </v-col>
         </v-row>

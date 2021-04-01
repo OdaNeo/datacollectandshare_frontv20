@@ -1,25 +1,13 @@
 <template>
   <v-row no-gutters>
     <!-- 配置类型 -->
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>配置类型</label>
-      <v-radio-group
-        v-model="formProvide.formObj['type']"
-        row
-        dense
-        height="34"
-        :rules="[...h_validator.noEmpty('配置类型')]"
-        class="ml-4 my-0 pt-0 flex-grow-1"
-      >
-        <v-radio
-          v-for="n in types"
-          :key="n.value"
-          :label="`${n.text}`"
-          :value="n.value"
-          :disabled="n.disabled"
-        ></v-radio>
-      </v-radio-group>
-    </v-col>
+    <HRadioGroup
+      :description="`配置类型`"
+      v-model="formProvide.formObj['type']"
+      :rules="[...h_validator.noEmpty('配置类型')]"
+      :items="types"
+    />
+
     <!-- typeInput -->
     <HSimpleInput
       v-if="formProvide.formObj['type'] === '其他'"
@@ -29,25 +17,13 @@
     />
 
     <!-- 配置名称 -->
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>配置名称</label>
-      <v-radio-group
-        v-model="formProvide.formObj['name']"
-        row
-        dense
-        height="34"
-        :rules="[...h_validator.noEmpty('配置名称')]"
-        class="ml-4 my-0 pt-0 flex-grow-1"
-      >
-        <v-radio
-          v-for="n in names"
-          :key="n.value"
-          :label="`${n.text}`"
-          :value="n.value"
-          :disabled="n.disabled"
-        ></v-radio>
-      </v-radio-group>
-    </v-col>
+    <HRadioGroup
+      :description="`配置名称`"
+      v-model="formProvide.formObj['name']"
+      :rules="[...h_validator.noEmpty('配置名称')]"
+      :items="names"
+    />
+
     <!-- nameInput -->
     <HSimpleInput
       v-if="formProvide.formObj['name'] === '其他'"
@@ -69,9 +45,12 @@ import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import HSimpleInput from '@/components/h-simple-input.vue'
+import HRadioGroup from '@/components/h-radio-group.vue'
+
 @Component({
   components: {
-    HSimpleInput
+    HSimpleInput,
+    HRadioGroup
   }
 })
 @Validator(['typeInputRules', 'nameInputRules', 'valueRules', 'noEmpty'])

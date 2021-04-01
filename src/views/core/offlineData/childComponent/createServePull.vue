@@ -29,8 +29,8 @@
               dense
               outlined
               :disabled="formProvide.formObj.canNotEdit"
-              :label="AuthorizationObj[0].text"
-              height="34"
+              :placeholder="AuthorizationObj[0].text"
+              height="35"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -39,8 +39,8 @@
               dense
               :disabled="formProvide.formObj.canNotEdit"
               outlined
-              :label="AuthorizationObj[1].text"
-              height="34"
+              :placeholder="AuthorizationObj[1].text"
+              height="35"
             ></v-text-field>
           </v-col>
         </v-row>
@@ -53,35 +53,25 @@
       :disabled="formProvide.formObj.canNotEdit"
       :rules="[...h_validator.noEmpty('URL')]"
     />
-    <!--请求类型-->
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>请求类型</label>
-      <v-select
-        v-model="formProvide.formObj['type']"
-        outlined
-        dense
-        clearable
-        :disabled="formProvide.formObj.canNotEdit"
-        height="34"
-        label="请选择请求类型"
-        :rules="[...h_validator.noEmpty('请求类型')]"
-        :items="typeItem"
-        class="ml-4 my-0 mr-15"
-      ></v-select>
-    </v-col>
+
+    <!-- 请求类型 -->
+    <HSelect
+      :description="`请求类型`"
+      placeholder="请选择请求类型"
+      :disabled="formProvide.formObj.canNotEdit"
+      v-model="formProvide.formObj['type']"
+      :rules="[...h_validator.noEmpty('请求类型')]"
+      :items="typeItem"
+    />
+
     <!-- body  -->
-    <v-col v-if="formProvide.formObj['type'] === 'post'" cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>body</label>
-      <v-textarea
-        v-model="formProvide.formObj['body']"
-        outlined
-        auto-grow
-        rows="3"
-        :disabled="formProvide.formObj.canNotEdit"
-        :rules="[...h_validator.noEmpty('body'), ...h_validator.isJSON()]"
-        class="ml-4 mr-15"
-      ></v-textarea>
-    </v-col>
+    <HTextArea
+      v-if="formProvide.formObj['type'] === 'post'"
+      v-model="formProvide.formObj['body']"
+      :disabled="formProvide.formObj.canNotEdit"
+      :description="`body`"
+      :rules="[...h_validator.noEmpty('body'), ...h_validator.isJSON()]"
+    />
     <!-- 头信息 -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2">头信息</label>
@@ -98,8 +88,8 @@
               dense
               outlined
               :disabled="formProvide.formObj.canNotEdit"
-              :label="header[0].text"
-              height="34"
+              :placeholder="header[0].text"
+              height="35"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -108,8 +98,8 @@
               dense
               :disabled="formProvide.formObj.canNotEdit"
               outlined
-              :label="header[1].text"
-              height="34"
+              :placeholder="header[1].text"
+              height="35"
             ></v-text-field>
           </v-col>
           <v-col class="d-flex justify-space-around flex-grow-0" style="min-width: 60px">
@@ -162,9 +152,9 @@
               dense
               outlined
               :disabled="item.disabled"
-              label="字段名"
+              placeholder="字段名"
               :rules="[...h_validator.noEmpty('字段名'), ...noRepeatKey]"
-              height="34"
+              height="35"
             ></v-text-field>
           </v-col>
           <v-col class="mr-2">
@@ -173,9 +163,9 @@
               dense
               :disabled="item.disabled"
               outlined
-              label="描述"
+              placeholder="描述"
               :rules="[...h_validator.noEmpty('描述')]"
-              height="34"
+              height="35"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -184,9 +174,9 @@
               dense
               outlined
               :disabled="item.disabled"
-              label="字段类型"
+              placeholder="字段类型"
               :rules="[...h_validator.noEmpty('字段类型')]"
-              height="34"
+              height="35"
               :items="items2"
             ></v-select>
           </v-col>
@@ -230,9 +220,13 @@ import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import { mdiPlus, mdiMinus } from '@mdi/js'
 import HSimpleInput from '@/components/h-simple-input.vue'
+import HTextArea from '@/components/h-textarea.vue'
+import HSelect from '@/components/h-select.vue'
 @Component({
   components: {
-    HSimpleInput
+    HSimpleInput,
+    HTextArea,
+    HSelect
   }
 })
 @Validator(['noEmpty', 'isJSON', 'topicNameFormatter'])

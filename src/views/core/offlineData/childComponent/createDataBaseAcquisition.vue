@@ -1,51 +1,34 @@
 <template>
   <v-row no-gutters>
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>主题名称</label>
-      <v-text-field
-        v-model="formProvide.formObj['topicName']"
-        :disabled="formProvide.formObj.canNotEdit"
-        outlined
-        dense
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty('主题名称'), ...noRepeat]"
-        v-topicNameNoRepeat="{
-          set: n => {
-            noRepeat = [...n]
-          }
-        }"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>数据库地址</label>
-      <v-text-field
-        v-model="formProvide.formObj['dataBaseIp']"
-        :disabled="formProvide.formObj.canNotEdit"
-        outlined
-        dense
-        clearable
-        height="34"
-        :rules="[...h_validator.noEmpty('数据库地址')]"
-        class="ml-4 mr-15"
-      ></v-text-field>
-    </v-col>
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>数据库类型</label>
-      <v-select
-        v-model="formProvide.formObj['dataBaseType']"
-        outlined
-        dense
-        clearable
-        :disabled="formProvide.formObj.canNotEdit"
-        height="34"
-        label="请选择数据库类型"
-        :rules="[...h_validator.noEmpty('数据库类型')]"
-        :items="items"
-        class="ml-4 my-0 mr-15"
-      ></v-select>
-    </v-col>
+    <!-- 主题名称 -->
+    <HSimpleInput
+      v-model="formProvide.formObj['topicName']"
+      :description="`主题名称`"
+      :disabled="formProvide.formObj.canNotEdit"
+      :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
+      v-topicNameNoRepeat="{
+        set: n => {
+          noRepeat = [...n]
+        }
+      }"
+    />
+    <!-- 数据库地址 -->
+    <HSimpleInput
+      v-model="formProvide.formObj['dataBaseIp']"
+      :description="`数据库地址`"
+      :disabled="formProvide.formObj.canNotEdit"
+      :rules="[...h_validator.noEmpty('数据库地址')]"
+    />
+
+    <!-- 数据库类型 -->
+    <HSelect
+      :description="`数据库类型`"
+      placeholder="请选择数据库类型"
+      v-model="formProvide.formObj['dataBaseType']"
+      :rules="[...h_validator.noEmpty('数据库类型')]"
+      :items="items"
+    />
+
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>数据结构</label>
       <div class="ml-4">
@@ -61,9 +44,9 @@
               dense
               outlined
               :disabled="item.disabled"
-              label="字段名"
+              placeholder="字段名"
               :rules="[...h_validator.noEmpty('字段名'), ...noRepeatKey]"
-              height="34"
+              height="35"
             ></v-text-field>
           </v-col>
           <v-col class="mr-2">
@@ -72,9 +55,9 @@
               dense
               :disabled="item.disabled"
               outlined
-              label="描述"
+              placeholder="描述"
               :rules="[...h_validator.noEmpty('描述')]"
-              height="34"
+              height="35"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -83,9 +66,9 @@
               dense
               outlined
               :disabled="item.disabled"
-              label="字段类型"
+              placeholder="字段类型"
               :rules="[...h_validator.noEmpty('字段类型')]"
-              height="34"
+              height="35"
               :items="items2"
             ></v-select>
           </v-col>
@@ -128,8 +111,15 @@ import { Component, Inject, Vue, Watch } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import { mdiPlus, mdiMinus } from '@mdi/js'
+import HSimpleInput from '@/components/h-simple-input.vue'
+import HSelect from '@/components/h-select.vue'
 
-@Component({})
+@Component({
+  components: {
+    HSimpleInput,
+    HSelect
+  }
+})
 @Validator(['topicNameFormatter', 'noEmpty'])
 export default class CreateDataBaseAcquisition extends Vue {
   @Inject() private readonly formProvide!: H_Vue

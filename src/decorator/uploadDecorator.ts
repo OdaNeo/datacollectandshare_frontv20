@@ -16,7 +16,7 @@ const header: Array<headerObj> = [
 
 // 上传300000超时
 const upload = (Vue: VueConstructor): void => {
-  Vue.prototype['h_upload'] = new RequestData(header, 300000)
+  Vue.prototype['h_upload'] = new RequestData(header, { timeout: 300000 })
 }
 
 export default upload

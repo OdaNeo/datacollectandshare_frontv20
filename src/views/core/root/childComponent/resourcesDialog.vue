@@ -9,63 +9,43 @@
     <!-- 权限名称 -->
     <HSimpleInput v-model="formProvide.formObj['url']" :required="false" :description="`权限地址`" />
 
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>权限类型</label>
-      <v-radio-group
-        v-model="formProvide.formObj['type']"
-        row
-        dense
-        height="34"
-        :rules="[...h_validator.noEmpty('权限类型')]"
-        class="ml-4 my-0 pt-0 flex-grow-1 mr-15"
-      >
-        <v-radio v-for="n in types" :key="n.value" :label="`${n.text}`" :value="n.value"></v-radio>
-      </v-radio-group>
-    </v-col>
+    <!-- 权限类型 -->
+    <HRadioGroup
+      :description="`权限类型`"
+      v-model="formProvide.formObj['type']"
+      :rules="[...h_validator.noEmpty('权限类型')]"
+      :items="types"
+    />
+
     <!-- menu -->
-    <v-col v-if="formProvide.formObj['type'] === 'menu'" cols="12" class="d-flex">
-      <label class="label mr-2">父节点名称</label>
-      <v-select
-        v-model="formProvide.formObj['parentid']"
-        outlined
-        dense
-        clearable
-        height="34"
-        label="请选择父节点名称"
-        :items="dessertsList"
-        class="ml-4 my-0 mr-15"
-      ></v-select>
-    </v-col>
+    <HSelect
+      v-if="formProvide.formObj['type'] === 'menu'"
+      :required="false"
+      :description="`父节点名称`"
+      placeholder="请选择父节点名称"
+      v-model="formProvide.formObj['parentid']"
+      :items="dessertsList"
+    />
+
     <!-- button -->
-    <v-col v-if="formProvide.formObj['type'] === 'button'" cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>父节点名称</label>
-      <v-select
-        v-model="formProvide.formObj['grandparentid']"
-        outlined
-        dense
-        clearable
-        height="34"
-        label="请选择父节点名称"
-        :rules="[...h_validator.noEmpty('父节点名称')]"
-        :items="dessertsList"
-        class="ml-4 my-0 mr-15"
-      ></v-select>
-    </v-col>
+    <HSelect
+      v-if="formProvide.formObj['type'] === 'button'"
+      :description="`父节点名称`"
+      placeholder="请选择父节点名称"
+      v-model="formProvide.formObj['grandparentid']"
+      :rules="[...h_validator.noEmpty('父节点名称')]"
+      :items="dessertsList"
+    />
+
     <!-- button -->
-    <v-col v-if="formProvide.formObj['type'] === 'button'" cols="12" class="d-flex">
-      <label class="label mr-2"></label>
-      <v-select
-        v-model="formProvide.formObj['parentid']"
-        outlined
-        dense
-        clearable
-        height="34"
-        label="请选择"
-        :rules="[...h_validator.noEmpty()]"
-        :items="dessertsListChild"
-        class="ml-4 my-0 mr-15"
-      ></v-select>
-    </v-col>
+    <HSelect
+      v-if="formProvide.formObj['type'] === 'button'"
+      placeholder="请选择"
+      :required="false"
+      v-model="formProvide.formObj['parentid']"
+      :rules="[...h_validator.noEmpty()]"
+      :items="dessertsListChild"
+    />
   </v-row>
 </template>
 <script lang="ts">
@@ -74,9 +54,14 @@ import { userFormVar, userFormVarDo } from '@/type/user.type'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import HSimpleInput from '@/components/h-simple-input.vue'
+import HRadioGroup from '@/components/h-radio-group.vue'
+import HSelect from '@/components/h-select.vue'
+
 @Component({
   components: {
-    HSimpleInput
+    HSimpleInput,
+    HRadioGroup,
+    HSelect
   }
 })
 @Validator(['noEmpty'])

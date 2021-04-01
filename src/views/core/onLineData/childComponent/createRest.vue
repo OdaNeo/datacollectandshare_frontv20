@@ -13,46 +13,24 @@
       }"
     />
     <!-- 消息类型 -->
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2"><span class="require-span">*</span>消息类型</label>
-      <v-radio-group
-        v-model="formProvide.formObj['queneType']"
-        :disabled="formProvide.formObj.canNotEdit"
-        row
-        dense
-        height="34"
-        :rules="[...h_validator.noEmpty('消息类型')]"
-        class="ml-4 my-0 pt-0 flex-grow-1"
-      >
-        <v-radio v-for="n in queneTypeItem" :key="n.value" :label="`${n.text}`" :value="n.value"></v-radio>
-      </v-radio-group>
-    </v-col>
+    <HRadioGroup
+      :description="`消息类型`"
+      v-model="formProvide.formObj['queneType']"
+      :disabled="formProvide.formObj.canNotEdit"
+      :rules="[...h_validator.noEmpty('消息类型')]"
+      :items="queneTypeItem"
+    />
+
     <!-- 内存过期时间 -->
-    <v-col cols="12" class="d-flex">
-      <label class="label mr-2">内存过期时间</label>
-      <v-slider
-        v-model="formProvide.formObj['redisTimer']"
-        :disabled="formProvide.formObj.canNotEdit"
-        class="align-center ml-4 mb-4 mr-15"
-        :max="30"
-        :min="5"
-        hide-details
-        :thumb-size="20"
-        thumb-label="always"
-      >
-        <template v-slot:append>
-          <v-text-field
-            v-model="formProvide.formObj['redisTimer']"
-            class="mt-0 pt-0"
-            hide-details
-            dense
-            disabled
-            single-line
-            style="width: 30px"
-          ></v-text-field>
-        </template>
-      </v-slider>
-    </v-col>
+    <HSlider
+      v-model="formProvide.formObj['redisTimer']"
+      :disabled="formProvide.formObj.canNotEdit"
+      :description="`内存过期时间`"
+      :max="30"
+      :min="5"
+      :required="false"
+    />
+
     <!-- 数据结构 -->
     <v-col cols="12" class="d-flex">
       <label class="label mr-2"><span class="require-span">*</span>数据结构</label>
@@ -69,9 +47,9 @@
               dense
               outlined
               :disabled="item.disabled"
-              label="字段名"
+              placeholder="字段名"
               :rules="[...h_validator.noEmpty('字段名'), ...noRepeatKey]"
-              height="34"
+              height="35"
             ></v-text-field>
           </v-col>
           <v-col class="mr-2">
@@ -80,9 +58,9 @@
               dense
               :disabled="item.disabled"
               outlined
-              label="描述"
+              placeholder="描述"
               :rules="[...h_validator.noEmpty('描述')]"
-              height="34"
+              height="35"
             ></v-text-field>
           </v-col>
           <v-col>
@@ -91,9 +69,9 @@
               dense
               outlined
               :disabled="item.disabled"
-              label="字段类型"
+              placeholder="字段类型"
               :rules="[...h_validator.noEmpty('字段类型')]"
-              height="34"
+              height="35"
               :items="items2"
             ></v-select>
           </v-col>
@@ -132,7 +110,7 @@
     <!-- 数据发送示例 -->
     <v-col cols="12" class="d-flex mb-5">
       <label class="label mr-6">数据发送示例</label>
-      <v-btn color="grey" height="34" outlined @click="showConstruction = true">查看</v-btn>
+      <v-btn color="grey" height="35" outlined @click="showConstruction = true">查看</v-btn>
     </v-col>
 
     <v-dialog v-model="showConstruction" width="450">
@@ -156,7 +134,7 @@
       v-if="!formProvide.formObj.canNotEdit"
       :required="false"
       :description="`通过文件创建`"
-      label="支持.xls, .xlsx格式的单文件上传"
+      placeholder="支持.xls, .xlsx格式的单文件上传"
       accept=".xls,.xlsx"
       @change="$emit('upload-file', $event)"
     />
@@ -170,10 +148,15 @@ import http from '@/decorator/httpDecorator'
 import { mdiPlus, mdiMinus } from '@mdi/js'
 import HFileUpLoad from '@/components/h-file-upload.vue'
 import HSimpleInput from '@/components/h-simple-input.vue'
+import HSlider from '@/components/h-slider.vue'
+import HRadioGroup from '@/components/h-radio-group.vue'
+
 @Component({
   components: {
     HFileUpLoad,
-    HSimpleInput
+    HSimpleInput,
+    HSlider,
+    HRadioGroup
   }
 })
 @http

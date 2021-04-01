@@ -1,28 +1,20 @@
 <template>
   <div id="role">
     <v-row>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入查找的角色名称"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchRoles"
-          @keyup.enter="searchRoles"
-          @click:clear="
-            searchMethod(false, {
-              pageNum: pageNum,
-              pageSize: pageSize
-            })
-          "
-          v-model.trim="queryRolesName"
-        >
-        </v-text-field>
-      </v-col>
-      <v-col cols="9">
-        <v-btn height="35px" color="primary" small depressed dark @click.stop="addItem">添加角色</v-btn>
+      <HSearch
+        v-model="queryRolesName"
+        placeholder="请输入查找的角色名称"
+        @append="searchRoles"
+        @enter="searchRoles"
+        @clear="
+          searchMethod(false, {
+            pageNum: pageNum,
+            pageSize: pageSize
+          })
+        "
+      />
+      <v-col>
+        <v-btn color="primary" small depressed dark @click.stop="addItem">添加角色</v-btn>
       </v-col>
     </v-row>
     <h-table
@@ -66,14 +58,15 @@ import HConfirm from '@/components/h-confirm.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicTable } from '@/type/topic.type'
 import { mdiMagnify } from '@mdi/js'
-
+import HSearch from '@/components/h-search.vue'
 @Component({
   components: {
     HTable,
     FDialog,
     RoleDialog,
     AuthDialog,
-    HConfirm
+    HConfirm,
+    HSearch
   }
 })
 @http

@@ -1,45 +1,20 @@
 <template>
   <div id="transactionalDataList">
     <v-row>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入查找的事务主题ID"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchTopic"
-          @keyup.enter="searchTopic"
-          @click:clear="tabChange(tab)"
-          v-model="queryTopicID"
-          v-only-num
-        >
-        </v-text-field>
-      </v-col>
-      <v-col cols="9">
-        <v-btn
-          color="primary"
-          width="100px"
-          height="35px"
-          depressed
-          class="mr-6"
-          small
-          dark
-          @click="createTransactionalData()"
-        >
+      <HSearch
+        v-model="queryTopicID"
+        pl
+        placeholder="请输入查找的事务主题ID"
+        @append="searchTopic"
+        @enter="searchTopic"
+        @clear="tabChange(tab)"
+        v-only-num
+      />
+      <v-col>
+        <v-btn color="primary" depressed class="mr-6" small dark @click="createTransactionalData()">
           创建事务主题
         </v-btn>
-        <v-btn
-          color="primary"
-          width="100px"
-          height="35px"
-          :loading="uploadBtnLoading"
-          depressed
-          class="mr-6"
-          small
-          dark
-          @click="uploadSQL"
+        <v-btn color="primary" :loading="uploadBtnLoading" depressed class="mr-6" small dark @click="uploadSQL"
           >上传SQL文件</v-btn
         >
       </v-col>
@@ -99,9 +74,10 @@
               >重跑</v-btn
             >
           </template>
-          <template v-slot:log="{ item, index }">
-            <v-btn text color="primary" @click.stop="currentLog(item, index)">最新日志</v-btn>
-            <v-btn text color="primary" @click.stop="historyLog(item, index)">历史日志</v-btn>
+          <template v-slot:log="{ item }">
+            <v-btn text color="primary" @click.stop="getCurrentLog(item.id)">最新日志</v-btn>
+            <!-- 虚拟滚动 -->
+            <v-btn text color="primary" @click.stop="getHistoryLog(item.id)">历史日志</v-btn>
           </template>
         </h-table>
       </v-tab-item>
@@ -113,7 +89,7 @@
     </f-dialog>
 
     <!-- 表格显示 -->
-    <t-dialog v-model="tDialogFlag">
+    <t-dialog v-model="tDialogFlag" :loading="rowJsonLoading">
       <ContentDetails v-if="dialogFlag === 3" :rowJson="rowJson" />
       <SqlDetails v-if="dialogFlag === 4" :str="str" />
     </t-dialog>
@@ -142,6 +118,8 @@ import { tableHeaderType } from '@/type/table.type'
 import upload from '@/decorator/uploadDecorator'
 import { mdiMagnify } from '@mdi/js'
 import SqlDetails from './childComponent/sqlDetails.vue'
+import HSearch from '@/components/h-search.vue'
+import Moment from 'moment'
 
 @Component({
   components: {
@@ -152,7 +130,8 @@ import SqlDetails from './childComponent/sqlDetails.vue'
     CreateTransactionalData,
     ContentDetails,
     UploadSQL,
-    SqlDetails
+    SqlDetails,
+    HSearch
   }
 })
 @http
@@ -189,11 +168,13 @@ export default class transactionalDataList extends Vue {
   }
 
   private rowJson = ''
+  private rowJsonLoading = false
   private str = ''
   private sqlFile: File | null = null
   private sqlForms = new FormData()
   private SQLLoading = false
   private sqlTimer = 0
+  private logTimeOut = 0
   private uploadBtnLoading = false
 
   private desserts: Array<topicTable> = [] // 数据列表
@@ -306,24 +287,6 @@ export default class transactionalDataList extends Vue {
     this.formProvide.title = 'DataX脚本'
     this.dialogFlag = 3
     this.rowJson = item.jsonContent
-  }
-
-  // 最新日志
-  private currentLog(item: unknown, index: number) {
-    this.tDialogFlag = true
-    this.formProvide.title = '最新日志'
-    this.dialogFlag = 3
-    console.log(item)
-    console.log(index)
-  }
-
-  // 历史日志
-  private historyLog(item: unknown, index: number) {
-    this.tDialogFlag = true
-    this.formProvide.title = '历史日志'
-    this.dialogFlag = 3
-    console.log(item)
-    console.log(index)
   }
 
   // 提交事务性数据
@@ -603,20 +566,46 @@ export default class transactionalDataList extends Vue {
     const { success } = await this.h_request['httpGET']('GET_TOPICS_RUNTRANSACTIONALTOPICAGAIN', {
       topicId
     })
-    // console.log(success)
     if (success) {
       this.h_utils['alertUtil'].open(`主题${topicId}重跑成功`, true, 'success')
-      // 乐观更新
-      // this.$set(this.desserts, index, {
-      //   ...this.desserts[index],
-      //   currentLogFlag: true
-      // })
     }
   }
 
+  // 最新日志
+  private async getCurrentLog(topicId: number) {
+    clearTimeout(this.logTimeOut)
+    this.rowJsonLoading = true
+    this.tDialogFlag = true
+    this.formProvide.title = '正在查询'
+    this.dialogFlag = 3
+    const { data } = await this.h_request.httpGET('GET_TOPICS_GETOFFLINELOGBYTOPICID', { topicId, num: 1 })
+    this.rowJsonLoading = false
+
+    if (data && data.length > 0) {
+      this.rowJson = data[0].log
+      this.formProvide.title = `创建时间：${Moment(data[0].createTime).format('YYYY/MM/DD k:mm:ss')}`
+    } else {
+      this.formProvide.title = '查询失败'
+      this.logTimeOut = setTimeout(() => {
+        this.tDialogFlag = false
+      }, 1500)
+    }
+    this.rowJsonLoading = false
+  }
+
+  // 历史日志
+  private async getHistoryLog(topicId: number) {
+    this.$router.push({
+      name: `事务数据统计`,
+      query: {
+        topicId: `${topicId}`
+      }
+    })
+  }
   // 清除timer
   beforeDestroy(): void {
     clearInterval(this.sqlTimer)
+    clearTimeout(this.logTimeOut)
   }
 }
 </script>

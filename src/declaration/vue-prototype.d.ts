@@ -10,6 +10,7 @@ declare module 'vue/types/vue' {
   interface Vue {
     h_request: RequestData
     h_upload: RequestData
+    h_download: RequestData
     h_utils: Utils
     h_echarts: any
     h_enum: any

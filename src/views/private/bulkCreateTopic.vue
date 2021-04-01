@@ -2,7 +2,7 @@
   <div>
     <div class="mt-6">First To the Egg: {{ BRANCH }}</div>
     <div class="mt-6">First To the Key: {{ COMMITHASH }}</div>
-    <v-btn class="mt-6" color="primary" height="35px" small dark @click.stop="createTopicVideo">视频</v-btn>
+    <v-btn class="mt-6" color="primary" small dark @click.stop="createTopicVideo">视频</v-btn>
     <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <v-row no-gutters>
         <!-- 主题名称母版 -->
@@ -12,8 +12,7 @@
             v-model="formProvide.formObj['topicNameItem']"
             outlined
             dense
-            clearable
-            height="34"
+            height="35"
             class="ml-4 mr-15"
             :rules="[v => !!v || `主题名称母版不能为空`]"
           ></v-text-field>
@@ -25,9 +24,8 @@
             v-model="formProvide.formObj['sourceUrl']"
             outlined
             dense
-            clearable
             placeholder="默认地址 rtmp://58.200.131.2:1935/livetv/cctv8"
-            height="34"
+            height="35"
             class="ml-4 mr-15"
           ></v-text-field>
         </v-col>
@@ -38,8 +36,7 @@
             v-model="formProvide.formObj['number']"
             outlined
             dense
-            clearable
-            height="34"
+            height="35"
             class="ml-4 mr-15"
             :rules="[v => !!(typeof Number(v) === 'number' && !isNaN(v)) || '请输入数字']"
           ></v-text-field>

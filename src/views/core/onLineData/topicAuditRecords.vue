@@ -1,30 +1,33 @@
 <template>
   <div id="topicAuditRecords">
-    <v-row no-gutters>
-      <v-col cols="3">
-        <v-text-field
+    <v-row>
+      <HSearch
+        v-model="queryTopicID"
+        v-only-num
+        placeholder="请输入要查询的主题ID"
+        @append="searchTopicID"
+        @enter="searchTopicID"
+        @clear="
+          searchMethod(false, {
+            pageSize: pageSize,
+            pageNum: pageNum,
+            status: btnAction
+          })
+        "
+      />
+      <v-col>
+        <v-btn
+          class="mr-6"
           outlined
-          dense
-          height="35px"
-          placeholder="请输入要查询的主题ID"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchTopicID"
-          @keyup.enter="searchTopicID"
-          @click:clear="
-            searchMethod(false, {
-              pageSize: pageSize,
-              pageNum: pageNum,
-              status: btnAction
-            })
-          "
-          v-model="queryTopicID"
-          v-only-num
+          :color="btnAction === index ? 'primary' : ''"
+          v-for="(item, index) in 3"
+          :key="index"
+          @click="btnClickMethod(index)"
+          >{{ examineType[index] }}</v-btn
         >
-        </v-text-field>
       </v-col>
     </v-row>
-    <v-row no-gutters>
+    <!-- <v-row no-gutters>
       <v-col>
         <v-btn
           class="mr-4 mb-6"
@@ -36,7 +39,7 @@
           >{{ btnName }}</v-btn
         >
       </v-col>
-    </v-row>
+    </v-row> -->
     <h-table
       :headers="headers"
       :desserts="desserts"
@@ -50,7 +53,7 @@
         >
       </template>
       <template v-slot:examineType="{}">
-        <v-btn text :color="h_enum['examineTypeColor'][btnAction]">{{ h_enum['examineType'][btnAction] }}</v-btn>
+        <v-btn text :color="examineTypeColor[btnAction]">{{ examineType[btnAction] }}</v-btn>
       </template>
     </h-table>
 
@@ -70,12 +73,16 @@ import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import { mdiMagnify } from '@mdi/js'
+import HSearch from '@/components/h-search.vue'
+import { examineType, examineTypeColor } from '@/enum/topic-audit-enum'
+import { tableHeaderType } from '@/type/table.type'
 
 @Component({
   components: {
     HTable,
     TDialog,
-    DataStructureDialog
+    DataStructureDialog,
+    HSearch
   }
 })
 @http
@@ -84,14 +91,6 @@ import { mdiMagnify } from '@mdi/js'
   {
     tsFileName: 'topic-list-enum',
     enumName: 'queneType'
-  },
-  {
-    tsFileName: 'topic-audit-enum',
-    enumName: 'examineType'
-  },
-  {
-    tsFileName: 'topic-audit-enum',
-    enumName: 'examineTypeColor'
   }
 ])
 export default class TopicAuditRecords extends Vue {
@@ -106,9 +105,10 @@ export default class TopicAuditRecords extends Vue {
     }
   })
 
+  private examineType = examineType
+  private examineTypeColor = examineTypeColor
   private mdiMagnify = mdiMagnify
   private desserts: Array<topicTable> = []
-  private btnNames: Array<string> = ['未审核', '已通过', '已拒绝']
 
   private btnAction = 0
   private rowObj: object = {}
@@ -118,57 +118,60 @@ export default class TopicAuditRecords extends Vue {
   private dialogFlag = false
   private queryTopicID = ''
   private loading = true
-  private headers = [
-    {
-      text: '主题ID',
-      align: 'center',
-      value: 'id'
-    },
-    {
-      text: '主题名称',
-      align: 'center',
-      value: 'topicName'
-    },
-    {
-      text: '所属用户',
-      align: 'center',
-      value: 'belongUserName'
-    },
-    {
-      text: '订阅时间',
-      align: 'center',
-      value: 'subscribe',
-      format: (time: number): string => {
-        return this.h_utils.timeUtil.stamptoTime(time, '-')
+  private get headers(): Array<tableHeaderType> {
+    return [
+      {
+        text: '主题ID',
+        align: 'center',
+        value: 'id'
+      },
+      {
+        text: '主题名称',
+        align: 'center',
+        value: 'topicName'
+      },
+      {
+        text: '所属用户',
+        align: 'center',
+        value: 'belongUserName'
+      },
+      {
+        text: '订阅时间',
+        align: 'center',
+        value: 'subscribe',
+        format: (time: number): string => {
+          return this.h_utils.timeUtil.stamptoTime(time, '-')
+        }
+      },
+      {
+        text: '审核时间',
+        align: 'center',
+        value: 'auditTime',
+        isHide: this.btnAction === 0,
+        format: (time: number): string => {
+          return time ? this.h_utils.timeUtil.stamptoTime(time, '-') : '-'
+        }
+      },
+      {
+        text: '消息类型',
+        align: 'center',
+        value: 'queneType',
+        format: (quene: number): number => {
+          return this.h_enum['queneType'][quene]
+        }
+      },
+      {
+        text: '数据结构',
+        align: 'center',
+        slot: 'buttons'
+      },
+      {
+        text: '审核状态',
+        align: 'center',
+        slot: 'examineType'
       }
-    },
-    {
-      text: '审核时间',
-      align: 'center',
-      value: 'auditTime',
-      format: (time: number): string => {
-        return time ? this.h_utils.timeUtil.stamptoTime(time, '-') : '-'
-      }
-    },
-    {
-      text: '消息类型',
-      align: 'center',
-      value: 'queneType',
-      format: (quene: number): number => {
-        return this.h_enum['queneType'][quene]
-      }
-    },
-    {
-      text: '数据结构',
-      align: 'center',
-      slot: 'buttons'
-    },
-    {
-      text: '审核状态',
-      align: 'center',
-      slot: 'examineType'
-    }
-  ]
+    ]
+  }
 
   async searchMethod(bool: boolean, params: paramsType): Promise<void> {
     this.loading = true

@@ -1,28 +1,20 @@
 <template>
   <div id="bindNetwork">
     <v-row>
-      <v-col cols="3">
-        <v-text-field
-          outlined
-          dense
-          height="35px"
-          placeholder="请输入查找的系统名称"
-          clearable
-          :append-icon="mdiMagnify"
-          @click:append="searchSystemName"
-          @keyup.enter="searchSystemName"
-          @click:clear="
-            searchMethod(false, {
-              pageSize: pageSize,
-              pageNum: pageNum
-            })
-          "
-          v-model="querySystemName"
-        >
-        </v-text-field>
-      </v-col>
-      <v-col cols="9">
-        <v-btn height="35px" color="primary" depressed small dark @click.stop="bindNet">绑定网络</v-btn>
+      <HSearch
+        v-model="querySystemName"
+        placeholder="请输入查找的系统名称"
+        @append="searchSystemName"
+        @enter="searchSystemName"
+        @clear="
+          searchMethod(false, {
+            pageSize: pageSize,
+            pageNum: pageNum
+          })
+        "
+      />
+      <v-col>
+        <v-btn color="primary" depressed small dark @click.stop="bindNet">绑定网络</v-btn>
       </v-col>
     </v-row>
     <h-table
@@ -64,13 +56,15 @@ import util from '@/decorator/utilsDecorator'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicTable } from '@/type/topic.type'
 import { mdiMagnify } from '@mdi/js'
+import HSearch from '@/components/h-search.vue'
 
 @Component({
   components: {
     HTable,
     FDialog,
     BindNetDialog,
-    HConfirm
+    HConfirm,
+    HSearch
   }
 })
 @http

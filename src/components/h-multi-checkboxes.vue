@@ -1,5 +1,5 @@
 <template>
-  <v-col id="HMultiCheckBoxes" cols="12" class="d-flex">
+  <v-col cols="12" class="HMultiCheckBoxes d-flex">
     <label class="label mr-2"><span v-if="required" class="require-span">*</span>{{ description }}</label>
     <v-row no-gutters class="d-flex mb-0 ml-4 mr-15">
       <v-col v-for="(item, index) in items" :key="item.id" :cols="cols">

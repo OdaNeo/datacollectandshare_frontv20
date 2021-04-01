@@ -8,7 +8,7 @@
           height="35px"
           v-model="systemValue"
           :items="systemItems"
-          label="请选择系统"
+          placeholder="请选择系统"
           @change="getTopicList"
         ></v-select>
       </v-col>
@@ -27,7 +27,7 @@
               dense
               height="35px"
               v-model="beginDate"
-              label="请选择日期"
+              placeholder="请选择日期"
               readonly
               v-bind="attrs"
               v-on="on"
@@ -55,7 +55,7 @@
           v-model="currentSelectMonth"
           @change="getTopicList"
           :items="monthSelectItems"
-          label="获取更长时间信息"
+          placeholder="获取更长时间信息"
         ></v-select>
       </v-col>
       <v-col cols="2" v-if="topicListNumber > 1">
@@ -65,7 +65,7 @@
           v-model="releasePageNum"
           height="35px"
           :items="pageList"
-          label="获取更多主题信息"
+          placeholder="获取更多主题信息"
           @change="getTopicList"
         ></v-select>
       </v-col>

@@ -1,5 +1,5 @@
 <template>
-  <v-col id="HFileUpLoad" cols="12" class="d-flex">
+  <v-col cols="12" class="HFileUpLoad d-flex">
     <label class="label mr-2"><span v-if="required" class="require-span">*</span>{{ description }}</label>
     <v-file-input
       v-bind="$attrs"
