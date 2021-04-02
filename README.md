@@ -40,7 +40,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 14. ~~实时主题 统计~~
 15. ~~搜索体验优化~~
 16. ~~侧边栏根据路由表排序~~
-17. rest protobuf sql 文件上传方式创建主题 文件示例
+17. rest protobuf sql 文件上传方式创建主题 文件示例，上传表头格式不对要有提示
 18. ~~首页登陆以及搜索框支持 Enter~~
 19. ~~this.formProvide.title 优化（区分修改和创建）~~
 20. ~~h-table 动态设置 header（需要新字段） 已在统一运维平台实现~~
@@ -70,14 +70,12 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 44. ~~统一http超时、权限、断网等错误处理，与现有业务报错逻辑整合~~
 45. 生产环境错误上报
 46. ~~REQUEST_NAME_TYPE 类型校验~~
-47. 主题名未开始验证要阻止提交
-48. HConfirm 重构
-49. 刷新logout 会重置session?
-50. H_Vue 类型修改
-51. 主题名创建重复bug fix
-52. ~~button 添加loading（附加信息）~~
-53. Body示例整合？
-54. http download?
+47. H_Vue 类型修改
+48. ~~主题名创建重复bug fix~~
+49. ~~button 添加loading（附加信息）~~
+50. ~~Body示例整合~~
+51. ~~http download~~
+52. ~~上传rest文件错误上报以及验重bug~~
 
 ## 常见问题
 

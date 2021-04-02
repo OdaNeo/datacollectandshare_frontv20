@@ -20,12 +20,7 @@
             v-model="formProvide.formObj['topicName']"
             :disabled="formProvide.formObj.canNotEdit"
             :description="`主题名称`"
-            :rules="[...h_validator.noEmpty('主题名称'), ...noRepeat]"
-            v-topicNameNoRepeat="{
-              set: n => {
-                noRepeat = [...n]
-              }
-            }"
+            :rules="[...h_validator.noEmpty('主题名称')]"
           />
           <!-- cron -->
           <HSelect
@@ -255,13 +250,12 @@ import HSelect from '@/components/h-select.vue'
 @Validator(['noEmpty'])
 export default class CreateTransactionalData extends Vue {
   @Inject() private readonly formProvide!: H_Vue
-  mdiChevronRight = mdiChevronRight
-  mdiChevronLeft = mdiChevronLeft
-  mdiPlus = mdiPlus
-  mdiMinus = mdiMinus
-  mdiChevronUp = mdiChevronUp
+  private mdiChevronRight = mdiChevronRight
+  private mdiChevronLeft = mdiChevronLeft
+  private mdiPlus = mdiPlus
+  private mdiMinus = mdiMinus
+  private mdiChevronUp = mdiChevronUp
 
-  private noRepeat: Array<string> = []
   private noRepeatKey: string[] = []
   private typeItems = ['boolean', 'short', 'int', 'long', 'float', 'double', 'string']
   private iskeyItems = ['true', 'false']

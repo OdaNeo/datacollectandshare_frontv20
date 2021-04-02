@@ -39,7 +39,10 @@ class RequestData {
     })
 
     this.axiosIns.interceptors.response.use(
-      ({ data }: AxiosResponse) => {
+      ({ data, headers }: AxiosResponse) => {
+        // 如果有content-disposition 响应头，认为是文件下载
+        const filename = headers['content-disposition']?.split('=')[1].split('"')[1]
+        filename && (data.filename = filename)
         return Promise.resolve(data)
       },
       (error: AxiosError) => {
@@ -177,15 +180,24 @@ class RequestData {
     let code = 0
     let message = ''
     let _error: {} | Array<{}>
+    let filename: string | undefined = ''
+
     if (Array.isArray(response)) {
       code = response[0].code
       message = response[0].message
       _error = response.map(() => ({}))
     } else {
+      filename = response.filename
       code = response.code
       message = response.message
       _error = {}
     }
+    // 如果有filename，直接callback
+    if (filename) {
+      callback(response)
+      return
+    }
+
     switch (code) {
       case 200:
         callback(response)

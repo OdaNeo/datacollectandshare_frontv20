@@ -3,14 +3,10 @@
     <!-- 主题名称 -->
     <HSimpleInput
       v-model="formProvide.formObj['topicName']"
-      :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
+      :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter()]"
       :description="`主题名称`"
-      v-topicNameNoRepeat="{
-        set: n => {
-          noRepeat = [...n]
-        }
-      }"
     />
+
     <!-- rtsp/rtmp地址 -->
     <HSimpleInput
       v-model="formProvide.formObj['sourceUrl']"
@@ -38,7 +34,6 @@ import HSimpleInput from '@/components/h-simple-input.vue'
 @Validator(['topicNameFormatter', 'noEmpty'])
 export default class CreateVideoTopicDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
-  private noRepeat: string[] = []
 
   // firstToTheEgg
   private count = 0

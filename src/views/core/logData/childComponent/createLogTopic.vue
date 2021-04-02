@@ -5,12 +5,7 @@
       v-model="formProvide.formObj['topicName']"
       :disabled="formProvide.formObj.canNotEdit"
       :description="`主题名称`"
-      :rules="[...h_validator.noEmpty('主题名称'), ...noRepeat]"
-      v-topicNameNoRepeat="{
-        set: n => {
-          noRepeat = [...n]
-        }
-      }"
+      :rules="[...h_validator.noEmpty('主题名称')]"
     />
 
     <!-- 服务器IP -->
@@ -81,7 +76,6 @@ import HSimpleInput from '@/components/h-simple-input.vue'
 export default class CreateLogTopic extends Vue {
   @Inject() private readonly formProvide!: H_Vue
 
-  private noRepeat: string[] = []
   private saveTypeItems: Array<{ text: string; value: string }> = [
     { text: 'ElasticSearch', value: 'ElasticSearch' },
     { text: 'HDFS', value: 'HDFS' }

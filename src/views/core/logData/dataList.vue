@@ -101,7 +101,7 @@ export default class LogDataList extends Vue {
       }
     }
   })
-  mdiMagnify = mdiMagnify
+  private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示

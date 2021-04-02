@@ -199,6 +199,20 @@ export default class User extends Vue {
 
   // 添加用户
   private async addUser(formObj: userFormObj) {
+    // 如果是添加 验重
+    if (!formObj.canNotEdit && formObj.loginName) {
+      const text = await this.h_utils['noRepeat'].loginName(formObj.loginName)
+
+      if (text === undefined) {
+        // 网络错误
+        return
+      } else if (text) {
+        // 如果重复，阻止提交
+        this.h_utils.alertUtil.open(text, true, 'error')
+        return
+      }
+    }
+
     const { loginName, loginPwd, userType, userState, systemName } = formObj
     const { success } = await this.h_request['httpPOST']<dialogRequestStructure>('POST_USER_ADD_USER', {
       loginName,

@@ -110,7 +110,7 @@ export default class VideoDataList extends Vue {
       }
     }
   })
-  mdiMagnify = mdiMagnify
+  private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
   private dialogFlag = false // 弹窗展示

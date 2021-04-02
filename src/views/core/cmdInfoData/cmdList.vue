@@ -193,6 +193,20 @@ export default class CmdList extends Vue {
 
   //  提交创建
   private async addCmd(formObj: CmdAdd) {
+    // 验重
+    if (!formObj.canNotEdit) {
+      const text = await this.h_utils['noRepeat'].cmdName(formObj.cmdName, this.formProvide.formObj.producer)
+
+      if (text === undefined) {
+        // 网络错误
+        return
+      } else if (text) {
+        // 如果重复，阻止提交
+        this.h_utils.alertUtil.open(text, true, 'error')
+        return
+      }
+    }
+
     const params: any = {}
     //  ADD 不提交id，UPDATE提交id
     formObj.id && (params.id = formObj.id)

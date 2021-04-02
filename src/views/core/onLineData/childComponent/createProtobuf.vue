@@ -4,13 +4,8 @@
     <HSimpleInput
       v-model="formProvide.formObj['topicName']"
       :disabled="formProvide.formObj.canNotEdit"
-      :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
+      :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter()]"
       :description="`主题名称`"
-      v-topicNameNoRepeat="{
-        set: n => {
-          noRepeat = [...n]
-        }
-      }"
     />
     <!-- 内存过期时间 -->
     <HSlider
@@ -51,6 +46,5 @@ import HSlider from '@/components/h-slider.vue'
 @Validator(['fileProtoValidate', 'topicNameFormatter', 'noEmpty'])
 export default class CreateProtobuf extends Vue {
   @Inject() private readonly formProvide!: H_Vue
-  private noRepeat: string[] = []
 }
 </script>

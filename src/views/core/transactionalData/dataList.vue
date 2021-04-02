@@ -174,7 +174,7 @@ export default class transactionalDataList extends Vue {
   private sqlForms = new FormData()
   private SQLLoading = false
   private sqlTimer = 0
-  private logTimeOut = 0
+
   private uploadBtnLoading = false
 
   private desserts: Array<topicTable> = [] // 数据列表
@@ -573,22 +573,18 @@ export default class transactionalDataList extends Vue {
 
   // 最新日志
   private async getCurrentLog(topicId: number) {
-    clearTimeout(this.logTimeOut)
+    this.rowJson = ''
     this.rowJsonLoading = true
     this.tDialogFlag = true
     this.formProvide.title = '正在查询'
     this.dialogFlag = 3
     const { data } = await this.h_request.httpGET('GET_TOPICS_GETOFFLINELOGBYTOPICID', { topicId, num: 1 })
     this.rowJsonLoading = false
-
-    if (data && data.length > 0) {
-      this.rowJson = data[0].log
-      this.formProvide.title = `创建时间：${Moment(data[0].createTime).format('YYYY/MM/DD k:mm:ss')}`
+    if (data.list && data.list.length > 0) {
+      this.rowJson = data.list[0].log
+      this.formProvide.title = `创建时间：${Moment(data.list[0].createTime).format('YYYY/MM/DD k:mm:ss')}`
     } else {
       this.formProvide.title = '查询失败'
-      this.logTimeOut = setTimeout(() => {
-        this.tDialogFlag = false
-      }, 1500)
     }
     this.rowJsonLoading = false
   }
@@ -605,7 +601,6 @@ export default class transactionalDataList extends Vue {
   // 清除timer
   beforeDestroy(): void {
     clearInterval(this.sqlTimer)
-    clearTimeout(this.logTimeOut)
   }
 }
 </script>

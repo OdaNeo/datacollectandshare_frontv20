@@ -119,7 +119,9 @@ export default class TransactionalDataStatistics extends Vue {
       this.paginationLength = Math.ceil(data?.['total'] / this.pageSize) || 1
     } else {
       // 按照topicId查询
-      const { data } = await this.h_request['httpGET']('GET_TOPICS_GETOFFLINELOGBYTOPICID', { topicId, num: -1 })
+      params.topicId = topicId
+      params.num = -1
+      const { data } = await this.h_request['httpGET']('GET_TOPICS_GETOFFLINELOGBYTOPICID', params)
       this.desserts = data ? [...data.list] : []
       this.paginationLength = Math.ceil(data?.['total'] / this.pageSize) || 1
     }

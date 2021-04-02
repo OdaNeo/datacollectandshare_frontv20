@@ -3,13 +3,8 @@
     <!-- 主题名称 -->
     <HSimpleInput
       v-model="formProvide.formObj['topicName']"
-      :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter(), ...noRepeat]"
+      :rules="[...h_validator.noEmpty('主题名称'), ...h_validator.topicNameFormatter()]"
       :description="`主题名称`"
-      v-topicNameNoRepeat="{
-        set: n => {
-          noRepeat = [...n]
-        }
-      }"
     />
     <!-- 消息类型 -->
     <HRadioGroup
@@ -35,28 +30,8 @@
       :rules="[...h_validator.noEmpty('数据结构'), ...h_validator.isJSON()]"
     />
 
-    <!--  -->
-    <v-col cols="12" class="d-flex mb-6">
-      <label class="label mr-6">数据发送示例</label>
-      <v-btn color="grey" outlined @click="showConstruction = true">查看</v-btn>
-    </v-col>
-
-    <v-dialog v-model="showConstruction" width="450">
-      <v-card>
-        <v-card-title style="font-size: 18px">数据发送示例</v-card-title>
-        <v-divider></v-divider>
-        <v-card-text class="mt-5">
-          <p style="white-space: pre-wrap">
-            {{ msgSendExample }}
-          </p>
-        </v-card-text>
-
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="showConstruction = false">关闭</v-btn>
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+    <!-- 数据发送示例 -->
+    <HExample :description="`数据发送示例`" :message="msgSendExample" />
   </v-row>
 </template>
 <script lang="ts">
@@ -67,20 +42,20 @@ import HSimpleInput from '@/components/h-simple-input.vue'
 import HSlider from '@/components/h-slider.vue'
 import HRadioGroup from '@/components/h-radio-group.vue'
 import HTextArea from '@/components/h-textarea.vue'
-
+import HExample from '@/components/h-example.vue'
 @Component({
   components: {
     HSimpleInput,
     HSlider,
     HRadioGroup,
-    HTextArea
+    HTextArea,
+    HExample
   }
 })
 @Validator(['noEmpty', 'isJSON', 'topicNameFormatter'])
 export default class CreateJson extends Vue {
   @Inject() private readonly formProvide!: H_Vue
 
-  private noRepeat: string[] = []
   private showConstruction = false
   private queneTypeItem = [
     { text: '数据量优先', value: 1 },

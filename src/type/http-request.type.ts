@@ -11,6 +11,7 @@ export type paramsType = {
   status?: number
   topicId?: string
   topicID?: string
+  num?: number
 }
 
 export type returnTypeData = {
@@ -25,6 +26,7 @@ export type returnType = {
   data: any | returnTypeData
   message: string
   success: boolean
+  filename?: string
 }
 
 export type httpAllParams = {

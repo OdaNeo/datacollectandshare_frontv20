@@ -73,7 +73,7 @@
     </f-dialog>
 
     <!-- 表格显示 -->
-    <t-dialog v-model="tDialogFlag">
+    <t-dialog v-model="tDialogFlag" :loading="dialogLoading">
       <data-structure-dialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <topic-ancillary-information-dialog :otherObj="otherObj" v-else-if="tDialogShow === 2" />
     </t-dialog>
@@ -96,7 +96,6 @@ import util from '@/decorator/utilsDecorator'
 import { dataType } from '@/enum/topic-datatype-enum'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import { FormObj } from '@/type/dialog-form.type'
-
 import CreateDataBaseAcquisition from './childComponent/createDataBaseAcquisition.vue'
 import CreateServePull from './childComponent/createServePull.vue'
 import PullFTP from './childComponent/pullFTP.vue'
@@ -151,6 +150,8 @@ export default class OfflineTopicList extends Vue {
 
   // private sheetObj: any
   private loading = true
+
+  private dialogLoading = false
 
   private HConfirmShow = false
   private HConfirmItem = {
@@ -579,19 +580,19 @@ export default class OfflineTopicList extends Vue {
   }
 
   // 附加信息
-  private ancillaryInformation(info: any, str: string) {
-    this.tDialogFlag = true
-    this.tDialogShow = 2
-    this.otherObj = info
-    this.formProvide.title = str
-  }
-
   private dataStructureDetails(item: any) {
     this.dataStructure(item, '数据结构详情')
   }
 
   private async getTopicInformation(item: any, index: number) {
+    this.tDialogFlag = true
+    this.tDialogShow = 2
+    this.otherObj = {}
+    this.dialogLoading = true
+
     if (!this.desserts[index].flag) {
+      this.formProvide.title = '正在查询'
+
       const { data } = await this.h_request['httpGET']('GET_TOPICS_INFORMATION', {
         topicID: item.id,
         topicName: item.topicName,
@@ -603,11 +604,20 @@ export default class OfflineTopicList extends Vue {
         this.desserts[index].dataBaseType = data[0].dataBaseType
         this.desserts[index].url = data[0].url
         this.desserts[index].header = data[0].header
+        this.desserts[index].flag = true
+      } else if (data.length === 0) {
+        // 数据为空
+        this.desserts[index].flag = true
+      } else {
+        this.dialogLoading = false
+        this.formProvide.title = '查询失败'
+        return
       }
-      // info = {...data[0],topicInterFaceType:item.topicInterFaceType,redisTimer:item.redisTimer}
-      this.desserts[index].flag = true
     }
-    this.ancillaryInformation(this.desserts[index], '附加信息')
+
+    this.dialogLoading = false
+    this.formProvide.title = '附加信息'
+    this.otherObj = { ...this.desserts[index] }
   }
 
   // 删除

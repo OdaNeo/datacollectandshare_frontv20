@@ -1,11 +1,6 @@
 <template>
   <v-dialog class="dialog" v-model="dialog" :width="width" persistent>
     <!-- 遮罩层 禁止交互 -->
-    <!-- <v-overlay :opacity="0.2" :value="loading">
-      <v-progress-circular class="loading" indeterminate color="primary"></v-progress-circular>
-      <div class="loading-text">请稍候……</div>
-    </v-overlay> -->
-    <!-- tittle form btn -->
     <v-card>
       <v-card-title>
         <span style="font-size: 18px">{{ formProvide.title }}</span>
@@ -20,7 +15,7 @@
       <!-- 主题 -->
       <v-card-text class="pb-0 mt-4">
         <v-container class="pb-0 pt-5">
-          <v-form ref="userDialogForm" :disabled="loading" v-model="userDialogValid">
+          <v-form ref="userDialogForm" id="userDialogForm" :disabled="loading" v-model="userDialogValid">
             <slot />
           </v-form>
         </v-container>
@@ -47,8 +42,10 @@
 import { Component, Vue, Model, Inject, Ref, Prop } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import { mdiClose } from '@mdi/js'
+import util from '@/decorator/utilsDecorator'
 
 @Component
+@util
 export default class FDialog extends Vue {
   @Ref('userDialogForm') readonly udf!: HTMLFormElement
   @Inject() private readonly formProvide!: H_Vue
@@ -67,12 +64,30 @@ export default class FDialog extends Vue {
   }
 
   private async validate() {
+    const topicName = this.formProvide.formObj.topicName
+
+    // 如果包含topicName，且不为修改 主题 (undefined) ， 就要发送验重请求
+    if (topicName && !this.formProvide.formObj.canNotEdit) {
+      const text = await this.h_utils['noRepeat'].topicName(topicName)
+
+      if (text === undefined) {
+        // 网络错误
+        return
+      } else if (text) {
+        // 如果重复，阻止提交
+        this.h_utils.alertUtil.open(text, true, 'error')
+        return
+      }
+    }
+
     if (this.udf.validate() && this.formProvide.methodName) {
       const parent = this.$parent as any
       const bool = await parent[this.formProvide.methodName](this.formProvide.formObj)
       if (bool) {
         this.closeMethod()
       }
+    } else {
+      throw new Error('请指定发起请求的methodName')
     }
   }
 

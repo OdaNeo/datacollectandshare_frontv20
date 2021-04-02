@@ -4,8 +4,7 @@
     <HSimpleInput
       v-model="formProvide.formObj['loginName']"
       :disabled="formProvide.formObj.canNotEdit"
-      :rules="[...h_validator.noEmpty('用户名'), ...noRepeat]"
-      @input="loginNameNoRepeat"
+      :rules="[...h_validator.noEmpty('用户名')]"
       :description="`用户名`"
     />
 
@@ -74,7 +73,7 @@ export default class userDialog extends Vue {
   ]
   private userRoots: Array<userFormVar> = []
   private systemNames: Array<userFormVar> = []
-  private noRepeat: Array<string> = []
+  // private noRepeat: Array<string> = []
   // private editDialog = false
   private timer = 0
 
@@ -113,21 +112,21 @@ export default class userDialog extends Vue {
     data2 && this.getSystemName(data2)
   }
 
-  private async loginNameNoRepeat(val: string) {
-    if (val === undefined) {
-      return
-    }
+  // private async loginNameNoRepeat(val: string) {
+  //   if (val === undefined) {
+  //     return
+  //   }
 
-    clearTimeout(this.timer)
-    this.timer = setTimeout(async () => {
-      const { data } = await this.h_request['httpGET']('GET_USER_FIND_ALL_USER_BY_PARAM', { loginName: val })
-      if (data?.list?.length > 0) {
-        this.noRepeat = ['用户名重复']
-      } else {
-        this.noRepeat = []
-      }
-    }, 150)
-  }
+  //   clearTimeout(this.timer)
+  //   this.timer = setTimeout(async () => {
+  //     const { data } = await this.h_request['httpGET']('GET_USER_FIND_ALL_USER_BY_PARAM', { loginName: val })
+  //     if (data?.list?.length > 0) {
+  //       this.noRepeat = ['用户名重复']
+  //     } else {
+  //       this.noRepeat = []
+  //     }
+  //   }, 150)
+  // }
 
   created(): void {
     this.httpAll()

@@ -79,10 +79,11 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Provide } from 'vue-property-decorator'
+import { Component, Vue, Provide, Ref } from 'vue-property-decorator'
 import { paramsType, returnType, returnTypeData } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import upload from '@/decorator/uploadDecorator'
+import download from '@/decorator/downloadDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
@@ -93,18 +94,11 @@ import { TopicAdd } from '@/type/topic-add.type'
 import util from '@/decorator/utilsDecorator'
 import { dataType } from '@/enum/topic-datatype-enum'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
-
-import axios from 'axios'
-import { GET_TOPICS_PROTOBUFDOWNLOAD } from '@/api/requestName'
-import { rootStoreModule } from '@/store/modules/root'
 import XLSX from 'xlsx'
-import { VUE_APP_BASE_API } from '../../../../config'
-
 import { FormObj } from '@/type/dialog-form.type'
 import CreateRest from './childComponent/createRest.vue'
 import CreateProtobuf from './childComponent/createProtobuf.vue'
 import createJson from './childComponent/createJson.vue'
-
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInformationDialog.vue'
 import HSearch from '@/components/h-search.vue'
@@ -126,6 +120,7 @@ import { mdiMagnify } from '@mdi/js'
 })
 @http
 @upload
+@download
 @Enum([
   {
     tsFileName: 'topic-list-enum',
@@ -134,6 +129,7 @@ import { mdiMagnify } from '@mdi/js'
 ])
 @util
 export default class OnlineDataTopicList extends Vue {
+  @Ref('createRest') readonly crRef!: Vue
   @Provide('formProvide') private formProvide: FormObj = new Vue({
     data() {
       return {
@@ -144,6 +140,7 @@ export default class OnlineDataTopicList extends Vue {
       }
     }
   })
+
   private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
@@ -269,7 +266,7 @@ export default class OnlineDataTopicList extends Vue {
       }
     }
   }
-  // rest addTopic code 500, but topic actually created success /topics/addTopic
+
   private async addRest(formObj: TopicAdd) {
     const canNotEdit = formObj.canNotEdit
 
@@ -541,7 +538,7 @@ export default class OnlineDataTopicList extends Vue {
 
         // 格式不对报错
         if (!this.sheetObj['!ref'].includes('C')) {
-          this.h_utils['alertUtil'].open('表头有误', true, 'error')
+          this.h_utils['alertUtil'].open('表头格式有误', true, 'error')
           return
         }
 
@@ -563,10 +560,15 @@ export default class OnlineDataTopicList extends Vue {
           topicList: _topicList
           // writeElasticsearch: '是'
         }
-        // 手动触发 topicName 校验方法
-        const _createRest = this.$refs.createRest as CreateRest
-        _createRest.handleTopicNameNoRepeat()
+
+        // 上传文件手动触发校验
+        const parent = this.crRef.$parent as any
+        this.$nextTick(() => {
+          parent.validate()
+        })
       }
+    } else {
+      this.h_utils.alertUtil.open('文件格式错误', true, 'error')
     }
   }
   //
@@ -606,43 +608,31 @@ export default class OnlineDataTopicList extends Vue {
 
   // 下载 proto
   private async downloadFile(id: number) {
-    axios({
-      method: 'get',
-      url: VUE_APP_BASE_API + GET_TOPICS_PROTOBUFDOWNLOAD,
-      params: { id: id },
-      timeout: 500000,
-      responseType: 'blob',
-      headers: {
-        Authorization: rootStoreModule.UserState.token
-      }
+    const data = await this.h_download.httpGET('GET_TOPICS_PROTOBUFDOWNLOAD', {
+      id
     })
-      .then(res => {
-        console.log(res)
-        const filename = res.headers['content-disposition']
-          ? res.headers['content-disposition'].split('=')[1].split('"')[1]
-          : 'proto.zip'
-        const blob = new Blob([res.data], {
-          type: 'application/octet-stream'
-        })
-        const tempLink = document.createElement('a')
-        const blobURL = window.URL.createObjectURL(blob)
 
-        tempLink.style.display = 'none'
-        tempLink.href = blobURL
-        tempLink.setAttribute('download', decodeURI(filename))
+    if (data.filename) {
+      const blob = new Blob([data] as any, {
+        type: 'application/octet-stream'
+      })
+      const tempLink = document.createElement('a')
+      const blobURL = window.URL.createObjectURL(blob)
 
-        if (typeof tempLink.download === 'undefined') {
-          tempLink.setAttribute('target', '_blank')
-        }
-        document.body.appendChild(tempLink)
-        tempLink.click()
-        document.body.removeChild(tempLink)
-        window.URL.revokeObjectURL(blobURL)
-      })
-      .catch(err => {
-        console.log(err)
-        this.h_utils['alertUtil'].open('文件下载失败', true, 'error')
-      })
+      tempLink.style.display = 'none'
+      tempLink.href = blobURL
+      tempLink.setAttribute('download', decodeURI(data.filename))
+
+      if (typeof tempLink.download === 'undefined') {
+        tempLink.setAttribute('target', '_blank')
+      }
+      document.body.appendChild(tempLink)
+      tempLink.click()
+      document.body.removeChild(tempLink)
+      window.URL.revokeObjectURL(blobURL)
+    } else {
+      this.h_utils['alertUtil'].open('文件不存在或者下载失败', true, 'error')
+    }
   }
 }
 </script>
