@@ -153,6 +153,7 @@ class RequestData {
         })
       })
     } catch (err) {
+      // Promise.all 返回第一个错误
       return new Promise(resolve => {
         this.httpErrorHandle(
           err,
@@ -183,8 +184,16 @@ class RequestData {
     let filename: string | undefined = ''
 
     if (Array.isArray(response)) {
-      code = response[0].code
-      message = response[0].message
+      // 找出第一个错误项
+      const _error_item = response.filter(item => {
+        return item.code !== 200
+      })
+      if (_error_item.length === 0) {
+        code = 200
+      } else {
+        code = _error_item[0].code
+        message = _error_item[0].message
+      }
       _error = response.map(() => ({}))
     } else {
       filename = response.filename
