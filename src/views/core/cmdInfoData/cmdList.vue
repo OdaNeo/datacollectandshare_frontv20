@@ -68,7 +68,7 @@ import HConfirm from '@/components/h-confirm.vue'
 import FDialog from '@/components/f-dialog.vue'
 import TDialog from '@/components/t-dialog.vue'
 import CreateCmdDialog from './childComponent/createCmdDialog.vue'
-import { CmdAdd } from '@/type/cmd-add.type'
+import { CmdAdd, CmdForm } from '@/type/cmd-add.type'
 import util from '@/decorator/utilsDecorator'
 import { rootStoreModule } from '@/store/modules/root'
 import HTable from '@/components/h-table.vue'
@@ -78,6 +78,7 @@ import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import { topicTable } from '@/type/topic.type'
 import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
+import { tableHeaderType } from '@/type/table.type'
 
 @Component({
   components: {
@@ -110,8 +111,8 @@ export default class CmdList extends Vue {
   private dialogFlag = false // 弹窗展示
   private dialogShow = 0 // 展示哪个弹窗 1.是添加和修改弹窗 2.是订阅系统详情和查看描述
 
-  private dessertsObj: Array<any> = []
-  private headersObj: Array<any> = []
+  private dessertsObj: Array<topicTable> = []
+  private headersObj: Partial<Array<tableHeaderType>> = []
   private rowDescription = ''
 
   private onlyShowOther = false // 只显示补充信息
@@ -132,7 +133,7 @@ export default class CmdList extends Vue {
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
   private loading = true
-  private headers = [
+  private headers: Array<tableHeaderType> = [
     // 表头内容 所有命令
     {
       text: '命令ID',
@@ -167,7 +168,7 @@ export default class CmdList extends Vue {
   ]
 
   //  创建命令
-  private createCommend(item: any) {
+  private createCommend(item: CmdForm | false) {
     this.dialogFlag = true
     this.dialogShow = 1
     this.formProvide.btnName = ['立即提交']
@@ -207,7 +208,7 @@ export default class CmdList extends Vue {
       }
     }
 
-    const params: any = {}
+    const params = {} as CmdForm
     //  ADD 不提交id，UPDATE提交id
     formObj.id && (params.id = formObj.id)
 
@@ -307,7 +308,7 @@ export default class CmdList extends Vue {
   }
 
   // 数据结构展示方法
-  private consumersSystem(item: any) {
+  private consumersSystem(item: CmdForm) {
     this.tDialogFlag = true
     this.tDialogShow = 2
     this.formProvide.title = '订阅系统信息详情'

@@ -119,19 +119,21 @@ export default class HTopicList extends Vue {
 
   // validation topicList no-repeat-key
   @Watch('formProvide.formObj.topicList', { deep: true })
-  private handleKeyNoRepeat(val: Array<any>) {
-    let _L: Array<string> = []
-    let _l: Array<string> = []
+  private handleKeyNoRepeat(val: Array<{ key: string }>) {
+    let _L: Array<string> = [] // 全部
+    let _l: Array<string> = [] // 不重复
+    let _r: Array<string> = [] // 重复项
+
     val.forEach(item => {
-      if (item.key && !_l.includes(item.key)) {
-        _l.push(item.key)
-      }
       if (item.key) {
         _L.push(item.key)
+        _l.includes(item.key) ? _r.push(item.key) : _l.push(item.key)
       }
     })
+
     if (_L.length > _l.length) {
-      this.noRepeatKey = ['字段名不能重复']
+      // _r去重
+      this.noRepeatKey = [`字段名"${Array.from(new Set(_r)).join(',')}"不能重复`]
     } else {
       this.noRepeatKey = []
     }

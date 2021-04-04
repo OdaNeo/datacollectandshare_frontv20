@@ -29,3 +29,12 @@ export type userProportion = {
   name: string
   value: number
 }
+
+export type releaseMenuRequest = {
+  startTime: string
+  endTime: string
+  systemId: number
+  dataType: number
+  pageNum: number
+  pageSize: number
+}

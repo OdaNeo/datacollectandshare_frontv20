@@ -46,7 +46,7 @@
     </v-tabs-items>
 
     <!-- 表单展示 -->
-    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag" :loading="createTopicLoading">
+    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
       <CreateLogTopic v-if="fDialogShow === 1" />
     </f-dialog>
 
@@ -76,6 +76,7 @@ import LogDataDialog from './childComponent/logDataDialog.vue'
 import HConfirm from '@/components/h-confirm.vue'
 import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
+import { tableHeaderType } from '@/type/table.type'
 
 @Component({
   components: {
@@ -120,14 +121,12 @@ export default class LogDataList extends Vue {
     topicInterFaceType: 0
   }
 
-  private createTopicLoading = false
-
   private desserts: Array<topicTable> = [] // 数据列表
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
   // 主题ID 主题名称 用户 日志采集路径 服务器地址 服务器用户名（暂定）
-  private headers = [
+  private headers: Array<tableHeaderType> = [
     // 表头内容 所有主题
     {
       text: '主题ID',
@@ -177,7 +176,7 @@ export default class LogDataList extends Vue {
   ]
 
   // 表格显示
-  private headersObj: Array<any> = []
+  private headersObj: Array<tableHeaderType> = []
   private dessertsObj: Array<topicTable> = []
 
   // 创建日志主题
@@ -187,7 +186,6 @@ export default class LogDataList extends Vue {
     this.formProvide.btnName = item ? ['立即修改'] : ['立即创建']
     this.formProvide.title = item ? '修改日志主题' : '创建日志主题'
     this.formProvide.methodName = 'addLogTopic' // 立即提交
-    this.createTopicLoading = false
 
     if (item) {
       this.formProvide.formObj = {
@@ -209,7 +207,6 @@ export default class LogDataList extends Vue {
   private async addLogTopic(formObj: TopicAdd) {
     const canNotEdit = formObj.canNotEdit
     // 创建主题 有loading，修改主题没有loading
-    !canNotEdit ? (this.createTopicLoading = true) : (this.createTopicLoading = false)
 
     const params: any = {
       dataType: dataType['结构化']
@@ -235,7 +232,6 @@ export default class LogDataList extends Vue {
       params
     )
     // 关闭loading
-    this.createTopicLoading = false
 
     if (success) {
       this.h_utils['alertUtil'].open(!canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
@@ -253,7 +249,7 @@ export default class LogDataList extends Vue {
   }
 
   // 查询数据详情
-  private showLogDataDetail(item: any) {
+  private showLogDataDetail(item: topicTable) {
     this.formProvide.title = '日志数据详情'
     this.tDialogFlag = true
     this.tDialogShow = 1

@@ -6,7 +6,7 @@ const request = new RequestData()
 // 搜索框仅数字
 Vue.directive('onlyNum', {
   bind: function (el) {
-    let ele: any[] | any = el.tagName === 'INPUT' ? el : el.querySelectorAll('input')
+    let ele: any[] | any = el.tagName.toUpperCase() === 'INPUT' ? el : el.querySelectorAll('input')
     switch (ele.length) {
       case 1:
         ele = ele[0]

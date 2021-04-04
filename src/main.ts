@@ -8,7 +8,7 @@ import { Route, NavigationGuardNext } from 'vue-router'
 import alertUtil from './utils/alertUtil'
 import VueClipboard from 'vue-clipboard2'
 import './directive' // 绑定的指令
-
+import { cancelTokenModule } from '@/store/modules/request'
 const { UserState, logout } = rootStoreModule
 
 Vue.config.productionTip = false
@@ -17,6 +17,9 @@ Vue.use(VueClipboard)
 
 router.beforeEach(
   async ({ path: toPath, name: toName, meta: toMeta }: Route, from: Route, next: NavigationGuardNext<Vue>) => {
+    // 取消上一页的请求
+    cancelTokenModule.clearToken()
+
     if (toPath === '/login') {
       logout()
       next()

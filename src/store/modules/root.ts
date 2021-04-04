@@ -10,11 +10,11 @@ type UserStateType = {
   routeRoot: Array<string> // 用户路由的权限
   userMessage: userMessageType // 主题信息对象
   token: string
-  createUserOption: {
-    // 创建用户参数
-    roleList: Array<any> // 角色列表
-    systemName: Array<any> // 系统名称
-  }
+  // createUserOption: {
+  //   // 创建用户参数
+  //   roleList: Array<any> // 角色列表
+  //   systemName: Array<any> // 系统名称
+  // }
 }
 
 type UserLocalType = {
@@ -42,11 +42,11 @@ export default class rootStore extends VuexModule {
     userRoot: [],
     routeRoot: [],
     userMessage: {},
-    token: '',
-    createUserOption: {
-      roleList: [],
-      systemName: []
-    }
+    token: ''
+    // createUserOption: {
+    //   roleList: [],
+    //   systemName: []
+    // }
   }
 
   @Mutation
@@ -69,10 +69,10 @@ export default class rootStore extends VuexModule {
     this.UserState.routeRoot = []
     this.UserState.userMessage = {}
     this.UserState.token = ''
-    this.UserState.createUserOption = {
-      roleList: [],
-      systemName: []
-    }
+    // this.UserState.createUserOption = {
+    //   roleList: [],
+    //   systemName: []
+    // }
   }
 
   @Action({ rawError: true })

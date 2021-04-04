@@ -98,7 +98,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
-import { CalendarData } from '@/type/calendar'
+import { CalendarData, realTimeData } from '@/type/calendar'
 import { calendarType, calendarColorType } from '@/enum/calendar-enum'
 import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
 @Component
@@ -191,7 +191,7 @@ export default class dataMonitor extends Vue {
     // ]
     const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG', {})
 
-    const _events: Array<CalendarData> = data?.map((item: any) => {
+    const _events: Array<CalendarData> = data?.map((item: realTimeData) => {
       return {
         start: new Date(Number(item['createTime'])),
         color: calendarColorType[item['status']],

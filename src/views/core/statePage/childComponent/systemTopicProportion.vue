@@ -44,7 +44,7 @@ export default class SystemTopicProportion extends Vue {
 
   private topicProportion(elementName: string, opt: topicProportionOpt): void {
     const element = document.getElementById(elementName)
-    const chartElement = this.h_echarts.init(element as HTMLCanvasElement, 'light', { renderer: 'svg' })
+    const chartElement = this.h_echarts.init(element as HTMLCanvasElement, 'light')
     chartElement.setOption(
       {
         title: {
@@ -186,9 +186,9 @@ export default class SystemTopicProportion extends Vue {
     width:49%
     height:100%
     background:#fff
-    box-shadow: 2px 6px 15px 0 rgba(69,65,78,.1)
     border-radius: 5px
     position: relative
+
 ::-webkit-scrollbar
     display:none
 .leftTopView

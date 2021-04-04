@@ -56,6 +56,7 @@
             <v-btn
               text
               color="primary"
+              :loading="!!item.loading"
               :disabled="item.topicInterFaceType === 5"
               @click="getTopicInformation(item, index)"
               >查看附加信息</v-btn
@@ -73,7 +74,7 @@
     </f-dialog>
 
     <!-- 表格显示 -->
-    <t-dialog v-model="tDialogFlag" :loading="dialogLoading">
+    <t-dialog v-model="tDialogFlag">
       <data-structure-dialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <topic-ancillary-information-dialog :otherObj="otherObj" v-else-if="tDialogShow === 2" />
     </t-dialog>
@@ -150,8 +151,6 @@ export default class OfflineTopicList extends Vue {
 
   // private sheetObj: any
   private loading = true
-
-  private dialogLoading = false
 
   private HConfirmShow = false
   private HConfirmItem = {
@@ -585,13 +584,8 @@ export default class OfflineTopicList extends Vue {
   }
 
   private async getTopicInformation(item: any, index: number) {
-    this.tDialogFlag = true
-    this.tDialogShow = 2
-    this.otherObj = {}
-    this.dialogLoading = true
-
     if (!this.desserts[index].flag) {
-      this.formProvide.title = '正在查询'
+      this.$set(item, 'loading', true)
 
       const { data } = await this.h_request['httpGET']('GET_TOPICS_INFORMATION', {
         topicID: item.id,
@@ -609,13 +603,16 @@ export default class OfflineTopicList extends Vue {
         // 数据为空
         this.desserts[index].flag = true
       } else {
-        this.dialogLoading = false
-        this.formProvide.title = '查询失败'
+        // 查询失败
+        this.$set(item, 'loading', false)
+        this.desserts[index].flag = false
         return
       }
     }
-
-    this.dialogLoading = false
+    this.$set(item, 'loading', false)
+    this.tDialogFlag = true
+    this.tDialogShow = 2
+    this.otherObj = {}
     this.formProvide.title = '附加信息'
     this.otherObj = { ...this.desserts[index] }
   }

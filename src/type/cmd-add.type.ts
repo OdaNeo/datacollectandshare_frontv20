@@ -6,3 +6,13 @@ export type CmdAdd = {
   producer: string
   canNotEdit: boolean
 }
+
+export type CmdForm = {
+  id: number
+  cmdName: string
+  consumers: string
+  description: string
+  queueNames: string
+  producer: string
+  canNotEdit: boolean
+}

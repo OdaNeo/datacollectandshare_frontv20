@@ -83,6 +83,7 @@ import Moment from 'moment'
 import util from '@/decorator/utilsDecorator'
 import HOverLay from '@/components/h-overlay.vue'
 import { mdiShieldLock } from '@mdi/js'
+import { releaseMenuRequest } from '@/type/welcome.type'
 
 @Component({
   components: {
@@ -108,9 +109,12 @@ export default class ReleaseMenu extends Vue {
   private releaseDate: string = new Date().toISOString().substr(0, 10)
   private releaseTime = false
 
-  private async getRelease(params: any, callback: Function) {
+  private async getRelease(params: releaseMenuRequest, callback: Function) {
     this.loading = true
-    const result: returnType = await this.h_request.httpGET('GET_STATISTICS_STAT_TOPIC_DATA', params)
+    const result: returnType = await this.h_request.httpGET<releaseMenuRequest>(
+      'GET_STATISTICS_STAT_TOPIC_DATA',
+      params
+    )
     this.loading = false
 
     if (!result.data) {
@@ -232,9 +236,9 @@ export default class ReleaseMenu extends Vue {
     width:49%
     height:100%
     background:#fff
-    box-shadow: 2px 6px 15px 0 rgba(69,65,78,.1)
     border-radius: 5px
     position: relative
+
 .iconCon
     position:absolute
     right:0

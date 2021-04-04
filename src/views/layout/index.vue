@@ -41,7 +41,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import NavBar from './childComponent/navbar.vue'
 import TopBar from './childComponent/topbar.vue'
 import { PROJECT_BASE_COLOR } from '../../../config'
-import { CalendarData } from '@/type/calendar'
+import { CalendarData, realTimeData } from '@/type/calendar'
 import { calendarType, calendarColorType } from '@/enum/calendar-enum'
 import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
@@ -110,7 +110,7 @@ export default class Layout extends Vue {
       this.showAlert = true
     }
 
-    const _events: any = data?.map((item: any) => {
+    const _events: Array<CalendarData> = data?.map((item: realTimeData) => {
       return {
         start: new Date(Number(item['createTime'])),
         color: calendarColorType[item['status']],
@@ -123,7 +123,7 @@ export default class Layout extends Vue {
     })
 
     this.$nextTick(() => {
-      this.events = _events
+      this.events = [..._events]
     })
   }
   // 面包屑导航内容

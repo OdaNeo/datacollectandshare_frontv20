@@ -12,6 +12,8 @@ export type paramsType = {
   topicId?: string
   topicID?: string
   num?: number
+  createTime?: number
+  serverName?: string
 }
 
 export type returnTypeData = {

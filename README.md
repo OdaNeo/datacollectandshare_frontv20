@@ -59,9 +59,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 33. ~~首页loading， 首页加载速度优化， 削减请求数量， 目前有7个请求~~
 34. ~~icon-font 改 svg~~
 35. 资源管理 新添权限切换 bug-fix
-36. 侧边栏样式构建
+36. ~~侧边栏样式构建~~
 37. ~~作业监控轮询 权限bugfix~~
-38. 字段名 noRepeatKey 提示优化
+38. ~~字段名 noRepeatKey 提示优化，显示哪一项重复了~~
 39. ~~使用 非prop $attr，抽象表单内组件~~
 40. ~~实时监控自动延长x轴可视区域~~
 41. ~~事务数据启停重跑后查看日志~~
@@ -70,12 +70,13 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 44. ~~统一http超时、权限、断网等错误处理，与现有业务报错逻辑整合~~
 45. 生产环境错误上报
 46. ~~REQUEST_NAME_TYPE 类型校验~~
-47. H_Vue 类型修改
-48. ~~主题名创建重复bug fix~~
-49. ~~button 添加loading（附加信息）~~
-50. ~~Body示例整合~~
-51. ~~http download~~
-52. ~~上传rest文件错误上报以及验重bug~~
+47. ~~主题名创建重复bug fix~~
+48. ~~button 添加loading（附加信息）~~
+49. ~~Body示例整合~~
+50. ~~http download~~
+51. ~~上传rest文件错误上报以及验重bug~~
+52. ~~路由跳转取消上一页请求~~
+53. 提升首页性能
 
 ## 常见问题
 

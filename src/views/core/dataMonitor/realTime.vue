@@ -63,6 +63,7 @@ import http from '@/decorator/httpDecorator'
 import echarts from '@/decorator/echartsDecorator'
 import util from '@/decorator/utilsDecorator'
 import { mdiToyBrickRemoveOutline, mdiCloseCircleOutline } from '@mdi/js'
+import { paramsType } from '@/type/http-request.type'
 @echarts
 @Component
 @http
@@ -235,9 +236,9 @@ export default class RealTime extends Vue {
     }
   }
 
-  private async updateRange(params: any) {
+  private async updateRange(params: paramsType) {
     // 增量更新
-    const { data } = await this.h_request.httpPOST<object>('POST_MONITOR_FINDLOGBYTIME', params)
+    const { data } = await this.h_request.httpPOST<paramsType>('POST_MONITOR_FINDLOGBYTIME', params)
     // console.log(data.list)
     // console.log(this.dataAll)
     if (data) {

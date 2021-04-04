@@ -55,6 +55,10 @@ export default class Welcome extends Vue {
         width:100%
         display:flex
         justify-content:space-between
+    .viewBox
+        &:hover
+          box-shadow: 1px 6px 15px 0 rgba(69,65,78,.1)
+
 // ::-webkit-scrollbar
 //     display:none
 </style>

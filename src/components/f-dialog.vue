@@ -50,9 +50,8 @@ export default class FDialog extends Vue {
   @Ref('userDialogForm') readonly udf!: HTMLFormElement
   @Inject() private readonly formProvide!: H_Vue
   @Model('closedialog') private checked!: boolean
-  @Prop({ default: false }) private loading!: boolean
   @Prop({ default: 700 }) private width!: number
-
+  private loading = false
   private defaultFormObj: any = {}
   private dialog = true
   private mdiClose = mdiClose
@@ -64,6 +63,7 @@ export default class FDialog extends Vue {
   }
 
   private async validate() {
+    this.loading = true
     const topicName = this.formProvide.formObj.topicName
 
     // 如果包含topicName，且不为修改 主题 (undefined) ， 就要发送验重请求
@@ -72,10 +72,12 @@ export default class FDialog extends Vue {
 
       if (text === undefined) {
         // 网络错误
+        this.loading = false
         return
       } else if (text) {
         // 如果重复，阻止提交
         this.h_utils.alertUtil.open(text, true, 'error')
+        this.loading = false
         return
       }
     }
@@ -86,9 +88,13 @@ export default class FDialog extends Vue {
       if (bool) {
         this.closeMethod()
       }
+      this.loading = false
     } else {
+      this.loading = false
       throw new Error('请指定发起请求的methodName')
     }
+
+    this.loading = false
   }
 
   private reset() {

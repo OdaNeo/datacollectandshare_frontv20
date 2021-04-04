@@ -75,21 +75,20 @@
             >
           </template>
           <template v-slot:log="{ item }">
-            <v-btn text color="primary" @click.stop="getCurrentLog(item.id)">最新日志</v-btn>
-            <!-- 虚拟滚动 -->
+            <v-btn text color="primary" :loading="!!item.loading" @click.stop="getCurrentLog(item)">最新日志</v-btn>
             <v-btn text color="primary" @click.stop="getHistoryLog(item.id)">历史日志</v-btn>
           </template>
         </h-table>
       </v-tab-item>
     </v-tabs-items>
     <!-- 表单展示 -->
-    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag" :loading="SQLLoading">
+    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
       <CreateTransactionalData v-if="dialogFlag === 1" />
       <UploadSQL v-if="dialogFlag === 2" @change="transformSQLFile" />
     </f-dialog>
 
     <!-- 表格显示 -->
-    <t-dialog v-model="tDialogFlag" :loading="rowJsonLoading">
+    <t-dialog v-model="tDialogFlag">
       <ContentDetails v-if="dialogFlag === 3" :rowJson="rowJson" />
       <SqlDetails v-if="dialogFlag === 4" :str="str" />
     </t-dialog>
@@ -148,7 +147,7 @@ export default class transactionalDataList extends Vue {
       }
     }
   })
-  mdiMagnify = mdiMagnify
+  private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示
@@ -168,11 +167,9 @@ export default class transactionalDataList extends Vue {
   }
 
   private rowJson = ''
-  private rowJsonLoading = false
   private str = ''
   private sqlFile: File | null = null
   private sqlForms = new FormData()
-  private SQLLoading = false
   private sqlTimer = 0
 
   private uploadBtnLoading = false
@@ -400,7 +397,6 @@ export default class transactionalDataList extends Vue {
     if (!this.sqlFile) {
       return
     }
-    this.SQLLoading = true
     this.sqlForms = new FormData()
     this.sqlForms.append('ddlFile', this.sqlFile)
 
@@ -409,10 +405,8 @@ export default class transactionalDataList extends Vue {
     if (success) {
       this.h_utils['alertUtil'].open('SQL文件上传成功，正在后台查询日志', true, 'success')
       this.getSQLFileLog(data)
-      this.SQLLoading = false
       return Promise.resolve(success)
     }
-    this.SQLLoading = false
   }
 
   // 轮询上传文件日志
@@ -572,21 +566,22 @@ export default class transactionalDataList extends Vue {
   }
 
   // 最新日志
-  private async getCurrentLog(topicId: number) {
-    this.rowJson = ''
-    this.rowJsonLoading = true
-    this.tDialogFlag = true
-    this.formProvide.title = '正在查询'
-    this.dialogFlag = 3
-    const { data } = await this.h_request.httpGET('GET_TOPICS_GETOFFLINELOGBYTOPICID', { topicId, num: 1 })
-    this.rowJsonLoading = false
-    if (data.list && data.list.length > 0) {
+  private async getCurrentLog(item: { id: number; loading: boolean | undefined }) {
+    this.$set(item, `loading`, true)
+
+    const { data } = await this.h_request.httpGET('GET_TOPICS_GETOFFLINELOGBYTOPICID', { topicId: item.id, num: 1 })
+    if (data && data.list.length > 0) {
       this.rowJson = data.list[0].log
       this.formProvide.title = `创建时间：${Moment(data.list[0].createTime).format('YYYY/MM/DD k:mm:ss')}`
     } else {
-      this.formProvide.title = '查询失败'
+      this.$set(item, `loading`, false)
+      return
     }
-    this.rowJsonLoading = false
+
+    this.$set(item, `loading`, false)
+    this.rowJson = ''
+    this.tDialogFlag = true
+    this.dialogFlag = 3
   }
 
   // 历史日志

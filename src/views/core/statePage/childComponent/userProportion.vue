@@ -136,7 +136,6 @@ export default class UserProportion extends Vue {
     width:49%
     height:100%
     background:#fff
-    box-shadow: 2px 6px 15px 0 rgba(69,65,78,.1)
     border-radius: 5px
     position: relative
 .rightTopView

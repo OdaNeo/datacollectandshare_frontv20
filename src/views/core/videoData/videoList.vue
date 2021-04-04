@@ -43,7 +43,7 @@
       </v-tab-item>
     </v-tabs-items>
     <!-- 表单 -->
-    <f-dialog v-if="dialogFlag" v-model="dialogFlag" :loading="dialogLoading">
+    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
       <create-video-topic-dialog v-if="dialogShow === 1" />
       <set-date-range v-else-if="dialogShow === 2" />
     </f-dialog>
@@ -130,7 +130,6 @@ export default class VideoDataList extends Vue {
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
   private loading = true
-  private dialogLoading = false
 
   // 表头内容 所有主题
   private headers: tableHeaderType[] = [
@@ -202,7 +201,6 @@ export default class VideoDataList extends Vue {
   // 时间选择弹窗
   private showDateRangePopup(item: any) {
     this.curItem = item
-    this.dialogLoading = false
     this.dialogFlag = true
     this.dialogShow = 2
     this.formProvide.title = '选择日期范围'
@@ -244,7 +242,6 @@ export default class VideoDataList extends Vue {
   private async getVideoList(formObj: any) {
     this.videoList = []
     this.videoCountsReal = 0
-    this.dialogLoading = true
     const params: any = {}
     // -8小时时差
     // 2020-1-1-0时 ~ 2020-1-1-1时 视频文件数：1，overTime - beginTime=0ms
@@ -277,7 +274,6 @@ export default class VideoDataList extends Vue {
       // }
     })
     // console.log(this.videoList)
-    this.dialogLoading = false
     // 有视频，才弹出视频弹窗
     if (this.videoList.length > 0) {
       this.showVideoPopup = true

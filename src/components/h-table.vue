@@ -12,8 +12,9 @@
         class="text-center mt-15"
         style="min-height: 150px"
       >
-        <v-icon color="primary">{{ mdiToyBrickRemoveOutline }}</v-icon>
-        <div style="font-size: 14px; margin-top: 5px">查无数据</div>
+        <!-- <v-icon color="primary">{{ mdiToyBrickRemoveOutline }}</v-icon> -->
+        <div style="font-size: 18px; color: #666">查无数据</div>
+        <img class="img" src="../assets/image/kong.png" alt="" />
       </div>
       <!-- 有数据 -->
       <v-simple-table v-else fixed-header>
@@ -70,7 +71,7 @@
 <script lang="ts">
 import { tableHeaderType } from '@/type/table.type'
 import { Component, Vue, Watch, Prop, Emit } from 'vue-property-decorator'
-import { mdiToyBrickRemoveOutline, mdiChevronRight } from '@mdi/js'
+import { mdiChevronRight } from '@mdi/js'
 
 @Component
 export default class HTable extends Vue {
@@ -83,7 +84,7 @@ export default class HTable extends Vue {
 
   private desserts2: Array<unknown> = []
   private expanded: Array<any> = []
-  private mdiToyBrickRemoveOutline = mdiToyBrickRemoveOutline
+  // private mdiToyBrickRemoveOutline = mdiToyBrickRemoveOutline
   private mdiChevronRight = mdiChevronRight
 
   @Watch('desserts')
@@ -184,5 +185,10 @@ export default class HTable extends Vue {
   background-color: #fff;
   overflow-y: auto;
   overflow-x: hidden;
+}
+
+.img {
+  width: 560px;
+  margin-top: 30px;
 }
 </style>

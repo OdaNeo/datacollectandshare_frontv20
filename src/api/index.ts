@@ -2,6 +2,7 @@ import REQUEST_NAME from './requestName'
 import { returnType, httpAllParams, headerObj } from '../type/http-request.type'
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } from 'axios'
 import { rootStoreModule } from '../store/modules/root'
+import { cancelTokenModule } from '../store/modules/request'
 import alertUtil from '../utils/alertUtil'
 import { VUE_APP_BASE_API, BASE_REQUEST_TIME_OUT } from '../../config'
 
@@ -35,6 +36,11 @@ class RequestData {
         config.headers['Authorization'] = rootStoreModule.UserState.token
       }
 
+      // 取消上个页面的请求
+      config.cancelToken = new axios.CancelToken(cancel => {
+        cancelTokenModule.setToken(cancel)
+      })
+
       return config
     })
 
@@ -52,6 +58,8 @@ class RequestData {
           _msg = '网络错误'
         } else if (error.message.includes('timeout')) {
           _msg = '超时'
+        } else if (error.message.includes('路由跳转取消请求')) {
+          _msg = '取消'
         }
         return Promise.reject({ code: error.response?.status || _msg })
       }
@@ -224,6 +232,9 @@ class RequestData {
     // console.log('error code:' + err.code)
     let _message = ''
     switch (err.code) {
+      case '取消':
+        // 如果是取消请求，直接返回，不提示错误
+        return
       case '网络错误':
         _message = '网络错误，请检查网络连接'
         break
@@ -254,10 +265,14 @@ class RequestData {
       case 501:
         _message = `HTTP_ERROR：${err.code}，错误信息：服务器错误`
         break
+      case 502:
+        _message = `HTTP_ERROR：${err.code}，错误信息：网关错误`
+        break
       case 503:
         _message = `HTTP_ERROR：${err.code}，错误信息：服务器暂时不可用`
         break
       default:
+        console.error(err)
         _message = '未知错误'
         break
     }

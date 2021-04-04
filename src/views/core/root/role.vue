@@ -25,7 +25,7 @@
       :paginationLength="paginationLength"
     >
       <template v-slot:buttons="{ item }">
-        <v-btn text color="primary" @click="authItem(item)">授权</v-btn>
+        <v-btn text color="primary" :loading="!!item.loading" @click="authItem(item)">授权</v-btn>
         <v-btn text color="primary" @click="editItem(item)">编辑</v-btn>
         <v-btn
           text
@@ -184,19 +184,25 @@ export default class Role extends Vue {
   }
 
   // 权限页面
-  private async authItem(item: any) {
+  private async authItem(item: { id: number; loading: boolean }) {
+    this.$set(item, `loading`, true)
+
     const { data } = await this.h_request['httpGET'](
       'GET_PERMISSION_AUTHORIZATION_FINDPERMISSIONLISTBYROLEID',
       {},
-      item.id
+      item.id.toString()
     )
-    this.dialogFlag = true
-    this.dialogShow = false
-    this.formProvide.title = '角色授权'
-    this.formProvide.btnName = ['提交授权', '取消']
-    this.formProvide.methodName = 'authRole'
-    this.formProvide.formObj.id = item.id
-    this.formProvide.formObj.roles = this.getActionRoles(data)
+    if (data) {
+      this.dialogFlag = true
+      this.dialogShow = false
+      this.formProvide.title = '角色授权'
+      this.formProvide.btnName = ['提交授权', '取消']
+      this.formProvide.methodName = 'authRole'
+      this.formProvide.formObj.id = item.id
+      this.formProvide.formObj.roles = this.getActionRoles(data)
+    }
+
+    this.$set(item, `loading`, false)
   }
 
   private async addRole(formObj: RoleFormObj) {
