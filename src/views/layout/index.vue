@@ -1,18 +1,13 @@
 <template>
   <v-app id="tct">
-    <v-app-bar app height="57" width="100%" style="left: 0px; z-index: 10" :color="PROJECT_BASE_COLOR">
+    <v-app-bar app height="57" width="100%" style="left: 0px; z-index: 10" flat :color="PROJECT_BASE_COLOR">
       <TopBar />
     </v-app-bar>
-    <v-navigation-drawer
-      style="padding-top: 57px; z-index: 9; max-width: 210px"
-      width="15%"
-      app
-      :color="PROJECT_BASE_COLOR"
-    >
+    <v-navigation-drawer permanent style="padding-top: 57px; z-index: 9; max-width: 210px" width="15%" app>
       <NavBar />
     </v-navigation-drawer>
     <v-main style="background: rgb(246, 248, 251); width: 100%; height: 100%">
-      <v-container fluid class="main-container mt-4">
+      <v-container fluid class="main-container mt-3">
         <!-- 面包屑导航 -->
         <!-- <v-breadcrumbs :items="items"></v-breadcrumbs> -->
         <transition name="fade-transform" mode="out-in">
@@ -177,6 +172,9 @@ export default class Layout extends Vue {
   width: 100%;
   height: auto;
 }
+#tct >>> .v-navigation-drawer__border {
+  background-color: transparent;
+}
 #alert {
   position: fixed;
   right: 20px;
@@ -207,6 +205,7 @@ export default class Layout extends Vue {
   width: 97%;
   margin: 0 auto;
 }
+
 /* fade-transform */
 .fade-transform-leave-active,
 .fade-transform-enter-active {

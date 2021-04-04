@@ -12,7 +12,7 @@
         class="text-center mt-15"
         style="min-height: 150px"
       >
-        <v-icon color="primary lighten-3">{{ mdiToyBrickRemoveOutline }}</v-icon>
+        <v-icon color="primary">{{ mdiToyBrickRemoveOutline }}</v-icon>
         <div style="font-size: 14px; margin-top: 5px">查无数据</div>
       </div>
       <!-- 有数据 -->

@@ -1,5 +1,5 @@
 <template>
-  <v-list id="navbar" dark class="pt-0" expand dense>
+  <v-list id="navbar" light class="pt-0" expand dense>
     <v-list-group
       :value="$route.matched[0].name === item.name"
       v-for="item in navMenu"
@@ -7,7 +7,7 @@
       :append-icon="mdiMenuUp"
       :prepend-icon="item.meta.icon"
       no-action
-      color="white"
+      color="primary"
     >
       <template v-slot:activator>
         <v-list-item-content>
@@ -15,7 +15,14 @@
         </v-list-item-content>
       </template>
 
-      <v-list-item class="ml-n3" v-for="subItem in item.childrenNavList" :key="subItem.id" link :to="subItem.meta.url">
+      <v-list-item
+        color="primary"
+        class="ml-n3"
+        v-for="subItem in item.childrenNavList"
+        :key="subItem.id"
+        link
+        :to="subItem.meta.url"
+      >
         <v-list-item-content class="ml-0">
           <v-list-item-title v-text="subItem.name"></v-list-item-title>
         </v-list-item-content>
