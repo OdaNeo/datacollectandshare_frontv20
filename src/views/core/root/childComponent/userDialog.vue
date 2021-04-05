@@ -20,7 +20,6 @@
     <HSelect
       :description="`用户类型`"
       placeholder="请选择用户类型"
-      :loading="userRoots.length === 0"
       v-model="formProvide.formObj['userType']"
       :rules="[...h_validator.noEmpty('用户类型')]"
       :items="userRoots"
@@ -38,7 +37,6 @@
     <HSelect
       :description="`系统名称`"
       placeholder="请选择系统名称"
-      :loading="systemNames.length === 0"
       v-model="formProvide.formObj['systemName']"
       :rules="[...h_validator.noEmpty('系统名称')]"
       :items="systemNames"
@@ -46,16 +44,13 @@
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Vue, Inject } from 'vue-property-decorator'
+import { Component, Vue, Inject, Prop } from 'vue-property-decorator'
 import { userFormVar } from '@/type/user.type'
-import http from '@/decorator/httpDecorator'
-import { returnType } from '@/type/http-request.type'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import HSimpleInput from '@/components/h-simple-input.vue'
 import HRadioGroup from '@/components/h-radio-group.vue'
 import HSelect from '@/components/h-select.vue'
-@http
 @Component({
   components: {
     HSimpleInput,
@@ -66,51 +61,53 @@ import HSelect from '@/components/h-select.vue'
 @Validator(['noEmpty'])
 export default class userDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
+  @Prop() private userRoots!: Array<userFormVar>
+  @Prop() private systemNames!: Array<userFormVar>
+
   private userStates: Array<userFormVar> = [
     { text: '正常', value: '1' },
     { text: '锁定', value: '2' },
     { text: '删除', value: '0' }
   ]
-  private userRoots: Array<userFormVar> = []
-  private systemNames: Array<userFormVar> = []
+
   // private noRepeat: Array<string> = []
   // private editDialog = false
-  private timer = 0
+  // private timer = 0
 
-  private getUserRoot(data: Array<{ name: string; id: number }>) {
-    this.userRoots = data.map((s: { name: string; id: number }) => {
-      return {
-        text: s.name,
-        value: s.id.toString()
-      }
-    })
-  }
-  private getSystemName(data: Array<{ name: string; id: number }>) {
-    this.systemNames = data.map((s: { name: string; id: number }) => {
-      return {
-        text: s.name,
-        value: s.id.toString()
-      }
-    })
-  }
+  // private getUserRoot(data: Array<{ name: string; id: number }>) {
+  //   this.userRoots = data.map((s: { name: string; id: number }) => {
+  //     return {
+  //       text: s.name,
+  //       value: s.id.toString()
+  //     }
+  //   })
+  // }
+  // private getSystemName(data: Array<{ name: string; id: number }>) {
+  //   this.systemNames = data.map((s: { name: string; id: number }) => {
+  //     return {
+  //       text: s.name,
+  //       value: s.id.toString()
+  //     }
+  //   })
+  // }
 
-  private async httpAll() {
-    const [{ data: data1 }, { data: data2 }]: Array<returnType> = await this.h_request['httpAll']([
-      {
-        name: 'GET_USER_ADDUSER_FIND_ALL_ROLE',
-        method: 'get',
-        data: {}
-      },
-      {
-        name: 'GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER',
-        method: 'get',
-        data: {}
-      }
-    ])
+  // private async httpAll() {
+  //   const [{ data: data1 }, { data: data2 }]: Array<returnType> = await this.h_request['httpAll']([
+  //     {
+  //       name: 'GET_USER_ADDUSER_FIND_ALL_ROLE',
+  //       method: 'get',
+  //       data: {}
+  //     },
+  //     {
+  //       name: 'GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER',
+  //       method: 'get',
+  //       data: {}
+  //     }
+  //   ])
 
-    data1 && this.getUserRoot(data1)
-    data2 && this.getSystemName(data2)
-  }
+  //   data1 && this.getUserRoot(data1)
+  //   data2 && this.getSystemName(data2)
+  // }
 
   // private async loginNameNoRepeat(val: string) {
   //   if (val === undefined) {
@@ -128,8 +125,8 @@ export default class userDialog extends Vue {
   //   }, 150)
   // }
 
-  created(): void {
-    this.httpAll()
-  }
+  // created(): void {
+  //   this.httpAll()
+  // }
 }
 </script>

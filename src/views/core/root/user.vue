@@ -14,7 +14,7 @@
         "
       />
       <v-col>
-        <v-btn color="primary" depressed small dark @click.stop="addItem">添加用户</v-btn>
+        <v-btn color="primary" :loading="addItemLoading" depressed small dark @click.stop="addItem">添加用户</v-btn>
       </v-col>
     </v-row>
 
@@ -27,12 +27,12 @@
       :paginationLength="paginationLength"
     >
       <template v-slot:buttons="{ item }">
-        <v-btn text color="primary" @click="editItem(item)">编辑</v-btn>
+        <v-btn text color="primary" :loading="!!item.loading" @click="editItem(item)">编辑</v-btn>
       </template>
     </h-table>
 
     <f-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <user-dialog />
+      <user-dialog :userRoots="userRoots" :systemNames="systemNames" />
     </f-dialog>
   </div>
 </template>
@@ -45,7 +45,8 @@ import {
   userParamsType,
   userFormObj,
   dialogRequestStructure,
-  dialogRequestStructure2
+  dialogRequestStructure2,
+  userFormVar
 } from '@/type/user.type'
 import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
@@ -83,14 +84,20 @@ export default class User extends Vue {
       }
     }
   })
-  mdiMagnify = mdiMagnify
+  private mdiMagnify = mdiMagnify
   private dialogFlag = false
   private desserts: Array<userInfo> = []
   private pageNum = 1
   private pageSize = 10
   private paginationLength = 1
   private queryUserName = ''
+
   private loading = true
+  private addItemLoading = false
+
+  private userRoots: Array<userFormVar> = []
+  private systemNames: Array<userFormVar> = []
+
   private headers = [
     {
       text: '账号ID',
@@ -140,7 +147,18 @@ export default class User extends Vue {
     }
   ]
 
-  private addItem() {
+  private async addItem() {
+    // 如果保存了userRoots 和 systemNames 直接进入, 否则发送请求
+    if (this.userRoots.length === 0 || this.systemNames.length === 0) {
+      this.addItemLoading = true
+      const bo = await this.httpAll()
+      if (!bo) {
+        this.addItemLoading = false
+        return
+      }
+    }
+
+    this.addItemLoading = false
     this.dialogFlag = true
     this.formProvide.title = '创建用户'
     this.formProvide.btnName = ['立即创建', '取消']
@@ -148,7 +166,17 @@ export default class User extends Vue {
     this.formProvide.formObj = {}
   }
 
-  private editItem(item: userInfo) {
+  private async editItem(item: userInfo) {
+    // 如果保存了userRoots 和 systemNames 直接进入, 否则发送请求
+    if (this.userRoots.length === 0 || this.systemNames.length === 0) {
+      this.$set(item, 'loading', true)
+      const bo = await this.httpAll()
+      if (!bo) {
+        this.$set(item, 'loading', false)
+        return
+      }
+    }
+    this.$set(item, 'loading', false)
     this.dialogFlag = true
     this.formProvide.title = '用户信息编辑'
     this.formProvide.btnName = ['立即修改', '取消']
@@ -161,6 +189,46 @@ export default class User extends Vue {
       userId: item.id,
       canNotEdit: true
     }
+  }
+  // 请求 userRoots 和 systemNames
+  private async httpAll() {
+    const [{ data: data1 }, { data: data2 }]: Array<returnType> = await this.h_request['httpAll']([
+      {
+        name: 'GET_USER_ADDUSER_FIND_ALL_ROLE',
+        method: 'get',
+        data: {}
+      },
+      {
+        name: 'GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER',
+        method: 'get',
+        data: {}
+      }
+    ])
+
+    if (data1 && data2) {
+      this.getUserRoot(data1)
+      this.getSystemName(data2)
+      return Promise.resolve(true)
+    } else {
+      return Promise.resolve(false)
+    }
+  }
+
+  private getUserRoot(data: Array<{ name: string; id: number }>) {
+    this.userRoots = data.map((s: { name: string; id: number }) => {
+      return {
+        text: s.name,
+        value: s.id.toString()
+      }
+    })
+  }
+  private getSystemName(data: Array<{ name: string; id: number }>) {
+    this.systemNames = data.map((s: { name: string; id: number }) => {
+      return {
+        text: s.name,
+        value: s.id.toString()
+      }
+    })
   }
 
   private async searchMethod(bool: boolean, params: paramsType): Promise<void> {
