@@ -257,7 +257,7 @@ class RequestData {
         _message = `HTTP_ERROR：${err.code}，错误信息：请求方法错误`
         break
       case 408:
-        _message = `HTTP_ERROR：${err.code}，请求超时，请重试`
+        _message = `HTTP_ERROR：${err.code}，错误信息：请求超时，请重试`
         break
       case 500:
         _message = `HTTP_ERROR：${err.code}，错误信息：服务器错误`

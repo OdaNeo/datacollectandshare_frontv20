@@ -39,8 +39,8 @@
       id="realTimeNoData"
       style="height: 200px; margin-top: 120px"
     >
-      <v-icon color="primary lighten-3">{{ mdiToyBrickRemoveOutline }}</v-icon>
-      <div style="font-size: 14px; margin-top: 5px">查无数据</div>
+      <div style="font-size: 18px; color: #666">查无数据</div>
+      <img class="img" src="../../../assets/image/kong.png" alt="" />
     </div>
     <!-- echarts -->
     <div v-else class="charts-container">
@@ -62,7 +62,7 @@ import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import echarts from '@/decorator/echartsDecorator'
 import util from '@/decorator/utilsDecorator'
-import { mdiToyBrickRemoveOutline, mdiCloseCircleOutline } from '@mdi/js'
+import { mdiCloseCircleOutline } from '@mdi/js'
 import { paramsType } from '@/type/http-request.type'
 @echarts
 @Component
@@ -71,7 +71,6 @@ import { paramsType } from '@/type/http-request.type'
 export default class RealTime extends Vue {
   private timer = 0
   private interval = 10
-  private mdiToyBrickRemoveOutline = mdiToyBrickRemoveOutline
   private mdiCloseCircleOutline = mdiCloseCircleOutline
 
   private timeRange = 10 * 60 * 1000 // 10分钟
@@ -91,7 +90,6 @@ export default class RealTime extends Vue {
     { name: '异常', color: 'red' },
     { name: '离线', color: 'grey' },
     { name: '警告', color: 'orange' }
-    // { name: '正常', color: '#2ECC71' }
   ]
 
   // 分页
@@ -437,7 +435,10 @@ export default class RealTime extends Vue {
   height: 50px !important;
   width: 50px !important;
 }
-
+.img {
+  width: 560px;
+  margin-top: 30px;
+}
 .real-time-enum {
   display: inline-block;
   width: 33%;

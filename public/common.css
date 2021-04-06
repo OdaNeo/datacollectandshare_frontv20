@@ -27,19 +27,7 @@ html {
 
 @media all and (min-width: 1920px) {
     html {
-        font-size: 19px !important;
-    }
-}
-
-@media all and (min-width: 2560px) {
-    html {
-        font-size: 20px !important;
-    }
-}
-
-@media all and (min-width: 3840px) {
-    html {
-        font-size: 36px !important;
+        font-size: 17px !important;
     }
 }
 
@@ -62,12 +50,12 @@ input:-internal-autofill-previewed, input:-internal-autofill-selected {
 /* form */
 
 .label {
-    min-width: 110px;
+    min-width: 120px;
     display: flex;
     justify-content: flex-end;
     color: rgba(0, 0, 0, 0.87);
-    font-size: 14px;
-    line-height: 34px;
+    font-size: 0.9rem;
+    line-height: 35px;
 }
 
 .require-span {

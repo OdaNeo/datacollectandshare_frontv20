@@ -1,6 +1,6 @@
 <template>
   <v-app id="tct">
-    <v-app-bar app height="57" width="100%" style="left: 0px; z-index: 10" flat :color="PROJECT_BASE_COLOR">
+    <v-app-bar app height="57" width="100%" style="left: 0px; z-index: 10" flat color="rgb(0, 21, 41)">
       <TopBar />
     </v-app-bar>
     <v-navigation-drawer permanent style="padding-top: 57px; z-index: 9; max-width: 210px" width="15%" app>
@@ -40,7 +40,6 @@
 import { Component, Vue } from 'vue-property-decorator'
 import NavBar from './childComponent/navbar.vue'
 import TopBar from './childComponent/topbar.vue'
-import { PROJECT_BASE_COLOR } from '../../../config'
 import { CalendarData, realTimeData } from '@/type/calendar'
 import { calendarType, calendarColorType } from '@/enum/calendar-enum'
 import http from '@/decorator/httpDecorator'
@@ -58,7 +57,6 @@ import { mdiClose } from '@mdi/js'
 export default class Layout extends Vue {
   mdiClose = mdiClose
 
-  private PROJECT_BASE_COLOR = PROJECT_BASE_COLOR
   private timer = 0
   private interval = 60
 
@@ -150,15 +148,11 @@ export default class Layout extends Vue {
     this.showAlert = true
   }
   mounted(): void {
-    // 开发环境不轮询
     // this.updateRange()
 
-    if (process.env.NODE_ENV !== 'development') {
-      // this.updateRange()  // 减少首页http请求
-      this.timer = setInterval(() => {
-        this.updateRange()
-      }, this.interval * 1000)
-    }
+    this.timer = setInterval(() => {
+      this.updateRange()
+    }, this.interval * 1000)
   }
   // 清除timer
   beforeDestroy(): void {

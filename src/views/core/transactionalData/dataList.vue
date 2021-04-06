@@ -568,18 +568,18 @@ export default class transactionalDataList extends Vue {
   // 最新日志
   private async getCurrentLog(item: { id: number; loading: boolean | undefined }) {
     this.$set(item, `loading`, true)
-
+    this.rowJson = ''
     const { data } = await this.h_request.httpGET('GET_TOPICS_GETOFFLINELOGBYTOPICID', { topicId: item.id, num: 1 })
     if (data && data.list.length > 0) {
       this.rowJson = data.list[0].log
       this.formProvide.title = `创建时间：${Moment(data.list[0].createTime).format('YYYY/MM/DD k:mm:ss')}`
     } else {
+      this.rowJson = ''
       this.$set(item, `loading`, false)
       return
     }
 
     this.$set(item, `loading`, false)
-    this.rowJson = ''
     this.tDialogFlag = true
     this.dialogFlag = 3
   }

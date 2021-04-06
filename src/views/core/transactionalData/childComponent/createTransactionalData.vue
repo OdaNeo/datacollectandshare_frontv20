@@ -369,7 +369,7 @@ export default class CreateTransactionalData extends Vue {
   display: flex;
   justify-content: flex-end;
   color: rgba(0, 0, 0, 0.87);
-  font-size: 15px;
+  font-size: 0.9rem;
   line-height: 35px;
   cursor: pointer;
 }

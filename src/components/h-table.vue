@@ -2,18 +2,13 @@
   <div id="h-table">
     <div class="simple-table">
       <!-- 正在查询 -->
-      <div v-if="loading" class="text-center mt-15" style="min-height: 100px">
+      <div v-if="loading" class="content">
         <v-progress-circular indeterminate color="primary"></v-progress-circular>
       </div>
       <!-- 无数据 -->
-      <div
-        id="h-table-no-data"
-        v-else-if="!desserts || desserts.length === 0"
-        class="text-center mt-15"
-        style="min-height: 150px"
-      >
+      <div id="h-table-no-data" v-else-if="!desserts || desserts.length === 0" class="content">
         <!-- <v-icon color="primary">{{ mdiToyBrickRemoveOutline }}</v-icon> -->
-        <div style="font-size: 18px; color: #666">查无数据</div>
+        <div style="font-size: 0.9rem; color: #666">查无数据</div>
         <img class="img" src="../assets/image/kong.png" alt="" />
       </div>
       <!-- 有数据 -->
@@ -179,16 +174,21 @@ export default class HTable extends Vue {
   height: 50px !important;
   width: 50px !important;
 }
-
+.img {
+  width: 240px;
+  margin-top: 10px;
+}
+.content {
+  height: 180px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
 .simple-table {
   border-radius: 2px;
   background-color: #fff;
   overflow-y: auto;
   overflow-x: hidden;
-}
-
-.img {
-  width: 560px;
-  margin-top: 30px;
 }
 </style>
