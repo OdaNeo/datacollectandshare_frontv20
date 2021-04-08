@@ -3,6 +3,24 @@
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const gitRevisionPlugin = new GitRevisionPlugin()
 
+// 生产环境版本号
+// 版本号 3.[月份].[自增打包次数]，自增打包次数每月一日重置
+if (process.env.NODE_ENV === 'production') {
+  const fs = require('fs')
+  const packageJSON = require('./package.json')
+
+  const date = new Date().getMonth() + 1
+  const day = new Date().getDate()
+  const _version = Number(packageJSON.version.split('.')[2])
+
+  const times = day === 1 && _version !== 1 ? 0 : _version
+
+  packageJSON.version = `3.${date}.${times + 1}`
+
+  //同步写入package.json文件
+  fs.writeFileSync('package.json', JSON.stringify(packageJSON, null, 2))
+}
+
 module.exports = {
   // publicPath:"/tsweb2/",
   lintOnSave: process.env.NODE_ENV === 'development',
