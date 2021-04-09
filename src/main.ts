@@ -7,6 +7,7 @@ import { rootStoreModule } from './store/modules/root'
 import { Route, NavigationGuardNext } from 'vue-router'
 import alertUtil from './utils/alertUtil'
 import VueClipboard from 'vue-clipboard2'
+import './common.css'
 import './directive' // 绑定的指令
 import { cancelTokenModule } from '@/store/modules/request'
 const { UserState, logout } = rootStoreModule

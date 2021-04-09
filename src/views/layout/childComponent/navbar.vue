@@ -17,7 +17,7 @@
 
       <v-list-item
         color="primary"
-        class="ml-n3"
+        class="ml-n5"
         v-for="subItem in item.childrenNavList"
         :key="subItem.id"
         link

@@ -148,11 +148,6 @@ export default class VideoDataList extends Vue {
       align: 'center',
       value: 'userName'
     },
-    // {
-    //   text: '视频流m3u8地址',
-    //   align: 'center',
-    //   value: 'm3u8Url'
-    // },
     {
       text: '本系统rtmp地址',
       align: 'center',
@@ -176,6 +171,11 @@ export default class VideoDataList extends Vue {
       align: 'center',
       value: 'bucketName'
     },
+    // {
+    //   text: '显示详情',
+    //   align: 'center',
+    //   slot: 'buttons'
+    // },
     {
       text: '操作',
       align: 'center',

@@ -42,10 +42,10 @@
             fab
             dark
             depressed
-            max-width="24"
-            max-height="24"
+            max-width="22"
+            max-height="22"
             color="primary"
-            style="margin-top: 5px"
+            style="margin-top: 7px"
             @click.stop="add"
           >
             <v-icon dark>{{ mdiPlus }}</v-icon>
@@ -56,10 +56,10 @@
             fab
             dark
             depressed
-            max-width="24"
-            max-height="24"
+            max-width="22"
+            max-height="22"
             color="primary"
-            style="margin-top: 5px"
+            style="margin-top: 7px"
             @click.stop="minus(index)"
           >
             <v-icon dark>{{ mdiMinus }}</v-icon>

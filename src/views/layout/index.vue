@@ -3,7 +3,7 @@
     <v-app-bar app height="57" width="100%" style="left: 0px; z-index: 10" flat color="rgb(0, 21, 41)">
       <TopBar />
     </v-app-bar>
-    <v-navigation-drawer permanent style="padding-top: 57px; z-index: 9; max-width: 210px" width="15%" app>
+    <v-navigation-drawer color="#f7f7f9" permanent style="padding-top: 57px; z-index: 9" width="190px" app>
       <NavBar />
     </v-navigation-drawer>
     <v-main style="background: rgb(246, 248, 251); width: 100%; height: 100%">
@@ -96,7 +96,8 @@ export default class Layout extends Vue {
     const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME', {
       date: new Date().getTime()
     })
-    // 如果 data 不存在，说明没有权限或者http请求出错
+
+    // 如果 data 不存在，说明没有权限或者http请求出错，清空定时器不在轮询
     if (data === undefined) {
       this.h_utils.alertUtil.close()
       clearInterval(this.timer)

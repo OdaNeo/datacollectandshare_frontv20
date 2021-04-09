@@ -1,7 +1,7 @@
 <template>
   <div class="viewBox rightBtmView">
     <HOverLay :loading="loading" />
-    <div v-if="!loading" style="width: 100%; height: 8%; padding-top: 10px">
+    <div style="width: 100%; height: 8%; padding-top: 10px">
       <p>{{ `${subscribeStartTime}至${subscribeEndTime}主题${subscribeSystemName}订阅情况` }}</p>
       <div class="iconCon">
         <v-menu offset-y max-height="200" min-width="130" transition="slide-x-transition">

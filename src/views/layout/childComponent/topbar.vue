@@ -2,8 +2,10 @@
   <div id="topbar">
     <v-row align="center" no-gutters>
       <v-col cols="12" align-self="center">
-        <span class="titleShadow" @click="handleNavRouter">{{ PROJECT_TITLE }}</span>
-
+        <div class="titleShadow">
+          <span @click="handleNavRouter">{{ PROJECT_TITLE }}</span>
+          <span class="subTitle">版本：{{ PROJECT_SUB_TITLE }}</span>
+        </div>
         <v-row class="userMenu">
           <v-menu left offset-y bottom max-width="200px" min-width="200px" rounded attach>
             <template v-slot:activator="{ on }">
@@ -47,7 +49,7 @@
 import { Component, Vue } from 'vue-property-decorator'
 import { rootStoreModule } from '@/store/modules/root'
 import { userState } from '@/enum/user-enum'
-import { PROJECT_TITLE } from '../../../../config'
+import { PROJECT_TITLE, PROJECT_SUB_TITLE } from '../../../../config'
 import { mdiAccount } from '@mdi/js'
 
 @Component
@@ -59,6 +61,7 @@ export default class TopBar extends Vue {
   private mdiAccount = mdiAccount
 
   private PROJECT_TITLE = PROJECT_TITLE
+  private PROJECT_SUB_TITLE = PROJECT_SUB_TITLE
 
   get username(): string {
     return rootStoreModule.UserState.username
@@ -150,5 +153,9 @@ export default class TopBar extends Vue {
   z-index: 7;
   top: 13px;
   left: 15px;
+}
+.subTitle {
+  padding-left: 40px;
+  font-size: 18px;
 }
 </style>

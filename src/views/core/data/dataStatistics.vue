@@ -94,8 +94,8 @@
           </div>
           <!-- 满足查询条件 显示图表 -->
           <div v-show="showEchartsBox">
-            <div class="before-btn" @click="beforeMonth">
-              <img src="../../../assets/image/leftBtn.png" alt="" />
+            <div class="before-btn">
+              <img @click="beforeMonth" src="../../../assets/image/leftBtn.png" alt="" />
             </div>
             <div class="chart-box">
               <div v-show="haveData" id="canvasPackRelease" class="canvasPack echartsBox"></div>
@@ -106,8 +106,8 @@
                 </div>
               </div>
             </div>
-            <div class="after-btn" @click="afterMonth">
-              <img src="../../../assets/image/rightBtn.png" alt="" />
+            <div class="after-btn">
+              <img @click="afterMonth" src="../../../assets/image/rightBtn.png" alt="" />
             </div>
           </div>
         </v-tab-item>

@@ -1,5 +1,30 @@
 <template>
   <div id="VideoDataStatistics">
+    <div v-if="videoList.length > 0" class="slider mt-2">
+      <span style="font-size: 14px">当前显示前{{ sliderNumber }}条主题</span>
+      <v-slider
+        v-model="sliderNumber"
+        class="align-center ml-4"
+        hide-details
+        :max="maxValue"
+        :min="10"
+        thumb-size="20"
+        thumb-label="always"
+        @input="sliderChange"
+      >
+        <template v-slot:append>
+          <v-text-field
+            v-model="sliderNumber"
+            class="mt-0 pt-0"
+            dense
+            single-line
+            type="number"
+            style="width: 45px"
+          ></v-text-field>
+        </template>
+      </v-slider>
+    </div>
+
     <div id="echarts1"></div>
     <div id="echarts2"></div>
   </div>
@@ -10,24 +35,42 @@ import http from '@/decorator/httpDecorator'
 import Echarts from 'echarts'
 import Moment from 'moment'
 
-@Component
+@Component({})
 @http
 export default class VideoDataStatistics extends Vue {
   private videoList: Array<any> = []
+  private maxValue = 10
+
+  private sliderNumber = 10
 
   private async getVideoAll() {
     const { data } = await this.h_request['httpGET']('GET_TOPICS_GETVIDEO', {})
+    this.videoList = [...data]
+    this.maxValue = data.length
 
-    this.videoList = data
-    data && this.handelECharts('echarts1', this.getOption1(this.videoList))
+    data && this.handelECharts('echarts1', this.getOption1(this.videoList, this.sliderNumber))
     data && this.handelECharts('echarts2', this.getOption2(this.videoList))
   }
 
   // echarts1
-  private getOption1(data: Array<{ fileNum: unknown; topicId: unknown }>) {
+  private getOption1(data: Array<{ fileNum: number; topicId: number | string }>, number: number) {
+    data.sort((prev, next) => {
+      return next.fileNum - prev.fileNum
+    })
+
+    const _data: typeof data = []
+    let otherFileNum = 0
+
+    data.forEach((item, index) => {
+      index < number
+        ? (_data[index] = { fileNum: item.fileNum, topicId: `主题ID：${item.topicId}` })
+        : (otherFileNum += item.fileNum)
+    })
+    _data[number] = { fileNum: otherFileNum, topicId: '其余视频主题' }
+
     return {
       title: {
-        text: '主题数据统计',
+        text: '视频主题占比',
         left: 'center'
       },
       tooltip: {
@@ -35,23 +78,23 @@ export default class VideoDataStatistics extends Vue {
         formatter: '{a} <br/>{b} : {c} ({d}%)'
       },
       legend: {
-        left: 'center',
-        top: 'bottom',
-        data: data.map(item => {
-          return `主题ID：${item.topicId}`
+        right: '20%',
+        top: '15%',
+        orient: 'vertical',
+        data: _data.map(item => {
+          return `${item.topicId}`
         })
       },
       series: [
         {
           name: '视频主题文件占比',
           type: 'pie',
-          radius: [20, 80],
-          center: ['50%', '38%'],
-          roseType: 'area',
-          data: data.map(item => {
+          radius: [20, 95],
+          center: ['35%', '50%'],
+          data: _data.map(item => {
             return {
               value: item.fileNum,
-              name: `主题ID：${item.topicId}`
+              name: `${item.topicId}`
             }
           })
         }
@@ -156,6 +199,11 @@ export default class VideoDataStatistics extends Vue {
     })
   }
 
+  // 滑块 sliderChange
+  private sliderChange(val: number) {
+    this.handelECharts('echarts1', this.getOption1(this.videoList, val))
+  }
+
   //
   mounted(): void {
     this.getVideoAll()
@@ -163,8 +211,14 @@ export default class VideoDataStatistics extends Vue {
 }
 </script>
 <style scoped>
+.slider {
+  width: 500px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 #echarts1 {
-  height: 400px;
+  height: 380px;
   width: 100%;
 }
 #echarts2 {

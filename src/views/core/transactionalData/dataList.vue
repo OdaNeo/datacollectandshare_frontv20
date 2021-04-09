@@ -82,7 +82,7 @@
       </v-tab-item>
     </v-tabs-items>
     <!-- 表单展示 -->
-    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
+    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag" :indeterminate="false" :value="upLoadingProgress">
       <CreateTransactionalData v-if="dialogFlag === 1" />
       <UploadSQL v-if="dialogFlag === 2" @change="transformSQLFile" />
     </f-dialog>
@@ -119,6 +119,7 @@ import { mdiMagnify } from '@mdi/js'
 import SqlDetails from './childComponent/sqlDetails.vue'
 import HSearch from '@/components/h-search.vue'
 import Moment from 'moment'
+import { uploadStoreModule } from '@/store/modules/upload'
 
 @Component({
   components: {
@@ -173,6 +174,10 @@ export default class transactionalDataList extends Vue {
   private sqlTimer = 0
 
   private uploadBtnLoading = false
+
+  private get upLoadingProgress() {
+    return uploadStoreModule.upLoadingProgress
+  }
 
   private desserts: Array<topicTable> = [] // 数据列表
   private loading = true
@@ -412,11 +417,12 @@ export default class transactionalDataList extends Vue {
   // 轮询上传文件日志
   private async getSQLFileLog(id: unknown) {
     clearInterval(this.sqlTimer)
-    // 0: 进行 1：完成
+
+    // 0: 进行 1：成功 2: 失败 3：sql文件执行完毕
     this.sqlTimer = setInterval(async () => {
       const { data, message } = await this.h_request.httpGET('GET_TOPICS_SELECTSQLFILELOG', { id })
 
-      if (data === 1) {
+      if (data !== 0) {
         // SQL日志详情
         this.str = message
         this.tDialogFlag = true

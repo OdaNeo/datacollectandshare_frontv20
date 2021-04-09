@@ -11,7 +11,13 @@
       <!-- 分割线 -->
       <v-divider style="padding-bottom: 1px" v-if="!loading"></v-divider>
       <!-- 进度条 -->
-      <v-progress-linear v-else color="primary" indeterminate height="2"></v-progress-linear>
+      <v-progress-linear
+        v-else
+        color="primary"
+        :value="value"
+        :indeterminate="indeterminate"
+        height="2"
+      ></v-progress-linear>
       <!-- 主题 -->
       <v-card-text class="pb-0 mt-4">
         <v-container class="pb-0 pt-5">
@@ -51,6 +57,9 @@ export default class FDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   @Model('closedialog') private checked!: boolean
   @Prop({ default: 700 }) private width!: number
+  @Prop({ default: true }) indeterminate!: boolean
+  @Prop({ default: 0 }) value!: number
+
   private loading = false
   private defaultFormObj: any = {}
   private dialog = true
@@ -59,7 +68,9 @@ export default class FDialog extends Vue {
   private userDialogValid = true
   private closeMethod(): void {
     this.dialog = false
-    this.$emit('closedialog')
+    setTimeout(() => {
+      this.$emit('closedialog')
+    }, 290)
   }
 
   private async validate() {

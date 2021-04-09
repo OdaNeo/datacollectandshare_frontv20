@@ -35,12 +35,12 @@ export default class DataStructureDialog extends Vue {
   }
   private headers = [
     {
-      text: '数据key',
+      text: '字段名称',
       align: 'center',
       value: 'key'
     },
     {
-      text: '数据value',
+      text: '字段类型',
       align: 'center',
       value: 'value'
     },

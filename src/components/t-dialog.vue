@@ -12,7 +12,7 @@
       <v-divider style="padding-bottom: 1px" v-if="!loading"></v-divider>
       <!-- 进度条 -->
       <v-progress-linear v-else color="primary" indeterminate height="2"></v-progress-linear>
-      <v-card-text class="pb-0 mt-4 pb-6">
+      <v-card-text class="pt-4 pb-6 overflow">
         <v-container class="pb-1">
           <slot />
         </v-container>
@@ -50,5 +50,10 @@ export default class TDialog extends Vue {
   position: absolute;
   right: 14px;
   top: 14px;
+}
+.overflow {
+  max-height: 70vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 </style>

@@ -33,9 +33,23 @@
               >数据结构详情</v-btn
             >
           </template>
-          <template v-slot:operation="{ item, index }">
-            <v-btn text v-if="!item.status" color="primary" class="my-2" @click="subscribe(item, index)">订阅</v-btn>
-            <v-btn text v-if="item.status" color="warning" class="my-2" @click="cancelScribe(item, index)"
+          <template v-slot:operation="{ item }">
+            <v-btn
+              text
+              v-if="!item.status"
+              color="primary"
+              :loading="!!item.subloading"
+              class="my-2"
+              @click="subscribe(item)"
+              >订阅</v-btn
+            >
+            <v-btn
+              text
+              v-if="item.status"
+              :loading="!!item.subloading"
+              color="warning"
+              class="my-2"
+              @click="cancelScribe(item)"
               >取消订阅</v-btn
             >
           </template>
@@ -204,13 +218,11 @@ export default class TopicSub extends Vue {
       const { data }: returnType = bool
         ? await this.h_request['httpGET']<object>('GET_SUBMODERATIONS_SELECTMYSUBTOPICBYTOPICID', params)
         : await this.h_request['httpGET']<object>('GET_SUBMODERATIONS_SELECTMYSUBTOPICLIST', params)
-      console.log(data)
       _data = data ? { ...data } : undefined
     } else {
       const { data }: returnType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTSUBTOPICBYID', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_FINDALLSUBTOPIC', params)
-      console.log(data)
       _data = data ? { ...data } : undefined
     }
 
@@ -249,30 +261,32 @@ export default class TopicSub extends Vue {
     this.pageNum = 1
   }
   // <!-- 订阅按钮乐观更新 -->
-  private async subscribe(item: { id: string }, index: number) {
+  private async subscribe(item: { id: string }) {
+    this.$set(item, 'subloading', true)
+
     const { success } = await this.h_request['httpPOST']('POST_SUBMODERATIONS_INSERTSUBMODERATION', {
       topicId: item.id
     })
     if (success) {
-      this.$set(this.desserts, index, {
-        ...this.desserts[index],
-        status: true
-      })
+      this.$set(item, 'status', true)
     }
+
+    this.$set(item, 'subloading', false)
   }
 
   // <!-- 取消订阅按钮乐观更新 -->
-  private async cancelScribe(item: { id: string; userID: string }, index: number) {
+  private async cancelScribe(item: { id: string; userID: string }) {
+    this.$set(item, 'subloading', true)
+
     const { success } = await this.h_request['httpPOST']('POST_TOPICS_DELSUBUSER', {
       topicID: item.id,
       subUserID: item.userID
     })
     if (success) {
-      this.$set(this.desserts, index, {
-        ...this.desserts[index],
-        status: false
-      })
+      this.$set(item, 'status', false)
     }
+
+    this.$set(item, 'subloading', false)
   }
 
   private PaginationNow(page: number) {

@@ -1,7 +1,7 @@
 <template>
   <div class="viewBox leftBtmView">
     <HOverLay :loading="loading" />
-    <div v-if="!loading" style="width: 100%; height: 8%; padding-top: 10px">
+    <div style="width: 100%; height: 8%; padding-top: 10px">
       <p>{{ `${releaseStartTime}至${releaseEndTime} ${releaseSystemName}系统主题消息发布情况` }}</p>
       <div class="iconCon">
         <v-menu offset-y max-height="200" min-width="130" transition="slide-x-transition">

@@ -1,9 +1,6 @@
 <template>
   <div id="SqlDetails">
-    <div
-      style="max-height: 400px; overflow: auto; margin-bottom: 15px; font-size: 16px; line-height: 24px"
-      v-html="obj"
-    ></div>
+    <div style="line-height: 24px" v-html="obj"></div>
 
     <v-card-actions class="pa-0">
       <v-spacer></v-spacer>

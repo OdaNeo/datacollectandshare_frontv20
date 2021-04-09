@@ -93,8 +93,8 @@ class topicRanking {
           },
           calculable: true,
           grid: {
-            left: '13%',
-            right: '7%',
+            left: '15%',
+            right: '12%',
             bottom: '14%',
             top: '5%',
             containLabel: true
@@ -108,8 +108,8 @@ class topicRanking {
           },
           yAxis: [
             {
-              nameGap: 50,
-              offset: '37',
+              name: '主题名',
+              nameGap: 1,
               type: 'category',
               interval: 50,
               data: '',
@@ -157,8 +157,10 @@ class topicRanking {
           xAxis: [
             {
               type: 'value',
-              name: '',
-              splitNumber: 8,
+              name: '主题数目',
+              splitNumber: 5,
+              min: 0,
+              minInterval: 1,
               nameTextStyle: {
                 color: 'black'
               },

@@ -1,10 +1,10 @@
 <template>
   <div id="OfflineDataStatistics">
     <HOverLay :loading="loading" />
-    <p v-if="!loading" style="text-align: center; color: #000; font-size: 20px; line-height: 30px">
+    <p style="text-align: center; color: #000; font-size: 20px; line-height: 30px">
       {{ `${releaseStartTime}至${releaseEndTime}系统${releaseSystemName}离线数据任务统计` }}
     </p>
-    <div v-if="!loading" class="iconCon">
+    <div class="iconCon">
       <v-menu offset-y max-height="200" min-width="130" transition="slide-x-transition">
         <template v-slot:activator="{ on: menu, attrs }">
           <v-tooltip bottom>
@@ -69,7 +69,7 @@
     <div id="release" style="height: 90%" v-show="releaseTopicExist"></div>
     <div v-show="!releaseTopicExist">
       <p style="margin-top: 180px; text-align: center">
-        {{ `主题${releaseSystemName}在${releaseStartTime}至${releaseEndTime}没有任务执行` }}
+        {{ `系统${releaseSystemName}在${releaseStartTime}至${releaseEndTime}没有任务执行` }}
       </p>
     </div>
   </div>

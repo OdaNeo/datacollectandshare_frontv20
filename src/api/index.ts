@@ -5,6 +5,7 @@ import { rootStoreModule } from '../store/modules/root'
 import { cancelTokenModule } from '../store/modules/request'
 import alertUtil from '../utils/alertUtil'
 import { VUE_APP_BASE_API, BASE_REQUEST_TIME_OUT } from '../../config'
+import { uploadStoreModule } from '@/store/modules/upload'
 
 class RequestData {
   private axiosIns: AxiosInstance = axios.create({
@@ -13,6 +14,10 @@ class RequestData {
       post: {
         'Content-Type': 'application/json;charset=UTF-8'
       }
+    },
+    onUploadProgress: progress => {
+      // 格式化成百分数
+      uploadStoreModule.handleSetUploadingProgress(Math.ceil((progress.loaded / progress.total) * 100))
     }
     // withCredentials: true
   })
@@ -23,9 +28,6 @@ class RequestData {
 
   constructor(headers: Array<headerObj> = [], otherConfig?: AxiosRequestConfig) {
     this.axiosIns.interceptors.request.use((config: AxiosRequestConfig) => {
-      // 合并用户配置与默认配置
-      config = { ...config, ...this.DEFAULT_CONFIG, ...otherConfig }
-
       if (headers?.length > 0) {
         // 自定义headers
         headers.forEach((header: headerObj) => {
@@ -40,6 +42,9 @@ class RequestData {
       config.cancelToken = new axios.CancelToken(cancel => {
         cancelTokenModule.setToken(cancel)
       })
+
+      // 合并用户配置与默认配置
+      config = { ...config, ...this.DEFAULT_CONFIG, ...otherConfig }
 
       return config
     })

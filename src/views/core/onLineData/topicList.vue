@@ -28,12 +28,13 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
-          <template v-slot:buttons="{ item }">
+          <template v-slot:buttons2="{ item, index }">
             <v-btn :disabled="item.topicInterFaceType === 6" text color="primary" @click="dataStructureDetails(item)"
               >数据结构详情</v-btn
             >
+            <v-btn text color="primary" @click="getTopicInformation(item, index)">附加信息</v-btn>
           </template>
-          <template v-slot:buttons2="{ item, index }">
+          <template v-slot:buttons="{ item }">
             <v-btn
               v-if="tab"
               :disabled="item.topicInterFaceType !== 1"
@@ -41,6 +42,9 @@
               color="primary"
               @click.stop="addItems(item)"
               >增加字段</v-btn
+            >
+            <v-btn :disabled="item.topicInterFaceType !== 6" text color="primary" @click.stop="downloadFile(item.id)"
+              >下载</v-btn
             >
             <v-btn
               v-if="tab"
@@ -53,10 +57,6 @@
             >
               删除
             </v-btn>
-            <v-btn :disabled="item.topicInterFaceType !== 6" text color="primary" @click.stop="downloadFile(item.id)"
-              >下载</v-btn
-            >
-            <v-btn text color="primary" @click="getTopicInformation(item, index)">附加信息</v-btn>
           </template>
         </h-table>
       </v-tab-item>
@@ -212,14 +212,14 @@ export default class OnlineDataTopicList extends Vue {
       }
     },
     {
-      text: '数据结构',
+      text: '显示详情',
       align: 'center',
-      slot: 'buttons'
+      slot: 'buttons2'
     },
     {
       text: '操作',
       align: 'center',
-      slot: 'buttons2'
+      slot: 'buttons'
     }
   ]
   // REST
@@ -534,11 +534,17 @@ export default class OnlineDataTopicList extends Vue {
         const data = new Uint8Array(e.target.result)
         const { Sheets } = XLSX.read(data, { type: 'array' })
 
-        Sheets[`sheet1`] && (this.sheetObj = Sheets[`sheet1`])
+        // 表格需命名为sheet1
+        if (!Sheets[`sheet1`]) {
+          this.h_utils['alertUtil'].open('表格格式有误', true, 'error')
+          return
+        } else {
+          this.sheetObj = Sheets[`sheet1`]
+        }
 
         // 格式不对报错
-        if (!this.sheetObj['!ref'].includes('C')) {
-          this.h_utils['alertUtil'].open('表头格式有误', true, 'error')
+        if (!this.sheetObj['!ref'] && !this.sheetObj['!ref'].includes('C')) {
+          this.h_utils['alertUtil'].open('表格格式有误', true, 'error')
           return
         }
 
