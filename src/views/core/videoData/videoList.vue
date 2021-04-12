@@ -10,7 +10,7 @@
         @clear="tabChange(tab)"
       />
       <v-col>
-        <v-btn color="primary" depressed dark small @click.stop="createTopicVideo">创建视频主题</v-btn>
+        <v-btn color="primary" depressed dark small @click.stop="createTopicVideo">创建视频</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -166,11 +166,11 @@ export default class VideoDataList extends Vue {
       width: 200,
       value: 'sourceUrl'
     },
-    {
-      text: 'minio桶名称',
-      align: 'center',
-      value: 'bucketName'
-    },
+    // {
+    //   text: 'minio桶名称',
+    //   align: 'center',
+    //   value: 'bucketName'
+    // },
     // {
     //   text: '显示详情',
     //   align: 'center',

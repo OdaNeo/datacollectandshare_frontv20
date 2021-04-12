@@ -3,7 +3,13 @@
     <v-app-bar app height="57" width="100%" style="left: 0px; z-index: 10" flat color="rgb(0, 21, 41)">
       <TopBar />
     </v-app-bar>
-    <v-navigation-drawer color="#f7f7f9" permanent style="padding-top: 57px; z-index: 9" width="190px" app>
+    <v-navigation-drawer
+      color="#f7f7f9"
+      permanent
+      style="padding-top: 57px; z-index: 9; max-width: 200px"
+      width="13.5%"
+      app
+    >
       <NavBar />
     </v-navigation-drawer>
     <v-main style="background: rgb(246, 248, 251); width: 100%; height: 100%">
@@ -64,7 +70,7 @@ export default class Layout extends Vue {
   private showAlert = false
 
   private async updateRange() {
-    // const data = [
+    // const data: Array<CalendarData> = [
     //   {
     //     'id': 1,
     //     'topicId': 88888888,

@@ -56,7 +56,7 @@
                 <v-icon>{{ mdiShieldLock }}</v-icon>
               </v-btn>
             </template>
-            <span>时间选项</span>
+            <span>截止时间</span>
           </v-tooltip>
         </template>
         <v-date-picker v-model="releaseDate" :allowed-dates="releaseAllowedDates" no-title scrollable locale="zh-cn">
@@ -228,7 +228,7 @@ export default class OfflineDataStatistics extends Vue {
 <style scoped>
 #OfflineDataStatistics {
   position: relative;
-  width: 80%;
+  width: 70%;
   height: 75vh;
   padding-top: 20px;
   margin-top: 20px;

@@ -14,7 +14,7 @@
             dense
             outlined
             :disabled="item.disabled"
-            placeholder="字段名"
+            label="字段名"
             :rules="[...h_validator.noEmpty('字段名'), ...noRepeatKey]"
             height="35"
           ></v-text-field>
@@ -25,7 +25,7 @@
             dense
             :disabled="item.disabled"
             outlined
-            placeholder="描述"
+            label="描述"
             :rules="[...h_validator.noEmpty('描述')]"
             height="35"
           ></v-text-field>
@@ -36,7 +36,7 @@
             dense
             outlined
             :disabled="item.disabled"
-            placeholder="字段类型"
+            label="字段类型"
             :rules="[...h_validator.noEmpty('字段类型')]"
             height="35"
             :items="items"

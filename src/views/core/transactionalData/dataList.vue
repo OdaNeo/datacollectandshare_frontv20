@@ -3,7 +3,6 @@
     <v-row>
       <HSearch
         v-model="queryTopicID"
-        pl
         placeholder="请输入查找的事务主题ID"
         @append="searchTopic"
         @enter="searchTopic"
@@ -11,11 +10,9 @@
         v-only-num
       />
       <v-col>
-        <v-btn color="primary" depressed class="mr-6" small dark @click="createTransactionalData()">
-          创建事务主题
-        </v-btn>
+        <v-btn color="primary" depressed class="mr-6" small dark @click="createTransactionalData()"> 创建事务 </v-btn>
         <v-btn color="primary" :loading="uploadBtnLoading" depressed class="mr-6" small dark @click="uploadSQL"
-          >上传SQL文件</v-btn
+          >上传SQL</v-btn
         >
       </v-col>
     </v-row>

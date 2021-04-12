@@ -23,8 +23,8 @@ html {
 ::-webkit-scrollbar {
     background: #f7f7f9;
     transition: all 0.3s ease-in-out;
-    width: 8px;
-    height: 8px;
+    width: 7px;
+    height: 7px;
 }
 
 ::-webkit-scrollbar-track-piece {
@@ -35,26 +35,6 @@ html {
     border-radius: 50px;
     background: #d4d4d4;
 }
-
-/* 媒体查询 */
-
-/* @media all and (min-width: 1280px) {
-    html {
-        font-size: 14px !important;
-    }
-}
-
-@media all and (min-width: 1536px) {
-    html {
-        font-size: 16px !important;
-    }
-}
-
-@media all and (min-width: 1920px) {
-    html {
-        font-size: 17px !important;
-    }
-} */
 
 button {
     outline: none;
@@ -88,12 +68,6 @@ input:-internal-autofill-previewed, input:-internal-autofill-selected {
     margin-right: 4px;
 }
 
-/* reset v-breadcrumbs*/
-
-/* .v-breadcrumbs__item--disabled {
-    color: #1976d2 !important;
-} */
-
 /* reset v-data-table*/
 
 .v-data-table>.v-data-table__wrapper>table>tbody>tr>th, .v-data-table>.v-data-table__wrapper>table>thead>tr>th, .v-data-table>.v-data-table__wrapper>table>tfoot>tr>th {
@@ -103,12 +77,12 @@ input:-internal-autofill-previewed, input:-internal-autofill-selected {
 
 /* reset v-list-item*/
 
-.v-application--is-ltr .v-list-item__action:first-child, .v-application--is-ltr .v-list-item__icon:first-child {
+.v-list-item__icon:first-child {
     margin-right: 6px !important;
 }
 
-.v-application--is-ltr .v-list-item__action:last-of-type:not(:only-child), .v-application--is-ltr .v-list-item__avatar:last-of-type:not(:only-child), .v-application--is-ltr .v-list-item__icon:last-of-type:not(:only-child) {
-    margin-left: 0px !important;
+.v-list-group__items>.v-list-item {
+    padding-left: 46px !important;
 }
 
 .v-input__slot {
@@ -134,13 +108,23 @@ input:-internal-autofill-previewed, input:-internal-autofill-selected {
 }
 
 .v-pagination__item, .v-pagination__item--active, .v-pagination__navigation {
-    box-shadow: 0px 1px 5px 0px rgb(0 0 0 / 0%) !important;
+    /* box-shadow: 0px 1px 5px 0px rgb(0 0 0 / 0%) !important; */
+    box-shadow: none !important;
 }
 
-.v-btn.v-btn--has-bg.theme--dark {
+.v-text-field__slot textarea {
+    margin-top: 0px !important;
+}
+
+.v-btn:not(.v-btn--round).v-btn--has-bg.theme--dark {
     height: 35px !important;
+    min-width: 70px !important;
 }
 
 .v-list-group .v-list-group__header .v-list-item__icon.v-list-group__header__append-icon {
     min-width: 0px !important;
+}
+
+.v-text-field--outlined.v-input--dense .v-label {
+    top: 8px !important;
 }

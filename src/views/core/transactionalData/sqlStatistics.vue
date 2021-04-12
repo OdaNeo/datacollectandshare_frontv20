@@ -8,6 +8,9 @@
       @PaginationNow="PaginationNow"
       :paginationLength="paginationLength"
     >
+      <template v-slot:status="{ item }">
+        <v-btn text :color="getSqlStatus(item.status)['color']">{{ getSqlStatus(item.status)['text'] }}</v-btn>
+      </template>
       <template v-slot:buttons="{ item }">
         <v-btn text color="primary" @click.stop="sqlLogDetails(item)">查看SQL日志详情</v-btn>
       </template>
@@ -78,26 +81,7 @@ export default class SqlStatistics extends Vue {
     {
       text: '状态',
       align: 'center',
-      value: 'status',
-      format: (status: number) => {
-        switch (status) {
-          case 0:
-            return `正在执行`
-          case 1:
-            return `成功`
-          case 2:
-            return `失败`
-          case 3:
-            return `正在执行`
-          default:
-            return `正在执行`
-        }
-      }
-    },
-    {
-      text: '上传文件名',
-      align: 'center',
-      value: 'originalFileName'
+      slot: 'status'
     },
     {
       text: '创建时间',
@@ -110,10 +94,7 @@ export default class SqlStatistics extends Vue {
       slot: 'buttons'
     }
   ]
-  // 正在执行,
-  //   成功,
-  //   失败
-  // }
+
   // 查看日志详情
   private sqlLogDetails(item: { log: string }) {
     this.str = item.log
@@ -128,6 +109,37 @@ export default class SqlStatistics extends Vue {
     this.desserts = data ? [...data.list] : []
     this.paginationLength = Math.ceil(data?.['total'] / this.pageSize) || 1
     this.loading = false
+  }
+
+  // sql status
+  private getSqlStatus(num: number) {
+    switch (num) {
+      case 0:
+        return {
+          text: `正在执行`,
+          color: 'primary'
+        }
+      case 1:
+        return {
+          text: `成功`,
+          color: 'success'
+        }
+      case 2:
+        return {
+          text: `失败`,
+          color: 'error'
+        }
+      case 3:
+        return {
+          text: `正在执行`,
+          color: 'primary'
+        }
+      default:
+        return {
+          text: `正在执行`,
+          color: 'primary'
+        }
+    }
   }
 
   // 分页方法

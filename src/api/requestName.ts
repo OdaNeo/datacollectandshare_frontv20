@@ -20,6 +20,7 @@ const GET_ROLE_FIND_ALL_ROLE_BY_PARAM = '/role/findAllRoleByParam'
 const GET_PERMISSION_AUTHORIZATION_FIND_ALL_PERMISSION = '/permission/authorization/findAllPermission'
 const GET_PERMISSION_AUTHORIZATION_FINDPERMISSIONLISTBYROLEID = '/permission/authorization/findPermissionListByRoleId'
 const POST_PERMISSION_AUTHORIZATION_ADDROLEIDPERMISSIONID = '/permission/authorization/addRoleIdPermissionId'
+const GET_SYSTEM_GETSYSTEMINFO = '/system/getSystemInfo' // 获取系统信息
 // /system/getSystemTypeInfo ？
 // /user/delete/* ?
 // /permission/findPermissionListByRoleId/* ?
@@ -66,7 +67,6 @@ const GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG = '/logMGT/viewLog/log/findAllLog'
 // /logMGT/viewLog/log/findAllLogByParam ？
 
 // ---------------------------- 系统统计 ---------------------------
-const GET_SYSTEM_GETSYSTEMINFO = '/system/getSystemInfo'
 const GET_STATISTICS_STAT_TOPIC_DATA = '/statistics/statTopicData'
 const GET_STATISTICS_STAT_SYS_TOPIC = '/statistics/statSysTopic'
 
@@ -89,6 +89,7 @@ const POST_TOPICS_ADDLOGGERTOPIC = '/topics/addLoggerTopic'
 const POST_TOPICS_UPDATELOGGERTOPIC = '/topics/updateLoggerTopic'
 const GET_TOPICS_DELETELOOGGERTOPIC = '/topics/deleteLoggerTopic'
 const GET_TOPICS_SELECTLOGGERTOPICBYTOPICID = '/topics/selectLoggerTopicByTopicId'
+const GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICID = '/topics/statisticsLoggerTopicByTopicId'
 
 // ----------------------------- 作业监控 ------------------------
 const GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME = '/monitor/findAllMonitorLogByTime'
@@ -199,7 +200,8 @@ const REQUEST_NAME = {
   GET_SUBMODERATIONS_SELECTMYSUBTOPICLIST,
   GET_SUBMODERATIONS_SELECTMYSUBTOPICBYTOPICID,
   GET_TOPICS_CHECKUSERUPLOADTASKSTATUS,
-  GET_TOPICS_GETOFFLINELOGBYTOPICID
+  GET_TOPICS_GETOFFLINELOGBYTOPICID,
+  GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICID
 }
 
 export default REQUEST_NAME

@@ -11,8 +11,8 @@
       />
       <v-col>
         <!-- <v-btn color="primary" depressed class="mr-6" small dark @click="createDataBaseAcquisition()">数据库采集</v-btn> -->
-        <v-btn color="primary" depressed class="mr-6" small dark @click="createServePull()">服务主动拉取</v-btn>
-        <v-btn color="primary" depressed class="mr-6" small dark @click="pullFTP">拉取FTP</v-btn>
+        <v-btn color="primary" depressed class="mr-6" small dark @click="createServePull()">主动拉取</v-btn>
+        <v-btn color="primary" depressed class="mr-6" small dark @click="pullFTP">FTP</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -508,7 +508,8 @@ export default class OfflineTopicList extends Vue {
     let _data: returnTypeData
 
     params.dataType = dataType['结构化']
-    params.faceTypes = `${topicInterFaceType['数据库采集']},${topicInterFaceType['服务主动拉取']},${topicInterFaceType['拉取FTP']}`
+    // params.faceTypes = `${topicInterFaceType['数据库采集']},${topicInterFaceType['服务主动拉取']},${topicInterFaceType['拉取FTP']}`
+    params.faceTypes = `${topicInterFaceType['服务主动拉取']},${topicInterFaceType['拉取FTP']}`
     if (tab) {
       const { data }: returnType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)

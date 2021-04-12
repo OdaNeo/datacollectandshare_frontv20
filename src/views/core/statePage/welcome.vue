@@ -33,7 +33,7 @@ import SubscribeMenu from '@/components/subscribeMenu.vue'
 export default class Welcome extends Vue {
   private systemItems = []
 
-  private async getRelease(params: any, callback: Function) {
+  private async getRelease(params: {}, callback: Function) {
     const result: returnType = await this.h_request.httpGET('GET_SYSTEM_GETSYSTEMINFO', params)
     callback(result)
   }

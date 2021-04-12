@@ -18,6 +18,12 @@
       @PaginationNow="PaginationNow"
       :paginationLength="paginationLength"
     >
+      <template v-slot:status="{ item }">
+        <!-- 有res ：success，无res：error -->
+        <v-btn text :color="transactionalStatus(item) ? `success` : `error`">
+          {{ transactionalStatus(item) ? `成功` : '失败' }}
+        </v-btn>
+      </template>
       <template v-slot:buttons="{ item }">
         <v-btn text color="primary" @click="offlineLogDetails(item)">查看离线日志详情</v-btn>
       </template>
@@ -75,7 +81,7 @@ export default class TransactionalDataStatistics extends Vue {
   private headers = [
     // 表头内容 所有主题
     {
-      text: '序号',
+      text: 'ID',
       align: 'center',
       value: 'id'
     },
@@ -91,6 +97,11 @@ export default class TransactionalDataStatistics extends Vue {
       format: (createTime: string) => {
         return this.h_utils.timeUtil['stamptoFullTime'](new Date(createTime).getTime(), '/')
       }
+    },
+    {
+      text: '状态',
+      align: 'center',
+      slot: 'status'
     },
     {
       text: '日志',
@@ -126,6 +137,11 @@ export default class TransactionalDataStatistics extends Vue {
       this.paginationLength = Math.ceil(data?.['total'] / this.pageSize) || 1
     }
     this.loading = false
+  }
+
+  // 任务状态
+  private transactionalStatus(item: { log: string }) {
+    return !!JSON.parse(item.log)['res']
   }
 
   // 改变query

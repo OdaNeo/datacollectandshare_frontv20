@@ -55,7 +55,7 @@
                   <v-icon>{{ mdiShieldLock }}</v-icon>
                 </v-btn>
               </template>
-              <span>时间选项</span>
+              <span>截止时间</span>
             </v-tooltip>
           </template>
           <v-date-picker

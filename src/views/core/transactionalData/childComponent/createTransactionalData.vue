@@ -175,7 +175,7 @@
                             v-model="item.field"
                             dense
                             outlined
-                            placeholder="字段名"
+                            label="字段名"
                             :rules="[...h_validator.noEmpty('字段名'), ...noRepeatKey]"
                             height="35"
                           ></v-text-field>
@@ -186,7 +186,7 @@
                             :items="typeItems"
                             dense
                             outlined
-                            placeholder="类型"
+                            label="类型"
                             :rules="[...h_validator.noEmpty('类型')]"
                             height="35"
                           ></v-select>
@@ -196,7 +196,7 @@
                             v-model="item.iskey"
                             dense
                             outlined
-                            placeholder="是否为key"
+                            label="是否为key"
                             :rules="[...h_validator.noEmpty('是否为key')]"
                             height="35"
                             :items="iskeyItems"

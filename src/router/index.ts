@@ -503,14 +503,14 @@ const routes: Array<RouteConfig> = [
     path: '/private',
     name: '内部调试页面',
     component: StatePage,
-    redirect: '/private/topicProducerAndconsume',
+    redirect: '/private/topicProducerAndConsume',
     meta: {
       title: '内部调试页面',
       access: false
     },
     children: [
       {
-        path: 'topicProducerAndconsume',
+        path: 'topicProducerAndConsume',
         component: () => import('@/views/private/topicProducerAndConsume.vue'),
         name: '主题生产消费测试',
         meta: {
@@ -518,6 +518,7 @@ const routes: Array<RouteConfig> = [
           access: false
         }
       },
+      // 汇总 json 系统统计 作业监控
       {
         path: 'bulkCreateTopic',
         name: '批量创建主题',

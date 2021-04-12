@@ -11,7 +11,7 @@
         v-only-num
       />
       <v-col>
-        <v-btn color="primary" depressed class="mr-6" small dark @click="createLogTopic()">创建日志主题</v-btn>
+        <v-btn color="primary" depressed class="mr-6" small dark @click="createLogTopic()">创建主题</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -27,8 +27,11 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
+          <template v-slot:detail="{ item }">
+            <v-btn text color="primary" @click="showLogDataDetail(item)">服务器详情</v-btn>
+          </template>
           <template v-slot:buttons="{ item }">
-            <v-btn v-if="!tab" text color="primary" @click="showLogDataDetail(item)">数据详情</v-btn>
+            <!-- <v-btn v-if="!tab" text color="primary" @click="showLogDataDetail(item)">服务器详情</v-btn> -->
             <v-btn v-if="tab" text color="primary" @click="createLogTopic(item)">修改</v-btn>
             <v-btn
               v-if="tab"
@@ -77,6 +80,7 @@ import HConfirm from '@/components/h-confirm.vue'
 import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
 import { tableHeaderType } from '@/type/table.type'
+import { loggerParamType } from '@/type/logger.type'
 
 @Component({
   components: {
@@ -126,61 +130,58 @@ export default class LogDataList extends Vue {
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
   // 主题ID 主题名称 用户 日志采集路径 服务器地址 服务器用户名（暂定）
-  private headers: Array<tableHeaderType> = [
-    // 表头内容 所有主题
-    {
-      text: '主题ID',
-      align: 'center',
-      value: 'id'
-    },
-    {
-      text: '主题名称',
-      align: 'center',
-      value: 'topicName'
-    },
-    {
-      text: '所属用户',
-      align: 'center',
-      value: 'userName'
-    },
-    {
-      text: '日志采集路径',
-      align: 'center',
-      value: 'savePath'
-    },
-    {
-      text: '服务器地址',
-      align: 'center',
-      value: 'logIp'
-    },
-    {
-      text: '服务器用户名',
-      align: 'center',
-      value: 'logUserName'
-    },
-    {
-      text: '落盘策略',
-      align: 'center',
-      value: 'saveType'
-    },
-    {
-      text: '采集校验关键字',
-      align: 'center',
-      value: 'keywords'
-    },
-    {
-      text: '操作',
-      align: 'center',
-      slot: 'buttons'
-    }
-  ]
+  private get headers(): Array<tableHeaderType> {
+    return [
+      // 表头内容 所有主题
+      {
+        text: '主题ID',
+        align: 'center',
+        value: 'id'
+      },
+      {
+        text: '主题名称',
+        align: 'center',
+        value: 'topicName'
+      },
+      {
+        text: '所属用户',
+        align: 'center',
+        value: 'userName'
+      },
+      {
+        text: '落盘策略',
+        align: 'center',
+        value: 'saveType'
+      },
+      {
+        text: '采集校验关键字',
+        align: 'center',
+        value: 'keywords'
+      },
+      {
+        text: '详细信息',
+        align: 'center',
+        slot: 'detail'
+      },
+      {
+        text: '操作',
+        align: 'center',
+        slot: 'buttons',
+        isHide: !this.tab
+      }
+    ]
+  }
+  //  TODO:
+  //  创建任务
+  //  绑定 显示目前已经绑定的，勾选，已经绑定的可解绑。采集所有
+  //  穿梭框
 
   // 表格显示
   private headersObj: Array<tableHeaderType> = []
   private dessertsObj: Array<topicTable> = []
 
   // 创建日志主题
-  private createLogTopic(item?: any) {
+  private createLogTopic(item?: loggerParamType) {
     this.fDialogFlag = true
     this.fDialogShow = 1
     this.formProvide.btnName = item ? ['立即修改'] : ['立即创建']
@@ -208,9 +209,9 @@ export default class LogDataList extends Vue {
     const canNotEdit = formObj.canNotEdit
     // 创建主题 有loading，修改主题没有loading
 
-    const params: any = {
-      dataType: dataType['结构化']
-    }
+    const params: Partial<loggerParamType> = {}
+
+    params.dataType = dataType['结构化']
     params.topicName = formObj.topicName
     params.logIp = formObj.logIp
     params.logUserName = formObj.logUserName
@@ -255,11 +256,6 @@ export default class LogDataList extends Vue {
     this.tDialogShow = 1
     this.headersObj = [
       {
-        text: '日志采集路径',
-        align: 'center',
-        value: 'savePath'
-      },
-      {
         text: '服务器地址',
         align: 'center',
         value: 'logIp'
@@ -268,6 +264,11 @@ export default class LogDataList extends Vue {
         text: '服务器用户名',
         align: 'center',
         value: 'logUserName'
+      },
+      {
+        text: '日志采集路径',
+        align: 'center',
+        value: 'savePath'
       }
     ]
 

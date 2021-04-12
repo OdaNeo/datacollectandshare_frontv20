@@ -10,9 +10,9 @@
         v-only-num
       />
       <v-col>
-        <v-btn color="primary" depressed class="mr-6" small dark @click="createRest()">创建REST</v-btn>
-        <v-btn color="primary" depressed class="mr-6" small dark @click="createJson">创建JSON</v-btn>
-        <v-btn color="primary" depressed class="mr-6" small dark @click="createProtobuf">创建PROTO</v-btn>
+        <v-btn color="primary" depressed class="mr-6" small dark @click="createRest()">REST</v-btn>
+        <!-- <v-btn color="primary" depressed class="mr-6" small dark @click="createJson">JSON</v-btn> -->
+        <v-btn color="primary" depressed class="mr-6" small dark @click="createProtobuf">PROTO</v-btn>
       </v-col>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
@@ -28,11 +28,12 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
-          <template v-slot:buttons2="{ item, index }">
-            <v-btn :disabled="item.topicInterFaceType === 6" text color="primary" @click="dataStructureDetails(item)"
+          <template v-slot:buttons2="{ item }">
+            <v-btn :disabled="item.topicInterFaceType === 6" text color="primary" @click="dataStructure(item)"
               >数据结构详情</v-btn
             >
-            <v-btn text color="primary" @click="getTopicInformation(item, index)">附加信息</v-btn>
+            <v-btn text color="primary" @click="showUserSubNameList(item)">订阅用户</v-btn>
+            <v-btn text color="primary" @click="ancillaryInformation(item)">附加信息</v-btn>
           </template>
           <template v-slot:buttons="{ item }">
             <v-btn
@@ -71,8 +72,9 @@
 
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
-      <data-structure-dialog :rowObj="rowObj" v-if="tDialogShow === 1" />
-      <topic-ancillary-information-dialog :otherObj="otherObj" v-else-if="tDialogShow === 2" />
+      <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
+      <TopicAncillaryInformationDialog :otherObj="otherObj" v-else-if="tDialogShow === 2" />
+      <UserSubNameList :otherObj="otherObj" v-else-if="tDialogShow === 3" />
     </t-dialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -101,6 +103,7 @@ import CreateProtobuf from './childComponent/createProtobuf.vue'
 import createJson from './childComponent/createJson.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInformationDialog.vue'
+import UserSubNameList from './childComponent/userSubNameList.vue'
 import HSearch from '@/components/h-search.vue'
 import { mdiMagnify } from '@mdi/js'
 
@@ -115,7 +118,8 @@ import { mdiMagnify } from '@mdi/js'
     createJson,
     DataStructureDialog,
     TopicAncillaryInformationDialog,
-    HSearch
+    HSearch,
+    UserSubNameList
   }
 })
 @http
@@ -187,14 +191,15 @@ export default class OnlineDataTopicList extends Vue {
       align: 'center',
       value: 'userName'
     },
-    {
-      text: '订阅用户',
-      align: 'center',
-      value: 'userSubNameList',
-      format: (userSubNameList: Array<string>) => {
-        return userSubNameList.toString()
-      }
-    },
+    // 系统名，用户名
+    // {
+    //   text: '订阅用户',
+    //   align: 'center',
+    //   value: 'userSubNameList',
+    //   format: (userSubNameList: Array<string>) => {
+    //     return userSubNameList.toString()
+    //   }
+    // },
     {
       text: '接口类型',
       align: 'center',
@@ -399,7 +404,8 @@ export default class OnlineDataTopicList extends Vue {
     this.loading = true
     let _data: returnTypeData
 
-    params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['多级嵌套免校验']},${topicInterFaceType['PROTOBUF']}`
+    // params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['多级嵌套免校验']},${topicInterFaceType['PROTOBUF']}`
+    params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['PROTOBUF']}`
     params.dataType = dataType['结构化']
 
     if (tab) {
@@ -456,27 +462,28 @@ export default class OnlineDataTopicList extends Vue {
   }
 
   // 数据结构展示方法
-  private dataStructure(item: any, str: string) {
+  private dataStructure(item: object) {
     this.tDialogFlag = true
     this.tDialogShow = 1
     this.rowObj = item
-    this.formProvide.title = str
+    this.formProvide.title = '数据结构详情'
   }
 
   // 附加信息
-  private ancillaryInformation(info: any, str: string) {
+  private ancillaryInformation(info: object) {
     this.tDialogFlag = true
     this.tDialogShow = 2
     this.otherObj = info
-    this.formProvide.title = str
+    this.formProvide.title = '附加信息'
   }
 
-  private dataStructureDetails(item: any) {
-    this.dataStructure(item, '数据结构详情')
-  }
-
-  private async getTopicInformation(item: any, index: number) {
-    this.ancillaryInformation(this.desserts[index], '附加信息')
+  // 订阅用户详情
+  private showUserSubNameList(info: object) {
+    console.log(info)
+    this.tDialogFlag = true
+    this.tDialogShow = 3
+    this.otherObj = info
+    this.formProvide.title = '订阅用户详情'
   }
 
   // 删除
