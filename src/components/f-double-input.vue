@@ -16,7 +16,7 @@
             clearable
             :disabled="formProvide.formObj.canNotEdit"
             :clear-icon="mdiCloseCircleOutline"
-            :placeholder="object[0].text"
+            :label="object[0].text"
             height="35"
             :rules="rules1 ? [...rules1] : undefined"
           ></v-text-field>
@@ -27,7 +27,7 @@
             dense
             :disabled="formProvide.formObj.canNotEdit"
             outlined
-            :placeholder="object[1].text"
+            :label="object[1].text"
             clearable
             :clear-icon="mdiCloseCircleOutline"
             :rules="rules2 ? [...rules2] : undefined"

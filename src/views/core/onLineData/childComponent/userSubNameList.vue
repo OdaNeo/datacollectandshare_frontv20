@@ -22,19 +22,19 @@ export default class UserSubNameList extends Vue {
 
   private headers = [
     {
-      text: '订阅用户',
+      text: '订阅用户ID',
+      align: 'center',
+      value: 'subUserID'
+    },
+    {
+      text: '订阅用户名称',
       align: 'center',
       value: 'login_name'
     },
     {
-      text: '系统名',
+      text: '订阅用户所属系统名称',
       align: 'center',
       value: 'Name'
-    },
-    {
-      text: '订阅用户ID',
-      align: 'center',
-      value: 'subUserID'
     }
   ]
 }

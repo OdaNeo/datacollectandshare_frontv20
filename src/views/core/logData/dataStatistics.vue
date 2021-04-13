@@ -1,16 +1,48 @@
 <template>
   <div id="LogDataStatistics">
     <v-row>
-      <HSearch
-        v-model="queryTopicID"
-        placeholder="请输入查找的日志主题ID"
-        @append="searchTopic"
-        @enter="searchTopic"
-        @clear="searchTopic"
-        v-only-num
-      />
+      <HSearch :cols="3" :showAppEnd="false" v-model="queryTopicID" label="日志主题ID" v-only-num />
+      <v-col cols="3">
+        <v-menu
+          ref="menu"
+          v-model="showMenu"
+          :close-on-content-click="false"
+          :return-value.sync="queryTopicDate"
+          transition="scale-transition"
+          offset-y
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              outlined
+              dense
+              height="35px"
+              v-model="queryTopicDate"
+              label="截止日期"
+              readonly
+              clearable
+              :clear-icon="mdiCloseCircleOutline"
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker
+            locale="zh-cn"
+            v-model="queryTopicDate"
+            @click.native="$refs.menu.save(queryTopicDate)"
+            no-title
+            scrollable
+          >
+          </v-date-picker>
+        </v-menu>
+      </v-col>
+      <v-col>
+        <v-btn color="primary" small depressed dark>开始查询</v-btn>
+      </v-col>
     </v-row>
-    <div id="loggerDataMouth"></div>
+    <!-- 默认日历表 -->
+
+    <!-- eChartsDataDom -->
+    <div id="eChartsDataDom"></div>
   </div>
 </template>
 <script lang="ts">
@@ -19,7 +51,9 @@ import http from '@/decorator/httpDecorator'
 import { paramsType, returnType } from '@/type/http-request.type'
 import HSearch from '@/components/h-search.vue'
 import echarts from '@/decorator/echartsDecorator'
-// import Moment from 'moment'
+import util from '@/decorator/utilsDecorator'
+import { mdiCloseCircleOutline } from '@mdi/js'
+import Moment from 'moment'
 @Component({
   components: {
     HSearch
@@ -27,9 +61,18 @@ import echarts from '@/decorator/echartsDecorator'
 })
 @http
 @echarts
+@util
 export default class LogDataStatistics extends Vue {
-  private queryTopicID = '' // 查询主题ID input框内容
+  private mdiCloseCircleOutline = mdiCloseCircleOutline
 
+  private myChartElement: any = null
+  // 默认显示我的主题中的第一条
+  // 默认显示当天
+  private queryEndDate = Moment(new Date()).format(`YYYY-MM-DD`)
+  private queryTopicID = '' // 查询主题ID input框内容
+  private queryTopicDate = this.queryEndDate
+
+  private showMenu = false
   // private async getStatisticsLoggerTopicByTopicId(params: { topicId: number; timeDate: string }) {
   //   const data = await this.h_request['httpGET']('GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICID', { params })
   //   console.log(data)
@@ -85,7 +128,7 @@ export default class LogDataStatistics extends Vue {
     }
   }
 
-  private searchTopic() {
+  private searchLoggerData() {
     console.log(1)
   }
 
@@ -94,16 +137,17 @@ export default class LogDataStatistics extends Vue {
     const { data }: returnType = await this.h_request['httpGET']('GET_TOPICS_MYTOPICS', params)
     if (data && data.list.length > 0) {
       this.queryTopicID = data.list[0].id
+    } else {
+      this.h_utils['alertUtil'].open('该用户未发布主题', true, 'error')
     }
   }
 
   // echart handle
-  private handelECharts(ele: string, options: object) {
+  private initECharts(ele: string, options: object) {
     this.$nextTick(() => {
       const element = document.getElementById(ele)
-      const myChartElement = this.h_echarts.init(element as HTMLCanvasElement, 'light', { renderer: 'svg' })
-
-      myChartElement.setOption(options, true)
+      this.myChartElement = this.h_echarts.init(element as HTMLCanvasElement, 'light', { renderer: 'svg' })
+      this.myChartElement.setOption(options, true)
     })
   }
   created(): void {
@@ -113,8 +157,9 @@ export default class LogDataStatistics extends Vue {
 }
 </script>
 <style scoped>
-#loggerDataMouth {
-  width: 100%;
-  height: 200px;
+.loggerDataMouth {
+  display: flex !important;
+  justify-content: space-between;
+  flex-wrap: wrap;
 }
 </style>

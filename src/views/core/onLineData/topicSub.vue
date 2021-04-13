@@ -23,6 +23,17 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
+          <!-- 订阅用户 -->
+          <template v-slot:subUsers="{ item }">
+            <v-btn
+              :disabled="item.userSubNameList.length === 0"
+              text
+              color="primary"
+              @click="showUserSubNameList(item)"
+              >{{ item.userSubNameList.length }}</v-btn
+            >
+          </template>
+          <!-- 数据结构详情 -->
           <template v-slot:buttons="{ item }">
             <v-btn
               text
@@ -32,8 +43,8 @@
               @click="dataStructure(item)"
               >数据结构详情</v-btn
             >
-            <v-btn text color="primary" @click="showUserSubNameList(item)">订阅用户</v-btn>
           </template>
+          <!-- 订阅 -->
           <template v-slot:operation="{ item }">
             <v-btn
               text
@@ -119,7 +130,7 @@ export default class TopicSub extends Vue {
       }
     }
   })
-  //TODO: 主题订阅  按照主题ID和主题名称查询，加字段
+  //TODO: 主题订阅  按照主题ID和主题名称查询，加字段  id,topicName 如果没有为空: ''
   private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['可订阅主题', '我的订阅']
@@ -145,6 +156,11 @@ export default class TopicSub extends Vue {
         text: '主题名称',
         align: 'center',
         value: 'topicName'
+      },
+      {
+        text: '订阅用户数',
+        align: 'center',
+        slot: 'subUsers'
       },
       {
         text: '所属用户',

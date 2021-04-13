@@ -28,38 +28,27 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
+          <!-- 订阅用户 -->
+          <template v-slot:subUsers="{ item }">
+            <v-btn
+              :disabled="item.userSubNameList.length === 0"
+              text
+              color="primary"
+              @click="showUserSubNameList(item)"
+              >{{ item.userSubNameList.length }}</v-btn
+            >
+          </template>
+          <!-- 数据结构 -->
           <template v-slot:buttons2="{ item }">
             <v-btn :disabled="item.topicInterFaceType === 6" text color="primary" @click="dataStructure(item)"
               >数据结构详情</v-btn
             >
-            <v-btn text color="primary" @click="showUserSubNameList(item)">订阅用户</v-btn>
             <v-btn text color="primary" @click="ancillaryInformation(item)">附加信息</v-btn>
           </template>
+          <!-- 操作 -->
           <template v-slot:buttons="{ item }">
-            <!-- <v-btn
-              v-if="tab"
-              :disabled="item.topicInterFaceType !== 1"
-              text
-              color="primary"
-              @click.stop="addItems(item)"
-              >增加字段</v-btn
-            >
-            <v-btn :disabled="item.topicInterFaceType !== 6" text color="primary" @click.stop="downloadFile(item)"
-              >下载</v-btn
-            >
-            <v-btn
-              v-if="tab"
-              text
-              color="primary"
-              @click.stop="
-                HConfirmShow = true
-                HConfirmItem = item
-              "
-            >
-              删除
-            </v-btn> -->
             <!-- 操作下拉框 -->
-            <v-menu open-on-hover left offset-x bottom max-width="90px" min-width="90px">
+            <v-menu close-delay="150" left offset-x bottom max-width="90px" min-width="90px">
               <template v-slot:activator="{ on, attrs }">
                 <v-btn color="primary" text v-bind="attrs" v-on="on">...</v-btn>
               </template>
@@ -205,6 +194,11 @@ export default class OnlineDataTopicList extends Vue {
       text: '主题名称',
       align: 'center',
       value: 'topicName'
+    },
+    {
+      text: '订阅用户数',
+      align: 'center',
+      slot: 'subUsers'
     },
     {
       text: '所属用户',

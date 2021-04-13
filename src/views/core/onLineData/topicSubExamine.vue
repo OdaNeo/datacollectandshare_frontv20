@@ -49,6 +49,7 @@ import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
+import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 @Component({
   components: {
     HTable,
@@ -76,7 +77,7 @@ export default class TopicSubExamine extends Vue {
       }
     }
   })
-  mdiMagnify = mdiMagnify
+  private mdiMagnify = mdiMagnify
   private desserts: Array<topicTable> = []
   private rowObj: object = {}
   private pageNum = 1
@@ -100,6 +101,14 @@ export default class TopicSubExamine extends Vue {
       text: '订阅用户',
       align: 'center',
       value: 'userName'
+    },
+    {
+      text: '接口类型',
+      align: 'center',
+      value: 'topicInterFaceType',
+      format: (val: number) => {
+        return topicInterFaceType[val]
+      }
     },
     {
       text: '订阅时间',
@@ -132,8 +141,8 @@ export default class TopicSubExamine extends Vue {
   async searchMethod(bool: boolean, params: paramsType): Promise<void> {
     this.loading = true
     const { data }: returnType = bool
-      ? await this.h_request['httpGET']<object>('GET_SUBMODERATIONS_SELECTBYUSERNAMESTATUS', params)
-      : await this.h_request['httpGET']<object>('GET_SUB_MODERATIONS_SELECT_STATUS', params)
+      ? await this.h_request['httpGET']('GET_SUBMODERATIONS_SELECTBYUSERNAMESTATUS', params)
+      : await this.h_request['httpGET']('GET_SUB_MODERATIONS_SELECT_STATUS', params)
 
     this.desserts = data ? [...data.list] : []
     this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
