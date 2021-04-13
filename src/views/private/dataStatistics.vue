@@ -88,26 +88,26 @@
             <div class="nodata-box">
               <p>请选择系统及初始时间</p>
               <div class="bg-box">
-                <img src="../../../assets/image/kong.png" alt="" />
+                <img src="../../assets/image/kong.png" alt="" />
               </div>
             </div>
           </div>
           <!-- 满足查询条件 显示图表 -->
           <div v-show="showEchartsBox">
             <div class="before-btn">
-              <img @click="beforeMonth" src="../../../assets/image/leftBtn.png" alt="" />
+              <img @click="beforeMonth" src="../../assets/image/leftBtn.png" alt="" />
             </div>
             <div class="chart-box">
               <div v-show="haveData" id="canvasPackRelease" class="canvasPack echartsBox"></div>
               <div v-show="!haveData">
                 <p>{{ beginDate }}至{{ afterDate }}时间内{{ getSystemName() }}系统暂无主题消息发布</p>
                 <div class="bg-box">
-                  <img src="../../../assets/image/kong.png" alt="" />
+                  <img src="../../assets/image/kong.png" alt="" />
                 </div>
               </div>
             </div>
             <div class="after-btn">
-              <img @click="afterMonth" src="../../../assets/image/rightBtn.png" alt="" />
+              <img @click="afterMonth" src="../../assets/image/rightBtn.png" alt="" />
             </div>
           </div>
         </v-tab-item>
@@ -117,26 +117,26 @@
             <div class="nodata-box">
               <p>请选择系统及初始时间</p>
               <div class="bg-box">
-                <img src="../../../assets/image/kong.png" alt="" />
+                <img src="../../assets/image/kong.png" alt="" />
               </div>
             </div>
           </div>
           <!-- 满足查询条件 显示图表 -->
           <div v-show="showEchartsBox">
             <div class="before-btn" @click="beforeMonth">
-              <img src="../../../assets/image/leftBtn.png" alt="" />
+              <img src="../../assets/image/leftBtn.png" alt="" />
             </div>
             <div class="chart-box">
               <div v-show="haveData" id="canvasPackSubscribe" class="canvasPack echartsBox"></div>
               <div v-show="!haveData">
                 <p>{{ beginDate }}至{{ afterDate }}时间内{{ getSystemName() }}系统暂无主题订阅信息</p>
                 <div class="bg-box">
-                  <img src="../../../assets/image/kong.png" alt="" />
+                  <img src="../../assets/image/kong.png" alt="" />
                 </div>
               </div>
             </div>
             <div class="after-btn" @click="afterMonth">
-              <img src="../../../assets/image/rightBtn.png" alt="" />
+              <img src="../../assets/image/rightBtn.png" alt="" />
             </div>
           </div>
         </v-tab-item>
@@ -144,7 +144,7 @@
           <div class="noMsg" v-show="!noMsg">
             <p>暂无系统数据</p>
             <div class="bg-box">
-              <img src="../../../assets/image/kong.png" alt="" />
+              <img src="../../assets/image/kong.png" alt="" />
             </div>
           </div>
           <div class="showChart" v-show="noMsg">
@@ -166,7 +166,7 @@ import moment from 'moment'
 @echarts
 @http
 @util
-export default class DataStatistics extends Vue {
+export default class DataDataStatistics extends Vue {
   private items: Array<string> = ['1', '2']
   private tabs = ''
   private menu = false

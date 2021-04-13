@@ -16,9 +16,8 @@ import { Component, Vue, Model } from 'vue-property-decorator'
 export default class HConfirm extends Vue {
   @Model('closeConfirm', { type: Boolean }) private checked!: boolean
 
-  set closeDialog(val: boolean) {
-    val
-  }
+  // eslint-disable-next-line @typescript-eslint/no-empty-function
+  set closeDialog(val: boolean) {}
 
   get closeDialog(): boolean {
     return this.checked

@@ -1,6 +1,6 @@
 <template>
   <div id="topicAncillaryInformationDialog">
-    <h-table :headers="tableHeader" :desserts="otherObj"></h-table>
+    <h-table :headers="tableHeader" :desserts="rowObj"></h-table>
   </div>
 </template>
 <script lang="ts">
@@ -13,47 +13,16 @@ import HTable from '@/components/h-table.vue'
   }
 })
 export default class TopicAncillaryInformationDialog extends Vue {
-  @Prop() private otherObj!: any
+  @Prop() private rowObj!: any
 
   get tableHeader(): any {
-    switch (this.otherObj.topicInterFaceType) {
+    switch (this.rowObj.topicInterFaceType) {
       case 1:
         return [
           {
             text: '内存过期时间',
             align: 'center',
             value: 'redisTimer'
-          }
-        ]
-      case 2:
-        return [
-          {
-            text: '数据库类型',
-            align: 'center',
-            value: 'dataBaseType'
-          },
-          {
-            text: '数据库IP',
-            align: 'center',
-            value: 'dataBaseIp'
-          }
-        ]
-      case 3:
-        return [
-          {
-            text: 'url',
-            align: 'center',
-            value: 'url'
-          },
-          {
-            text: 'key',
-            align: 'center',
-            value: 'key'
-          },
-          {
-            text: 'value',
-            align: 'center',
-            value: 'value'
           }
         ]
       case 4:

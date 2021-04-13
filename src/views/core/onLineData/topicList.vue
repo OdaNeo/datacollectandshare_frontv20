@@ -36,7 +36,7 @@
             <v-btn text color="primary" @click="ancillaryInformation(item)">附加信息</v-btn>
           </template>
           <template v-slot:buttons="{ item }">
-            <v-btn
+            <!-- <v-btn
               v-if="tab"
               :disabled="item.topicInterFaceType !== 1"
               text
@@ -44,7 +44,7 @@
               @click.stop="addItems(item)"
               >增加字段</v-btn
             >
-            <v-btn :disabled="item.topicInterFaceType !== 6" text color="primary" @click.stop="downloadFile(item.id)"
+            <v-btn :disabled="item.topicInterFaceType !== 6" text color="primary" @click.stop="downloadFile(item)"
               >下载</v-btn
             >
             <v-btn
@@ -57,7 +57,26 @@
               "
             >
               删除
-            </v-btn>
+            </v-btn> -->
+            <!-- 操作下拉框 -->
+            <v-menu open-on-hover left offset-x bottom max-width="90px" min-width="90px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn color="primary" text v-bind="attrs" v-on="on">...</v-btn>
+              </template>
+              <v-list dense>
+                <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
+                  <v-btn
+                    :disabled="(i.tab && tab !== i.tab) || (i.faceType && item.topicInterFaceType !== i.faceType)"
+                    class="pa-0"
+                    width="100%"
+                    :color="i.color ? i.color : `primary`"
+                    text
+                    @click.stop="i.handle(item)"
+                    >{{ i.text }}</v-btn
+                  >
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </template>
         </h-table>
       </v-tab-item>
@@ -73,8 +92,8 @@
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
       <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
-      <TopicAncillaryInformationDialog :otherObj="otherObj" v-else-if="tDialogShow === 2" />
-      <UserSubNameList :otherObj="otherObj" v-else-if="tDialogShow === 3" />
+      <TopicAncillaryInformationDialog :rowObj="rowObj" v-else-if="tDialogShow === 2" />
+      <UserSubNameList :rowObj="rowObj" v-else-if="tDialogShow === 3" />
     </t-dialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -105,6 +124,7 @@ import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInformationDialog.vue'
 import UserSubNameList from './childComponent/userSubNameList.vue'
 import HSearch from '@/components/h-search.vue'
+import { onlineDataParamType } from '@/type/online-data.type'
 import { mdiMagnify } from '@mdi/js'
 
 @Component({
@@ -132,6 +152,7 @@ import { mdiMagnify } from '@mdi/js'
   }
 ])
 @util
+// 1，4，6
 export default class OnlineDataTopicList extends Vue {
   @Ref('createRest') readonly crRef!: Vue
   @Provide('formProvide') private formProvide: FormObj = new Vue({
@@ -148,15 +169,14 @@ export default class OnlineDataTopicList extends Vue {
   private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
+
   private fDialogFlag = false // 弹窗展示
   private tDialogFlag = false // 表格展示
 
   private fDialogShow = 0 // 展示哪个弹窗 1.rest 2.Protobuf 3.JSON
   private tDialogShow = 0 // 展示哪个弹窗 1.数据结构 2.其他信息
 
-  private rowObj: object = {}
-  private otherObj: object = {}
-
+  private rowObj: topicTable = {}
   private sheetObj: any
 
   private HConfirmShow = false
@@ -191,15 +211,6 @@ export default class OnlineDataTopicList extends Vue {
       align: 'center',
       value: 'userName'
     },
-    // 系统名，用户名
-    // {
-    //   text: '订阅用户',
-    //   align: 'center',
-    //   value: 'userSubNameList',
-    //   format: (userSubNameList: Array<string>) => {
-    //     return userSubNameList.toString()
-    //   }
-    // },
     {
       text: '接口类型',
       align: 'center',
@@ -227,8 +238,37 @@ export default class OnlineDataTopicList extends Vue {
       slot: 'buttons'
     }
   ]
+
+  private buttonItems = [
+    {
+      text: `增加字段`,
+      tab: 1,
+      faceType: 1,
+      handle: this.addItems
+    },
+    {
+      text: `下载`,
+      faceType: 6,
+      handle: this.downloadFile
+    },
+    {
+      text: `启动`,
+      tab: 1
+    },
+    {
+      text: `停止`,
+      tab: 1
+    },
+    {
+      text: '删除',
+      tab: 1,
+      color: `error`,
+      handle: this.handelDeleteTopic
+    }
+  ]
+
   // REST
-  private createRest(item?: any) {
+  private createRest(item?: topicTable) {
     this.fDialogFlag = true
     this.fDialogShow = 1
     this.formProvide.btnName = ['立即提交']
@@ -236,8 +276,8 @@ export default class OnlineDataTopicList extends Vue {
     this.formProvide.methodName = 'addRest' // 立即提交
     // 修改
     if (item) {
-      const obj1: any = JSON.parse(item.dsAnnotation)
-      const obj2: any = JSON.parse(item.dataStruct)[0]
+      const obj1 = item.dsAnnotation ? JSON.parse(item.dsAnnotation) : undefined
+      const obj2 = item.dataStruct ? JSON.parse(item.dataStruct)[0] : undefined
 
       let _topicList = []
       for (const k in obj1) {
@@ -284,7 +324,8 @@ export default class OnlineDataTopicList extends Vue {
     })
     const _numberS = JSON.stringify(dataStruct)
     const _keyS = '[' + JSON.stringify(dataStructNumber) + ']'
-    const params: any = {
+
+    const params: Partial<onlineDataParamType> = {
       dataStruct: _keyS,
       dsAnnotation: _numberS,
       dataType: dataType['结构化']
@@ -364,7 +405,7 @@ export default class OnlineDataTopicList extends Vue {
   }
   // addJson
   private async addJson(formObj: TopicAdd) {
-    const params: any = {}
+    const params: Partial<onlineDataParamType> = {}
 
     params.dataType = dataType['结构化']
     params.topicInterFaceType = 4
@@ -392,7 +433,7 @@ export default class OnlineDataTopicList extends Vue {
   }
 
   // 添加
-  private addItems(item: any) {
+  private addItems(item: topicTable) {
     // rest
     if (item.topicInterFaceType === 1) {
       this.createRest(item)
@@ -462,27 +503,26 @@ export default class OnlineDataTopicList extends Vue {
   }
 
   // 数据结构展示方法
-  private dataStructure(item: object) {
+  private dataStructure(item: topicTable) {
+    this.rowObj = item
     this.tDialogFlag = true
     this.tDialogShow = 1
-    this.rowObj = item
     this.formProvide.title = '数据结构详情'
   }
 
   // 附加信息
-  private ancillaryInformation(info: object) {
+  private ancillaryInformation(item: topicTable) {
+    this.rowObj = item
     this.tDialogFlag = true
     this.tDialogShow = 2
-    this.otherObj = info
     this.formProvide.title = '附加信息'
   }
 
   // 订阅用户详情
-  private showUserSubNameList(info: object) {
-    console.log(info)
+  private showUserSubNameList(item: topicTable) {
+    this.rowObj = item
     this.tDialogFlag = true
     this.tDialogShow = 3
-    this.otherObj = info
     this.formProvide.title = '订阅用户详情'
   }
 
@@ -620,9 +660,9 @@ export default class OnlineDataTopicList extends Vue {
   }
 
   // 下载 proto
-  private async downloadFile(id: number) {
+  private async downloadFile(item: { id: number }) {
     const data = await this.h_download.httpGET('GET_TOPICS_PROTOBUFDOWNLOAD', {
-      id
+      id: item.id
     })
 
     if (data.filename) {
@@ -646,6 +686,12 @@ export default class OnlineDataTopicList extends Vue {
     } else {
       this.h_utils['alertUtil'].open('文件不存在或者下载失败', true, 'error')
     }
+  }
+
+  // handelDeleteTopic
+  private handelDeleteTopic(item: { id: string; topicName: string; topicInterFaceType: number }) {
+    this.HConfirmShow = true
+    this.HConfirmItem = { ...item }
   }
 }
 </script>

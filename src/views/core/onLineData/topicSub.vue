@@ -32,6 +32,7 @@
               @click="dataStructure(item)"
               >数据结构详情</v-btn
             >
+            <v-btn text color="primary" @click="showUserSubNameList(item)">订阅用户</v-btn>
           </template>
           <template v-slot:operation="{ item }">
             <v-btn
@@ -63,7 +64,8 @@
       </v-tab-item>
     </v-tabs-items>
     <t-dialog v-model="dialogFlag">
-      <data-structure-dialog :rowObj="rowObj"></data-structure-dialog>
+      <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
+      <UserSubNameList :rowObj="rowObj" v-else-if="tDialogShow === 2" />
     </t-dialog>
   </div>
 </template>
@@ -76,6 +78,7 @@ import HTable from '@/components/h-table.vue'
 import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
+import UserSubNameList from './childComponent/userSubNameList.vue'
 import { mdiMagnify } from '@mdi/js'
 import { tableHeaderType } from '@/type/table.type'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
@@ -86,7 +89,8 @@ import HSearch from '@/components/h-search.vue'
     HTable,
     TDialog,
     DataStructureDialog,
-    HSearch
+    HSearch,
+    UserSubNameList
   }
 })
 @http
@@ -115,6 +119,7 @@ export default class TopicSub extends Vue {
       }
     }
   })
+  //TODO: 主题订阅  按照主题ID和主题名称查询，加字段
   private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['可订阅主题', '我的订阅']
@@ -125,6 +130,7 @@ export default class TopicSub extends Vue {
   private pageSize = 20
   private paginationLength = 0
   private dialogFlag = false
+  private tDialogShow = 0
   private queryTopicID = ''
   private loading = true
 
@@ -152,15 +158,15 @@ export default class TopicSub extends Vue {
         value: 'belongUserName',
         isHide: !this.tab
       },
-      {
-        text: '订阅用户',
-        align: 'center',
-        value: 'userSubNameList',
-        isHide: !!this.tab,
-        format: (userSubNameList: Array<string>): string => {
-          return userSubNameList.toString()
-        }
-      },
+      // {
+      //   text: '订阅用户',
+      //   align: 'center',
+      //   value: 'userSubNameList',
+      //   isHide: !!this.tab,
+      //   format: (userSubNameList: Array<string>): string => {
+      //     return userSubNameList.toString()
+      //   }
+      // },
       {
         text: '接口类型',
         align: 'center',
@@ -178,7 +184,7 @@ export default class TopicSub extends Vue {
         }
       },
       {
-        text: '数据结构',
+        text: '显示详情',
         align: 'center',
         slot: 'buttons'
       },
@@ -231,10 +237,20 @@ export default class TopicSub extends Vue {
     this.loading = false
   }
 
-  private dataStructure(item: any) {
-    this.dialogFlag = true
+  // 数据结构详情
+  private dataStructure(item: topicTable) {
     this.rowObj = item
+    this.dialogFlag = true
+    this.tDialogShow = 1
     this.formObj.title = '数据结构详情'
+  }
+
+  // 订阅用户详情
+  private showUserSubNameList(item: topicTable) {
+    this.rowObj = item
+    this.dialogFlag = true
+    this.tDialogShow = 2
+    this.formObj.title = '订阅用户详情'
   }
 
   private searchTopic() {
@@ -260,6 +276,7 @@ export default class TopicSub extends Vue {
     }
     this.pageNum = 1
   }
+
   // <!-- 订阅按钮乐观更新 -->
   private async subscribe(item: { id: string }) {
     this.$set(item, 'subloading', true)
@@ -270,7 +287,6 @@ export default class TopicSub extends Vue {
     if (success) {
       this.$set(item, 'status', true)
     }
-
     this.$set(item, 'subloading', false)
   }
 
@@ -285,10 +301,10 @@ export default class TopicSub extends Vue {
     if (success) {
       this.$set(item, 'status', false)
     }
-
     this.$set(item, 'subloading', false)
   }
 
+  // 分页
   private PaginationNow(page: number) {
     this.pageNum = page
     this.searchMethod(

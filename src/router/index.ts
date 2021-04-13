@@ -12,8 +12,8 @@ import {
   mdiConsole,
   mdiMonitorScreenshot,
   mdiDevices,
-  mdiClipboardTextMultiple,
-  mdiDatabaseCog
+  mdiClipboardTextMultiple
+  // mdiDatabaseCog
 } from '@mdi/js'
 
 Vue.use(VueRouter)
@@ -473,32 +473,32 @@ const routes: Array<RouteConfig> = [
       }
     ]
   },
-  // 系统统计
-  {
-    path: '/dataMGT',
-    name: '系统统计',
-    component: StatePage,
-    redirect: '/dataMGT/dataStatistics',
-    meta: {
-      title: '系统统计',
-      icon: mdiDatabaseCog,
-      access: true,
-      url: '/dataMGT'
-    },
-    children: [
-      {
-        path: 'dataStatistics',
-        component: () => import('@/views/core/data/dataStatistics.vue'),
-        name: '数据统计',
-        meta: {
-          title: '数据统计',
-          // icon: 'mdi-database-clock',
-          access: true,
-          url: '/dataMGT/dataStatistics'
-        }
-      }
-    ]
-  },
+  // 系统统计--隐藏页，在private中查看
+  // {
+  //   path: '/dataMGT',
+  //   name: '系统统计',
+  //   component: StatePage,
+  //   redirect: '/dataMGT/dataStatistics',
+  //   meta: {
+  //     title: '系统统计',
+  //     icon: mdiDatabaseCog,
+  //     access: false,
+  //     url: '/dataMGT'
+  //   },
+  //   children: [
+  //     {
+  //       path: 'dataStatistics',
+  //       component: () => import('@/views/core/data/dataStatistics.vue'),
+  //       name: '数据统计',
+  //       meta: {
+  //         title: '数据统计',
+  //         // icon: 'mdi-database-clock',
+  //         access: false,
+  //         url: '/dataMGT/dataStatistics'
+  //       }
+  //     }
+  //   ]
+  // },
   {
     path: '/private',
     name: '内部调试页面',
@@ -518,7 +518,6 @@ const routes: Array<RouteConfig> = [
           access: false
         }
       },
-      // 汇总 json 系统统计 作业监控
       {
         path: 'bulkCreateTopic',
         name: '批量创建主题',
@@ -527,6 +526,15 @@ const routes: Array<RouteConfig> = [
           access: false
         },
         component: () => import('@/views/private/bulkCreateTopic.vue')
+      },
+      {
+        path: 'dataStatistics',
+        component: () => import('@/views/private/dataStatistics.vue'),
+        name: '数据统计',
+        meta: {
+          title: '数据统计',
+          access: false
+        }
       }
     ]
   }

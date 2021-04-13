@@ -20,7 +20,9 @@ const GET_ROLE_FIND_ALL_ROLE_BY_PARAM = '/role/findAllRoleByParam'
 const GET_PERMISSION_AUTHORIZATION_FIND_ALL_PERMISSION = '/permission/authorization/findAllPermission'
 const GET_PERMISSION_AUTHORIZATION_FINDPERMISSIONLISTBYROLEID = '/permission/authorization/findPermissionListByRoleId'
 const POST_PERMISSION_AUTHORIZATION_ADDROLEIDPERMISSIONID = '/permission/authorization/addRoleIdPermissionId'
-const GET_SYSTEM_GETSYSTEMINFO = '/system/getSystemInfo' // 获取系统信息
+const GET_SYSTEM_GETSYSTEMINFO = '/system/getSystemInfo' // 获取系统信息 全局
+const GET_STATISTICS_STAT_TOPIC_DATA = '/statistics/statTopicData' // 系统统计 隐藏页
+const GET_STATISTICS_STAT_SYS_TOPIC = '/statistics/statSysTopic' // 系统统计 隐藏页
 // /system/getSystemTypeInfo ？
 // /user/delete/* ?
 // /permission/findPermissionListByRoleId/* ?
@@ -65,10 +67,6 @@ const POST_SYSNET_DELETEBINDINFO = '/sysnet/delBindInfo'
 // ---------------------------- 操作日志 ---------------------------
 const GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG = '/logMGT/viewLog/log/findAllLog'
 // /logMGT/viewLog/log/findAllLogByParam ？
-
-// ---------------------------- 系统统计 ---------------------------
-const GET_STATISTICS_STAT_TOPIC_DATA = '/statistics/statTopicData'
-const GET_STATISTICS_STAT_SYS_TOPIC = '/statistics/statSysTopic'
 
 // ---------------------------- 可靠通道 ---------------------------
 const GET_CMD_FIND_ALL = '/cmd/findAll'

@@ -14,7 +14,7 @@ export type topicTable = {
   topicName?: string
   userID?: number | null
   userName?: string
-  userSubNameList?: Array<string>
+  userSubNameList?: Array<{ Name: string; login_name: string; subUserID: number }>
   flag?: boolean
   topicInterFaceType?: number
   redisTimer?: number
@@ -27,4 +27,5 @@ export type topicTable = {
   state?: number
   key?: string
   value?: string
+  dsAnnotation?: string
 }

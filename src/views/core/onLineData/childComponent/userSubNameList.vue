@@ -1,11 +1,12 @@
 <template>
   <div id="UserSubNameList">
-    <h-table :headers="headers" :desserts="otherObj"></h-table>
+    <h-table :headers="headers" :desserts="desserts"></h-table>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
+import { topicTable } from '@/type/topic.type'
 
 @Component({
   components: {
@@ -13,16 +14,27 @@ import HTable from '@/components/h-table.vue'
   }
 })
 export default class UserSubNameList extends Vue {
-  @Prop() private otherObj!: any
+  @Prop() private rowObj!: Partial<topicTable>
+
+  private get desserts() {
+    return this.rowObj.userSubNameList
+  }
 
   private headers = [
     {
       text: '订阅用户',
       align: 'center',
-      value: 'userSubNameList',
-      format: (userSubNameList: Array<string>) => {
-        return userSubNameList?.toString()
-      }
+      value: 'login_name'
+    },
+    {
+      text: '系统名',
+      align: 'center',
+      value: 'Name'
+    },
+    {
+      text: '订阅用户ID',
+      align: 'center',
+      value: 'subUserID'
     }
   ]
 }

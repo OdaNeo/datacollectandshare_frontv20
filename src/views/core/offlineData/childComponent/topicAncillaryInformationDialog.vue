@@ -18,14 +18,6 @@ export default class TopicAncillaryInformationDialog extends Vue {
 
   get tableHeader(): Array<{}> {
     switch (this.otherObj.topicInterFaceType) {
-      case 1:
-        return [
-          {
-            text: '内存过期时间',
-            align: 'center',
-            value: 'redisTimer'
-          }
-        ]
       case 2:
         return [
           {
@@ -45,35 +37,6 @@ export default class TopicAncillaryInformationDialog extends Vue {
             text: 'url',
             align: 'center',
             value: 'url'
-          }
-        ]
-      case 4:
-        return [
-          {
-            text: '内存过期时间',
-            align: 'center',
-            value: 'redisTimer'
-          },
-          {
-            text: '是否写入ES',
-            align: 'center',
-            value: 'writeElasticsearch',
-            format: function (val: any) {
-              switch (val) {
-                case 1:
-                  return '是'
-                case 0:
-                  return '否'
-              }
-            }
-          }
-        ]
-      case 6:
-        return [
-          {
-            text: '内存过期时间',
-            align: 'center',
-            value: 'redisTimer'
           }
         ]
       default:
