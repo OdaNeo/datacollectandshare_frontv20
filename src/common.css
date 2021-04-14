@@ -112,6 +112,18 @@ input:-internal-autofill-previewed, input:-internal-autofill-selected {
     box-shadow: none !important;
 }
 
+.v-text-field__slot label {
+    font-size: 0.875rem !important;
+}
+
+.v-select__slot label {
+    font-size: 0.875rem !important;
+}
+
+.v-input__slot label {
+    font-size: 0.875rem !important;
+}
+
 .v-text-field__slot textarea {
     margin-top: 0px !important;
 }

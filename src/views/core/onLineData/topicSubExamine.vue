@@ -3,7 +3,7 @@
     <v-row>
       <HSearch
         v-model="queryExamineUser"
-        placeholder="请输入要查询的订阅用户名"
+        label="请输入要查询的订阅用户名"
         @append="searchExamine"
         @enter="searchExamine"
         @clear="

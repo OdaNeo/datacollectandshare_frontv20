@@ -3,7 +3,7 @@
     <v-row>
       <HSearch
         v-model="queryTopicID"
-        placeholder="请输入查找的事务主题ID"
+        label="请输入查找的事务主题ID"
         @append="searchTopic"
         @enter="searchTopic"
         @clear="tabChange(tab)"
@@ -33,47 +33,41 @@
             <v-btn text color="primary" @click="sqlMaxContentDetails(item)">自增属性</v-btn>
             <v-btn text color="primary" @click="jsonContentDetails(item)">DataX</v-btn>
           </template>
-          <template v-slot:buttons="{ item, index }">
-            <v-btn v-if="tab" text color="primary" @click.stop="addItems(item)">修改</v-btn>
-            <v-btn
-              v-if="tab"
-              text
-              color="primary"
-              @click.stop="
-                HConfirmShow = true
-                HConfirmItem = item
-              "
-            >
-              删除
-            </v-btn>
-            <v-btn
-              v-if="!tab"
-              text
-              color="primary"
-              @click="stateOrStopTransactionalData(item.id, index, 1)"
-              :disabled="!item.state || item.state === -1 || item.state === 1"
-              >启动</v-btn
-            >
-            <v-btn
-              v-if="!tab"
-              text
-              color="primary"
-              :disabled="!item.state || item.state === -1 || item.state === 2"
-              @click="stateOrStopTransactionalData(item.id, index, 2)"
-              >停止</v-btn
-            >
-            <v-btn
-              v-if="!tab"
-              text
-              color="primary"
-              :disabled="item.state === -1"
-              @click="reloadTransactionalData(item.id)"
-              >重跑</v-btn
-            >
-          </template>
+          <!-- 日志 -->
           <template v-slot:log="{ item }">
             <v-btn text color="primary" :loading="!!item.loading" @click.stop="getCurrentLog(item)">最新日志</v-btn>
             <v-btn text color="primary" @click.stop="getHistoryLog(item.id)">历史日志</v-btn>
+          </template>
+          <!-- 实时监控 -->
+          <template v-slot:monitor="{}">
+            <v-btn text color="primary">实时监控</v-btn>
+          </template>
+          <!-- 操作 -->
+          <template v-slot:buttons="{ item }">
+            <!-- 操作下拉框 -->
+            <v-menu close-delay="150" left offset-x bottom max-width="90px" min-width="90px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn color="primary" text v-bind="attrs" v-on="on">...</v-btn>
+              </template>
+              <v-list dense>
+                <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
+                  <v-btn
+                    :disabled="
+                      (i.tab && tab !== Number(i.tab)) ||
+                      item.state === undefined ||
+                      item.state === -1 ||
+                      (i.state && item.state === i.state)
+                    "
+                    class="pa-0"
+                    width="100%"
+                    :color="i.color ? i.color : `primary`"
+                    text
+                    @click="i.handle(item)"
+                    >{{ i.text }}</v-btn
+                  >
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </template>
         </h-table>
       </v-tab-item>
@@ -197,7 +191,11 @@ export default class transactionalDataList extends Vue {
     {
       text: '运行周期',
       align: 'center',
-      value: 'cron'
+      value: 'cron',
+      format: (cron: string) => {
+        const _str = cron.replaceAll(' ', '')
+        return `每日${_str.slice(2, _str.length - 3)}时`
+      }
     },
     {
       text: '自增属性最大值',
@@ -210,16 +208,54 @@ export default class transactionalDataList extends Vue {
       slot: 'content'
     },
     {
-      text: '操作',
-      align: 'center',
-      slot: 'buttons'
-    },
-    {
       text: '日志',
       align: 'center',
       slot: 'log'
+    },
+    {
+      text: '实时监控',
+      align: 'center',
+      slot: 'monitor'
+    },
+    {
+      text: '操作',
+      align: 'center',
+      slot: 'buttons'
     }
   ]
+
+  // 操作下拉框
+  private buttonItems = [
+    {
+      text: `修改`,
+      tab: '1',
+      handle: this.addItems
+    },
+    {
+      text: `启动`,
+      tab: '0',
+      state: 1,
+      handle: this.stateTransactionalData
+    },
+    {
+      text: `停止`,
+      tab: '0',
+      state: 2,
+      handle: this.stopTransactionalData
+    },
+    {
+      text: `重跑`,
+      tab: '0',
+      handle: this.reloadTransactionalData
+    },
+    {
+      text: '删除',
+      tab: '1',
+      color: `error`,
+      handle: this.handelDeleteTopic
+    }
+  ]
+
   // 创建 修改事务性数据
   private createTransactionalData(items?: any) {
     // 创建
@@ -229,7 +265,7 @@ export default class transactionalDataList extends Vue {
     this.formProvide.title = items ? '修改事务主题' : '创建事务主题'
     this.formProvide.methodName = 'addTransactionalData'
     this.formProvide.formObj = {
-      cron: '0 时',
+      cron: '0',
       column: [
         {
           field: '',
@@ -245,7 +281,7 @@ export default class transactionalDataList extends Vue {
       this.formProvide.formObj.topicName = items.topicName
       this.formProvide.formObj.maxValue = items.maxValue
       const _str = items.cron.replaceAll(' ', '')
-      this.formProvide.formObj.cron = `${_str.slice(2, _str.length - 3)} 时`
+      this.formProvide.formObj.cron = `${_str.slice(2, _str.length - 3)}`
 
       const _inputContent = JSON.parse(items.inputContent)
       console.log(_inputContent)
@@ -344,7 +380,7 @@ export default class transactionalDataList extends Vue {
         topicName,
         dataType: dataType['结构化'],
         topicInterFaceType: 8,
-        cron: `0 0 ${cron.replaceAll(' 时', '')} * * ?`,
+        cron: `0 0 ${cron} * * ?`,
         sqlMaxContent: '',
         maxValue,
         state: 1,
@@ -466,6 +502,12 @@ export default class transactionalDataList extends Vue {
     this.loading = false
   }
 
+  // handelDeleteTopic
+  private handelDeleteTopic(item: { id: string; topicName: string; topicInterFaceType: number }) {
+    this.HConfirmShow = true
+    this.HConfirmItem = { ...item }
+  }
+
   // 删除
   private async deleteTopic() {
     if (this.HConfirmItem.id === undefined) {
@@ -542,29 +584,57 @@ export default class transactionalDataList extends Vue {
     this.pageNum = 1
   }
   // 启停 1启动，2停止
-  private async stateOrStopTransactionalData(topicId: number, index: number, state: number) {
-    // console.log(topicId)
+  // private async stateOrStopTransactionalData(topicId: number, index: number, state: number) {
+  //   // console.log(topicId)
+  //   const { success } = await this.h_request['httpGET']('GET_TOPICS_UPDATETRANSACTIONALTOPICSTATE', {
+  //     topicId,
+  //     state
+  //   })
+  //   // console.log(data)
+  //   if (success) {
+  //     this.h_utils['alertUtil'].open(state === 1 ? '启动成功' : '停止成功', true, 'success')
+  //     // 乐观更新
+  //     this.$set(this.desserts, index, {
+  //       ...this.desserts[index],
+  //       state
+  //     })
+  //   }
+  // }
+
+  // 启动
+  private async stateTransactionalData(item: { id: number }) {
     const { success } = await this.h_request['httpGET']('GET_TOPICS_UPDATETRANSACTIONALTOPICSTATE', {
-      topicId,
-      state
+      topicId: item.id,
+      state: 1
     })
-    // console.log(data)
+
     if (success) {
-      this.h_utils['alertUtil'].open(state === 1 ? '启动成功' : '停止成功', true, 'success')
+      this.h_utils['alertUtil'].open(`主题${item.id}启动成功`, true, 'success')
       // 乐观更新
-      this.$set(this.desserts, index, {
-        ...this.desserts[index],
-        state
-      })
+      this.$set(item, `state`, 1)
+    }
+  }
+
+  // 停止
+  private async stopTransactionalData(item: { id: number }) {
+    const { success } = await this.h_request['httpGET']('GET_TOPICS_UPDATETRANSACTIONALTOPICSTATE', {
+      topicId: item.id,
+      state: 2
+    })
+
+    if (success) {
+      this.h_utils['alertUtil'].open(`主题${item.id}停止成功`, true, 'success')
+      // 乐观更新
+      this.$set(item, `state`, 2)
     }
   }
   // 重跑
-  private async reloadTransactionalData(topicId: number) {
+  private async reloadTransactionalData(item: { id: number }) {
     const { success } = await this.h_request['httpGET']('GET_TOPICS_RUNTRANSACTIONALTOPICAGAIN', {
-      topicId
+      topicId: item.id
     })
     if (success) {
-      this.h_utils['alertUtil'].open(`主题${topicId}重跑成功`, true, 'success')
+      this.h_utils['alertUtil'].open(`主题${item.id}重跑成功`, true, 'success')
     }
   }
 
@@ -579,6 +649,7 @@ export default class transactionalDataList extends Vue {
     } else {
       this.rowJson = ''
       this.$set(item, `loading`, false)
+      this.h_utils['alertUtil'].open(`未查询到最新日志`, true, 'error')
       return
     }
 
@@ -596,6 +667,7 @@ export default class transactionalDataList extends Vue {
       }
     })
   }
+
   // 清除timer
   beforeDestroy(): void {
     clearInterval(this.sqlTimer)

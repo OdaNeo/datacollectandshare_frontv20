@@ -3,7 +3,7 @@
     <!-- 上传文件 -->
     <HFileUpLoad
       accept=".sql"
-      placeholder="支持.sql格式的单文件上传"
+      label="支持.sql格式的单文件上传"
       outlined
       description="上传文件"
       :rules="[...h_validator.fileSQLValidate()]"

@@ -18,7 +18,7 @@
     <!-- 数据库类型 -->
     <HSelect
       :description="`数据库类型`"
-      placeholder="请选择数据库类型"
+      label="请选择数据库类型"
       v-model="formProvide.formObj['dataBaseType']"
       :rules="[...h_validator.noEmpty('数据库类型')]"
       :items="items"

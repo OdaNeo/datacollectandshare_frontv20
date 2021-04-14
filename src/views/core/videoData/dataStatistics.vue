@@ -1,6 +1,6 @@
 <template>
   <div id="VideoDataStatistics">
-    <div v-if="videoList.length > 0" class="slider mt-2">
+    <div v-if="videoList.length > 0" class="slider">
       <span style="font-size: 14px">当前显示前{{ sliderNumber }}条主题</span>
       <v-slider
         v-model="sliderNumber"
@@ -224,6 +224,6 @@ export default class VideoDataStatistics extends Vue {
 #echarts2 {
   height: 250px;
   width: 95%;
-  margin: 20px auto 0 auto;
+  margin: 0 auto;
 }
 </style>

@@ -12,7 +12,7 @@
           height="35px"
           v-model="queryServerName"
           @change="handleCurrentChange(1)"
-          placeholder="请选择作业类别"
+          label="请选择作业类别"
         ></v-select>
       </v-col>
       <!-- 分割 -->

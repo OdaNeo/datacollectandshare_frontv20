@@ -4,7 +4,7 @@
       <HSearch
         v-model="queryTopicID"
         v-only-num
-        placeholder="请输入查找的离线主题ID"
+        label="请输入查找的离线主题ID"
         @append="searchTopic"
         @enter="searchTopic"
         @clear="tabChange(tab)"

@@ -81,23 +81,13 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 55. ~~表单弹框关闭动画缺失，需要优化~~
 56. 开发者模式
 
-<!-- 57. 订阅用户和订阅系统名显示——实时主题
-1.  下载按钮加一个解释
-2.  JSON 多级嵌套 做成隐藏页面
-3.  创建rest 修改字段类型？版本号？
-4.  ~~隐藏minio~~
-5.  事务的数据结构
-6.  ftp定时，拉取失败与成功
-7.  运行周期 格式化时间， 表字段显示
-8.  日志 详情添加 采集策略关键字
-9.  实时监控 分散到 主题，跟任务对应
-10. 历史统计，搜索
-11. 整体统计 隐藏
-12. 离线主题 重做，按照主题统计，不区分系统，按照任务ID统计 -->
 
 ## 常见问题
 
 - 新增接口后 需要在权限管理处进行配置 否则会报错 401 身份验证失败
-- 后端接口配置在 src/config.ts > VUE_APP_BASE_API
+- 后端接口配置在 config.ts > VUE_APP_BASE_API
 - 页面左侧菜单栏顺序 配置在 src/router/index.ts > routes, 可同时修改一级列表和二级列表顺序，不依赖后端 callback 顺序
+- 隐藏页面 /private
 - 线上查看 git 版本页面 /private/bulkCreateTopic
+- 页面跳转会批量取消上一个页面的请求
+- npm run staging 打包成后端可配的页面，其余与生产环境相同，详见 .env.staging 文件

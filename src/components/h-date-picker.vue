@@ -13,9 +13,9 @@
         outlined
         dense
         height="35px"
-        :placeholder="placeholder"
+        :label="label"
         readonly
-        :prepend-inner-icon="mdiMagnify"
+        :append-icon="mdiMagnify"
         v-bind="attrs"
         v-on="on"
       ></v-text-field>
@@ -42,7 +42,7 @@ import { mdiMagnify } from '@mdi/js'
 @Component
 @util
 export default class HDatePicker extends Vue {
-  @Prop() private placeholder!: string
+  @Prop() private label!: string
   @Prop() private begin!: string
   @Prop() private anotherDate!: null | string
 

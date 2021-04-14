@@ -6,7 +6,7 @@
         @append="changeQuery"
         @enter="changeQuery"
         @clear="clearInput"
-        placeholder="请输入查找的事务主题ID"
+        label="请输入查找的事务主题ID"
         v-only-num
       />
     </v-row>

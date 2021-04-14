@@ -1,14 +1,37 @@
 <template>
   <div id="topicSub">
     <v-row>
-      <HSearch
-        v-model="queryTopicID"
-        placeholder="请输入查找的主题ID"
-        @append="searchTopic"
-        @enter="searchTopic"
-        @clear="tabChange(tab)"
-        v-only-num
-      />
+      <v-switch
+        style="padding-top: 2px; width: 180px"
+        class="ml-3"
+        dense
+        v-model="switchMode"
+        flat
+        :label="switchMode ? `按照主题ID查询` : `按照主题名称查询`"
+        @change="changeSearchMode"
+      ></v-switch>
+      <transition name="fade" mode="out-in">
+        <HSearch
+          v-if="searchMode === `id`"
+          v-model="queryTopicID"
+          :label="`请输入主题ID`"
+          @append="searchTopic"
+          @enter="searchTopic"
+          @clear="tabChange(tab)"
+          v-only-num
+          key="id"
+        />
+
+        <HSearch
+          v-else-if="searchMode === `topicName`"
+          v-model="queryTopicID"
+          :label="`请输入主题名称`"
+          @append="searchTopic"
+          @enter="searchTopic"
+          @clear="tabChange(tab)"
+          key="topicName"
+        />
+      </transition>
     </v-row>
     <v-tabs v-model="tab" @change="tabChange">
       <v-tab v-for="item in items" :key="item">{{ item }}</v-tab>
@@ -130,7 +153,7 @@ export default class TopicSub extends Vue {
       }
     }
   })
-  //TODO: 主题订阅  按照主题ID和主题名称查询，加字段  id,topicName 如果没有为空: ''
+
   private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['可订阅主题', '我的订阅']
@@ -144,6 +167,11 @@ export default class TopicSub extends Vue {
   private tDialogShow = 0
   private queryTopicID = ''
   private loading = true
+
+  // 搜索方法，默认搜索id
+  private searchMode: `id` | `topicName` = `id`
+  // 切换开关
+  private switchMode = true
 
   private get headers(): Array<tableHeaderType> {
     return [
@@ -160,7 +188,8 @@ export default class TopicSub extends Vue {
       {
         text: '订阅用户数',
         align: 'center',
-        slot: 'subUsers'
+        slot: 'subUsers',
+        isHide: !!this.tab
       },
       {
         text: '所属用户',
@@ -232,6 +261,12 @@ export default class TopicSub extends Vue {
     this.pageNum = 1
   }
 
+  // 改变用户
+  private changeSearchMode() {
+    this.searchMode === `id` ? (this.searchMode = `topicName`) : (this.searchMode = `id`)
+  }
+
+  // 统一请求方法
   private async searchMethod(bool: boolean, params: object, tab?: boolean): Promise<void> {
     this.loading = true
     let _data: returnTypeData
@@ -243,7 +278,7 @@ export default class TopicSub extends Vue {
       _data = data ? { ...data } : undefined
     } else {
       const { data }: returnType = bool
-        ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTSUBTOPICBYID', params)
+        ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTSUBTOPICBYIDORNAME', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_FINDALLSUBTOPIC', params)
       _data = data ? { ...data } : undefined
     }
@@ -283,7 +318,8 @@ export default class TopicSub extends Vue {
       this.searchMethod(
         true,
         {
-          id: this.queryTopicID,
+          id: this.searchMode === `id` ? this.queryTopicID : '',
+          topicName: this.searchMode === `topicName` ? this.queryTopicID : '',
           pageNum: 1,
           pageSize: this.pageSize
         },
@@ -334,3 +370,20 @@ export default class TopicSub extends Vue {
   }
 }
 </script>
+<style>
+/* fade-transform */
+.fade-leave-active,
+.fade-enter-active {
+  transition: all 0.5s;
+}
+
+.fade-enter {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.fade-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
+</style>

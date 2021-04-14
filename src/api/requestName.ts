@@ -20,9 +20,9 @@ const GET_ROLE_FIND_ALL_ROLE_BY_PARAM = '/role/findAllRoleByParam'
 const GET_PERMISSION_AUTHORIZATION_FIND_ALL_PERMISSION = '/permission/authorization/findAllPermission'
 const GET_PERMISSION_AUTHORIZATION_FINDPERMISSIONLISTBYROLEID = '/permission/authorization/findPermissionListByRoleId'
 const POST_PERMISSION_AUTHORIZATION_ADDROLEIDPERMISSIONID = '/permission/authorization/addRoleIdPermissionId'
-const GET_SYSTEM_GETSYSTEMINFO = '/system/getSystemInfo' // 获取系统信息 全局
 const GET_STATISTICS_STAT_TOPIC_DATA = '/statistics/statTopicData' // 系统统计 隐藏页
 const GET_STATISTICS_STAT_SYS_TOPIC = '/statistics/statSysTopic' // 系统统计 隐藏页
+// const GET_SYSTEM_GETSYSTEMINFO = '/system/getSystemInfo' // 获取系统信息 全局 与 /user/addUser/getSystemInfoAndAddUser 重复
 // /system/getSystemTypeInfo ？
 // /user/delete/* ?
 // /permission/findPermissionListByRoleId/* ?
@@ -37,7 +37,7 @@ const GET_TOPICS_FIND_ALL = '/topics/findAll'
 const GET_TOPICS_CHECKED = '/topics/findTopicByTopicName'
 const GET_TOPICS_MYTOPICSBYID = '/topics/myTopicsById'
 const GET_TOPICS_FINDALLSUBTOPIC = '/topics/findAllSubTopic' // 查询可订阅的主题
-const GET_TOPICS_SELECTSUBTOPICBYID = '/topics/selectSubTopicById' // 通过id查询主题
+const GET_TOPICS_SELECTSUBTOPICBYIDORNAME = '/topics/selectSubTopicByIdOrName' // 通过id查询主题
 const GET_TOPICS_INFORMATION = '/topics/findTopicAdditionalByTopicName' // 查询主题附加信息
 const POST_SUBMODERATIONS_INSERTSUBMODERATION = '/subModerations/insertSubModeration'
 const POST_TOPIC_ADDPROTOBUFTOPIC = '/topics/addProtobufTopic' // 上传proto文件
@@ -87,7 +87,8 @@ const POST_TOPICS_ADDLOGGERTOPIC = '/topics/addLoggerTopic'
 const POST_TOPICS_UPDATELOGGERTOPIC = '/topics/updateLoggerTopic'
 const GET_TOPICS_DELETELOOGGERTOPIC = '/topics/deleteLoggerTopic'
 const GET_TOPICS_SELECTLOGGERTOPICBYTOPICID = '/topics/selectLoggerTopicByTopicId'
-const GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICID = '/topics/statisticsLoggerTopicByTopicId'
+const GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICIDANDDAY = '/topics/statisticsLoggerTopicByTopicIdAndDay'
+const GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICIDANDDAYAND30DAYS = '/topics/statisticsLoggerTopicByTopicIdAnd30Days'
 
 // ----------------------------- 作业监控 ------------------------
 const GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME = '/monitor/findAllMonitorLogByTime'
@@ -154,7 +155,7 @@ const REQUEST_NAME = {
   GET_SYSNET_GETBINDBYNAME,
   GET_SYSNET_GETSYSNETLIST,
   GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG,
-  GET_SYSTEM_GETSYSTEMINFO,
+  // GET_SYSTEM_GETSYSTEMINFO,
   POST_TOPICS_ADD,
   GET_TOPICS_DELETE,
   GET_TOPICS_INFORMATION,
@@ -176,7 +177,7 @@ const REQUEST_NAME = {
   GET_TRANSMISSION_HISTORY,
   GET_TOPICS_PROTOBUFDOWNLOAD,
   GET_TOPICS_FINDALLSUBTOPIC,
-  GET_TOPICS_SELECTSUBTOPICBYID,
+  GET_TOPICS_SELECTSUBTOPICBYIDORNAME,
   GET_VIDEO_ADDRESS,
   POST_TOPIC_ADDPROTOBUFTOPIC,
   GET_CMD_FINDMYCMDINFOBYID,
@@ -199,7 +200,8 @@ const REQUEST_NAME = {
   GET_SUBMODERATIONS_SELECTMYSUBTOPICBYTOPICID,
   GET_TOPICS_CHECKUSERUPLOADTASKSTATUS,
   GET_TOPICS_GETOFFLINELOGBYTOPICID,
-  GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICID
+  GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICIDANDDAY,
+  GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICIDANDDAYAND30DAYS
 }
 
 export default REQUEST_NAME

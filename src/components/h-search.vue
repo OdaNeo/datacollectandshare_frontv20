@@ -8,11 +8,13 @@
       height="35px"
       :append-icon="showAppEnd ? mdiMagnify : undefined"
       :clear-icon="mdiCloseCircleOutline"
+      @click:prepend="$emit('prepend')"
       @click:append="$emit('append')"
       @keyup.enter="$emit('enter')"
       @click:clear="$emit('clear')"
       @input="$emit('input', $event)"
-    ></v-text-field>
+    >
+    </v-text-field>
   </v-col>
 </template>
 <script lang="ts">

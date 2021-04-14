@@ -3,7 +3,7 @@
     <v-row>
       <HSearch
         v-model="queryTopicID"
-        placeholder="请输入查找的实时主题ID"
+        label="请输入查找的实时主题ID"
         @append="searchTopic"
         @enter="searchTopic"
         @clear="tabChange(tab)"
@@ -60,7 +60,7 @@
                     width="100%"
                     :color="i.color ? i.color : `primary`"
                     text
-                    @click.stop="i.handle(item)"
+                    @click="i.handle(item)"
                     >{{ i.text }}</v-btn
                   >
                 </v-list-item>
@@ -232,7 +232,7 @@ export default class OnlineDataTopicList extends Vue {
       slot: 'buttons'
     }
   ]
-
+  // 操作下拉框
   private buttonItems = [
     {
       text: `增加字段`,

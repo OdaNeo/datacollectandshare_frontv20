@@ -3,7 +3,7 @@
     <v-row>
       <HSearch
         v-model="queryResourcesName"
-        placeholder="请输入查找的权限名称"
+        label="请输入查找的权限名称"
         @append="searchResources"
         @enter="searchResources"
         @clear="searchMethod(false)"

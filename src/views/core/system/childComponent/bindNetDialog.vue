@@ -3,7 +3,7 @@
     <!-- 系统名称 -->
     <HSelect
       :description="`系统名称`"
-      placeholder="请选择系统名称"
+      label="请选择系统名称"
       v-model="formProvide.formObj['systemId']"
       :rules="[...h_validator.noEmpty('系统名称')]"
       :disabled="formProvide.formObj.canNotEdit"
@@ -13,7 +13,7 @@
     <!-- 网络名称 -->
     <HSelect
       :description="`网络名称`"
-      placeholder="请选择网络名称"
+      label="请选择网络名称"
       v-model="formProvide.formObj['networkId']"
       :disabled="formProvide.formObj.canNotEdit"
       :rules="[...h_validator.noEmpty('网络名称')]"

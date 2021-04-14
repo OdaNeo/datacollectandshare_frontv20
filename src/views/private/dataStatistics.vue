@@ -8,7 +8,7 @@
           height="35px"
           v-model="systemValue"
           :items="systemItems"
-          placeholder="请选择系统"
+          label="请选择系统"
           @change="getTopicList"
         ></v-select>
       </v-col>
@@ -27,7 +27,7 @@
               dense
               height="35px"
               v-model="beginDate"
-              placeholder="请选择日期"
+              label="请选择日期"
               readonly
               v-bind="attrs"
               v-on="on"
@@ -55,7 +55,7 @@
           v-model="currentSelectMonth"
           @change="getTopicList"
           :items="monthSelectItems"
-          placeholder="获取更长时间信息"
+          label="获取更长时间信息"
         ></v-select>
       </v-col>
       <v-col cols="2" v-if="topicListNumber > 1">
@@ -65,7 +65,7 @@
           v-model="releasePageNum"
           height="35px"
           :items="pageList"
-          placeholder="获取更多主题信息"
+          label="获取更多主题信息"
           @change="getTopicList"
         ></v-select>
       </v-col>
@@ -648,21 +648,17 @@ export default class DataDataStatistics extends Vue {
       this.noMsg = false
     }
   }
-  private async getSystemItems(params: any, callback: Function) {
-    const result: returnType = await this.h_request['httpGET']('GET_SYSTEM_GETSYSTEMINFO', params)
-    if (result.data) {
-      callback(result)
-    }
-  }
+
   // 获取系统占比数据
-  async mounted(): Promise<void> {
-    this.getSystemItems({}, (result: returnType) => {
-      this.systemItems = []
-      result.data.forEach((currentItem: any) => {
-        this.systemItems.push({
-          text: currentItem.name,
-          value: currentItem.id
-        })
+  mounted(): void {
+    const result = JSON.parse(sessionStorage.getItem('systemInfo') || '')
+
+    this.systemItems = []
+
+    result.forEach((item: any) => {
+      this.systemItems.push({
+        text: item.name,
+        value: item.id
       })
     })
   }

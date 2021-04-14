@@ -21,7 +21,7 @@
     <HFileUpLoad
       :required="true"
       :description="`上传文件`"
-      placeholder="支持.proto格式的单文件上传"
+      label="支持.proto格式的单文件上传"
       accept=".proto"
       :rules="[...h_validator.fileProtoValidate()]"
       @change="$emit('upload-proto-file', $event)"

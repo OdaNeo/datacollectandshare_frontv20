@@ -22,7 +22,7 @@
       v-if="formProvide.formObj['type'] === 'menu'"
       :required="false"
       :description="`父节点名称`"
-      placeholder="请选择父节点名称"
+      label="请选择父节点名称"
       v-model="formProvide.formObj['parentid']"
       :items="dessertsList"
     />
@@ -31,7 +31,7 @@
     <HSelect
       v-if="formProvide.formObj['type'] === 'button'"
       :description="`父节点名称`"
-      placeholder="请选择父节点名称"
+      label="请选择父节点名称"
       v-model="formProvide.formObj['grandparentid']"
       :rules="[...h_validator.noEmpty('父节点名称')]"
       :items="dessertsList"
@@ -40,7 +40,7 @@
     <!-- button -->
     <HSelect
       v-if="formProvide.formObj['type'] === 'button'"
-      placeholder="请选择"
+      label="请选择"
       :required="false"
       v-model="formProvide.formObj['parentid']"
       :rules="[...h_validator.noEmpty()]"

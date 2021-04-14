@@ -6,10 +6,10 @@
         <v-form ref="producerForm" style="margin-top: 15px">
           <v-row>
             <v-col cols="10" offset="1" style="padding: 0">
-              <v-text-field v-model="topicId" solo dense placeholder="请输入生产的主题ID" clearable></v-text-field>
+              <v-text-field v-model="topicId" solo dense label="请输入生产的主题ID" clearable></v-text-field>
             </v-col>
             <v-col cols="10" offset="1" style="padding: 0">
-              <v-text-field v-model="userToken" solo dense placeholder="请输入生产的用户token" clearable></v-text-field>
+              <v-text-field v-model="userToken" solo dense label="请输入生产的用户token" clearable></v-text-field>
             </v-col>
             <v-col cols="10" offset="1" style="padding: 0">
               <v-radio-group v-model="producerMsgState" single-line outlined dense solo row>
@@ -20,7 +20,7 @@
               <v-textarea solo name="input-7-4" label="主题生产数据"></v-textarea>
             </v-col>
             <v-col cols="10" offset="1" v-if="producerMsgState == '1'" style="padding: 0">
-              <v-text-field v-model="createMsgNum" solo dense placeholder="随机生成数据数量" clearable>
+              <v-text-field v-model="createMsgNum" solo dense label="随机生成数据数量" clearable>
                 <template v-slot:append-outer>
                   <v-btn color="primary" class="mr-4" solo @click="createMsg" style="margin-top: -4px">
                     生成数据
@@ -50,16 +50,10 @@
               </v-radio-group>
             </v-col>
             <v-col cols="10" offset="1" v-if="producerMsgState == '1' && collectiveState == '2'" style="padding: 0">
-              <v-text-field
-                v-model="sendMsgRate"
-                solo
-                dense
-                placeholder="数据发送频率（毫秒值）"
-                clearable
-              ></v-text-field>
+              <v-text-field v-model="sendMsgRate" solo dense label="数据发送频率（毫秒值）" clearable></v-text-field>
             </v-col>
             <v-col cols="10" offset="1" v-if="producerMsgState == '1'" style="padding: 0">
-              <v-text-field v-model="delayConsume" solo dense placeholder="延迟消费（毫秒值）" clearable></v-text-field>
+              <v-text-field v-model="delayConsume" solo dense label="延迟消费（毫秒值）" clearable></v-text-field>
             </v-col>
             <v-col cols="10" offset="1" style="padding: 0">
               <v-btn color="primary" class="mr-4" solo @click="sendMsg"> 单独发送数据 </v-btn>
@@ -78,20 +72,14 @@
         <v-form ref="consumeForm" style="margin-top: 15px">
           <v-row>
             <v-col cols="10" offset="1" style="padding: 0">
-              <v-text-field
-                v-model="consumeTopicId"
-                solo
-                dense
-                placeholder="请输入消费的主题ID"
-                clearable
-              ></v-text-field>
+              <v-text-field v-model="consumeTopicId" solo dense label="请输入消费的主题ID" clearable></v-text-field>
             </v-col>
             <v-col cols="10" offset="1" style="padding: 0">
               <v-text-field
                 v-model="consumeUserToken"
                 solo
                 dense
-                placeholder="请输入消费的用户token"
+                label="请输入消费的用户token"
                 clearable
               ></v-text-field>
             </v-col>

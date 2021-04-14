@@ -3,7 +3,7 @@
     <v-row>
       <HSearch
         v-model="queryRolesName"
-        placeholder="请输入查找的角色名称"
+        label="请输入查找的角色名称"
         @append="searchRoles"
         @enter="searchRoles"
         @clear="

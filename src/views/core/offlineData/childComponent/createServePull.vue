@@ -26,7 +26,6 @@
     <!-- 请求类型 -->
     <HSelect
       :description="`请求类型`"
-      placeholder="请选择请求类型"
       :disabled="formProvide.formObj.canNotEdit"
       v-model="formProvide.formObj['type']"
       :rules="[...h_validator.noEmpty('请求类型')]"

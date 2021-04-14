@@ -23,16 +23,17 @@
             :rules="[...h_validator.noEmpty('主题名称')]"
           />
           <!-- cron -->
-          <HSelect
+          <HSlider
             :description="`每日运行周期`"
+            :polyfill="`时`"
+            :polyfillWidth="35"
+            min="0"
+            max="23"
             v-model="formProvide.formObj['cron']"
-            :rules="[...h_validator.noEmpty('运行周期')]"
-            :items="cronItems"
           />
 
           <HSelect
             :description="`源数据库类型`"
-            placeholder="源数据库类型"
             v-model="formProvide.formObj['reader_database']"
             :rules="[...h_validator.noEmpty('源数据库类型')]"
             :items="readerDatabaseItems"
@@ -40,7 +41,6 @@
 
           <HSelect
             :description="`目标数据库类型`"
-            placeholder="目标数据库类型"
             :fontSize="14"
             v-model="formProvide.formObj['writer_database']"
             :rules="[...h_validator.noEmpty('目标数据库类型')]"
@@ -59,7 +59,7 @@
               outlined
               dense
               height="35"
-              placeholder="自增属性字段名"
+              label="自增属性字段名"
               v-model="formProvide.formObj['increment']"
               class="ml-4"
             ></v-text-field>
@@ -67,7 +67,7 @@
               outlined
               dense
               height="35"
-              placeholder="自增属性最大值"
+              label="自增属性最大值"
               v-model="formProvide.formObj['maxValue']"
               v-only-num
               class="ml-2 mr-15"
@@ -87,7 +87,7 @@
               outlined
               dense
               height="35"
-              placeholder="用户名"
+              label="用户名"
               :rules="[...h_validator.noEmpty('用户名')]"
               v-model="formProvide.formObj['reader_username']"
               class="ml-4"
@@ -96,7 +96,7 @@
               outlined
               dense
               height="35"
-              placeholder="密码"
+              label="密码"
               :rules="[...h_validator.noEmpty('密码')]"
               v-model="formProvide.formObj['reader_password']"
               class="ml-2"
@@ -105,13 +105,14 @@
               outlined
               dense
               height="35"
-              placeholder="表名"
+              label="表名"
               :rules="[...h_validator.noEmpty('表名')]"
               v-model="formProvide.formObj['reader_table']"
               class="ml-2 mr-15"
             ></v-text-field>
           </v-col>
           <!-- action panel -->
+          <!-- 表字段 -->
           <v-col cols="12" class="d-flex mb-5">
             <label class="panels-label" @click="openPanels === 0 ? (openPanels = -1) : (openPanels = 0)">
               <span class="require-span">*</span>
@@ -126,12 +127,9 @@
               </v-icon>
             </label>
           </v-col>
+          <!-- 表字段 panel -->
           <v-expansion-panels accordion flat :value="openPanels">
             <v-expansion-panel>
-              <!-- <v-expansion-panel-header hide-actions class="panel-header py-0"
-              ><label class="panels-label mr-2"><span class="require-span">*</span>表字段</label>
-              <v-spacer></v-spacer>
-            </v-expansion-panel-header> -->
               <v-expansion-panel-content eager>
                 <v-row no-gutters>
                   <v-col cols="12" class="d-flex">
@@ -142,7 +140,7 @@
                         v-for="(item, index) in formProvide.formObj['column']"
                         :key="item.id"
                       >
-                        <v-col class="d-flex justify-space-around flex-grow-0 ml-5 mr-4" style="min-width: 80px">
+                        <v-col class="d-flex justify-space-around flex-grow-0 mr-2" style="min-width: 120px">
                           <v-btn
                             v-if="formProvide.formObj['column'].length === index + 1"
                             fab
@@ -240,11 +238,12 @@ import Validator from '@/decorator/validatorDecorator'
 import { mdiChevronRight, mdiChevronLeft, mdiPlus, mdiMinus, mdiChevronUp } from '@mdi/js'
 import HSimpleInput from '@/components/h-simple-input.vue'
 import HSelect from '@/components/h-select.vue'
-
+import HSlider from '@/components/h-slider.vue'
 @Component({
   components: {
     HSimpleInput,
-    HSelect
+    HSelect,
+    HSlider
   }
 })
 @Validator(['noEmpty'])
@@ -267,13 +266,13 @@ export default class CreateTransactionalData extends Vue {
   // 控制打开面板
   private openPanels = -1
 
-  private get cronItems() {
-    const _arr = []
-    for (let i = 0; i < 24; i++) {
-      _arr.push(`${i} 时`)
-    }
-    return _arr
-  }
+  // private get cronItems() {
+  //   const _arr = []
+  //   for (let i = 0; i < 24; i++) {
+  //     _arr.push(`${i}`)
+  //   }
+  //   return _arr
+  // }
 
   // add
   private add() {
@@ -365,7 +364,7 @@ export default class CreateTransactionalData extends Vue {
   transform: rotate(180deg);
 }
 .panels-label {
-  min-width: 170px;
+  min-width: 182px;
   display: flex;
   justify-content: flex-end;
   color: rgba(0, 0, 0, 0.87);

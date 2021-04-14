@@ -24,7 +24,7 @@
             v-model="formProvide.formObj['sourceUrl']"
             outlined
             dense
-            placeholder="默认地址 rtmp://58.200.131.2:1935/livetv/cctv8"
+            label="默认地址 rtmp://58.200.131.2:1935/livetv/cctv8"
             height="35"
             class="ml-4 mr-15"
           ></v-text-field>

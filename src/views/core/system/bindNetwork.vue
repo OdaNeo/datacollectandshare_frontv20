@@ -3,7 +3,7 @@
     <v-row>
       <HSearch
         v-model="querySystemName"
-        placeholder="请输入查找的系统名称"
+        label="请输入查找的系统名称"
         @append="searchSystemName"
         @enter="searchSystemName"
         @clear="

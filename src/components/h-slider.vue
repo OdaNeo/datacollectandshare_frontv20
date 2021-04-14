@@ -4,7 +4,7 @@
     <v-slider
       :value="slider"
       v-bind="$attrs"
-      class="align-center ml-4 mb-4 mr-15"
+      class="align-center ml-4 mb-6 mr-15"
       hide-details
       :thumb-size="20"
       thumb-label="always"
@@ -12,13 +12,13 @@
     >
       <template v-slot:append>
         <v-text-field
-          :value="slider"
+          :value="`${slider}${polyfill}`"
           class="mt-0 pt-0"
           hide-details
           dense
           disabled
           single-line
-          style="width: 20px"
+          :style="`width: ${polyfillWidth}px`"
         ></v-text-field>
       </template>
     </v-slider>
@@ -35,6 +35,8 @@ import { Component, Vue, Prop, Watch } from 'vue-property-decorator'
 export default class HSlider extends Vue {
   @Prop() private description!: string
   @Prop() private value!: number
+  @Prop({ default: '' }) private polyfill!: string
+  @Prop({ default: 20 }) private polyfillWidth!: number
   @Prop({ default: true }) private required!: boolean
 
   private slider = 1

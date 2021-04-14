@@ -92,7 +92,10 @@ import { mdiShieldLock } from '@mdi/js'
 @http
 @util
 export default class OfflineDataStatistics extends Vue {
-  private systemItems = []
+  private get systemItems() {
+    return JSON.parse(sessionStorage.getItem('systemInfo') || '')
+  }
+
   private loading = true
   private releaseTopicExist = true
   private releaseStartTime: string = Moment(Moment().subtract(11, 'months').calendar(), 'MM-DD-YYYY').format(
@@ -196,13 +199,6 @@ export default class OfflineDataStatistics extends Vue {
     this.h_utils.topicRanking.init('release', data, this.releaseEndTime)
   }
 
-  private async getSysRelease() {
-    const result: returnType = await this.h_request.httpGET('GET_SYSTEM_GETSYSTEMINFO', {})
-    if (result.data) {
-      this.systemItems = result.data
-    }
-  }
-
   mounted(): void {
     this.getRelease(
       {
@@ -221,7 +217,6 @@ export default class OfflineDataStatistics extends Vue {
         // }
       }
     )
-    this.getSysRelease()
   }
 }
 </script>

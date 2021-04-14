@@ -3,8 +3,7 @@
     <v-row>
       <HSearch
         v-model="queryTopicID"
-        pl
-        placeholder="请输入查找的日志主题ID"
+        label="请输入查找的日志主题ID"
         @append="searchTopic"
         @enter="searchTopic"
         @clear="tabChange(tab)"
@@ -27,22 +26,35 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
+          <!-- 服务器详情 -->
           <template v-slot:detail="{ item }">
             <v-btn text color="primary" @click="showLogDataDetail(item)">服务器详情</v-btn>
           </template>
+          <!-- 实时监控 -->
+          <template v-slot:monitor="{}">
+            <v-btn text color="primary">实时监控</v-btn>
+          </template>
+          <!-- 操作 -->
           <template v-slot:buttons="{ item }">
-            <!-- <v-btn v-if="!tab" text color="primary" @click="showLogDataDetail(item)">服务器详情</v-btn> -->
-            <v-btn v-if="tab" text color="primary" @click="createLogTopic(item)">修改</v-btn>
-            <v-btn
-              v-if="tab"
-              text
-              color="primary"
-              @click="
-                HConfirmShow = true
-                HConfirmItem = item
-              "
-              >删除</v-btn
-            >
+            <!-- 操作下拉框 -->
+            <v-menu close-delay="150" left offset-x bottom max-width="90px" min-width="90px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn color="primary" text v-bind="attrs" v-on="on">...</v-btn>
+              </template>
+              <v-list dense>
+                <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
+                  <v-btn
+                    :disabled="i.tab && tab !== i.tab"
+                    class="pa-0"
+                    width="100%"
+                    :color="i.color ? i.color : `primary`"
+                    text
+                    @click="i.handle(item)"
+                    >{{ i.text }}</v-btn
+                  >
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </template>
         </h-table>
       </v-tab-item>
@@ -164,17 +176,37 @@ export default class LogDataList extends Vue {
         slot: 'detail'
       },
       {
+        text: '实时监控',
+        align: 'center',
+        slot: 'monitor'
+      },
+      {
         text: '操作',
         align: 'center',
-        slot: 'buttons',
-        isHide: !this.tab
+        slot: 'buttons'
       }
     ]
   }
-  //  TODO:
-  //  创建任务
-  //  绑定 显示目前已经绑定的，勾选，已经绑定的可解绑。采集所有
-  //  穿梭框
+  // 操作下拉框
+  private buttonItems = [
+    {
+      text: `修改`,
+      tab: 1,
+      handle: this.createLogTopic
+    },
+    {
+      text: `启动`
+    },
+    {
+      text: `停止`
+    },
+    {
+      text: '删除',
+      tab: 1,
+      color: `error`,
+      handle: this.handelDeleteTopic
+    }
+  ]
 
   // 表格显示
   private headersObj: Array<tableHeaderType> = []
@@ -376,6 +408,12 @@ export default class LogDataList extends Vue {
       },
       !!this.tab
     )
+  }
+
+  // handelDeleteTopic
+  private handelDeleteTopic(item: { id: string; topicName: string; topicInterFaceType: number }) {
+    this.HConfirmShow = true
+    this.HConfirmItem = { ...item }
   }
 }
 </script>

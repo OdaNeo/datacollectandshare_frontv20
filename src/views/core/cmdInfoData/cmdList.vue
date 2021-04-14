@@ -3,7 +3,7 @@
     <v-row>
       <HSearch
         v-model="queryCmdID"
-        placeholder="请输入查找的命令ID"
+        label="请输入查找的命令ID"
         @append="searchCmd"
         @enter="searchCmd"
         @clear="tabChange(tab)"

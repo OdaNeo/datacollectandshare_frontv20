@@ -38,7 +38,7 @@
       v-if="!formProvide.formObj.canNotEdit"
       :required="false"
       :description="`通过文件创建`"
-      placeholder="支持.xls, .xlsx格式的单文件上传"
+      label="支持.xls, .xlsx格式的单文件上传"
       accept=".xls,.xlsx"
       @change="$emit('upload-file', $event)"
     />

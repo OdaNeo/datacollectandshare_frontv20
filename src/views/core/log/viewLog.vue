@@ -1,16 +1,10 @@
 <template>
   <div id="viewLog">
     <v-row>
-      <HSearch
-        :cols="2"
-        v-model="queryUserName"
-        placeholder="请输入用户名"
-        :showAppEnd="false"
-        @clear="clickSearch(true)"
-      />
+      <HSearch :cols="2" v-model="queryUserName" label="请输入用户名" :showAppEnd="false" @clear="clickSearch(true)" />
       <v-col cols="2">
         <h-date-picker
-          placeholder="选择查询起始时间"
+          label="起始时间"
           :begin="true"
           :anotherDate="afterDate"
           @pickerDate="time => (beginDate = time)"
@@ -18,7 +12,7 @@
       </v-col>
       <v-col cols="2">
         <h-date-picker
-          placeholder="选择查询截止时间"
+          label="截止时间"
           :begin="false"
           :anotherDate="beginDate"
           @pickerDate="time => (afterDate = time)"

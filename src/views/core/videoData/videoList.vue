@@ -4,7 +4,7 @@
       <HSearch
         v-model="queryVideoTopicID"
         v-only-num
-        placeholder="请输入查找的视频主题ID"
+        label="请输入查找的视频主题ID"
         @append="searchVideoTopic"
         @enter="searchVideoTopic"
         @clear="tabChange(tab)"
@@ -26,8 +26,17 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
+          <!-- 显示详情 -->
+          <template v-slot:buttons="{ item }">
+            <v-btn text color="primary" @click="showVideoDetail(item)">视频详情信息</v-btn>
+          </template>
+          <!-- 实时监控 -->
+          <template v-slot:monitor="{}">
+            <v-btn text color="primary">实时监控</v-btn>
+          </template>
+          <!-- 操作 -->
           <template v-slot:buttons2="{ item }">
-            <v-btn text color="primary" @click.stop="showDateRangePopup(item)">查看视频</v-btn>
+            <!-- <v-btn text color="primary" @click.stop="showDateRangePopup(item)">查看视频</v-btn>
             <v-btn
               v-if="tab"
               text
@@ -37,7 +46,26 @@
                 HConfirmItem = item
               "
               >删除
-            </v-btn>
+            </v-btn> -->
+            <!-- 操作下拉框 -->
+            <v-menu close-delay="150" left offset-x bottom max-width="90px" min-width="90px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn color="primary" text v-bind="attrs" v-on="on">...</v-btn>
+              </template>
+              <v-list dense>
+                <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
+                  <v-btn
+                    :disabled="i.tab && tab !== i.tab"
+                    class="pa-0"
+                    width="100%"
+                    :color="i.color ? i.color : `primary`"
+                    text
+                    @click="i.handle(item)"
+                    >{{ i.text }}</v-btn
+                  >
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </template>
         </h-table>
       </v-tab-item>
@@ -47,6 +75,11 @@
       <create-video-topic-dialog v-if="dialogShow === 1" />
       <set-date-range v-else-if="dialogShow === 2" />
     </f-dialog>
+
+    <!-- 表格显示 -->
+    <TDialog v-model="tDialogFlag">
+      <VideoDetail :dessertsObj="dessertsObj" />
+    </TDialog>
 
     <!-- 视频 -->
     <video-popup
@@ -68,7 +101,7 @@ import HConfirm from '@/components/h-confirm.vue'
 import CreateVideoTopicDialog from './childComponent/createVideoTopicDialog.vue'
 import SetDateRange from './childComponent/setDateRange.vue'
 import VideoPopup from './childComponent/videoPopup.vue'
-import { VideoTopicAdd } from '@/type/video-add.type'
+import { VideoTimeRange, VideoTopicAdd } from '@/type/video-add.type'
 import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
 import { dataType } from '@/enum/topic-datatype-enum'
@@ -79,6 +112,8 @@ import { topicTable } from '@/type/topic.type'
 import { tableHeaderType } from '@/type/table.type'
 import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
+import TDialog from '@/components/t-dialog.vue'
+import VideoDetail from './childComponent/videoDetail.vue'
 
 @Component({
   components: {
@@ -88,7 +123,9 @@ import HSearch from '@/components/h-search.vue'
     VideoPopup,
     SetDateRange,
     FDialog,
-    HSearch
+    HSearch,
+    TDialog,
+    VideoDetail
   }
 })
 @http
@@ -114,6 +151,7 @@ export default class VideoDataList extends Vue {
   private tab = null
   private items = ['所有主题', '我的主题']
   private dialogFlag = false // 弹窗展示
+  private tDialogFlag = false // 表格展示
   private dialogShow = 0 // 展示哪个弹窗 1.创建主题 2.日期选择
   // 删除确认
   private HConfirmShow = false
@@ -125,6 +163,8 @@ export default class VideoDataList extends Vue {
   private showVideoPopup = false
 
   private desserts: Array<topicTable> = [] // 数据列表
+  private dessertsObj: Partial<Array<topicTable>> = [] // 表格弹框
+
   private queryVideoTopicID = '' // 查询主题ID input框内容
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
@@ -149,39 +189,53 @@ export default class VideoDataList extends Vue {
       value: 'userName'
     },
     {
-      text: '本系统rtmp地址',
+      text: '视频时间范围?',
       align: 'center',
-      width: 200,
-      value: 'serverUrl'
-    },
-    {
-      text: '摄像头物理地址',
-      align: 'center',
-      width: 200,
-      value: 'address'
-    },
-    {
-      text: '摄像头rtsp/rtmp地址',
-      align: 'center',
-      width: 200,
-      value: 'sourceUrl'
+      value: 'userName'
     },
     // {
     //   text: 'minio桶名称',
     //   align: 'center',
     //   value: 'bucketName'
     // },
-    // {
-    //   text: '显示详情',
-    //   align: 'center',
-    //   slot: 'buttons'
-    // },
+    {
+      text: '详情信息',
+      align: 'center',
+      slot: 'buttons'
+    },
+    {
+      text: '实时监控',
+      align: 'center',
+      slot: 'monitor'
+    },
     {
       text: '操作',
       align: 'center',
       slot: 'buttons2'
     }
   ]
+  // 操作下拉框
+  private buttonItems = [
+    {
+      text: `查看视频`,
+      handle: this.showDateRangePopup
+    },
+    {
+      text: `启动`,
+      tab: 1
+    },
+    {
+      text: `停止`,
+      tab: 1
+    },
+    {
+      text: '删除',
+      tab: 1,
+      color: `error`,
+      handle: this.handelDeleteTopic
+    }
+  ]
+
   // 查询到视频数量（不包含空视频）
   private videoList: Array<{ timer: string; url: string }> = []
 
@@ -239,7 +293,7 @@ export default class VideoDataList extends Vue {
   }
 
   // 获得视频列表
-  private async getVideoList(formObj: any) {
+  private async getVideoList(formObj: VideoTimeRange) {
     this.videoList = []
     this.videoCountsReal = 0
     const params: any = {}
@@ -347,6 +401,12 @@ export default class VideoDataList extends Vue {
     this.pageNum = 1
   }
 
+  // handelDeleteTopic
+  private handelDeleteTopic(item: { id: string; topicName: string; topicInterFaceType: number }) {
+    this.HConfirmShow = true
+    this.HConfirmItem = item
+  }
+
   // 删除主题
   private async deleteVideoTopic() {
     if (!this.HConfirmItem.id) {
@@ -384,6 +444,16 @@ export default class VideoDataList extends Vue {
       },
       !!this.tab
     )
+  }
+
+  // showVideoDetail
+  private showVideoDetail(item: Partial<topicTable>) {
+    const { serverUrl, address, sourceUrl } = item
+
+    this.dessertsObj = [{ serverUrl, address, sourceUrl }]
+    this.formProvide.title = '视频详情信息'
+
+    this.tDialogFlag = true
   }
 }
 </script>

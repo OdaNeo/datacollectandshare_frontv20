@@ -28,4 +28,7 @@ export type topicTable = {
   key?: string
   value?: string
   dsAnnotation?: string
+  serverUrl?: string
+  address?: string
+  sourceUrl?: string
 }

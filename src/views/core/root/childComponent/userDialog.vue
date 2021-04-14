@@ -19,7 +19,7 @@
     <!-- 用户类型 -->
     <HSelect
       :description="`用户类型`"
-      placeholder="请选择用户类型"
+      label="请选择用户类型"
       v-model="formProvide.formObj['userType']"
       :rules="[...h_validator.noEmpty('用户类型')]"
       :items="userRoots"
@@ -36,7 +36,7 @@
     <!-- 系统名称 -->
     <HSelect
       :description="`系统名称`"
-      placeholder="请选择系统名称"
+      label="请选择系统名称"
       v-model="formProvide.formObj['systemName']"
       :rules="[...h_validator.noEmpty('系统名称')]"
       :items="systemNames"

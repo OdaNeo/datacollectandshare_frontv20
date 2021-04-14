@@ -3,7 +3,7 @@
     <v-row>
       <HSearch
         v-model="queryUserName"
-        placeholder="请输入查找的账号名称"
+        label="请输入查找的账号名称"
         @append="searchUserList"
         @enter="searchUserList"
         @clear="
