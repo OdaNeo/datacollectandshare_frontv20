@@ -60,7 +60,7 @@
                     width="100%"
                     :color="i.color ? i.color : `primary`"
                     text
-                    @click="i.handle(item)"
+                    @click="i.handle && i.handle(item)"
                     >{{ i.text }}</v-btn
                   >
                 </v-list-item>

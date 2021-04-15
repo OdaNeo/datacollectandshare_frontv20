@@ -5,7 +5,7 @@
       <v-card-actions>
         <v-spacer />
         <v-btn color="primary" text @click.stop="closeMethod">取消</v-btn>
-        <v-btn color="primary" text @click.stop="$emit('hconfirm')">确定</v-btn>
+        <v-btn color="error" text @click.stop="$emit('hconfirm')">确定</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

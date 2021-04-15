@@ -40,6 +40,14 @@ button {
     outline: none;
 }
 
+input::-webkit-input-placeholder {
+    font-size: 0.875rem;
+}
+
+input::-moz-placeholder {
+    font-size: 0.875rem;
+}
+
 /* 浏览器自动填充 */
 
 input:-internal-autofill-previewed, input:-internal-autofill-selected {

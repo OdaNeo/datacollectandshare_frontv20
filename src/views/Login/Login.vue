@@ -118,6 +118,10 @@ export default class Login extends Vue {
   height: 100%;
 }
 
+#login >>> .v-input--switch__track {
+  color: #f7f7f9;
+}
+
 .bgImg {
   width: 100%;
   height: 100%;

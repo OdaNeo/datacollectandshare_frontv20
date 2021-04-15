@@ -27,19 +27,6 @@
         >
       </v-col>
     </v-row>
-    <!-- <v-row no-gutters>
-      <v-col>
-        <v-btn
-          class="mr-4 mb-6"
-          outlined
-          :color="btnAction === index ? 'primary' : ''"
-          v-for="(btnName, index) in btnNames"
-          :key="index"
-          @click="btnClickMethod(index)"
-          >{{ btnName }}</v-btn
-        >
-      </v-col>
-    </v-row> -->
     <h-table
       :headers="headers"
       :desserts="desserts"
@@ -47,18 +34,30 @@
       :pageNum="pageNum"
       :paginationLength="paginationLength"
     >
+      <!-- 数据结构详情 -->
       <template v-slot:buttons="{ item }">
         <v-btn text color="primary" :disabled="item.topicInterFaceType === 6" @click="dataStructure(item)"
           >数据结构详情</v-btn
         >
       </template>
+      <!-- 详情 -->
+      <template v-slot:subDetails="{ item }">
+        <v-btn text color="primary" @click="showSubDetails(item)">订阅详情</v-btn>
+      </template>
+      <!-- 详情 -->
+      <template v-slot:details="{ item }">
+        <v-btn text color="primary" @click="showAllDetails(item)">订阅与审核详情</v-btn>
+      </template>
+      <!-- 审核状态 -->
       <template v-slot:examineType="{}">
         <v-btn text :color="examineTypeColor[btnAction]">{{ examineType[btnAction] }}</v-btn>
       </template>
     </h-table>
 
     <t-dialog v-model="dialogFlag">
-      <data-structure-dialog :rowObj="rowObj"></data-structure-dialog>
+      <DataStructureDialog v-if="dialogShow === 1" :rowObj="rowObj" />
+      <SubDetails v-else-if="dialogShow === 2" :rowObj="rowObj" />
+      <AllDetails v-else-if="dialogShow === 3" :rowObj="rowObj" />
     </t-dialog>
   </div>
 </template>
@@ -72,17 +71,22 @@ import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
+import SubDetails from './childComponent/subDetails.vue'
+import AllDetails from './childComponent/allDetails.vue'
 import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
 import { examineType, examineTypeColor } from '@/enum/topic-audit-enum'
 import { tableHeaderType } from '@/type/table.type'
+import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 
 @Component({
   components: {
     HTable,
     TDialog,
     DataStructureDialog,
-    HSearch
+    HSearch,
+    SubDetails,
+    AllDetails
   }
 })
 @http
@@ -93,6 +97,7 @@ import { tableHeaderType } from '@/type/table.type'
     enumName: 'queneType'
   }
 ])
+/* 接口类型  订阅用户-订阅时间 审核人-审核时间*/
 export default class TopicAuditRecords extends Vue {
   @Provide('formProvide') private formObj = new Vue({
     data() {
@@ -111,11 +116,12 @@ export default class TopicAuditRecords extends Vue {
   private desserts: Array<topicTable> = []
 
   private btnAction = 0
-  private rowObj: object = {}
+  private rowObj: topicTable = {}
   private pageNum = 1
   private pageSize = 20
   private paginationLength = 0
   private dialogFlag = false
+  private dialogShow = 0
   private queryTopicID = ''
   private loading = true
   private get headers(): Array<tableHeaderType> {
@@ -136,20 +142,11 @@ export default class TopicAuditRecords extends Vue {
         value: 'belongUserName'
       },
       {
-        text: '订阅时间',
+        text: '接口类型',
         align: 'center',
-        value: 'subscribe',
-        format: (time: number): string => {
-          return this.h_utils.timeUtil.stamptoTime(time, '-')
-        }
-      },
-      {
-        text: '审核时间',
-        align: 'center',
-        value: 'auditTime',
-        isHide: this.btnAction === 0,
-        format: (time: number): string => {
-          return time ? this.h_utils.timeUtil.stamptoTime(time, '-') : '-'
+        value: 'topicInterFaceType',
+        format: (val: number) => {
+          return topicInterFaceType[val]
         }
       },
       {
@@ -166,6 +163,18 @@ export default class TopicAuditRecords extends Vue {
         slot: 'buttons'
       },
       {
+        text: '订阅详情',
+        align: 'center',
+        slot: 'subDetails',
+        isHide: this.btnAction !== 0
+      },
+      {
+        text: '订阅与审核详情',
+        align: 'center',
+        slot: 'details',
+        isHide: this.btnAction === 0
+      },
+      {
         text: '审核状态',
         align: 'center',
         slot: 'examineType'
@@ -176,17 +185,35 @@ export default class TopicAuditRecords extends Vue {
   async searchMethod(bool: boolean, params: paramsType): Promise<void> {
     this.loading = true
     const { data }: returnType = bool
-      ? await this.h_request['httpGET']<object>('GET_SUBMODERATIONS_SELECTAUDITSTATUSBYTOPICID', params)
-      : await this.h_request['httpGET']<object>('GET_SUB_MODERATIONS_SELECT_AUDIT_STATUS', params)
+      ? await this.h_request['httpGET']<paramsType>('GET_SUBMODERATIONS_SELECTAUDITSTATUSBYTOPICID', params)
+      : await this.h_request['httpGET']<paramsType>('GET_SUB_MODERATIONS_SELECT_AUDIT_STATUS', params)
     this.desserts = data ? [...data.list] : []
     this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
     this.loading = false
   }
 
-  private dataStructure(item: any) {
-    this.dialogFlag = true
+  // 数据结构详情
+  private dataStructure(item: topicTable) {
     this.rowObj = item
     this.formObj.title = '数据结构详情'
+    this.dialogFlag = true
+    this.dialogShow = 1
+  }
+
+  // 订阅详情
+  private showSubDetails(item: topicTable) {
+    this.rowObj = item
+    this.formObj.title = '订阅详情'
+    this.dialogFlag = true
+    this.dialogShow = 2
+  }
+
+  // 订阅与审核详情
+  private showAllDetails(item: topicTable) {
+    this.rowObj = item
+    this.formObj.title = '订阅与审核详情'
+    this.dialogFlag = true
+    this.dialogShow = 3
   }
 
   private btnClickMethod(index: number) {

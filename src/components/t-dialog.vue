@@ -12,11 +12,16 @@
       <v-divider style="padding-bottom: 1px" v-if="!loading"></v-divider>
       <!-- 进度条 -->
       <v-progress-linear v-else color="primary" indeterminate height="2"></v-progress-linear>
-      <v-card-text class="pt-4 pb-6 overflow">
-        <v-container class="pb-1">
+      <v-card-text class="pb-4 pt-4 overflow">
+        <v-container class="pb-0">
           <slot />
         </v-container>
       </v-card-text>
+      <!-- 按钮插槽 -->
+      <v-card-actions v-if="$slots[`button`]" class="pt-0 pb-2 pr-8">
+        <v-spacer></v-spacer>
+        <slot name="button" />
+      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>

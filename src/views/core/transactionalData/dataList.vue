@@ -80,8 +80,20 @@
 
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
+      <!-- default -->
       <ContentDetails v-if="dialogFlag === 3" :rowJson="rowJson" />
       <SqlDetails v-if="dialogFlag === 4" :str="str" />
+      <!-- button -->
+      <v-btn
+        slot="button"
+        color="primary"
+        :disabled="!(dialogFlag === 3 ? rowJson : str)"
+        text
+        v-clipboard:copy="dialogFlag === 3 ? rowJson : str"
+        v-clipboard:success="onCopy"
+        v-clipboard:error="onError"
+        >一键复制</v-btn
+      >
     </t-dialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -666,6 +678,15 @@ export default class transactionalDataList extends Vue {
         topicId: `${topicId}`
       }
     })
+  }
+
+  // 复制
+  private onCopy() {
+    this.h_utils.alertUtil.open('复制成功', true, 'success', 1500)
+  }
+  // 复制
+  private onError() {
+    this.h_utils.alertUtil.open('复制失败', true, 'error', 1500)
   }
 
   // 清除timer

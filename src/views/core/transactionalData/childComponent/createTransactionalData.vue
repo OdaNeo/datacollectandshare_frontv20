@@ -140,16 +140,16 @@
                         v-for="(item, index) in formProvide.formObj['column']"
                         :key="item.id"
                       >
-                        <v-col class="d-flex justify-space-around flex-grow-0 mr-2" style="min-width: 120px">
+                        <v-col class="d-flex justify-space-around flex-grow-0 mr-2 px-7" style="min-width: 120px">
                           <v-btn
                             v-if="formProvide.formObj['column'].length === index + 1"
                             fab
                             dark
                             depressed
-                            max-width="24"
-                            max-height="24"
+                            max-width="22"
+                            max-height="22"
                             color="primary"
-                            style="margin-top: 5px"
+                            style="margin-top: 7px"
                             @click.stop="add"
                           >
                             <v-icon dark>{{ mdiPlus }}</v-icon>
@@ -159,10 +159,10 @@
                             fab
                             dark
                             depressed
-                            max-width="24"
-                            max-height="24"
+                            max-width="22"
+                            max-height="22"
                             color="primary"
-                            style="margin-top: 5px"
+                            style="margin-top: 7px"
                             @click.stop="minus(index)"
                           >
                             <v-icon dark>{{ mdiMinus }}</v-icon>
@@ -312,19 +312,21 @@ export default class CreateTransactionalData extends Vue {
 
   // validation topicList no-repeat-key
   @Watch('formProvide.formObj.column', { deep: true })
-  private handleKeyNoRepeat(val: Array<any>) {
-    let _L: Array<string> = []
-    let _l: Array<string> = []
+  private handleKeyNoRepeat(val: Array<{ field: string }>) {
+    let _L: Array<string> = [] // 全部
+    let _l: Array<string> = [] // 不重复
+    let _r: Array<string> = [] // 重复项
+
     val.forEach(item => {
-      if (item.field && !_l.includes(item.field)) {
-        _l.push(item.field)
-      }
       if (item.field) {
         _L.push(item.field)
+        _l.includes(item.field) ? _r.push(item.field) : _l.push(item.field)
       }
     })
+
     if (_L.length > _l.length) {
-      this.noRepeatKey = ['字段名不能重复']
+      // _r去重
+      this.noRepeatKey = [`字段名"${Array.from(new Set(_r)).join(',')}"不能重复`]
     } else {
       this.noRepeatKey = []
     }

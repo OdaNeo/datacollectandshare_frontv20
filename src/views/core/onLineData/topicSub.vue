@@ -203,15 +203,6 @@ export default class TopicSub extends Vue {
         value: 'belongUserName',
         isHide: !this.tab
       },
-      // {
-      //   text: '订阅用户',
-      //   align: 'center',
-      //   value: 'userSubNameList',
-      //   isHide: !!this.tab,
-      //   format: (userSubNameList: Array<string>): string => {
-      //     return userSubNameList.toString()
-      //   }
-      // },
       {
         text: '接口类型',
         align: 'center',

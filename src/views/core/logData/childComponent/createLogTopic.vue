@@ -54,7 +54,7 @@
     <HSimpleInput
       v-model="formProvide.formObj['keywords']"
       :required="false"
-      label="关键字之间请使用英文逗号（,）隔开"
+      placeholder="关键字之间请使用英文逗号（,）隔开"
       :description="`采集校验关键字`"
     />
   </v-row>

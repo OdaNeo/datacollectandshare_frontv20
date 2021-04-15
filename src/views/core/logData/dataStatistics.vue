@@ -85,21 +85,21 @@ export default class LogDataStatistics extends Vue {
 
   // 获得30天数据并生成option1
   private async getStatisticsLoggerTopicByTopicIdAnd30Days(params: { topicId: number; timeDate: string }) {
-    // const { data }: { data: { time: string; value: number }[] } = await this.h_request['httpGET'](
-    //   'GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICIDANDDAYAND30DAYS',
-    //   {
-    //     params
-    //   }
-    // )
+    const { data }: { data: { date: string; count: number }[] } = await this.h_request['httpGET'](
+      'GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICIDANDDAYAND30DAYS',
+      {
+        params
+      }
+    )
     // console.log(data)
-    const data = [
-      { time: '2021-4-23', value: 27 },
-      { time: '2021-4-9', value: 5 },
-      { time: '2021-4-12', value: 12 }
-    ]
+    // const data = [
+    //   { date: '2021-4-23', count: 27 },
+    //   { date: '2021-4-9', count: 5 },
+    //   { date: '2021-4-12', count: 12 }
+    // ]
 
     if (data) {
-      const _data = data.map(item => [item.time, item.value] as const).sort((prev, next) => next[1] - prev[1])
+      const _data = data.map(item => [item.date, item.count] as const).sort((prev, next) => next[1] - prev[1])
       this.myChartElement1.setOption(this.getOption1(_data), true)
     }
   }
@@ -143,7 +143,7 @@ export default class LogDataStatistics extends Vue {
         top: 110,
         left: 180,
         right: 150,
-        height: 130,
+        height: 100,
         cellSize: ['auto', 13],
         range: [START, END],
         itemStyle: {
@@ -167,11 +167,25 @@ export default class LogDataStatistics extends Vue {
 
   // 获得指定天数据
   private async getStatisticsLoggerTopicByTopicIdAndDay(params: { topicId: number; timeDate: string }) {
-    // const { data } = await this.h_request['httpGET']('GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICIDANDDAY', { params })
+    const { data }: { data: { hour: string; count: number }[] } = await this.h_request[
+      'httpGET'
+    ]('GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICIDANDDAY', { params })
     // console.log(data)
-    const data = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 1, 4]
+    // const data = [
+    //   { hour: '2', count: 27 },
+    //   { hour: '4', count: 5 },
+    //   { hour: '6', count: 12 }
+    // ]
+
     if (data) {
-      this.myChartElement2.setOption(this.getOption2(data, params), true)
+      const _data: number[] = []
+
+      for (let i = 0; i < 24; i++) {
+        const _item = data.filter(item => Number(item.hour) === i)
+        _data[i] = _item.length > 0 ? _item[0].count : 0
+      }
+
+      this.myChartElement2.setOption(this.getOption2(_data, params), true)
     } else {
       // this.h_utils['alertUtil'].open('查询失败', true, 'error')
     }
@@ -185,7 +199,7 @@ export default class LogDataStatistics extends Vue {
     return {
       title: {
         left: 'center',
-        text: `主题${params.topicId}在${params.timeDate}日志详情`
+        text: `主题${params.topicId}${params.timeDate}日志详情`
       },
       tooltip: {
         trigger: 'axis'
@@ -201,7 +215,8 @@ export default class LogDataStatistics extends Vue {
         data: xData
       },
       yAxis: {
-        type: 'value'
+        type: 'value',
+        minInterval: 1
       },
       series: [
         {
@@ -259,18 +274,18 @@ export default class LogDataStatistics extends Vue {
     // 默认显示日志主题中的第一条
     this.initECharts1()
     this.initECharts2()
-    this.initSearchMethod({ pageNum: 1, pageSize: 20, dataType: 1, faceTypes: 9 })
+    this.initSearchMethod({ pageNum: 1, pageSize: 1, dataType: 1, faceTypes: 9 })
   }
 }
 </script>
 <style scoped>
 #eCharts1 {
-  width: 100%;
-  height: 280px;
+  width: 80%;
+  height: 250px;
+  margin: 0 auto;
 }
 #eCharts2 {
-  width: 95%;
-  margin: 0 auto;
+  width: 100%;
   height: 250px;
 }
 </style>

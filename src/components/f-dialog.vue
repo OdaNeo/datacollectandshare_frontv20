@@ -19,7 +19,7 @@
         height="2"
       ></v-progress-linear>
       <!-- 主题 -->
-      <v-card-text class="pb-0 mt-4">
+      <v-card-text class="pb-0 pt-4 overflow">
         <v-container class="pb-0 pt-5">
           <v-form ref="userDialogForm" id="userDialogForm" :disabled="loading" v-model="userDialogValid">
             <slot />
@@ -145,6 +145,11 @@ export default class FDialog extends Vue {
   position: absolute;
   right: 14px;
   top: 14px;
+}
+.overflow {
+  max-height: 70vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
 }
 .dialog {
   position: relative;

@@ -44,12 +44,12 @@
               <v-list dense>
                 <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
                   <v-btn
-                    :disabled="i.tab && tab !== i.tab"
+                    :disabled="(i.tab && tab !== Number(i.tab)) || (i.logState && item.logState === Number(i.logState))"
                     class="pa-0"
                     width="100%"
                     :color="i.color ? i.color : `primary`"
                     text
-                    @click="i.handle(item)"
+                    @click="i.handle && i.handle(item)"
                     >{{ i.text }}</v-btn
                   >
                 </v-list-item>
@@ -183,26 +183,32 @@ export default class LogDataList extends Vue {
       {
         text: '操作',
         align: 'center',
-        slot: 'buttons'
+        slot: 'buttons',
+        isHide: !this.tab
       }
     ]
   }
+  // 在列表中会多个state 0代表未启动 1代表启动
   // 操作下拉框
   private buttonItems = [
     {
       text: `修改`,
-      tab: 1,
+      tab: `1`,
       handle: this.createLogTopic
     },
     {
-      text: `启动`
+      text: `启动`,
+      tab: `1`,
+      logState: `1`
     },
     {
-      text: `停止`
+      text: `停止`,
+      tab: `1`,
+      logState: `0`
     },
     {
       text: '删除',
-      tab: 1,
+      tab: `1`,
       color: `error`,
       handle: this.handelDeleteTopic
     }
