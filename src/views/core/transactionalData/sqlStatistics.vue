@@ -17,7 +17,18 @@
     </h-table>
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
-      <SqlDetails :str="str" />
+      <SqlDetails slot="default" :str="str" />
+      <!-- button -->
+      <v-btn
+        slot="button"
+        color="primary"
+        :disabled="!str"
+        text
+        v-clipboard:copy="str"
+        v-clipboard:success="onCopy"
+        v-clipboard:error="onError"
+        >一键复制</v-btn
+      >
     </t-dialog>
   </div>
 </template>
@@ -149,6 +160,15 @@ export default class SqlStatistics extends Vue {
       pageSize: this.pageSize,
       pageNum: this.pageNum
     })
+  }
+
+  // 复制
+  private onCopy() {
+    this.h_utils.alertUtil.open('复制成功', true, 'success', 1500)
+  }
+  // 复制
+  private onError() {
+    this.h_utils.alertUtil.open('复制失败', true, 'error', 1500)
   }
 
   created(): void {

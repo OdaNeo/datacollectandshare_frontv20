@@ -1,32 +1,48 @@
 <template>
   <div id="VideoDataStatistics">
-    <div v-if="videoList.length > 0" class="slider">
-      <span style="font-size: 14px">当前显示前{{ sliderNumber }}条主题</span>
-      <v-slider
-        v-model="sliderNumber"
-        class="align-center ml-4"
-        hide-details
-        :max="maxValue"
-        :min="10"
-        thumb-size="20"
-        thumb-label="always"
-        @input="sliderChange"
-      >
-        <template v-slot:append>
-          <v-text-field
+    <!-- tab -->
+    <v-tabs v-model="tab" @change="tabChange">
+      <v-tab v-for="item in items" :key="item">{{ item }}</v-tab>
+    </v-tabs>
+    <!-- 切换 -->
+    <v-tabs-items v-model="tab">
+      <!-- 视频主题占比 -->
+      <v-tab-item eager>
+        <div v-if="videoList.length > 0" class="slider mt-6">
+          <div style="font-size: 14px" class="ml-4">当前显示前{{ sliderNumber }}条主题</div>
+          <v-slider
             v-model="sliderNumber"
-            class="mt-0 pt-0"
-            dense
-            single-line
-            type="number"
-            style="width: 45px"
-          ></v-text-field>
-        </template>
-      </v-slider>
-    </div>
-
-    <div id="echarts1"></div>
-    <div id="echarts2"></div>
+            class="align-center ml-4"
+            hide-details
+            :max="maxValue"
+            :min="10"
+            thumb-size="20"
+            thumb-label="always"
+            @input="sliderChange"
+          >
+            <template v-slot:append>
+              <v-text-field
+                v-model="sliderNumber"
+                class="mt-0 pt-0"
+                dense
+                single-line
+                type="number"
+                style="width: 45px"
+              ></v-text-field>
+            </template>
+          </v-slider>
+        </div>
+        <div id="echarts1"></div>
+      </v-tab-item>
+      <!-- 视频文件数量概况 -->
+      <v-tab-item eager>
+        <div id="echarts2"></div>
+      </v-tab-item>
+      <!-- 发布方视频统计 -->
+      <v-tab-item eager>
+        <div id="echarts3"></div>
+      </v-tab-item>
+    </v-tabs-items>
   </div>
 </template>
 <script lang="ts">
@@ -38,18 +54,41 @@ import Moment from 'moment'
 @Component({})
 @http
 export default class VideoDataStatistics extends Vue {
+  // tab
+  private tab = null
+  private items = ['视频主题占比', '视频文件数量概况', '发布方视频统计']
+
+  // 图表
   private videoList: Array<any> = []
   private maxValue = 10
 
   private sliderNumber = 10
+  // item1
+  private async getVideoAllItem1() {
+    if (this.videoList.length === 0) {
+      const { data } = await this.h_request['httpGET']('GET_TOPICS_GETVIDEO', {})
+      this.videoList = [...data]
+      this.maxValue = data.length
+      this.handelECharts('echarts1', this.getOption1(this.videoList, this.sliderNumber))
+    } else {
+      setTimeout(() => {
+        this.handelECharts('echarts1', this.getOption1(this.videoList, this.sliderNumber))
+      }, 500)
+    }
+  }
 
-  private async getVideoAll() {
-    const { data } = await this.h_request['httpGET']('GET_TOPICS_GETVIDEO', {})
-    this.videoList = [...data]
-    this.maxValue = data.length
-
-    data && this.handelECharts('echarts1', this.getOption1(this.videoList, this.sliderNumber))
-    data && this.handelECharts('echarts2', this.getOption2(this.videoList))
+  // item2
+  private async getVideoAllItem2() {
+    if (this.videoList.length === 0) {
+      const { data } = await this.h_request['httpGET']('GET_TOPICS_GETVIDEO', {})
+      this.videoList = [...data]
+      this.maxValue = data.length
+      this.handelECharts('echarts2', this.getOption2(this.videoList))
+    } else {
+      setTimeout(() => {
+        this.handelECharts('echarts2', this.getOption2(this.videoList))
+      }, 500)
+    }
   }
 
   // echarts1
@@ -204,9 +243,15 @@ export default class VideoDataStatistics extends Vue {
     this.handelECharts('echarts1', this.getOption1(this.videoList, val))
   }
 
-  //
-  mounted(): void {
-    this.getVideoAll()
+  // tabChange
+  private tabChange(num: unknown) {
+    if (num === 0) {
+      this.getVideoAllItem1()
+    } else if (num === 1) {
+      this.getVideoAllItem2()
+    } else {
+      console.log(2)
+    }
   }
 }
 </script>
@@ -218,12 +263,11 @@ export default class VideoDataStatistics extends Vue {
   align-items: center;
 }
 #echarts1 {
-  height: 380px;
+  height: 400px;
   width: 100%;
 }
 #echarts2 {
   height: 250px;
   width: 95%;
-  margin: 0 auto;
 }
 </style>

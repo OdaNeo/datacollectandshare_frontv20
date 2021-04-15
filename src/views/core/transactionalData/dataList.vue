@@ -16,9 +16,12 @@
         >
       </v-col>
     </v-row>
-    <v-tabs v-model="tab" @change="tabChange">
+    <!-- tab -->
+    <HTabs v-model="tab" :items="items" @change="tabChange" />
+
+    <!-- <v-tabs v-model="tab" @change="tabChange">
       <v-tab v-for="item in items" :key="item">{{ item }}</v-tab>
-    </v-tabs>
+    </v-tabs> -->
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="item in items" :key="item">
         <h-table
@@ -81,8 +84,8 @@
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
       <!-- default -->
-      <ContentDetails v-if="dialogFlag === 3" :rowJson="rowJson" />
-      <SqlDetails v-if="dialogFlag === 4" :str="str" />
+      <ContentDetails slot="default" v-if="dialogFlag === 3" :rowJson="rowJson" />
+      <SqlDetails slot="default" v-if="dialogFlag === 4" :str="str" />
       <!-- button -->
       <v-btn
         slot="button"
@@ -123,6 +126,7 @@ import SqlDetails from './childComponent/sqlDetails.vue'
 import HSearch from '@/components/h-search.vue'
 import Moment from 'moment'
 import { uploadStoreModule } from '@/store/modules/upload'
+import HTabs from '@/components/h-tabs.vue'
 
 @Component({
   components: {
@@ -134,7 +138,8 @@ import { uploadStoreModule } from '@/store/modules/upload'
     ContentDetails,
     UploadSQL,
     SqlDetails,
-    HSearch
+    HSearch,
+    HTabs
   }
 })
 @http

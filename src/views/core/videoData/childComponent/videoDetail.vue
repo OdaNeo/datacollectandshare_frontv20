@@ -36,6 +36,16 @@ export default class VideoDetail extends Vue {
       width: 200,
       value: 'sourceUrl'
     }
+    // {
+    //   text: '描述',
+    //   align: 'center',
+    //   value: 'value'
+    // },
+    // {
+    //   text: '关键字',
+    //   align: 'center',
+    //   value: 'value'
+    // }
   ]
 }
 </script>

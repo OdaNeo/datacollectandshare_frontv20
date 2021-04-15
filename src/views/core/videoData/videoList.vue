@@ -13,9 +13,12 @@
         <v-btn color="primary" depressed dark small @click.stop="createTopicVideo">创建视频</v-btn>
       </v-col>
     </v-row>
-    <v-tabs v-model="tab" @change="tabChange">
+    <!-- tab -->
+    <HTabs v-model="tab" :items="items" @change="tabChange" />
+
+    <!-- <v-tabs v-model="tab" @change="tabChange">
       <v-tab v-for="item in items" :key="item">{{ item }}</v-tab>
-    </v-tabs>
+    </v-tabs> -->
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="item in items" :key="item">
         <h-table
@@ -36,17 +39,6 @@
           </template>
           <!-- 操作 -->
           <template v-slot:buttons2="{ item }">
-            <!-- <v-btn text color="primary" @click.stop="showDateRangePopup(item)">查看视频</v-btn>
-            <v-btn
-              v-if="tab"
-              text
-              color="primary"
-              @click="
-                HConfirmShow = true
-                HConfirmItem = item
-              "
-              >删除
-            </v-btn> -->
             <!-- 操作下拉框 -->
             <v-menu close-delay="150" left offset-x bottom max-width="90px" min-width="90px">
               <template v-slot:activator="{ on, attrs }">
@@ -114,6 +106,7 @@ import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
 import TDialog from '@/components/t-dialog.vue'
 import VideoDetail from './childComponent/videoDetail.vue'
+import HTabs from '@/components/h-tabs.vue'
 
 @Component({
   components: {
@@ -125,7 +118,8 @@ import VideoDetail from './childComponent/videoDetail.vue'
     FDialog,
     HSearch,
     TDialog,
-    VideoDetail
+    VideoDetail,
+    HTabs
   }
 })
 @http

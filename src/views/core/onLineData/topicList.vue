@@ -15,9 +15,11 @@
         <v-btn color="primary" depressed class="mr-6" small dark @click="createProtobuf">PROTO</v-btn>
       </v-col>
     </v-row>
-    <v-tabs v-model="tab" @change="tabChange">
+    <!-- tab -->
+    <HTabs v-model="tab" :items="items" @change="tabChange" />
+    <!-- <v-tabs v-model="tab" @change="tabChange">
       <v-tab v-for="item in items" :key="item">{{ item }}</v-tab>
-    </v-tabs>
+    </v-tabs> -->
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="item in items" :key="item">
         <h-table
@@ -40,9 +42,7 @@
           </template>
           <!-- 数据结构 -->
           <template v-slot:buttons2="{ item }">
-            <v-btn :disabled="item.topicInterFaceType === 6" text color="primary" @click="dataStructure(item)"
-              >数据结构详情</v-btn
-            >
+            <v-btn text color="primary" @click="dataStructure(item)">数据结构详情</v-btn>
             <v-btn text color="primary" @click="ancillaryInformation(item)">附加信息</v-btn>
           </template>
           <!-- 操作 -->
@@ -115,6 +115,7 @@ import UserSubNameList from './childComponent/userSubNameList.vue'
 import HSearch from '@/components/h-search.vue'
 import { onlineDataParamType } from '@/type/online-data.type'
 import { mdiMagnify } from '@mdi/js'
+import HTabs from '@/components/h-tabs.vue'
 
 @Component({
   components: {
@@ -128,7 +129,8 @@ import { mdiMagnify } from '@mdi/js'
     DataStructureDialog,
     TopicAncillaryInformationDialog,
     HSearch,
-    UserSubNameList
+    UserSubNameList,
+    HTabs
   }
 })
 @http

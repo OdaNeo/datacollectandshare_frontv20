@@ -1,15 +1,6 @@
 <template>
   <div id="topicSub">
     <v-row>
-      <v-switch
-        style="padding-top: 2px; width: 180px"
-        class="ml-3"
-        dense
-        v-model="switchMode"
-        flat
-        :label="switchMode ? `按照主题ID查询` : `按照主题名称查询`"
-        @change="changeSearchMode"
-      ></v-switch>
       <transition name="fade" mode="out-in">
         <HSearch
           v-if="searchMode === `id`"
@@ -32,10 +23,21 @@
           key="topicName"
         />
       </transition>
+      <v-switch
+        style="padding-top: 2px; width: 180px"
+        class="ml-6"
+        dense
+        v-model="switchMode"
+        flat
+        :label="switchMode ? `按照主题ID查询` : `按照主题名称查询`"
+        @change="changeSearchMode"
+      ></v-switch>
     </v-row>
-    <v-tabs v-model="tab" @change="tabChange">
+    <!-- tab -->
+    <HTabs v-model="tab" :items="items" @change="tabChange" />
+    <!-- <v-tabs v-model="tab" @change="tabChange">
       <v-tab v-for="item in items" :key="item">{{ item }}</v-tab>
-    </v-tabs>
+    </v-tabs> -->
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="item in items" :key="item">
         <h-table
@@ -58,14 +60,7 @@
           </template>
           <!-- 数据结构详情 -->
           <template v-slot:buttons="{ item }">
-            <v-btn
-              text
-              color="primary"
-              :disabled="item.topicInterFaceType === 6"
-              class="my-2"
-              @click="dataStructure(item)"
-              >数据结构详情</v-btn
-            >
+            <v-btn text color="primary" class="my-2" @click="dataStructure(item)">数据结构详情</v-btn>
           </template>
           <!-- 订阅 -->
           <template v-slot:operation="{ item }">
@@ -117,6 +112,7 @@ import { mdiMagnify } from '@mdi/js'
 import { tableHeaderType } from '@/type/table.type'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import HSearch from '@/components/h-search.vue'
+import HTabs from '@/components/h-tabs.vue'
 // topicInterFaceType = 1，4，6
 @Component({
   components: {
@@ -124,7 +120,8 @@ import HSearch from '@/components/h-search.vue'
     TDialog,
     DataStructureDialog,
     HSearch,
-    UserSubNameList
+    UserSubNameList,
+    HTabs
   }
 })
 @http

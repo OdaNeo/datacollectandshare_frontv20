@@ -19,6 +19,12 @@
       :rules="[...h_validator.noEmpty('摄像头地址')]"
       :description="`摄像头地址`"
     />
+
+    <!-- 视频描述 -->
+    <HSimpleInput v-model="formProvide.formObj['details']" :required="false" :description="`视频描述`" />
+
+    <!-- 关键字 -->
+    <HSimpleInput v-model="formProvide.formObj['keywords']" :required="false" :description="`关键字`" />
   </v-row>
 </template>
 <script lang="ts">

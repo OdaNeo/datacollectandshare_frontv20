@@ -11,7 +11,7 @@
             <template v-slot:activator="{ on }">
               <div class="userMenuBtn" v-on="on">
                 <v-avatar color="white" size="30" class="ml-4">
-                  <v-icon size="24">{{ mdiAccount }}</v-icon>
+                  <v-icon size="22">{{ mdiAccount }}</v-icon>
                 </v-avatar>
                 <div class="userName">{{ username }}</div>
               </div>

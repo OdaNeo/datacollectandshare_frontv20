@@ -30,7 +30,7 @@
     </h-table>
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
-      <ContentDetails :rowJson="rowJson" />
+      <ContentDetails slot="default" :rowJson="rowJson" />
       <v-btn
         slot="button"
         color="primary"

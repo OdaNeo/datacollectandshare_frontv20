@@ -29,7 +29,7 @@ export default class AllDetails extends Vue {
     {
       text: '订阅用户',
       align: 'center',
-      value: 'value'
+      value: 'userName'
     },
     {
       text: '审核时间',
@@ -42,7 +42,7 @@ export default class AllDetails extends Vue {
     {
       text: '审核人',
       align: 'center',
-      value: 'value'
+      value: 'auditName'
     }
   ]
 }

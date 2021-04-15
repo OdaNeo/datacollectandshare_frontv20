@@ -17,6 +17,7 @@ export default class SubDetails extends Vue {
   @Prop() private rowObj!: unknown
   // value: 'subscribe'
   // value: 'auditTime',
+  // auditName:审核人，userName:订阅用户
   private headers = [
     {
       text: '订阅时间',
@@ -29,7 +30,7 @@ export default class SubDetails extends Vue {
     {
       text: '订阅用户',
       align: 'center',
-      value: 'value'
+      value: 'userName'
     }
   ]
 }
