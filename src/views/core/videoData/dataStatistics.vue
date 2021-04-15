@@ -1,9 +1,7 @@
 <template>
   <div id="VideoDataStatistics">
     <!-- tab -->
-    <v-tabs v-model="tab" @change="tabChange">
-      <v-tab v-for="item in items" :key="item">{{ item }}</v-tab>
-    </v-tabs>
+    <HTabs v-model="tab" :items="items" @change="tabChange" />
     <!-- 切换 -->
     <v-tabs-items v-model="tab">
       <!-- 视频主题占比 -->
@@ -50,9 +48,14 @@ import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import Echarts from 'echarts'
 import Moment from 'moment'
-
-@Component({})
+import HTabs from '@/components/h-tabs.vue'
+@Component({
+  components: {
+    HTabs
+  }
+})
 @http
+// 视频 选择周
 export default class VideoDataStatistics extends Vue {
   // tab
   private tab = null

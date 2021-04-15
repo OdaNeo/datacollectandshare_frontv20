@@ -13,9 +13,12 @@
         <v-btn color="primary" depressed class="mr-6" small dark @click="createLogTopic()">创建主题</v-btn>
       </v-col>
     </v-row>
-    <v-tabs v-model="tab" @change="tabChange">
+    <!-- tab -->
+    <HTabs v-model="tab" :items="items" @change="tabChange" />
+    <!-- <v-tabs v-model="tab" @change="tabChange">
       <v-tab v-for="item in items" :key="item">{{ item }}</v-tab>
-    </v-tabs>
+    </v-tabs> -->
+
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="item in items" :key="item">
         <h-table
@@ -93,6 +96,7 @@ import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
 import { tableHeaderType } from '@/type/table.type'
 import { loggerParamType } from '@/type/logger.type'
+import HTabs from '@/components/h-tabs.vue'
 
 @Component({
   components: {
@@ -102,7 +106,8 @@ import { loggerParamType } from '@/type/logger.type'
     CreateLogTopic,
     LogDataDialog,
     TDialog,
-    HSearch
+    HSearch,
+    HTabs
   }
 })
 @http

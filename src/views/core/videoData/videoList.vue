@@ -183,16 +183,6 @@ export default class VideoDataList extends Vue {
       value: 'userName'
     },
     {
-      text: '视频时间范围?',
-      align: 'center',
-      value: 'userName'
-    },
-    // {
-    //   text: 'minio桶名称',
-    //   align: 'center',
-    //   value: 'bucketName'
-    // },
-    {
       text: '详情信息',
       align: 'center',
       slot: 'buttons'
@@ -211,7 +201,11 @@ export default class VideoDataList extends Vue {
   // 操作下拉框
   private buttonItems = [
     {
-      text: `查看视频`,
+      text: `选择视频`,
+      handle: this.showDateRangePopup
+    },
+    {
+      text: `搜索视频`,
       handle: this.showDateRangePopup
     },
     {
@@ -233,9 +227,8 @@ export default class VideoDataList extends Vue {
   // 查询到视频数量（不包含空视频）
   private videoList: Array<{ timer: string; url: string }> = []
 
-  private curItem: any
+  private curItem: { id?: number; bucketName?: string } = {}
 
-  // private videoCounts = 0 // 总共应该显示多少视频
   private videoCountsReal = 0 // 实际视频数量
   //  创建主题
   private createTopicVideo() {
@@ -247,7 +240,7 @@ export default class VideoDataList extends Vue {
     this.formProvide.formObj = {}
   }
   // 时间选择弹窗
-  private showDateRangePopup(item: any) {
+  private showDateRangePopup(item: { id: number; bucketName: string }) {
     this.curItem = item
     this.dialogFlag = true
     this.dialogShow = 2
@@ -298,7 +291,6 @@ export default class VideoDataList extends Vue {
     params.topicId = this.curItem.id
     params.bucketName = this.curItem.bucketName
     // 总共显示的视频数
-    // this.videoCounts = ((params.overTime - params.beginTime) / (3600 * 1000) + 1) * 3
     const { data } = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
     // console.log(data)
     // const data = [
@@ -317,11 +309,7 @@ export default class VideoDataList extends Vue {
           }
         })
       }
-      // else {
-      //   this.videoList.push({ timer: item.timer + '时', url: '' })
-      // }
     })
-    // console.log(this.videoList)
     // 有视频，才弹出视频弹窗
     if (this.videoList.length > 0) {
       this.showVideoPopup = true
