@@ -388,16 +388,16 @@ const routes: Array<RouteConfig> = [
       url: '/dataMonitor'
     },
     children: [
-      {
-        path: 'realTime',
-        component: () => import('@/views/core/dataMonitor/realTime.vue'),
-        name: '实时监控',
-        meta: {
-          title: '实时监控',
-          access: true,
-          url: '/dataMonitor/realTime'
-        }
-      },
+      // {
+      //   path: 'realTime',
+      //   component: () => impor@/views/private/realTime.vuevue'),
+      //   name: '实时监控',
+      //   meta: {
+      //     title: '实时监控',
+      //     access: true,
+      //     url: '/dataMonitor/realTime'
+      //   }
+      // },
       {
         path: 'dataList',
         component: () => import('@/views/core/dataMonitor/dataList.vue'),
@@ -525,7 +525,7 @@ const routes: Array<RouteConfig> = [
           title: '批量创建主题',
           access: false
         },
-        component: () => import('@/views/private/bulkCreateTopic.vue')
+        component: () => import('@/views/private/videoDatePicker.vue')
       },
       {
         path: 'dataStatistics',
@@ -533,6 +533,15 @@ const routes: Array<RouteConfig> = [
         name: '数据统计',
         meta: {
           title: '数据统计',
+          access: false
+        }
+      },
+      {
+        path: 'realTime',
+        component: () => import('@/views/private/realTime.vue'),
+        name: '实时监控',
+        meta: {
+          title: '实时监控',
           access: false
         }
       }

@@ -51,7 +51,7 @@ export default class VideoPopup extends Vue {
   @Prop() private videoCountsReal!: number
   @Prop() private videoList!: Array<any>
   @Model('closeDialog', { type: Boolean }) private checked!: boolean
-  mdiClose = mdiClose
+  private mdiClose = mdiClose
 
   private video: HTMLVideoElement | undefined
   public dp: DPlayer | undefined

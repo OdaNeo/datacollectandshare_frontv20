@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="videoDataList">
     <v-row>
       <HSearch
         v-model="queryVideoTopicID"
@@ -63,10 +63,10 @@
       </v-tab-item>
     </v-tabs-items>
     <!-- 表单 -->
-    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
-      <create-video-topic-dialog v-if="dialogShow === 1" />
-      <set-date-range v-else-if="dialogShow === 2" />
-    </f-dialog>
+    <FDialog v-if="dialogFlag" v-model="dialogFlag">
+      <CreateVideoTopicDialog v-if="dialogShow === 1" />
+      <SetDateRange v-else-if="dialogShow === 2" />
+    </FDialog>
 
     <!-- 表格显示 -->
     <TDialog v-model="tDialogFlag">
@@ -284,7 +284,7 @@ export default class VideoDataList extends Vue {
     this.videoList = []
     this.videoCountsReal = 0
     const params: any = {}
-    // -8小时时差
+    // -8小时，服务器时间有误
     // 2020-1-1-0时 ~ 2020-1-1-1时 视频文件数：1，overTime - beginTime=0ms
     params.beginTime = this.h_utils.timeUtil.timeToStamp(formObj.startTime, '-') + (formObj.startHour - 8) * 3600 * 1000
     params.overTime = this.h_utils.timeUtil.timeToStamp(formObj.endTime, '-') + (formObj.endHour - 8 - 1) * 3600 * 1000

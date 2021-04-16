@@ -104,6 +104,7 @@
       <router-link to="./topicProducerAndConsume">主题生产消费测试</router-link>
       <router-link to="./dataStatistics">数据统计</router-link>
       <router-link to="./bulkCreateTopic">批量创建主题</router-link>
+      <router-link to="./realTime">实时监控</router-link>
     </div>
   </div>
 </template>

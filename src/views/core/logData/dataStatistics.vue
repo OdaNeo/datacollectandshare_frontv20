@@ -64,6 +64,7 @@ import Moment from 'moment'
 @echarts
 @util
 export default class LogDataStatistics extends Vue {
+  //TODO： 每一天 所有主题的 采集数量
   private mdiCloseCircleOutline = mdiCloseCircleOutline
 
   private myChartElement1: any = null

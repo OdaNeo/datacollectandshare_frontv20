@@ -40,7 +40,7 @@
       style="height: 200px; margin-top: 120px"
     >
       <div style="font-size: 18px; color: #666">查无数据</div>
-      <img class="img" src="../../../assets/image/kong.png" alt="" />
+      <img class="img" src="../../assets/image/kong.png" alt="" />
     </div>
     <!-- echarts -->
     <div v-else class="charts-container">
