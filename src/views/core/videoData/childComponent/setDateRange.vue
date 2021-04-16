@@ -26,6 +26,7 @@
           ></v-text-field>
         </template>
         <v-date-picker
+          locale="zh-Hans"
           v-model="formProvide.formObj.startTime"
           @change="dateChange"
           @input="menuStart = false"
@@ -68,6 +69,7 @@
           ></v-text-field>
         </template>
         <v-date-picker
+          locale="zh-Hans"
           v-model="formProvide.formObj.endTime"
           @change="dateChange"
           @input="menuEnd = false"

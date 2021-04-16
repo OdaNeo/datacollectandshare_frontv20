@@ -1,8 +1,8 @@
 <template>
-  <div id="videoDatePicker">
+  <div id="videoDatePicker" class="mb-3">
     <!-- 日期选择器 -->
-    <v-row no-gutters>
-      <v-col cols="3">
+    <v-row no-gutters style="display: flex; align-items: center; justify-content: center">
+      <v-col cols="5">
         <v-menu
           ref="menu"
           v-model="menu"
@@ -49,8 +49,8 @@
           <div class="weektime-hd-title">星期\时间</div>
           <div class="weektime-hd-con">
             <div class="weektime-hd-con-top">
-              <div class="weektime-date-range">00:00 - 12:00</div>
-              <div class="weektime-date-range">12:00 - 24:00</div>
+              <div class="weektime-date-range">00:00 - 11:59</div>
+              <div class="weektime-date-range">12:00 - 23:59</div>
             </div>
             <div class="weektime-hd-con-bottom">
               <span class="weektime-date-cell" v-for="hour in 24" :key="hour">{{ hour - 1 }}</span>
@@ -61,42 +61,43 @@
           <div class="week-body">
             <div v-for="week in weekDays" :key="week.id" class="week-item">{{ week }}</div>
           </div>
-          <div class="time-body">
+          <div v-if="!isSearching" class="time-body">
             <div
               :class="item.url.length > 0 ? `time-cell video-active` : `time-cell`"
-              :style="{ color: item.available ? `red` : 'green' }"
               v-for="item in videoList"
               :key="item.id"
               @click="push2VideoListAvailable(item)"
             >
-              1
+              <v-icon color="primary darken-2" v-if="item.url.length > 0 && item.available" size="16">{{
+                mdiCheck
+              }}</v-icon>
             </div>
           </div>
+          <div v-else class="time-body" style="background-color: #f7f7f9"></div>
         </div>
       </div>
-    </div>
-    <!-- 视频列表 -->
-    <div>
-      <div v-for="item in videoListAvailable" :key="item.id">{{ item }}</div>
     </div>
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
+import { H_Vue } from '@/declaration/vue-prototype'
 import util from '@/decorator/utilsDecorator'
-import { mdiMagnify } from '@mdi/js'
-
+import { mdiMagnify, mdiCheck } from '@mdi/js'
 @Component
 @http
 @util
-export default class videoDatePicker extends Vue {
+export default class VideoDatePicker extends Vue {
+  @Inject() private readonly formProvide!: H_Vue
+
   private menu = false
   private mdiMagnify = mdiMagnify
+  private mdiCheck = mdiCheck
 
-  private videoList: { timer: string; url: string[]; available: boolean }[] = []
+  private isSearching = true
 
-  private videoListAvailable: { timer: string; url: string[]; available: boolean }[] = []
+  private videoList: { timer: string; url: string[] }[] = []
 
   private curTime = new Date().getTime()
 
@@ -140,24 +141,43 @@ export default class videoDatePicker extends Vue {
   }
   // 获得视频列表
   private async getVideoList() {
+    this.isSearching = true
     const params: any = {}
     // -8小时，服务器时间有误
     // 2020-1-1-0时 ~ 2020-1-1-1时 视频文件数：1，overTime - beginTime=0ms
     params.beginTime = new Date(this.dates[0]).getTime() + (0 - 8) * 3600 * 1000
     params.overTime = new Date(this.dates[1]).getTime() + (23 - 8) * 3600 * 1000
-    params.topicId = 9008392
-    params.bucketName = `topic9008392`
+    params.topicId = this.formProvide.formObj.topicId
+    params.bucketName = this.formProvide.formObj.bucketName
     // 总共显示的视频数
-    // const { data } = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
-    const data = [
-      { timer: '2021-01-01 02', url: [] },
-      { timer: '2021-01-01 03', url: ['4', '5', '6'] },
-      { timer: '2021-01-01 04', url: [] },
-      { timer: '2021-01-01 05', url: ['1', '2', '3'] }
-    ]
-    this.videoList = data.map(item => {
+    const { data } = await this.h_request['httpGET']('GET_VIDEO_ADDRESS', params)
+    this.isSearching = false
+    // const data = [
+    //   { timer: '2021-01-01 03', url: ['4', '5', '6'] },
+    //   { timer: '2021-01-01 05', url: [] },
+    //   { timer: '2021-01-01 05', url: [] },
+    //   { timer: '2021-01-01 05', url: [] },
+    //   { timer: '2021-01-01 05', url: ['1', '2', '3'] },
+    //   { timer: '2021-01-01 05', url: [] },
+    //   { timer: '2021-01-01 05', url: [] },
+    //   { timer: '2021-01-01 05', url: [] },
+    //   { timer: '2021-01-01 05', url: [] },
+    //   { timer: '2021-01-01 05', url: [] },
+    //   { timer: '2021-01-01 06', url: ['11', '21', '31'] }
+    // ]
+    let videoCount = 0
+    this.videoList = data.map((item: { timer: string; url: string[] }) => {
+      if (item.url.length > 0) {
+        videoCount += item.url.length
+      }
       return { ...item, available: false }
     })
+
+    if (videoCount === 0) {
+      this.h_utils['alertUtil'].open('该时间段视频不存在', true, 'error', 3000)
+    }
+
+    this.formProvide.formObj.videoListAvailable.length = 0
   }
 
   // 推入视频栈内
@@ -166,14 +186,27 @@ export default class videoDatePicker extends Vue {
       return
     }
     let flag = 0
-    this.videoListAvailable.forEach(i => {
+    this.formProvide.formObj.videoListAvailable.forEach((i: { timer: string }) => {
       if (item.timer === i.timer) {
         flag++
       }
     })
+
     if (flag === 0) {
       this.$set(item, `available`, true)
-      this.videoListAvailable.push(item)
+      this.formProvide.formObj.videoListAvailable.push(item)
+    } else {
+      this.$set(item, `available`, false)
+      this.formProvide.formObj.videoListAvailable = this.formProvide.formObj.videoListAvailable.filter(
+        (_i: { timer: string }) => _i.timer !== item.timer
+      )
+    }
+  }
+
+  @Watch(`menu`)
+  private handleIsSearching(val: boolean) {
+    if (val) {
+      this.isSearching = true
     }
   }
 
@@ -186,13 +219,14 @@ export default class videoDatePicker extends Vue {
 .weektime {
   width: 688px;
   font-size: 14px;
+  box-sizing: border-box;
   line-height: 32px;
   color: #515a6e;
   user-select: none;
 }
 .weektime-main {
   border: 1px solid #dcdee2;
-  position: relative;
+  box-sizing: border-box;
 }
 .weektime-hd {
   display: flex;
@@ -261,6 +295,9 @@ export default class videoDatePicker extends Vue {
   overflow: hidden;
   transition: all 0.3s ease;
   outline-width: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .video-active {

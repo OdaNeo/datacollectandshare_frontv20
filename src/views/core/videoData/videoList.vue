@@ -63,9 +63,10 @@
       </v-tab-item>
     </v-tabs-items>
     <!-- 表单 -->
-    <FDialog v-if="dialogFlag" v-model="dialogFlag">
+    <FDialog v-if="dialogFlag" v-model="dialogFlag" :width="dialogShow === 3 ? 760 : 700">
       <CreateVideoTopicDialog v-if="dialogShow === 1" />
       <SetDateRange v-else-if="dialogShow === 2" />
+      <VideoDatePicker v-else-if="dialogShow === 3" />
     </FDialog>
 
     <!-- 表格显示 -->
@@ -107,6 +108,7 @@ import HSearch from '@/components/h-search.vue'
 import TDialog from '@/components/t-dialog.vue'
 import VideoDetail from './childComponent/videoDetail.vue'
 import HTabs from '@/components/h-tabs.vue'
+import VideoDatePicker from './childComponent/videoDatePicker.vue'
 
 @Component({
   components: {
@@ -119,7 +121,8 @@ import HTabs from '@/components/h-tabs.vue'
     HSearch,
     TDialog,
     VideoDetail,
-    HTabs
+    HTabs,
+    VideoDatePicker
   }
 })
 @http
@@ -202,7 +205,7 @@ export default class VideoDataList extends Vue {
   private buttonItems = [
     {
       text: `选择视频`,
-      handle: this.showDateRangePopup
+      handle: this.showVideoDatePicker
     },
     {
       text: `搜索视频`,
@@ -245,7 +248,7 @@ export default class VideoDataList extends Vue {
     this.dialogFlag = true
     this.dialogShow = 2
     this.formProvide.title = '选择日期范围'
-    this.formProvide.btnName = ['查看视频']
+    this.formProvide.btnName = ['搜索视频']
     this.formProvide.methodName = 'getVideoList'
     this.formProvide.formObj = {
       startHour: 0,
@@ -315,9 +318,50 @@ export default class VideoDataList extends Vue {
       this.showVideoPopup = true
       return Promise.resolve(true)
     } else {
-      this.h_utils['alertUtil'].open('该时间段视频不存在', true, 'error', 3000)
+      this.h_utils['alertUtil'].open('该时间段视频不存在', true, 'error')
       return Promise.resolve(false)
     }
+  }
+
+  // showVideoDatePicker
+  private showVideoDatePicker(item: { id: number; bucketName: string }) {
+    this.curItem = item
+    this.dialogFlag = true
+    this.dialogShow = 3
+    this.formProvide.title = '勾选要观看的视频'
+    this.formProvide.btnName = ['立即观看视频', '取消']
+    this.formProvide.methodName = 'getVideoDatePicker'
+    this.formProvide.formObj = {
+      topicId: item.id,
+      bucketName: item.bucketName,
+      videoListAvailable: []
+    }
+  }
+
+  // getVideoDatePicker
+  private getVideoDatePicker() {
+    const _arr = this.formProvide.formObj.videoListAvailable
+    if (_arr.length === 0) {
+      this.h_utils['alertUtil'].open('请至少选择一个时间段', true, 'error')
+      return Promise.resolve(false)
+    }
+    this.videoList = []
+    this.videoCountsReal = 0
+
+    _arr.forEach((item: { timer: string; url: Array<string> }) => {
+      if (item.url.length === 0) {
+        return
+      } else {
+        item.url.forEach((_item, _index) => {
+          if (_item) {
+            this.videoList.push({ timer: item.timer + '时' + '-' + (_index + 1), url: item.url[_index] })
+            this.videoCountsReal++
+          }
+        })
+      }
+    })
+    this.showVideoPopup = true
+    return Promise.resolve(true)
   }
 
   // 查询通用调用方法

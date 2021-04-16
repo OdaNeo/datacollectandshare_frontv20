@@ -7,12 +7,8 @@
           <v-icon>{{ mdiClose }}</v-icon>
         </v-btn>
       </v-card-title>
-      <div style="font-size: 12px; text-align: center; user-select: none">
-        该时间段（{{ formProvide.formObj.startTime }}日{{ formProvide.formObj.startHour }}时到{{
-          formProvide.formObj.endTime
-        }}日{{ formProvide.formObj.endHour }}时），已查询到{{ videoCountsReal }}个视频，正在播放第{{
-          curIndex + 1
-        }}个视频。
+      <div style="font-size: 14px; text-align: center; user-select: none">
+        共有{{ videoCountsReal }}个视频，正在播放第{{ curIndex + 1 }}个视频。
       </div>
       <v-slide-group v-model="model" class="pa-4 my-1" show-arrows center-active>
         <v-slide-item v-for="(item, index) in videoList" :key="item.id" v-slot="{ toggle }">
@@ -36,17 +32,15 @@
   </v-dialog>
 </template>
 <script lang="ts">
-import { Component, Vue, Model, Prop, Inject } from 'vue-property-decorator'
+import { Component, Vue, Model, Prop } from 'vue-property-decorator'
 // import Hls from 'hls.js'
 import DPlayer, { DPlayerEvents } from 'dplayer'
-import { H_Vue } from '@/declaration/vue-prototype'
 import util from '@/decorator/utilsDecorator'
 import { mdiClose } from '@mdi/js'
 
 @Component
 @util
 export default class VideoPopup extends Vue {
-  @Inject() private readonly formProvide!: H_Vue
   // @Prop() private videoCounts!: number
   @Prop() private videoCountsReal!: number
   @Prop() private videoList!: Array<any>

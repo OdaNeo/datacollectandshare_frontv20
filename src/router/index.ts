@@ -525,7 +525,7 @@ const routes: Array<RouteConfig> = [
           title: '批量创建主题',
           access: false
         },
-        component: () => import('@/views/private/videoDatePicker.vue')
+        component: () => import('@/views/private/bulkCreateTopic.vue')
       },
       {
         path: 'dataStatistics',
