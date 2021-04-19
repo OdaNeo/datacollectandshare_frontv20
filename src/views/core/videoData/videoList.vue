@@ -47,7 +47,7 @@
               <v-list dense>
                 <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
                   <v-btn
-                    :disabled="i.tab && tab !== i.tab"
+                    :disabled="(i.tab && tab !== i.tab) || (i.status && item.status === i.status)"
                     class="pa-0"
                     width="100%"
                     :color="i.color ? i.color : `primary`"
@@ -63,7 +63,7 @@
       </v-tab-item>
     </v-tabs-items>
     <!-- 表单 -->
-    <FDialog v-if="dialogFlag" v-model="dialogFlag" :width="dialogShow === 3 ? 760 : 700">
+    <FDialog v-if="dialogFlag" v-model="dialogFlag" :width="dialogShow === 3 ? 768 : 700">
       <CreateVideoTopicDialog v-if="dialogShow === 1" />
       <SetDateRange v-else-if="dialogShow === 2" />
       <VideoDatePicker v-else-if="dialogShow === 3" />
@@ -205,12 +205,13 @@ export default class VideoDataList extends Vue {
   private buttonItems = [
     {
       text: `选择视频`,
-      handle: this.showVideoDatePicker
+      handle: this.showVideoDatePicker,
+      status: 1
     },
-    {
-      text: `搜索视频`,
-      handle: this.showDateRangePopup
-    },
+    // {
+    //   text: `搜索视频`,
+    //   handle: this.showDateRangePopup
+    // },
     {
       text: `启动`,
       tab: 1
@@ -328,8 +329,8 @@ export default class VideoDataList extends Vue {
     this.curItem = item
     this.dialogFlag = true
     this.dialogShow = 3
-    this.formProvide.title = '勾选要观看的视频'
-    this.formProvide.btnName = ['立即观看视频', '取消']
+    this.formProvide.title = '请选择时间段并勾选要观看的视频'
+    this.formProvide.btnName = ['立即观看', '取消']
     this.formProvide.methodName = 'getVideoDatePicker'
     this.formProvide.formObj = {
       topicId: item.id,

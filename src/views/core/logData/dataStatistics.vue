@@ -1,6 +1,7 @@
 <template>
   <div id="LogDataStatistics">
     <v-row>
+      <!-- 搜索框 -->
       <HSearch :cols="3" :showAppEnd="false" v-model="queryTopicID" label="日志主题ID" v-only-num />
       <v-col cols="3">
         <v-menu
@@ -37,7 +38,7 @@
         </v-menu>
       </v-col>
       <v-col>
-        <v-btn color="primary" small depressed dark @click="search30DaysLogger">开始查询</v-btn>
+        <v-btn color="primary" small depressed dark @click="searchMethod">开始查询</v-btn>
       </v-col>
     </v-row>
     <!-- 默认日历表 -->
@@ -49,7 +50,6 @@
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
-import { paramsType, returnType } from '@/type/http-request.type'
 import HSearch from '@/components/h-search.vue'
 import echarts from '@/decorator/echartsDecorator'
 import util from '@/decorator/utilsDecorator'
@@ -64,7 +64,7 @@ import Moment from 'moment'
 @echarts
 @util
 export default class LogDataStatistics extends Vue {
-  //TODO： 每一天 所有主题的 采集数量
+  //TODO： 每一天 所有主题的 采集数量 statisticsAllLoggerTopicByDayTime query `2021-08-08`
   private mdiCloseCircleOutline = mdiCloseCircleOutline
 
   private myChartElement1: any = null
@@ -76,13 +76,6 @@ export default class LogDataStatistics extends Vue {
   private queryTopicDate = this.queryEndDate
 
   private showMenu = false
-
-  private search30DaysLogger() {
-    this.getStatisticsLoggerTopicByTopicIdAnd30Days({
-      topicId: Number(this.queryTopicID),
-      timeDate: this.queryTopicDate
-    })
-  }
 
   // 获得30天数据并生成option1
   private async getStatisticsLoggerTopicByTopicIdAnd30Days(params: { topicId: number; timeDate: string }) {
@@ -231,25 +224,20 @@ export default class LogDataStatistics extends Vue {
   }
 
   // 查询通用调用方法
-  private async initSearchMethod(params: paramsType) {
-    const { data }: returnType = await this.h_request['httpGET']('GET_TOPICS_FIND_ALL', params)
-    if (data && data.list.length > 0) {
-      this.queryTopicID = data.list[0].id.toString()
-      this.$nextTick(() => {
-        // 30 天
-        this.getStatisticsLoggerTopicByTopicIdAnd30Days({
-          topicId: Number(this.queryTopicID),
-          timeDate: this.queryTopicDate
-        })
-        // 当天
-        this.getStatisticsLoggerTopicByTopicIdAndDay({
-          topicId: Number(this.queryTopicID),
-          timeDate: this.queryTopicDate
-        })
-      })
-    } else {
-      this.h_utils['alertUtil'].open('日志主题不存在', true, 'error')
+  private async searchMethod() {
+    if (!this.queryTopicID || !this.queryTopicDate) {
+      return
     }
+    // 30 天
+    this.getStatisticsLoggerTopicByTopicIdAnd30Days({
+      topicId: Number(this.queryTopicID),
+      timeDate: this.queryTopicDate
+    })
+    // 当天
+    this.getStatisticsLoggerTopicByTopicIdAndDay({
+      topicId: Number(this.queryTopicID),
+      timeDate: this.queryTopicDate
+    })
   }
 
   // echarts1 handle
@@ -272,10 +260,9 @@ export default class LogDataStatistics extends Vue {
     })
   }
   mounted(): void {
-    // 默认显示日志主题中的第一条
+    // 初始化
     this.initECharts1()
     this.initECharts2()
-    this.initSearchMethod({ pageNum: 1, pageSize: 1, dataType: 1, faceTypes: 9 })
   }
 }
 </script>

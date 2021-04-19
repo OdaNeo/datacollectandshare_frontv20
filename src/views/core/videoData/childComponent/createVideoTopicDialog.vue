@@ -25,6 +25,9 @@
 
     <!-- 关键字 -->
     <HSimpleInput v-model="formProvide.formObj['keywords']" :required="false" :description="`关键字`" />
+
+    <!--  -->
+    <div class="description">注：添加主题成功后会自动启动</div>
   </v-row>
 </template>
 <script lang="ts">
@@ -57,3 +60,8 @@ export default class CreateVideoTopicDialog extends Vue {
   }
 }
 </script>
+<style scoped>
+.description {
+  margin-left: 35px;
+}
+</style>

@@ -108,7 +108,7 @@ export default class VideoDataStatistics extends Vue {
         ? (_data[index] = { fileNum: item.fileNum, topicId: `主题ID：${item.topicId}` })
         : (otherFileNum += item.fileNum)
     })
-    _data[number] = { fileNum: otherFileNum, topicId: '其余视频主题' }
+    _data[number] = { fileNum: otherFileNum, topicId: '其余' }
 
     return {
       title: {

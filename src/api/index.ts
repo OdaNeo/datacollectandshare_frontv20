@@ -189,7 +189,7 @@ class RequestData {
     return u
   }
 
-  // 捕捉业务上的错误
+  // 捕捉业务上的错误：直接显示后端错误码
   private codeType(response: Array<returnType> | returnType, callback: Function) {
     let code = 0
     let message = ''
@@ -232,7 +232,7 @@ class RequestData {
         break
     }
   }
-  // 捕捉http错误
+  // 捕捉http错误：显示http错误码
   private httpErrorHandle(err: { code: string | number }, callback: Function, data?: Array<unknown>) {
     // console.log('error code:' + err.code)
     let _message = ''

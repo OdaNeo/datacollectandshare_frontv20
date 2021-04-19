@@ -17,9 +17,7 @@
     </v-row>
     <!-- tab -->
     <HTabs v-model="tab" :items="items" @change="tabChange" />
-    <!-- <v-tabs v-model="tab" @change="tabChange">
-      <v-tab v-for="item in items" :key="item">{{ item }}</v-tab>
-    </v-tabs> -->
+
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="item in items" :key="item">
         <h-table
@@ -32,37 +30,38 @@
         >
           <template v-slot:buttons="{ item }">
             <v-btn :disabled="item.topicInterFaceType === 5" text color="primary" @click="dataStructureDetails(item)"
-              >数据结构详情</v-btn
-            >
-          </template>
-          <template v-slot:buttons2="{ item, index }">
-            <v-btn
-              v-if="tab"
-              :disabled="item.topicInterFaceType !== 2 && item.topicInterFaceType !== 3"
-              text
-              color="primary"
-              @click.stop="addItems(item)"
-              >增加字段</v-btn
-            >
-            <v-btn
-              v-if="tab"
-              text
-              color="primary"
-              @click.stop="
-                HConfirmShow = true
-                HConfirmItem = item
-              "
-            >
-              删除
+              >数据结构详情
             </v-btn>
             <v-btn
               text
               color="primary"
               :loading="!!item.loading"
               :disabled="item.topicInterFaceType === 5"
-              @click="getTopicInformation(item, index)"
+              @click="getTopicInformation(item)"
               >查看附加信息</v-btn
             >
+          </template>
+          <!-- 操作 -->
+          <template v-slot:buttons2="{ item }">
+            <!-- 操作下拉框 -->
+            <v-menu close-delay="150" left offset-x bottom max-width="90px" min-width="90px">
+              <template v-slot:activator="{ on, attrs }">
+                <v-btn color="primary" text v-bind="attrs" v-on="on">...</v-btn>
+              </template>
+              <v-list dense>
+                <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
+                  <v-btn
+                    :disabled="(i.tab && tab !== i.tab) || (i.faceType && item.topicInterFaceType !== i.faceType)"
+                    class="pa-0"
+                    width="100%"
+                    :color="i.color ? i.color : `primary`"
+                    text
+                    @click="i.handle && i.handle(item)"
+                    >{{ i.text }}</v-btn
+                  >
+                </v-list-item>
+              </v-list>
+            </v-menu>
           </template>
         </h-table>
       </v-tab-item>
@@ -142,7 +141,7 @@ export default class OfflineTopicList extends Vue {
       }
     }
   })
-  mdiMagnify = mdiMagnify
+  private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示
@@ -189,14 +188,6 @@ export default class OfflineTopicList extends Vue {
       align: 'center',
       value: 'userName'
     },
-    // {
-    //   text: '订阅用户',
-    //   align: 'center',
-    //   value: 'userSubNameList',
-    //   format: (userSubNameList: Array<string>) => {
-    //     return userSubNameList.toString()
-    //   }
-    // },
     {
       text: '接口类型',
       align: 'center',
@@ -205,14 +196,6 @@ export default class OfflineTopicList extends Vue {
         return topicInterFaceType[val]
       }
     },
-    // {
-    //   text: '消息类型',
-    //   align: 'center',
-    //   value: 'queneType',
-    //   format: (quene: number) => {
-    //     return this.h_enum['queneType'][quene]
-    //   }
-    // },
     {
       text: '数据结构',
       align: 'center',
@@ -224,6 +207,31 @@ export default class OfflineTopicList extends Vue {
       slot: 'buttons2'
     }
   ]
+
+  // 操作下拉框
+  private buttonItems = [
+    {
+      text: `增加字段`,
+      tab: 1,
+      faceType: 3,
+      handle: this.addItems
+    },
+    {
+      text: `启动`,
+      tab: 1
+    },
+    {
+      text: `停止`,
+      tab: 1
+    },
+    {
+      text: '删除',
+      tab: 1,
+      color: `error`,
+      handle: this.handelDeleteTopic
+    }
+  ]
+
   // 数据库采集
   private createDataBaseAcquisition(item?: any) {
     this.fDialogFlag = true
@@ -577,20 +585,16 @@ export default class OfflineTopicList extends Vue {
   }
 
   // 数据结构展示方法
-  private dataStructure(item: any, str: string) {
+  private dataStructureDetails(item: object) {
     this.tDialogFlag = true
     this.tDialogShow = 1
     this.rowObj = item
-    this.formProvide.title = str
+    this.formProvide.title = '数据结构详情'
   }
 
   // 附加信息
-  private dataStructureDetails(item: any) {
-    this.dataStructure(item, '数据结构详情')
-  }
-
-  private async getTopicInformation(item: any, index: number) {
-    if (!this.desserts[index].flag) {
+  private async getTopicInformation(item: any) {
+    if (!item.flag) {
       this.$set(item, 'loading', true)
 
       const { data } = await this.h_request['httpGET']('GET_TOPICS_INFORMATION', {
@@ -600,18 +604,18 @@ export default class OfflineTopicList extends Vue {
       })
 
       if (data && data.length > 0) {
-        this.desserts[index].dataBaseIp = data[0].dataBaseIp
-        this.desserts[index].dataBaseType = data[0].dataBaseType
-        this.desserts[index].url = data[0].url
-        this.desserts[index].header = data[0].header
-        this.desserts[index].flag = true
+        item.dataBaseIp = data[0].dataBaseIp
+        item.dataBaseType = data[0].dataBaseType
+        item.url = data[0].url
+        item.header = data[0].header
+        item.flag = true
       } else if (data.length === 0) {
         // 数据为空
-        this.desserts[index].flag = true
+        item.flag = true
       } else {
         // 查询失败
         this.$set(item, 'loading', false)
-        this.desserts[index].flag = false
+        item.flag = false
         return
       }
     }
@@ -620,7 +624,7 @@ export default class OfflineTopicList extends Vue {
     this.tDialogShow = 2
     this.otherObj = {}
     this.formProvide.title = '附加信息'
-    this.otherObj = { ...this.desserts[index] }
+    this.otherObj = { ...item }
   }
 
   // 删除
@@ -646,6 +650,12 @@ export default class OfflineTopicList extends Vue {
       )
       this.pageNum = 1
     }
+  }
+
+  // handelDeleteTopic
+  private handelDeleteTopic(item: { id: string; topicName: string; topicInterFaceType: number }) {
+    this.HConfirmShow = true
+    this.HConfirmItem = { ...item }
   }
 
   // 分页方法

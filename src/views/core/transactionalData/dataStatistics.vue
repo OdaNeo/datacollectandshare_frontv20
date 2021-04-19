@@ -55,7 +55,7 @@ import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
-import ContentDetails from './childComponent/contentDetails.vue'
+import ContentDetails from '@/components/f-content-details.vue'
 import HSearch from '@/components/h-search.vue'
 @Component({
   components: {

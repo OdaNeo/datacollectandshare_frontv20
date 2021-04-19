@@ -1,11 +1,12 @@
 <template>
-  <div id="videoDatePicker" class="mb-3">
+  <div id="videoDatePicker">
     <!-- 日期选择器 -->
     <v-row no-gutters style="display: flex; align-items: center; justify-content: center">
       <v-col cols="5">
         <v-menu
           ref="menu"
           v-model="menu"
+          :close-on-click="false"
           :close-on-content-click="false"
           transition="scale-transition"
           :return-value.sync="dates"
@@ -46,7 +47,7 @@
     <div class="weektime">
       <div class="weektime-main">
         <div class="weektime-hd">
-          <div class="weektime-hd-title">星期\时间</div>
+          <div class="weektime-hd-title">日期\时间</div>
           <div class="weektime-hd-con">
             <div class="weektime-hd-con-top">
               <div class="weektime-date-range">00:00 - 11:59</div>
@@ -68,11 +69,12 @@
               :key="item.id"
               @click="push2VideoListAvailable(item)"
             >
-              <v-icon color="primary darken-2" v-if="item.url.length > 0 && item.available" size="16">{{
+              <v-icon color="primary darken-4" v-if="item.url.length > 0 && item.available" size="16">{{
                 mdiCheck
               }}</v-icon>
             </div>
           </div>
+          <!-- loading -->
           <div v-else class="time-body" style="background-color: #f7f7f9"></div>
         </div>
       </div>
@@ -216,6 +218,9 @@ export default class VideoDatePicker extends Vue {
 }
 </script>
 <style scoped>
+#videoDatePicker {
+  height: 350px;
+}
 .weektime {
   width: 688px;
   font-size: 14px;
@@ -302,6 +307,6 @@ export default class VideoDatePicker extends Vue {
 
 .video-active {
   cursor: pointer;
-  background-color: #1890ff;
+  background-color: #82b1ff;
 }
 </style>

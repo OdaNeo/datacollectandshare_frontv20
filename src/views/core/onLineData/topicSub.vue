@@ -261,7 +261,7 @@ export default class TopicSub extends Vue {
 
     if (tab) {
       const { data }: returnType = bool
-        ? await this.h_request['httpGET']<object>('GET_SUBMODERATIONS_SELECTMYSUBTOPICBYTOPICID', params)
+        ? await this.h_request['httpGET']<object>('GET_SUBMODERATIONS_SELECTMYSUBTOPICBYTOPICIDORNAME', params)
         : await this.h_request['httpGET']<object>('GET_SUBMODERATIONS_SELECTMYSUBTOPICLIST', params)
       _data = data ? { ...data } : undefined
     } else {

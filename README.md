@@ -87,7 +87,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 - 新增接口后 需要在权限管理处进行配置 否则会报错 401 身份验证失败
 - 后端接口配置在 config.ts > VUE_APP_BASE_API
 - 页面左侧菜单栏顺序 配置在 src/router/index.ts > routes, 可同时修改一级列表和二级列表顺序
-- 隐藏页面 /private
+- 隐藏页面 /private，包含废弃页面
 - 线上查看 git 版本页面 /private/bulkCreateTopic
 - 页面跳转以及tab页切换会批量取消上一个页面的请求
 - npm run staging 打包成后端可配的页面，其余与生产环境相同，详见 .env.staging 文件
