@@ -151,7 +151,7 @@ export default class OfflineDataStatistics extends Vue {
 
     this.showECharts = true
     this.loading = false
-    if (data.list) {
+    if (data && data.list) {
       this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
       this.handleECharts1(data.list)
     } else {

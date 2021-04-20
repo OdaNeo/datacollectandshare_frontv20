@@ -82,7 +82,7 @@ import { paramsType, returnType, returnTypeData } from '@/type/http-request.type
 import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
-import FDialog from '@/components/f-dialog.vue'
+import FDialog from '@/components/h-dialog.vue'
 import TDialog from '@/components/t-dialog.vue'
 import { TopicAdd } from '@/type/topic-add.type'
 import util from '@/decorator/utilsDecorator'
@@ -92,7 +92,6 @@ import { FormObj } from '@/type/dialog-form.type'
 import CreateLogTopic from './childComponent/createLogTopic.vue'
 import LogDataDialog from './childComponent/logDataDialog.vue'
 import HConfirm from '@/components/h-confirm.vue'
-import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
 import { tableHeaderType } from '@/type/table.type'
 import { loggerParamType } from '@/type/logger.type'
@@ -123,7 +122,6 @@ export default class LogDataList extends Vue {
       }
     }
   })
-  private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示

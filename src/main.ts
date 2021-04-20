@@ -45,28 +45,6 @@ router.beforeEach(
             path: '/statePage/404'
           })
         }
-        // if(['/login'].indexOf(toPath)!==-1){
-        //   logout()
-        //   next();
-        // }else if (['/login'].indexOf(formPath) !== -1){
-        //   if (toName == "welcome") {
-        //       next();
-        //   }else{
-        //       next({
-        //           path:'/statePage/welcome'
-        //       });
-        //   }
-        // }else if (['/statePage/welcome'].indexOf(toPath) !== -1) {
-        //   next();
-        // }else{
-        //   if (toName == "page404") {
-        //       next();
-        //   } else {
-        //       next({
-        //           path: '/statePage/page404'
-        //       });
-        //   }
-        // }
       }
     } else {
       if (['/login'].indexOf(toPath) !== -1) {

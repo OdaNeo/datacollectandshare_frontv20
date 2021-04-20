@@ -28,10 +28,14 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
+          <!-- 数据结构 -->
           <template v-slot:buttons="{ item }">
             <v-btn :disabled="item.topicInterFaceType === 5" text color="primary" @click="dataStructureDetails(item)"
               >数据结构详情
             </v-btn>
+          </template>
+          <!-- 附加信息 -->
+          <template v-slot:details="{ item }">
             <v-btn
               text
               color="primary"
@@ -51,7 +55,9 @@
               <v-list dense>
                 <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
                   <v-btn
-                    :disabled="(i.tab && tab !== i.tab) || (i.faceType && item.topicInterFaceType !== i.faceType)"
+                    :disabled="
+                      (i.tab && !i.tab.includes(tab)) || (i.faceType && item.topicInterFaceType !== i.faceType)
+                    "
                     class="pa-0"
                     width="100%"
                     :color="i.color ? i.color : `primary`"
@@ -70,14 +76,14 @@
     <!-- 表单展示 -->
     <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
       <CreateDataBaseAcquisition v-if="fDialogShow === 1" />
-      <CreateServePull v-else-if="fDialogShow === 2" />
+      <CreateServePull v-else-if="fDialogShow === 2" @changeTopic="handleSelectTopic" />
       <PullFTP v-else-if="fDialogShow === 3" />
     </f-dialog>
 
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
-      <data-structure-dialog :rowObj="rowObj" v-if="tDialogShow === 1" />
-      <topic-ancillary-information-dialog :otherObj="otherObj" v-else-if="tDialogShow === 2" />
+      <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
+      <TopicAncillaryInformationDialog :otherObj="otherObj" v-else-if="tDialogShow === 2" />
     </t-dialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -92,7 +98,7 @@ import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
 import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
-import FDialog from '@/components/f-dialog.vue'
+import FDialog from '@/components/h-dialog.vue'
 import { TopicAdd } from '@/type/topic-add.type'
 import util from '@/decorator/utilsDecorator'
 import { dataType } from '@/enum/topic-datatype-enum'
@@ -105,7 +111,7 @@ import HSearch from '@/components/h-search.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInformationDialog.vue'
 import HTabs from '@/components/h-tabs.vue'
-import { mdiMagnify } from '@mdi/js'
+import { tableHeaderType } from '@/type/table.type'
 
 @Component({
   components: {
@@ -141,9 +147,8 @@ export default class OfflineTopicList extends Vue {
       }
     }
   })
-  private mdiMagnify = mdiMagnify
-  private tab = null
-  private items = ['所有主题', '我的主题']
+  private tab = 0
+  private items = ['所有任务', '我的任务', '主题列表']
   private fDialogFlag = false // 弹窗展示
   private tDialogFlag = false // 表格展示
 
@@ -153,8 +158,9 @@ export default class OfflineTopicList extends Vue {
   private rowObj: object = {}
   private otherObj: object = {}
 
-  // private sheetObj: any
   private loading = true
+
+  private activeTopicIDs = [`新建主题`, '123', '1231', '23423', '34534'] // 第0项 为新建主题，其余异步获取
 
   private HConfirmShow = false
   private HConfirmItem = {
@@ -171,62 +177,76 @@ export default class OfflineTopicList extends Vue {
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
-  private headers = [
-    // 表头内容 所有主题
-    {
-      text: '主题ID',
-      align: 'center',
-      value: 'id'
-    },
-    {
-      text: '主题名称',
-      align: 'center',
-      value: 'topicName'
-    },
-    {
-      text: '所属用户',
-      align: 'center',
-      value: 'userName'
-    },
-    {
-      text: '接口类型',
-      align: 'center',
-      value: 'topicInterFaceType',
-      format: (val: number) => {
-        return topicInterFaceType[val]
+  private get headers(): Array<tableHeaderType> {
+    return [
+      // 表头内容 所有主题
+      {
+        text: '主题ID',
+        align: 'center',
+        value: 'id'
+      },
+      {
+        text: '主题名称',
+        align: 'center',
+        value: 'topicName'
+      },
+      {
+        text: '所属用户',
+        align: 'center',
+        value: 'userName'
+      },
+      {
+        text: '接口类型',
+        align: 'center',
+        value: 'topicInterFaceType',
+        format: (val: number) => {
+          return topicInterFaceType[val]
+        }
+      },
+      {
+        text: '数据结构',
+        align: 'center',
+        slot: 'buttons'
+      },
+      {
+        text: '附加信息',
+        align: 'center',
+        slot: 'details',
+        isHide: this.tab === 2
+      },
+      {
+        text: '操作',
+        align: 'center',
+        slot: 'buttons2'
       }
-    },
-    {
-      text: '数据结构',
-      align: 'center',
-      slot: 'buttons'
-    },
-    {
-      text: '操作',
-      align: 'center',
-      slot: 'buttons2'
-    }
-  ]
+    ]
+  }
 
   // 操作下拉框
   private buttonItems = [
     {
-      text: `增加字段`,
-      tab: 1,
+      text: `创建任务`,
+      tab: [2],
       faceType: 3,
-      handle: this.addItems
+      handle: this.addTask
     },
+    // {
+    //   text: `增加字段`,
+    //   tab: [1],
+    //   faceType: 3,
+    //   handle: this.addItems
+    // },
     {
       text: `启动`,
-      tab: 1
+      tab: [1]
     },
     {
       text: `停止`,
-      tab: 1
+      tab: [1]
     },
     {
       text: '删除',
-      tab: 1,
+      tab: [1],
       color: `error`,
       handle: this.handelDeleteTopic
     }
@@ -308,20 +328,24 @@ export default class OfflineTopicList extends Vue {
           pageSize: this.pageSize,
           pageNum: 1
         },
-        !!this.tab
+        this.tab
       )
       this.pageNum = 1
       return Promise.resolve(success)
     }
   }
 
-  // 服务主动拉取
+  // 服务主动拉取 新建任务 和 修改
   private createServePull(item?: any) {
-    this.fDialogFlag = true
-    this.fDialogShow = 2
     this.formProvide.btnName = ['立即提交']
     this.formProvide.title = '服务主动拉取'
     this.formProvide.methodName = 'addServePull'
+    this.fDialogFlag = true
+    this.fDialogShow = 2
+    const _obj = {
+      activeTopicIDs: [...this.activeTopicIDs],
+      id: this.activeTopicIDs[0]
+    }
 
     if (item) {
       const obj1: any = JSON.parse(item.dsAnnotation)
@@ -337,6 +361,7 @@ export default class OfflineTopicList extends Vue {
       }
       const _header = JSON.parse(item.header)
       this.formProvide.formObj = {
+        ..._obj,
         canNotEdit: true,
         topicName: item.topicName,
         id: item.id,
@@ -361,6 +386,7 @@ export default class OfflineTopicList extends Vue {
       }
     } else {
       this.formProvide.formObj = {
+        ..._obj,
         AuthorizationObj: [
           {
             key: '',
@@ -428,7 +454,7 @@ export default class OfflineTopicList extends Vue {
           pageSize: this.pageSize,
           pageNum: 1
         },
-        !!this.tab
+        this.tab
       )
       this.pageNum = 1
       return Promise.resolve(true)
@@ -493,7 +519,7 @@ export default class OfflineTopicList extends Vue {
           pageSize: this.pageSize,
           pageNum: 1
         },
-        !!this.tab
+        this.tab
       )
       this.pageNum = 1
       return Promise.resolve(success)
@@ -509,21 +535,54 @@ export default class OfflineTopicList extends Vue {
       // 服务端主动拉取
       this.createServePull(item)
     }
-    //
+  }
+
+  // 创建任务
+  private addTask(item: any) {
+    this.createServePull()
+    this.handleSelectTopic(item.id)
+  }
+
+  // 选择主题回显
+  private handleSelectTopic(val: string) {
+    // 非新建
+    if (val && val !== this.activeTopicIDs[0]) {
+      this.formProvide.formObj.id = val
+      this.formProvide.formObj.useSelectID = true
+      this.formProvide.formObj.topicName = val
+      this.formProvide.formObj.topicList = [
+        {
+          key: '123',
+          description: '1',
+          type: '1',
+          disabled: true
+        }
+      ]
+    } else {
+      // 新建
+      this.formProvide.formObj.id = val
+      this.formProvide.formObj.useSelectID = false
+      this.formProvide.formObj.topicName = ''
+      this.formProvide.formObj.topicList = [
+        {
+          key: '',
+          description: '',
+          type: '',
+          disabled: false
+        }
+      ]
+    }
   }
 
   // 查询通用调用方法 结构化数据
-  private async searchMethod(bool: boolean, params: paramsType, tab?: boolean) {
-    // console.log(bool)
-    // console.log(params)
-    // console.log(tab)
+  private async searchMethod(bool: boolean, params: paramsType, tab: number) {
     this.loading = true
     let _data: returnTypeData
 
     params.dataType = dataType['结构化']
     // params.faceTypes = `${topicInterFaceType['数据库采集']},${topicInterFaceType['服务主动拉取']},${topicInterFaceType['拉取FTP']}`
     params.faceTypes = `${topicInterFaceType['服务主动拉取']},${topicInterFaceType['拉取FTP']}`
-    if (tab) {
+    if (tab === 1) {
       const { data }: returnType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICS', params)
@@ -555,7 +614,7 @@ export default class OfflineTopicList extends Vue {
           pageNum: 1,
           pageSize: this.pageSize
         },
-        !!this.tab
+        this.tab
       )
     } else {
       this.searchMethod(
@@ -565,7 +624,7 @@ export default class OfflineTopicList extends Vue {
           pageNum: 1,
           pageSize: this.pageSize
         },
-        !!this.tab
+        this.tab
       )
     }
     this.pageNum = 1
@@ -579,7 +638,7 @@ export default class OfflineTopicList extends Vue {
         pageSize: this.pageSize,
         pageNum: 1
       },
-      !!tab
+      tab
     )
     this.pageNum = 1
   }
@@ -646,7 +705,7 @@ export default class OfflineTopicList extends Vue {
           pageSize: this.pageSize,
           pageNum: 1
         },
-        true
+        this.tab
       )
       this.pageNum = 1
     }
@@ -667,7 +726,7 @@ export default class OfflineTopicList extends Vue {
         pageSize: this.pageSize,
         pageNum: this.pageNum
       },
-      !!this.tab
+      this.tab
     )
   }
 }

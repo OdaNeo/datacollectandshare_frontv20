@@ -1,16 +1,16 @@
 <template>
-  <v-col cols="12" class="HTopicList d-flex">
+  <v-col cols="12" class="HColumnList d-flex">
     <label class="label mr-2"><span v-if="required" class="require-span">*</span>{{ description }}</label>
     <div class="ml-4">
       <v-row
         class="d-flex justify-space-between"
         no-gutters
-        v-for="(item, index) in formProvide.formObj['topicList']"
+        v-for="(item, index) in formProvide.formObj['column']"
         :key="item.id"
       >
         <v-col class="mr-2">
           <v-text-field
-            v-model="item.key"
+            v-model="item.field"
             dense
             outlined
             :disabled="item.disabled"
@@ -20,36 +20,34 @@
           ></v-text-field>
         </v-col>
         <v-col class="mr-2">
-          <v-text-field
-            v-model="item.description"
+          <v-select
+            v-model="item.type"
+            :items="typeItems"
             dense
-            :disabled="item.disabled"
             outlined
-            label="描述"
-            :rules="[...h_validator.noEmpty('描述')]"
+            :disabled="item.disabled"
+            label="类型"
+            :rules="[...h_validator.noEmpty('类型')]"
             height="35"
-          ></v-text-field>
+          ></v-select>
         </v-col>
         <v-col>
           <v-select
-            v-model="item.type"
+            v-model="item.iskey"
             dense
             outlined
+            label="是否为key"
             :disabled="item.disabled"
-            label="字段类型"
-            :rules="[...h_validator.noEmpty('字段类型')]"
+            :rules="[...h_validator.noEmpty('是否为key')]"
             height="35"
-            :items="items"
+            :items="iskeyItems"
           ></v-select>
         </v-col>
         <!-- 按钮 -->
         <v-col class="d-flex justify-space-around flex-grow-0" style="min-width: 60px">
+          <!-- 加 -->
           <v-btn
-            v-if="
-              canAddTopicList
-                ? formProvide.formObj['topicList'].length === index + 1
-                : formProvide.formObj['topicList'].length === index + 1 && !item.disabled
-            "
+            v-if="!item.disabled && formProvide.formObj['column'].length === index + 1"
             fab
             dark
             depressed
@@ -61,8 +59,9 @@
           >
             <v-icon dark>{{ mdiPlus }}</v-icon>
           </v-btn>
+          <!-- 减 -->
           <v-btn
-            v-if="!item.disabled && formProvide.formObj['topicList'].length > 1"
+            v-if="!item.disabled && formProvide.formObj['column'].length > 1"
             fab
             dark
             depressed
@@ -87,11 +86,13 @@ import { mdiPlus, mdiMinus } from '@mdi/js'
 // required 会在 description 前添加 * 标识
 @Component({})
 @Validator(['noEmpty', 'topicNameFormatter'])
-export default class HTopicList extends Vue {
+export default class HColumnList extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   @Prop({ default: true }) private required!: boolean
   @Prop() private description!: string
-  @Prop({ default: true }) private canAddTopicList!: boolean
+
+  private typeItems = ['boolean', 'short', 'int', 'long', 'float', 'double', 'string']
+  private iskeyItems = ['true', 'false']
 
   private mdiPlus = mdiPlus
   private mdiMinus = mdiMinus
@@ -105,34 +106,35 @@ export default class HTopicList extends Vue {
   ]
   // add
   private add() {
-    this.formProvide.formObj['topicList'].push({
-      ['key']: '',
-      ['description']: '',
-      ['type']: '',
+    this.formProvide.formObj['column'].push({
+      field: '',
+      type: 'string',
+      iskey: 'false',
       disabled: false
     })
   }
+
   // minus
   private minus(index: number, bo: boolean) {
     if (bo) {
       // disable 不能修改
       return
     } else {
-      this.formProvide.formObj['topicList'].splice(index, 1)
+      this.formProvide.formObj['column'].splice(index, 1)
     }
   }
 
   // validation topicList no-repeat-key
-  @Watch('formProvide.formObj.topicList', { deep: true })
-  private handleKeyNoRepeat(val: Array<{ key: string }>) {
+  @Watch('formProvide.formObj.column', { deep: true })
+  private handleKeyNoRepeat(val: Array<{ field: string }>) {
     let _L: Array<string> = [] // 全部
     let _l: Array<string> = [] // 不重复
     let _r: Array<string> = [] // 重复项
 
     val.forEach(item => {
-      if (item.key) {
-        _L.push(item.key)
-        _l.includes(item.key) ? _r.push(item.key) : _l.push(item.key)
+      if (item.field) {
+        _L.push(item.field)
+        _l.includes(item.field) ? _r.push(item.field) : _l.push(item.field)
       }
     })
 

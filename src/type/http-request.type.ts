@@ -14,6 +14,7 @@ export type paramsType = {
   num?: number
   createTime?: number
   serverName?: string
+  taskId?: string
 }
 
 export type returnTypeData = {

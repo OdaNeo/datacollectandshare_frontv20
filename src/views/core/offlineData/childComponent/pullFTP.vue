@@ -41,7 +41,7 @@ import { Component, Inject, Vue } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import HSimpleInput from '@/components/h-simple-input.vue'
-import HDoubleInput from '@/components/f-double-input.vue'
+import HDoubleInput from '@/components/h-double-input.vue'
 @Component({
   components: {
     HSimpleInput,

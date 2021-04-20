@@ -51,7 +51,7 @@ import {
 import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
 import UserDialog from './childComponent/userDialog.vue'
-import FDialog from '@/components/f-dialog.vue'
+import FDialog from '@/components/h-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import HTable from '@/components/h-table.vue'
 import HSearch from '@/components/h-search.vue'

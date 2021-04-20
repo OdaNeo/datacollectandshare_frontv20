@@ -20,7 +20,7 @@
       ></v-progress-linear>
       <!-- 主题 -->
       <v-card-text class="pb-0 pt-4 overflow">
-        <v-container class="pb-0 pt-5">
+        <v-container class="pb-0 pt-4">
           <v-form ref="userDialogForm" id="userDialogForm" :disabled="loading" v-model="userDialogValid">
             <slot />
           </v-form>

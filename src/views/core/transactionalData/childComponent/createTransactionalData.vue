@@ -1,29 +1,39 @@
 <template>
   <div id="CreateTransactionalData">
-    <!-- 后退 -->
-    <div class="step-container">
-      <v-icon :disabled="step <= 1" class="step-icon" color="primary" @click="prevStep">{{ mdiChevronLeft }}</v-icon>
-      <!-- stepTitle -->
-      <span class="step-title">{{ stepTitle }}</span>
-      <!-- 前进 -->
-      <v-icon :disabled="step >= 3" class="step-icon" color="primary" @click="nextStep">{{ mdiChevronRight }}</v-icon>
-    </div>
+    <!-- 步骤条 -->
+    <HStep :step="step" :stepTitle="stepTitle" :MAX="4" @nextStep="nextStep" @prevStep="prevStep" />
 
     <v-window v-model="step">
+      <!-- 1 -->
       <v-window-item :value="1" class="ml-6" eager>
         <!-- 主题名称 -->
         <v-row no-gutters>
-          <!-- 1 -->
+          <!-- 选择主题ID -->
+          <HSelect
+            class="mt-6"
+            v-model="formProvide.formObj.id"
+            :description="`选择主题ID`"
+            :items="formProvide.formObj.activeTopicIDs"
+            @input="$emit('changeTopic', $event)"
+          />
 
           <HSimpleInput
-            class="mt-5"
             v-model="formProvide.formObj['topicName']"
             :disabled="formProvide.formObj.canNotEdit"
             :description="`主题名称`"
             :rules="[...h_validator.noEmpty('主题名称')]"
           />
+
+          <HColumnList :description="`主题结构数据`" />
+        </v-row>
+      </v-window-item>
+
+      <!-- 2 -->
+      <v-window-item :value="2" class="ml-6" eager>
+        <v-row no-gutters>
           <!-- cron -->
           <HSlider
+            class="mt-6"
             :description="`每日运行周期`"
             :polyfill="`时`"
             :polyfillWidth="35"
@@ -31,29 +41,22 @@
             max="23"
             v-model="formProvide.formObj['cron']"
           />
+        </v-row>
+      </v-window-item>
 
+      <!-- 3 -->
+      <v-window-item :value="3" class="ml-6" eager>
+        <v-row no-gutters>
           <HSelect
+            class="mt-6"
             :description="`源数据库类型`"
             v-model="formProvide.formObj['reader_database']"
             :rules="[...h_validator.noEmpty('源数据库类型')]"
             :items="readerDatabaseItems"
           />
 
-          <HSelect
-            :description="`目标数据库类型`"
-            :fontSize="14"
-            v-model="formProvide.formObj['writer_database']"
-            :rules="[...h_validator.noEmpty('目标数据库类型')]"
-            :items="writerDatabaseItems"
-          />
-        </v-row>
-      </v-window-item>
-
-      <v-window-item :value="2" class="ml-6" eager>
-        <v-row no-gutters>
-          <!-- 2 -->
           <!-- 自增属性查询脚本 -->
-          <v-col cols="12" class="d-flex mt-6">
+          <v-col cols="12" class="d-flex">
             <label class="label mr-2">自增属性</label>
             <v-text-field
               outlined
@@ -111,111 +114,22 @@
               class="ml-2 mr-15"
             ></v-text-field>
           </v-col>
-          <!-- action panel -->
-          <!-- 表字段 -->
-          <v-col cols="12" class="d-flex mb-5">
-            <label class="panels-label" @click="openPanels === 0 ? (openPanels = -1) : (openPanels = 0)">
-              <span class="require-span">*</span>
-              <span>表字段</span>
-              <v-icon
-                color="primary"
-                class="panels-icon"
-                style="transition: all 0.5s"
-                :class="openPanels === 0 ? `panels-icon-action` : ''"
-              >
-                {{ mdiChevronUp }}
-              </v-icon>
-            </label>
-          </v-col>
-          <!-- 表字段 panel -->
-          <v-expansion-panels accordion flat :value="openPanels">
-            <v-expansion-panel>
-              <v-expansion-panel-content eager>
-                <v-row no-gutters>
-                  <v-col cols="12" class="d-flex">
-                    <div class="ml-4">
-                      <v-row
-                        class="d-flex justify-space-between"
-                        no-gutters
-                        v-for="(item, index) in formProvide.formObj['column']"
-                        :key="item.id"
-                      >
-                        <v-col class="d-flex justify-space-around flex-grow-0 mr-2 px-7" style="min-width: 120px">
-                          <v-btn
-                            v-if="formProvide.formObj['column'].length === index + 1"
-                            fab
-                            dark
-                            depressed
-                            max-width="22"
-                            max-height="22"
-                            color="primary"
-                            style="margin-top: 7px"
-                            @click.stop="add"
-                          >
-                            <v-icon dark>{{ mdiPlus }}</v-icon>
-                          </v-btn>
-                          <v-btn
-                            v-if="formProvide.formObj['column'].length > 1"
-                            fab
-                            dark
-                            depressed
-                            max-width="22"
-                            max-height="22"
-                            color="primary"
-                            style="margin-top: 7px"
-                            @click.stop="minus(index)"
-                          >
-                            <v-icon dark>{{ mdiMinus }}</v-icon>
-                          </v-btn>
-                        </v-col>
-                        <v-col class="mr-2">
-                          <v-text-field
-                            v-model="item.field"
-                            dense
-                            outlined
-                            label="字段名"
-                            :rules="[...h_validator.noEmpty('字段名'), ...noRepeatKey]"
-                            height="35"
-                          ></v-text-field>
-                        </v-col>
-                        <v-col class="mr-2">
-                          <v-select
-                            v-model="item.type"
-                            :items="typeItems"
-                            dense
-                            outlined
-                            label="类型"
-                            :rules="[...h_validator.noEmpty('类型')]"
-                            height="35"
-                          ></v-select>
-                        </v-col>
-                        <v-col class="mr-15">
-                          <v-select
-                            v-model="item.iskey"
-                            dense
-                            outlined
-                            label="是否为key"
-                            :rules="[...h_validator.noEmpty('是否为key')]"
-                            height="35"
-                            :items="iskeyItems"
-                          ></v-select>
-                        </v-col>
-                      </v-row>
-                    </div>
-                  </v-col>
-                </v-row>
-              </v-expansion-panel-content>
-            </v-expansion-panel>
-          </v-expansion-panels>
         </v-row>
       </v-window-item>
 
-      <v-window-item :value="3" class="ml-6" eager>
+      <v-window-item :value="4" class="ml-6" eager>
         <v-row no-gutters>
-          <!-- 3 -->
+          <!-- 4 -->
           <!-- 写要求  -->
-          <HSimpleInput
+          <HSelect
             class="mt-6"
+            :description="`目标数据库类型`"
+            v-model="formProvide.formObj['writer_database']"
+            :rules="[...h_validator.noEmpty('目标数据库类型')]"
+            :items="writerDatabaseItems"
+          />
+
+          <HSimpleInput
             v-model="formProvide.formObj['writer_zookeeper_url']"
             :description="`zookeeper地址`"
             :rules="[...h_validator.noEmpty('zookeeper地址')]"
@@ -232,65 +146,40 @@
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue, Inject, Watch } from 'vue-property-decorator'
+import { Component, Vue, Inject } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
-import { mdiChevronRight, mdiChevronLeft, mdiPlus, mdiMinus, mdiChevronUp } from '@mdi/js'
+import HStep from '@/components/h-step.vue'
 import HSimpleInput from '@/components/h-simple-input.vue'
 import HSelect from '@/components/h-select.vue'
 import HSlider from '@/components/h-slider.vue'
+import HColumnList from '@/components/h-column-list.vue'
 @Component({
   components: {
     HSimpleInput,
     HSelect,
-    HSlider
+    HSlider,
+    HColumnList,
+    HStep
   }
 })
 @Validator(['noEmpty'])
 export default class CreateTransactionalData extends Vue {
   @Inject() private readonly formProvide!: H_Vue
-  private mdiChevronRight = mdiChevronRight
-  private mdiChevronLeft = mdiChevronLeft
-  private mdiPlus = mdiPlus
-  private mdiMinus = mdiMinus
-  private mdiChevronUp = mdiChevronUp
-
-  private noRepeatKey: string[] = []
-  private typeItems = ['boolean', 'short', 'int', 'long', 'float', 'double', 'string']
-  private iskeyItems = ['true', 'false']
+  // 新建主题
+  // 选择主题
+  // 新建任务  主题 + 任务自己添加
   private readerDatabaseItems = ['mysql']
   private writerDatabaseItems = ['hbase']
 
   private step = 1
-  private stepTitle = ''
+  private stepTitle = [
+    '主题结构数据信息',
+    '任务属性信息——运行周期',
+    '任务属性信息——源数据库',
+    '任务属性信息——目标数据库'
+  ]
   // 控制打开面板
-  private openPanels = -1
-
-  // private get cronItems() {
-  //   const _arr = []
-  //   for (let i = 0; i < 24; i++) {
-  //     _arr.push(`${i}`)
-  //   }
-  //   return _arr
-  // }
-
-  // add
-  private add() {
-    this.formProvide.formObj['column'].push({
-      ['field']: '',
-      ['type']: 'string',
-      ['iskey']: 'false'
-    })
-  }
-  // minus
-  private minus(index: number) {
-    // if (bo) {
-    //   // disable 不能修改
-    //   return
-    // } else {
-    this.formProvide.formObj['column'].splice(index, 1)
-    // }
-  }
 
   private prevStep() {
     if (this.step < 1) {
@@ -302,94 +191,12 @@ export default class CreateTransactionalData extends Vue {
   }
 
   private nextStep() {
-    if (this.step > 3) {
-      this.step = 3
+    if (this.step > 4) {
+      this.step = 4
       return
     } else {
       this.step++
     }
   }
-
-  // validation topicList no-repeat-key
-  @Watch('formProvide.formObj.column', { deep: true })
-  private handleKeyNoRepeat(val: Array<{ field: string }>) {
-    let _L: Array<string> = [] // 全部
-    let _l: Array<string> = [] // 不重复
-    let _r: Array<string> = [] // 重复项
-
-    val.forEach(item => {
-      if (item.field) {
-        _L.push(item.field)
-        _l.includes(item.field) ? _r.push(item.field) : _l.push(item.field)
-      }
-    })
-
-    if (_L.length > _l.length) {
-      // _r去重
-      this.noRepeatKey = [`字段名"${Array.from(new Set(_r)).join(',')}"不能重复`]
-    } else {
-      this.noRepeatKey = []
-    }
-  }
-
-  @Watch('step', { immediate: true })
-  private changeTitle(n: number) {
-    switch (n) {
-      case 1:
-        this.stepTitle = '1/3 基本信息'
-        return
-      case 2:
-        this.stepTitle = '2/3 源数据库信息'
-        return
-      case 3:
-        this.stepTitle = '3/3 目标数据库信息'
-        return
-      default:
-        this.stepTitle = '基本信息'
-        return
-    }
-  }
 }
 </script>
-<style scoped>
-#CreateTransactionalData >>> .v-expansion-panel--active > .v-expansion-panel-header {
-  min-height: 30px;
-}
-#CreateTransactionalData >>> .v-expansion-panel-content__wrap {
-  padding: 0px !important;
-}
-.panels-icon {
-  height: 32px;
-  width: 60px;
-}
-.panels-icon-action {
-  transform: rotate(180deg);
-}
-.panels-label {
-  min-width: 182px;
-  display: flex;
-  justify-content: flex-end;
-  color: rgba(0, 0, 0, 0.87);
-  font-size: 0.9rem;
-  line-height: 35px;
-  cursor: pointer;
-}
-.step-container {
-  width: 100%;
-  height: 30px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-.step-icon {
-  width: 30px;
-  height: 30px;
-  cursor: pointer;
-}
-.step-title {
-  display: inline-block;
-  width: 250px;
-  text-align: center;
-  font-size: 16px;
-}
-</style>

@@ -99,11 +99,10 @@ import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
 import { dataType } from '@/enum/topic-datatype-enum'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
-import FDialog from '@/components/f-dialog.vue'
+import FDialog from '@/components/h-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicTable } from '@/type/topic.type'
 import { tableHeaderType } from '@/type/table.type'
-import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
 import TDialog from '@/components/t-dialog.vue'
 import VideoDetail from './childComponent/videoDetail.vue'
@@ -144,7 +143,6 @@ export default class VideoDataList extends Vue {
       }
     }
   })
-  private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
   private dialogFlag = false // 弹窗展示

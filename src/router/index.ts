@@ -544,6 +544,15 @@ const routes: Array<RouteConfig> = [
           title: '实时监控',
           access: false
         }
+      },
+      {
+        path: 'dataList2',
+        component: () => import('@/views/private/dataList2.vue'),
+        name: '监控日志',
+        meta: {
+          title: '监控日志',
+          access: false
+        }
       }
     ]
   }

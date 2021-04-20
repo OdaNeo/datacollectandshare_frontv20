@@ -105,6 +105,7 @@
       <router-link to="./dataStatistics">数据统计</router-link>
       <router-link to="./bulkCreateTopic">批量创建主题</router-link>
       <router-link to="./realTime">实时监控</router-link>
+      <router-link to="./dataList2">监控日志</router-link>
     </div>
   </div>
 </template>

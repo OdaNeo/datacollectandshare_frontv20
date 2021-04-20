@@ -99,7 +99,7 @@ import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
 import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
-import FDialog from '@/components/f-dialog.vue'
+import FDialog from '@/components/h-dialog.vue'
 import { TopicAdd } from '@/type/topic-add.type'
 import util from '@/decorator/utilsDecorator'
 import { dataType } from '@/enum/topic-datatype-enum'
@@ -114,7 +114,6 @@ import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInfo
 import UserSubNameList from './childComponent/userSubNameList.vue'
 import HSearch from '@/components/h-search.vue'
 import { onlineDataParamType } from '@/type/online-data.type'
-import { mdiMagnify } from '@mdi/js'
 import HTabs from '@/components/h-tabs.vue'
 
 @Component({
@@ -157,7 +156,6 @@ export default class OnlineDataTopicList extends Vue {
     }
   })
 
-  private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有主题', '我的主题']
 

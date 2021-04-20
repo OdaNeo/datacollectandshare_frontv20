@@ -68,7 +68,7 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import { returnType, returnTypeData } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import HConfirm from '@/components/h-confirm.vue'
-import FDialog from '@/components/f-dialog.vue'
+import FDialog from '@/components/h-dialog.vue'
 import TDialog from '@/components/t-dialog.vue'
 import CreateCmdDialog from './childComponent/createCmdDialog.vue'
 import { CmdAdd, CmdForm } from '@/type/cmd-add.type'
@@ -79,7 +79,6 @@ import { FormObj } from '@/type/dialog-form.type'
 import CmdInformationDialog from './childComponent/cmdInformationDialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import { topicTable } from '@/type/topic.type'
-import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
 import { tableHeaderType } from '@/type/table.type'
 import HTabs from '@/components/h-tabs.vue'
@@ -110,7 +109,6 @@ export default class CmdList extends Vue {
       }
     }
   })
-  mdiMagnify = mdiMagnify
   private tab = null
   private items = ['所有命令', '我的命令']
   private dialogFlag = false // 弹窗展示
