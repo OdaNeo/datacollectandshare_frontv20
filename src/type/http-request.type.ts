@@ -8,13 +8,15 @@ export type paramsType = {
   faceTypes?: any
   userName?: string
   id?: string
-  status?: number
+  status?: number | string
   topicId?: string
   topicID?: string
   num?: number
   createTime?: number
   serverName?: string
   taskId?: string
+  startTime?: number
+  endTime?: number
 }
 
 export type returnTypeData = {

@@ -21,7 +21,7 @@ if (process.env.VUE_APP_NINJA_CAT && !sessionStorage.getItem('staging')) {
 
 export const VUE_APP_BASE_API = process.env.VUE_APP_NINJA_CAT
   ? sessionStorage.getItem('staging') || undefined
-  : 'http://172.51.216.106:49090'
+  : 'http://192.168.56.180:8080'
 
 export const BASE_REQUEST_TIME_OUT = 60000
 
@@ -30,6 +30,8 @@ export const PROJECT_TITLE = process.env.VUE_APP_NINJA_CAT
   : process.env.NODE_ENV === 'development'
   ? `开发环境IP${VUE_APP_BASE_API}`
   : `交控科技天枢平台数据采集管理中心`
+
+window.document.title = PROJECT_TITLE
 
 // 引入 packageJSON 文件
 // eslint-disable-next-line

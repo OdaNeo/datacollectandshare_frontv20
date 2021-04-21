@@ -17,7 +17,7 @@
     </h-table>
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
-      <SqlDetails slot="default" :str="str" />
+      <HSimpleDetails slot="default" :str="str" />
       <!-- button -->
       <v-btn
         slot="button"
@@ -41,13 +41,13 @@ import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
-import SqlDetails from './childComponent/sqlDetails.vue'
+import HSimpleDetails from '@/components/h-simple-details.vue'
 
 @Component({
   components: {
     HTable,
     TDialog,
-    SqlDetails
+    HSimpleDetails
   }
 })
 @http

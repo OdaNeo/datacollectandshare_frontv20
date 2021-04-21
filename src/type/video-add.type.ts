@@ -1,10 +1,20 @@
 export type VideoTopicAdd = {
   topicName: string
-  // serverUrl: string
   address: string
   sourceUrl: string
-  // m3u8Url: string
-  // bucketName: string
+  videoDescribe: string
+  videoKeyword: { keyword: string }[]
+  canNotEdit: boolean
+  id: number
+}
+export type VideoTopicTable = {
+  topicName: string
+  address: string
+  sourceUrl: string
+  videoDescribe: string
+  videoKeyword: string
+  canNotEdit: boolean
+  id: number
 }
 export type VideoTimeRange = {
   startTime: string

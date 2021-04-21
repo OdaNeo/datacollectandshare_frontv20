@@ -78,8 +78,12 @@ input:-internal-autofill-previewed, input:-internal-autofill-selected {
 
 /* reset v-data-table*/
 
+.v-data-table>.v-data-table__wrapper>table>tbody>tr>td, .v-data-table>.v-data-table__wrapper>table>thead>tr>td, .v-data-table>.v-data-table__wrapper>table>tfoot>tr>td {
+    font-size: 0.85rem !important;
+}
+
 .v-data-table>.v-data-table__wrapper>table>tbody>tr>th, .v-data-table>.v-data-table__wrapper>table>thead>tr>th, .v-data-table>.v-data-table__wrapper>table>tfoot>tr>th {
-    font-size: 0.875rem !important;
+    font-size: 0.85rem !important;
     font-weight: 600 !important;
 }
 
@@ -90,7 +94,7 @@ input:-internal-autofill-previewed, input:-internal-autofill-selected {
 }
 
 .v-list-group__items>.v-list-item {
-    padding-left: 46px !important;
+    padding-left: 47px !important;
 }
 
 .v-input__slot {

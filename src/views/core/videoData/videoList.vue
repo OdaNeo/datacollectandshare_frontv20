@@ -10,15 +10,12 @@
         @clear="tabChange(tab)"
       />
       <v-col>
-        <v-btn color="primary" depressed dark small @click.stop="createTopicVideo">创建视频</v-btn>
+        <v-btn color="primary" depressed dark small @click.stop="createTopicVideo()">创建视频</v-btn>
       </v-col>
     </v-row>
     <!-- tab -->
     <HTabs v-model="tab" :items="items" @change="tabChange" />
 
-    <!-- <v-tabs v-model="tab" @change="tabChange">
-      <v-tab v-for="item in items" :key="item">{{ item }}</v-tab>
-    </v-tabs> -->
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="item in items" :key="item">
         <h-table
@@ -29,6 +26,10 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
+          <!-- 当前状态 -->
+          <template v-slot:videoState="{ item }">
+            <v-btn text color="primary">{{ videoState[item.videoState] }}</v-btn>
+          </template>
           <!-- 显示详情 -->
           <template v-slot:buttons="{ item }">
             <v-btn text color="primary" @click="showVideoDetail(item)">视频详情信息</v-btn>
@@ -47,7 +48,9 @@
               <v-list dense>
                 <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
                   <v-btn
-                    :disabled="(i.tab && tab !== i.tab) || (i.status && item.status === i.status)"
+                    :disabled="
+                      (i.tab && tab !== i.tab) || (i.videoState && Number(item.videoState) !== Number(i.videoState))
+                    "
                     class="pa-0"
                     width="100%"
                     :color="i.color ? i.color : `primary`"
@@ -94,7 +97,7 @@ import HConfirm from '@/components/h-confirm.vue'
 import CreateVideoTopicDialog from './childComponent/createVideoTopicDialog.vue'
 import SetDateRange from './childComponent/setDateRange.vue'
 import VideoPopup from './childComponent/videoPopup.vue'
-import { VideoTimeRange, VideoTopicAdd } from '@/type/video-add.type'
+import { VideoTimeRange, VideoTopicAdd, VideoTopicTable } from '@/type/video-add.type'
 import util from '@/decorator/utilsDecorator'
 import Enum from '@/decorator/enumDecorator'
 import { dataType } from '@/enum/topic-datatype-enum'
@@ -108,6 +111,7 @@ import TDialog from '@/components/t-dialog.vue'
 import VideoDetail from './childComponent/videoDetail.vue'
 import HTabs from '@/components/h-tabs.vue'
 import VideoDatePicker from './childComponent/videoDatePicker.vue'
+import { videoState } from '@/enum/state-enum'
 
 @Component({
   components: {
@@ -156,6 +160,7 @@ export default class VideoDataList extends Vue {
     topicInterFaceType: 0
   }
   private showVideoPopup = false
+  private videoState = videoState
 
   private desserts: Array<topicTable> = [] // 数据列表
   private dessertsObj: Partial<Array<topicTable>> = [] // 表格弹框
@@ -184,6 +189,21 @@ export default class VideoDataList extends Vue {
       value: 'userName'
     },
     {
+      text: '当前状态',
+      align: 'center',
+      slot: 'videoState'
+    },
+    {
+      text: '描述',
+      align: 'center',
+      value: 'videoDescribe'
+    },
+    {
+      text: '关键字',
+      align: 'center',
+      value: 'videoKeyword'
+    },
+    {
       text: '详情信息',
       align: 'center',
       slot: 'buttons'
@@ -203,20 +223,25 @@ export default class VideoDataList extends Vue {
   private buttonItems = [
     {
       text: `选择视频`,
-      handle: this.showVideoDatePicker,
-      status: 1
+      handle: this.showVideoDatePicker
     },
-    // {
-    //   text: `搜索视频`,
-    //   handle: this.showDateRangePopup
-    // },
+
+    {
+      text: `修改`,
+      tab: 1,
+      handle: this.createTopicVideo
+    },
     {
       text: `启动`,
-      tab: 1
+      tab: 1,
+      videoState: `0`,
+      handle: this.startVideo
     },
     {
       text: `停止`,
-      tab: 1
+      tab: 1,
+      videoState: `1`,
+      handle: this.stopVideo
     },
     {
       text: '删除',
@@ -224,6 +249,11 @@ export default class VideoDataList extends Vue {
       color: `error`,
       handle: this.handelDeleteTopic
     }
+    // // 搜索视频对应旧版查找视频
+    // {
+    //   text: `搜索视频`,
+    //   handle: this.showDateRangePopup
+    // },
   ]
 
   // 查询到视频数量（不包含空视频）
@@ -232,15 +262,52 @@ export default class VideoDataList extends Vue {
   private curItem: { id?: number; bucketName?: string } = {}
 
   private videoCountsReal = 0 // 实际视频数量
-  //  创建主题
-  private createTopicVideo() {
+
+  //  创建，修改主题
+  private createTopicVideo(item?: VideoTopicTable) {
     this.dialogFlag = true
     this.dialogShow = 1
     this.formProvide.title = '创建视频主题'
     this.formProvide.btnName = ['立即提交']
     this.formProvide.methodName = 'addVideoTopic'
-    this.formProvide.formObj = {}
+    if (item) {
+      const { id, topicName, address, sourceUrl, videoDescribe, videoKeyword } = item
+
+      const _videoKeyword = videoKeyword ? videoKeyword.split(',') : []
+      let _arr = []
+
+      for (let i = 0; i < 3; i++) {
+        _arr.push({
+          keyword: _videoKeyword[i] ? _videoKeyword[i] : ''
+        })
+      }
+      this.formProvide.formObj = {
+        id: id,
+        canNotEdit: true,
+        topicName,
+        address,
+        sourceUrl,
+        videoDescribe: videoDescribe ? videoDescribe : '',
+        videoKeyword: _arr
+      }
+    } else {
+      this.formProvide.formObj = {
+        videoKeyword: [
+          {
+            keyword: ''
+          },
+          {
+            keyword: ''
+          },
+          {
+            keyword: ''
+          }
+        ],
+        canNotEdit: false
+      }
+    }
   }
+
   // 时间选择弹窗
   private showDateRangePopup(item: { id: number; bucketName: string }) {
     this.curItem = item
@@ -255,8 +322,9 @@ export default class VideoDataList extends Vue {
     }
   }
 
-  //  提交创建 非结构化数据
+  //  提交创建 视频
   private async addVideoTopic(formObj: VideoTopicAdd) {
+    const canNotEdit = formObj.canNotEdit
     const params: any = {}
 
     params['topicName'] = formObj.topicName
@@ -264,10 +332,17 @@ export default class VideoDataList extends Vue {
     params['sourceUrl'] = formObj.sourceUrl
     params['topicInterFaceType'] = topicInterFaceType['VIDEO']
     params['dataType'] = dataType['非结构化']
+    params['videoDescribe'] = formObj.videoDescribe
+    params['videoKeyword'] = formObj.videoKeyword.map(item => item.keyword).join(',')
+    // edit
+    canNotEdit && (params['id'] = formObj.id)
 
-    const { success } = await this.h_request['httpPOST']('POST_TOPICS_ADD', params)
+    const { success } = await this.h_request['httpPOST'](
+      !canNotEdit ? 'POST_TOPICS_ADD' : 'POST_TOPICS_UPDATEVIDEOTOPIC',
+      params
+    )
     if (success) {
-      this.h_utils['alertUtil'].open('主题创建成功', true, 'success')
+      this.h_utils['alertUtil'].open(!canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
       this.searchMethod(
         false,
         {
@@ -479,6 +554,30 @@ export default class VideoDataList extends Vue {
     this.formProvide.title = '视频详情信息'
 
     this.tDialogFlag = true
+  }
+
+  // 视频启动
+  private async startVideo(item: { id: number }) {
+    const { success } = await this.h_request['httpGET']('GET_TOPICS_STARTVIDEOTOPIC', {
+      topicId: item.id
+    })
+    if (success) {
+      this.h_utils['alertUtil'].open(`主题${item.id}启动成功`, true, 'success')
+      // 乐观更新
+      this.$set(item, `videoState`, 1)
+    }
+  }
+
+  // 视频停止
+  private async stopVideo(item: { id: number }) {
+    const { success } = await this.h_request['httpGET']('GET_TOPICS_STOPVIDEOTOPIC', {
+      topicId: item.id
+    })
+    if (success) {
+      this.h_utils['alertUtil'].open(`主题${item.id}停止成功`, true, 'success')
+      // 乐观更新
+      this.$set(item, `videoState`, 0)
+    }
   }
 }
 </script>

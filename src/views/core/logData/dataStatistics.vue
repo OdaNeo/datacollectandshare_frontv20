@@ -55,6 +55,7 @@ import echarts from '@/decorator/echartsDecorator'
 import util from '@/decorator/utilsDecorator'
 import { mdiCloseCircleOutline } from '@mdi/js'
 import Moment from 'moment'
+
 @Component({
   components: {
     HSearch
@@ -64,11 +65,14 @@ import Moment from 'moment'
 @echarts
 @util
 export default class LogDataStatistics extends Vue {
-  //TODO： 每一天 所有主题的 采集数量 statisticsAllLoggerTopicByDayTime query `2021-08-08`
   private mdiCloseCircleOutline = mdiCloseCircleOutline
 
   private myChartElement1: any = null
   private myChartElement2: any = null
+  // tab
+  private tab = 0
+  private items = ['日志主题占比', '视频文件数量概况']
+
   // 默认显示我的主题中的第一条
   // 默认显示当天
   private queryEndDate = Moment(new Date()).format(`YYYY-MM-DD`)
@@ -81,9 +85,7 @@ export default class LogDataStatistics extends Vue {
   private async getStatisticsLoggerTopicByTopicIdAnd30Days(params: { topicId: number; timeDate: string }) {
     const { data }: { data: { date: string; count: number }[] } = await this.h_request['httpGET'](
       'GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICIDANDDAYAND30DAYS',
-      {
-        params
-      }
+      params
     )
     // console.log(data)
     // const data = [
@@ -161,9 +163,10 @@ export default class LogDataStatistics extends Vue {
 
   // 获得指定天数据
   private async getStatisticsLoggerTopicByTopicIdAndDay(params: { topicId: number; timeDate: string }) {
-    const { data }: { data: { hour: string; count: number }[] } = await this.h_request[
-      'httpGET'
-    ]('GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICIDANDDAY', { params })
+    const { data }: { data: { hour: string; count: number }[] } = await this.h_request['httpGET'](
+      'GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICIDANDDAY',
+      params
+    )
     // console.log(data)
     // const data = [
     //   { hour: '2', count: 27 },
@@ -193,7 +196,7 @@ export default class LogDataStatistics extends Vue {
     return {
       title: {
         left: 'center',
-        text: `主题${params.topicId}${params.timeDate}日志详情`
+        text: `主题${params.topicId}在${params.timeDate}日志详情`
       },
       tooltip: {
         trigger: 'axis'
@@ -214,7 +217,7 @@ export default class LogDataStatistics extends Vue {
       },
       series: [
         {
-          name: 'Step Start',
+          name: '日志条数',
           type: 'line',
           step: 'middle',
           data: data
@@ -240,6 +243,13 @@ export default class LogDataStatistics extends Vue {
     })
   }
 
+  private async getStatisticsAllLoggerTopicByDayTime() {
+    const { data } = await this.h_request.httpGET('GET_TOPICS_STATISTICSALLLOGGERTOPICBYDAYTIME', {
+      dayTime: Moment(new Date()).format(`YYYY-MM-DD`)
+    })
+    console.log(data)
+  }
+
   // echarts1 handle
   private initECharts1() {
     this.$nextTick(() => {
@@ -263,17 +273,24 @@ export default class LogDataStatistics extends Vue {
     // 初始化
     this.initECharts1()
     this.initECharts2()
+    this.getStatisticsAllLoggerTopicByDayTime()
+    // [{
+    //       count: 1
+    // daytime: "2021-04-21"
+    // id: 18
+    // topicId: 9008598
+    //     }]
   }
 }
 </script>
 <style scoped>
 #eCharts1 {
-  width: 80%;
-  height: 250px;
-  margin: 0 auto;
-}
-#eCharts2 {
   width: 100%;
   height: 250px;
+}
+#eCharts2 {
+  width: 95%;
+  height: 250px;
+  margin: 0 auto;
 }
 </style>

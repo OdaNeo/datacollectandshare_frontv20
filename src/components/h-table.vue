@@ -174,6 +174,9 @@ export default class HTable extends Vue {
   height: 50px !important;
   width: 50px !important;
 }
+#h-table >>> .v-btn__content {
+  font-size: 0.85rem;
+}
 .img {
   width: 240px;
   margin-top: 10px;

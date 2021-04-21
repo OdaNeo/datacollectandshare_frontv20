@@ -1,5 +1,5 @@
 <template>
-  <div id="SqlDetails">
+  <div id="HSimpleDetails">
     <div style="line-height: 24px" v-html="obj"></div>
   </div>
 </template>
@@ -7,7 +7,7 @@
 import { Component, Vue, Prop } from 'vue-property-decorator'
 
 @Component({})
-export default class SqlDetails extends Vue {
+export default class HSimpleDetails extends Vue {
   @Prop() private str!: string
 
   private get obj() {

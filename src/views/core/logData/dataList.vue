@@ -29,6 +29,10 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
+          <!-- 当前状态 -->
+          <template v-slot:logState="{ item }">
+            <v-btn text color="primary">{{ logState[item.logState] }}</v-btn>
+          </template>
           <!-- 服务器详情 -->
           <template v-slot:detail="{ item }">
             <v-btn text color="primary" @click="showLogDataDetail(item)">服务器详情</v-btn>
@@ -47,7 +51,9 @@
               <v-list dense>
                 <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
                   <v-btn
-                    :disabled="(i.tab && tab !== Number(i.tab)) || (i.logState && item.logState === Number(i.logState))"
+                    :disabled="
+                      (i.tab && tab !== Number(i.tab)) || (i.logState && Number(item.logState) !== Number(i.logState))
+                    "
                     class="pa-0"
                     width="100%"
                     :color="i.color ? i.color : `primary`"
@@ -96,7 +102,7 @@ import HSearch from '@/components/h-search.vue'
 import { tableHeaderType } from '@/type/table.type'
 import { loggerParamType } from '@/type/logger.type'
 import HTabs from '@/components/h-tabs.vue'
-
+import { logState } from '@/enum/state-enum'
 @Component({
   components: {
     HConfirm,
@@ -122,10 +128,11 @@ export default class LogDataList extends Vue {
       }
     }
   })
-  private tab = null
+  private tab = 0
   private items = ['所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示
   private fDialogShow = 0
+  private logState = logState
 
   private tDialogFlag = false
   private tDialogShow = 0
@@ -162,6 +169,11 @@ export default class LogDataList extends Vue {
         text: '所属用户',
         align: 'center',
         value: 'userName'
+      },
+      {
+        text: '当前状态',
+        align: 'center',
+        slot: 'logState'
       },
       {
         text: '落盘策略',
@@ -202,12 +214,14 @@ export default class LogDataList extends Vue {
     {
       text: `启动`,
       tab: `1`,
-      logState: `1`
+      logState: `0`,
+      handle: this.startLogger
     },
     {
       text: `停止`,
       tab: `1`,
-      logState: `0`
+      logState: `1`,
+      handle: this.endLogger
     },
     {
       text: '删除',
@@ -423,6 +437,31 @@ export default class LogDataList extends Vue {
   private handelDeleteTopic(item: { id: string; topicName: string; topicInterFaceType: number }) {
     this.HConfirmShow = true
     this.HConfirmItem = { ...item }
+  }
+
+  // 启动
+  private async startLogger(item: { id: number }) {
+    const { success } = await this.h_request['httpGET']('GET_TOPICS_STARTLOGGERCOLLECTIONTASK', {
+      topicId: item.id
+    })
+    if (success) {
+      this.h_utils['alertUtil'].open(`主题${item.id}启动成功`, true, 'success')
+      // 乐观更新
+      this.$set(item, `logState`, 1)
+    }
+  }
+
+  // 停止
+  private async endLogger(item: { id: number }) {
+    console.log(item)
+    const { success } = await this.h_request['httpGET']('GET_TOPICS_STOPLOGGERCOLLECTIONTASK', {
+      topicId: item.id
+    })
+    if (success) {
+      this.h_utils['alertUtil'].open(`主题${item.id}停止成功`, true, 'success')
+      // 乐观更新
+      this.$set(item, `logState`, 0)
+    }
   }
 }
 </script>

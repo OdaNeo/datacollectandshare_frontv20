@@ -72,17 +72,18 @@
     </v-tabs-items>
 
     <!-- 表单展示 -->
-    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
+    <HDialog v-if="fDialogFlag" v-model="fDialogFlag">
       <create-rest v-if="fDialogShow === 1" @upload-file="upLoadFile" ref="createRest"></create-rest>
       <create-protobuf v-else-if="fDialogShow === 2" @upload-proto-file="uploadProtoFile" />
       <create-json v-else-if="fDialogShow === 3"></create-json>
-    </f-dialog>
+    </HDialog>
 
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
       <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <TopicAncillaryInformationDialog :rowObj="rowObj" v-else-if="tDialogShow === 2" />
       <UserSubNameList :rowObj="rowObj" v-else-if="tDialogShow === 3" />
+      <HSimpleDetails :str="str" v-else-if="tDialogShow === 4" class="mb-2" />
     </t-dialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -99,7 +100,7 @@ import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
 import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
-import FDialog from '@/components/h-dialog.vue'
+import HDialog from '@/components/h-dialog.vue'
 import { TopicAdd } from '@/type/topic-add.type'
 import util from '@/decorator/utilsDecorator'
 import { dataType } from '@/enum/topic-datatype-enum'
@@ -115,12 +116,13 @@ import UserSubNameList from './childComponent/userSubNameList.vue'
 import HSearch from '@/components/h-search.vue'
 import { onlineDataParamType } from '@/type/online-data.type'
 import HTabs from '@/components/h-tabs.vue'
+import HSimpleDetails from '@/components/h-simple-details.vue'
 
 @Component({
   components: {
     HTable,
     TDialog,
-    FDialog,
+    HDialog,
     HConfirm,
     CreateRest,
     CreateProtobuf,
@@ -129,7 +131,8 @@ import HTabs from '@/components/h-tabs.vue'
     TopicAncillaryInformationDialog,
     HSearch,
     UserSubNameList,
-    HTabs
+    HTabs,
+    HSimpleDetails
   }
 })
 @http
@@ -166,6 +169,7 @@ export default class OnlineDataTopicList extends Vue {
   private tDialogShow = 0 // 展示哪个弹窗 1.数据结构 2.其他信息
 
   private rowObj: topicTable = {}
+  private str: string | undefined = ''
   private sheetObj: any
 
   private HConfirmShow = false
@@ -498,10 +502,17 @@ export default class OnlineDataTopicList extends Vue {
 
   // 数据结构展示方法
   private dataStructure(item: topicTable) {
-    this.rowObj = item
     this.tDialogFlag = true
-    this.tDialogShow = 1
     this.formProvide.title = '数据结构详情'
+    // protobuf
+    if (item.topicInterFaceType === 6) {
+      this.tDialogShow = 4
+      this.str = item.dataStruct
+    } else {
+      // rest
+      this.tDialogShow = 1
+      this.rowObj = item
+    }
   }
 
   // 附加信息

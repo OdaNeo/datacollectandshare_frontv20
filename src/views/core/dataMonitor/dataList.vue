@@ -1,179 +1,276 @@
 <template>
   <div id="dataMonitor">
-    <v-row class="fill-height">
-      <v-col>
-        <v-sheet height="64">
-          <v-toolbar flat>
-            <v-btn
+    <v-row>
+      <!-- 作业ID -->
+      <v-col cols="2">
+        <v-text-field
+          v-model="queryTopicID"
+          outlined
+          dense
+          :clear-icon="mdiCloseCircleOutline"
+          height="35px"
+          label="请输入作业ID"
+          v-only-num
+        ></v-text-field>
+      </v-col>
+      <!-- 作业名 -->
+      <v-col cols="2">
+        <v-select
+          v-model="queryServerName"
+          outlined
+          dense
+          :items="serverNameItems"
+          :clear-icon="mdiCloseCircleOutline"
+          height="35px"
+          label="请选择作业名"
+          v-only-num
+        ></v-select>
+      </v-col>
+      <!-- 状态 -->
+      <v-col cols="2">
+        <v-select
+          v-model="queryStatus"
+          outlined
+          dense
+          :items="statusItems"
+          :clear-icon="mdiCloseCircleOutline"
+          height="35px"
+          label="请选择作业状态"
+          v-only-num
+        ></v-select>
+      </v-col>
+      <!-- 时间范围 -->
+      <v-col cols="3">
+        <v-menu
+          ref="menu"
+          v-model="menu"
+          :close-on-click="false"
+          :close-on-content-click="false"
+          transition="scale-transition"
+          :return-value.sync="dates"
+          offset-y
+          min-width="auto"
+        >
+          <template v-slot:activator="{ on, attrs }">
+            <v-text-field
+              v-model="dateRangeText"
               outlined
-              :color="type === 'category' ? `primary` : `grey darken-2`"
-              width="70px"
-              class="mr-4"
-              @click="type = 'category'"
-              >日</v-btn
-            >
-            <v-btn
-              outlined
-              :color="type === 'week' ? `primary` : `grey darken-2`"
-              width="70px"
-              class="mr-4"
-              @click="type = 'week'"
-              >周</v-btn
-            >
-            <v-btn outlined :color="type === 'month' ? `primary` : `grey darken-2`" width="70px" @click="type = 'month'"
-              >月</v-btn
-            >
-            <v-btn class="ml-12" fab text small color="grey darken-2" @click="prev">
-              <v-icon small>{{ mdiChevronLeft }}</v-icon>
-            </v-btn>
-            <v-btn fab text small color="grey darken-2" @click="next">
-              <v-icon small>{{ mdiChevronRight }}</v-icon>
-            </v-btn>
-            <v-toolbar-title v-if="$refs.calendar">
-              {{ $refs.calendar.title }}
-            </v-toolbar-title>
+              placeholder="请选择时间范围"
+              height="35px"
+              readonly
+              v-bind="attrs"
+              v-on="on"
+            ></v-text-field>
+          </template>
+          <v-date-picker locale="zh-Hans" v-model="dates" no-title range :allowed-dates="allowedDates">
             <v-spacer></v-spacer>
-            <v-btn outlined class="mr-4" color="grey darken-2" @click="setToday">转到今日</v-btn>
-          </v-toolbar>
-        </v-sheet>
-        <v-sheet :height="type === 'month' ? '77vh' : undefined">
-          <v-calendar
-            ref="calendar"
-            v-model="focus"
-            color="primary"
-            locale="zh-Hans"
-            :events="events"
-            :event-color="getEventColor"
-            :type="type"
-            category-show-all
-            interval-width="0"
-            :categories="categories"
-            :event-more-text="`显示更多`"
-            @click:event="showEvent"
-            @click:more="viewDay"
-            @click:date="viewDay"
-          >
-          </v-calendar>
-          <v-menu v-model="selectedOpen" :close-on-content-click="false" :activator="selectedElement" offset-x>
-            <v-card color="grey lighten-4" min-width="350px" flat>
-              <v-toolbar :color="selectedEvent.color" dark dense flat>
-                <v-toolbar-title> {{ selectedEvent.name }}</v-toolbar-title>
-              </v-toolbar>
-              <v-card-text>
-                <span>时间: {{ selectedEvent.timeFormatter }}</span>
-                <br />
-                <span>状态: {{ selectedEvent.status }}</span>
-                <br />
-                <span>作业名: {{ selectedEvent.category }}</span>
-                <br />
-                <span>描述: {{ selectedEvent.remarks }}</span>
-              </v-card-text>
-            </v-card>
-          </v-menu>
-        </v-sheet>
+            <v-btn text color="grey" @click="menu = false">取消</v-btn>
+            <v-btn text :disabled="dates.length < 2" color="primary" @click="$refs.menu.save(dates)">确定</v-btn>
+          </v-date-picker>
+        </v-menu>
+      </v-col>
+      <!-- 查询 -->
+      <v-col>
+        <v-btn color="primary" small depressed dark @click="searchHandler(1)">搜索日志</v-btn>
+        <v-btn color="primary" small height="35px" class="ml-4" text @click="resetSearchQuery">清空搜索</v-btn>
       </v-col>
     </v-row>
+    <h-table
+      :headers="headers"
+      :desserts="desserts"
+      :pageNum="pageNum"
+      :loading="loading"
+      @PaginationNow="PaginationNow"
+      :paginationLength="paginationLength"
+    >
+      <!-- 状态 -->
+      <template v-slot:status="{ item }">
+        <v-btn text :color="calendarColorType[item.status]">{{ calendarType[item.status] }}</v-btn>
+      </template>
+
+      <!-- 详情 -->
+      <template v-slot:details="{ item }">
+        <v-btn text color="primary" @click="dataStructure(item.remarks)">日志信息详情</v-btn>
+      </template>
+    </h-table>
+
+    <!-- 表格显示 -->
+    <t-dialog v-model="tDialogFlag">
+      <HSimpleDetails :str="str" v-if="tDialogShow === 1" class="mb-2" />
+    </t-dialog>
   </div>
 </template>
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Provide } from 'vue-property-decorator'
+import HTable from '@/components/h-table.vue'
 import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
-import { CalendarData, realTimeData } from '@/type/calendar'
+import { realTimeData } from '@/type/calendar'
 import { calendarType, calendarColorType } from '@/enum/calendar-enum'
-import { mdiChevronLeft, mdiChevronRight } from '@mdi/js'
-@Component
+import { paramsType, returnType } from '@/type/http-request.type'
+import TDialog from '@/components/t-dialog.vue'
+import HSimpleDetails from '@/components/h-simple-details.vue'
+import { FormObj } from '@/type/dialog-form.type'
+import { mdiCloseCircleOutline } from '@mdi/js'
+import { mdiMagnify } from '@mdi/js'
+import Moment from 'moment'
+
+@Component({
+  components: {
+    HTable,
+    TDialog,
+    HSimpleDetails
+  }
+})
 @http
 @util
 export default class dataMonitor extends Vue {
-  private focus = ''
-  private type = 'month'
-  private typeToLabel = {
-    'month': '月',
-    'week': '周',
-    'category': '日'
-  }
-
-  private mdiChevronLeft = mdiChevronLeft
-  private mdiChevronRight = mdiChevronRight
-
-  private categories = ['日志', '事务', '视频']
-
-  private selectedEvent = {}
-  private selectedElement = null
-  private selectedOpen = false
-  private events: Array<CalendarData> = []
-  private calendar: any
-  // 按照天显示
-  private viewDay({ date }: { date: string }) {
-    this.focus = date
-    this.type = 'category'
-  }
-
-  private getEventColor(event: { color: unknown }) {
-    return event.color
-  }
-  // 转到今天
-  private setToday() {
-    this.focus = ''
-  }
-  // 上一条
-  private prev() {
-    this.calendar.prev()
-  }
-  // 下一条
-  private next() {
-    this.calendar.next()
-  }
-  // 显示事件详情
-  private showEvent({ nativeEvent, event }: any) {
-    const open = () => {
-      this.selectedEvent = event
-      this.selectedElement = nativeEvent.target
-      setTimeout(() => {
-        this.selectedOpen = true
-      }, 10)
-    }
-    if (this.selectedOpen) {
-      this.selectedOpen = false
-      setTimeout(open, 10)
-    } else {
-      open()
-    }
-    nativeEvent.stopPropagation()
-  }
-  // 获得event
-  private async updateRange() {
-    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG', {})
-
-    const _events: Array<CalendarData> = data.list?.map((item: realTimeData) => {
+  @Provide('formProvide') private formProvide: FormObj = new Vue({
+    data() {
       return {
-        start: new Date(Number(item['createTime'])),
-        color: calendarColorType[item['status']],
-        remarks: item['remarks'],
-        status: calendarType[item['status']],
-        name: `作业ID：${item['topicId'].toString()}`,
-        category: item['serverName'],
-        timeFormatter: this.h_utils.timeUtil.stamptoFullTime(item['createTime'], '/'),
-        timed: false
+        title: '',
+        btnName: [] as string[],
+        methodName: '',
+        formObj: {}
       }
-    })
-    // console.log(_events)
+    }
+  })
+  private mdiCloseCircleOutline = mdiCloseCircleOutline
 
-    this.$nextTick(() => {
-      this.events = _events
-    })
+  private calendarType = calendarType
+  private calendarColorType = calendarColorType
+  // 搜索
+  private queryTopicID = ''
+  private queryServerName = ''
+  private queryStatus = ''
+  // 时间范围 v-model
+  private dates: string[] = []
+  // 显示的时间范围
+  private get dateRangeText() {
+    return this.dates.length > 1 ? this.dates.join(' ~ ') : ''
   }
 
-  mounted(): void {
-    this.calendar = this.$refs.calendar as any
-    this.calendar.checkChange()
-    this.updateRange()
+  private menu = false
+  private mdiMagnify = mdiMagnify
+  private serverNameItems = [`事务`, `日志`, `视频`]
+  private statusItems = [`异常`, `离线`, `警告`]
+
+  private desserts: Array<realTimeData> = []
+  private pageNum = 1
+  private pageSize = 20
+  private paginationLength = 1
+  private loading = true
+
+  private str = ''
+  private tDialogFlag = false // 表格展示
+  private tDialogShow = 0 // 展示哪个弹窗
+
+  private headers = [
+    {
+      text: '作业ID',
+      align: 'center',
+      value: 'topicId'
+    },
+    {
+      text: '作业名',
+      align: 'center',
+      value: 'serverName'
+    },
+    {
+      text: '时间',
+      align: 'center',
+      value: 'createTime',
+      format: (value: string) => {
+        return this.h_utils.timeUtil.stamptoFullTime(value, '/')
+      }
+    },
+    {
+      text: '状态',
+      align: 'center',
+      slot: 'status'
+    },
+    {
+      text: '描述信息',
+      align: 'center',
+      value: 'tip'
+    },
+    {
+      text: '日志信息',
+      align: 'center',
+      slot: 'details'
+    }
+  ]
+  // 清空搜索条件
+  private resetSearchQuery() {
+    this.queryTopicID = ''
+    this.queryServerName = ''
+    this.queryStatus = ''
+    this.dates = []
+    this.searchHandler(1)
+  }
+  // 搜索
+  private searchHandler(nowPage: number) {
+    // 时间范围只能是0或者2
+    if (this.dates.length === 1) {
+      return
+    }
+    this.pageNum = nowPage
+
+    const params: paramsType = {
+      pageSize: this.pageSize,
+      pageNum: this.pageNum
+    }
+    this.queryTopicID && (params.topicId = this.queryTopicID)
+    this.queryServerName && (params.serverName = this.queryServerName)
+    this.queryStatus && (params.status = calendarType[this.queryStatus as keyof typeof calendarType])
+    this.dates.length === 2 &&
+      ((params.startTime = Number(Moment(this.dates[0]).startOf('day').format('x'))),
+      (params.endTime = Number(Moment(this.dates[1]).endOf('day').format('x'))))
+
+    this.searchMethod(params)
+  }
+
+  // 通用搜索方法
+  private async searchMethod(params: paramsType) {
+    this.loading = true
+
+    const { data }: returnType = await this.h_request['httpGET']<paramsType>('GET_MONITOR_FIND_ALL_MONITOR_LOG', params)
+
+    this.desserts = data ? [...data.list] : []
+    this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
+    this.loading = false
+  }
+
+  // 分页方法
+  private PaginationNow(nowPage: number): void {
+    this.pageNum = nowPage
+    this.searchHandler(nowPage)
+  }
+
+  // 允许选择的时间范围
+  private allowedDates(val: string) {
+    if (this.dates.length === 0) {
+      return true
+    } else if (this.dates.length === 1) {
+      const beginTime = this.h_utils.timeUtil.timeToStamp(val, '-')
+      const endTime = this.h_utils.timeUtil.timeToStamp(this.dates[0], '-')
+      return beginTime + 24 * 60 * 60 * 1000 > endTime
+    } else {
+      return true
+    }
+  }
+
+  // 数据结构展示方法
+  private dataStructure(remarks: string) {
+    this.tDialogFlag = true
+    this.formProvide.title = '日志信息详情'
+    this.tDialogShow = 1
+    this.str = remarks
+  }
+
+  created(): void {
+    this.pageNum = 1
+    this.searchHandler(1)
   }
 }
 </script>
-<style scoped>
-#dataMonitor >>> .v-calendar-daily__body {
-  display: none;
-}
-</style>

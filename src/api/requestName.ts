@@ -81,6 +81,9 @@ const GET_CMD_DELETE = '/cmd/delCmdInfo'
 // ----------------------------- 视频数据 ---------------------------
 const GET_VIDEO_ADDRESS = '/topics/getVideoAddress' // 视频数据统计
 const GET_TOPICS_GETVIDEO = '/topics/getVideo'
+const GET_TOPICS_STARTVIDEOTOPIC = '/topics/startVideoTopic' // 启动视频
+const GET_TOPICS_STOPVIDEOTOPIC = '/topics/stopVideoTopic' // 停止视频
+const POST_TOPICS_UPDATEVIDEOTOPIC = '/topics/updateVideoTopic' // 更新视频主题
 
 // ----------------------------- 日志数据 ---------------------------
 const POST_TOPICS_ADDLOGGERTOPIC = '/topics/addLoggerTopic'
@@ -89,6 +92,9 @@ const GET_TOPICS_DELETELOOGGERTOPIC = '/topics/deleteLoggerTopic'
 const GET_TOPICS_SELECTLOGGERTOPICBYTOPICID = '/topics/selectLoggerTopicByTopicId'
 const GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICIDANDDAY = '/topics/statisticsLoggerTopicByTopicIdAndDay'
 const GET_TOPICS_STATISTICSLOGGERTOPICBYTOPICIDANDDAYAND30DAYS = '/topics/statisticsLoggerTopicByTopicIdAnd30Days'
+const GET_TOPICS_STATISTICSALLLOGGERTOPICBYDAYTIME = '/topics/statisticsAllLoggerTopicByDayTime'
+const GET_TOPICS_STOPLOGGERCOLLECTIONTASK = '/topics/stopLoggerCollectionTask' // 停止
+const GET_TOPICS_STARTLOGGERCOLLECTIONTASK = '/topics/startLoggerCollectionTask' // 启动
 
 // ----------------------------- 作业监控 ------------------------
 const GET_MONITOR_FIND_ALL_MONITOR_LOG_BY_TIME = '/monitor/findAllMonitorLogByTime'
@@ -209,7 +215,13 @@ const REQUEST_NAME = {
   GET_TASKINFO_SELECTTRANSCATIONTOPIC,
   GET_TASKINFO_FINDALLTASK,
   GET_TASKINFO_FINDALLTASKBYTASKID,
-  POST_TASKINFO_FINDALLTASKBYTASKID
+  POST_TASKINFO_FINDALLTASKBYTASKID,
+  GET_TOPICS_STARTVIDEOTOPIC,
+  GET_TOPICS_STOPVIDEOTOPIC,
+  POST_TOPICS_UPDATEVIDEOTOPIC,
+  GET_TOPICS_STATISTICSALLLOGGERTOPICBYDAYTIME,
+  GET_TOPICS_STOPLOGGERCOLLECTIONTASK,
+  GET_TOPICS_STARTLOGGERCOLLECTIONTASK
 }
 
 export default REQUEST_NAME

@@ -55,7 +55,6 @@ import FDialog from '@/components/h-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import HTable from '@/components/h-table.vue'
 import HSearch from '@/components/h-search.vue'
-import { mdiMagnify } from '@mdi/js'
 
 @Component({
   components: {
@@ -84,7 +83,6 @@ export default class User extends Vue {
       }
     }
   })
-  private mdiMagnify = mdiMagnify
   private dialogFlag = false
   private desserts: Array<userInfo> = []
   private pageNum = 1
@@ -248,7 +246,7 @@ export default class User extends Vue {
       pageSize: this.pageSize,
       pageNum: this.pageNum
     }
-    this.searchMethod(true, params)
+    this.searchMethod(false, params)
   }
 
   // private tableAfterEnter(): void {

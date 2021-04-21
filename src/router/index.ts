@@ -375,14 +375,14 @@ const routes: Array<RouteConfig> = [
       }
     ]
   },
-  // 作业监控
+  // 报警管理
   {
     path: '/dataMonitor',
-    name: '作业监控',
+    name: '报警管理',
     component: StatePage,
     redirect: '/dataMonitor/dataList',
     meta: {
-      title: '作业监控',
+      title: '报警管理',
       icon: mdiMonitorScreenshot,
       access: true,
       url: '/dataMonitor'
@@ -548,9 +548,9 @@ const routes: Array<RouteConfig> = [
       {
         path: 'dataList2',
         component: () => import('@/views/private/dataList2.vue'),
-        name: '监控日志',
+        name: '监控日志2',
         meta: {
-          title: '监控日志',
+          title: '监控日志2',
           access: false
         }
       }

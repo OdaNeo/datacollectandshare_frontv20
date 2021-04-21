@@ -83,7 +83,7 @@
     <t-dialog v-model="tDialogFlag">
       <!-- default -->
       <ContentDetails slot="default" v-if="dialogFlag === 3" :rowJson="rowJson" />
-      <SqlDetails slot="default" v-if="dialogFlag === 4" :str="str" />
+      <HSimpleDetails slot="default" v-if="dialogFlag === 4" :str="str" />
       <!-- button -->
       <v-btn
         slot="button"
@@ -119,7 +119,7 @@ import UploadSQL from './childComponent/uploadSQL.vue'
 import ContentDetails from '@/components/h-content-details.vue'
 import { tableHeaderType } from '@/type/table.type'
 import upload from '@/decorator/uploadDecorator'
-import SqlDetails from './childComponent/sqlDetails.vue'
+import HSimpleDetails from '@/components/h-simple-details.vue'
 import HSearch from '@/components/h-search.vue'
 import Moment from 'moment'
 import { uploadStoreModule } from '@/store/modules/upload'
@@ -136,7 +136,7 @@ import cronstrue from 'cronstrue/i18n'
     CreateTransactionalData,
     ContentDetails,
     UploadSQL,
-    SqlDetails,
+    HSimpleDetails,
     HSearch,
     HTabs
   }

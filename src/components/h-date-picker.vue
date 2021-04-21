@@ -46,7 +46,7 @@ export default class HDatePicker extends Vue {
   @Prop() private begin!: string
   @Prop() private anotherDate!: null | string
 
-  mdiMagnify = mdiMagnify
+  private mdiMagnify = mdiMagnify
   private menu = false
   private date: string | null = null
 

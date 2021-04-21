@@ -9,7 +9,7 @@ import util from '@/decorator/utilsDecorator'
 
 @util
 @Component({})
-export default class ContentDetails extends Vue {
+export default class HContentDetails extends Vue {
   @Prop() private rowJson!: string
 
   private get obj() {
