@@ -37,9 +37,9 @@
           <template v-slot:detail="{ item }">
             <v-btn text color="primary" @click="showLogDataDetail(item)">服务器详情</v-btn>
           </template>
-          <!-- 实时监控 -->
-          <template v-slot:monitor="{}">
-            <v-btn text color="primary">实时监控</v-btn>
+          <!-- 报警信息 -->
+          <template v-slot:monitor="{ item }">
+            <v-btn text color="primary" :loading="!!item.logLoading" @click="showTopicAlert(item)">报警信息</v-btn>
           </template>
           <!-- 操作 -->
           <template v-slot:buttons="{ item }">
@@ -76,7 +76,8 @@
 
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
-      <LogDataDialog v-if="tDialogShow === 1" :headersObj="headersObj" :dessertsObj="dessertsObj" />
+      <LogDataDialog v-if="tDialogShow === 1" :dessertsObj="dessertsObj" />
+      <TopicAlert v-if="tDialogShow === 2" :dessertsObj="dessertsObj" />
     </t-dialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -103,6 +104,7 @@ import { tableHeaderType } from '@/type/table.type'
 import { loggerParamType } from '@/type/logger.type'
 import HTabs from '@/components/h-tabs.vue'
 import { logState } from '@/enum/state-enum'
+import TopicAlert from '@/components/h-topic-alert.vue'
 @Component({
   components: {
     HConfirm,
@@ -112,7 +114,8 @@ import { logState } from '@/enum/state-enum'
     LogDataDialog,
     TDialog,
     HSearch,
-    HTabs
+    HTabs,
+    TopicAlert
   }
 })
 @http
@@ -191,7 +194,7 @@ export default class LogDataList extends Vue {
         slot: 'detail'
       },
       {
-        text: '实时监控',
+        text: '报警信息查询',
         align: 'center',
         slot: 'monitor'
       },
@@ -232,7 +235,6 @@ export default class LogDataList extends Vue {
   ]
 
   // 表格显示
-  private headersObj: Array<tableHeaderType> = []
   private dessertsObj: Array<topicTable> = []
 
   // 创建日志主题
@@ -309,23 +311,6 @@ export default class LogDataList extends Vue {
     this.formProvide.title = '日志数据详情'
     this.tDialogFlag = true
     this.tDialogShow = 1
-    this.headersObj = [
-      {
-        text: '服务器地址',
-        align: 'center',
-        value: 'logIp'
-      },
-      {
-        text: '服务器用户名',
-        align: 'center',
-        value: 'logUserName'
-      },
-      {
-        text: '日志采集路径',
-        align: 'center',
-        value: 'savePath'
-      }
-    ]
 
     this.dessertsObj = [{ ...item }]
   }
@@ -437,6 +422,28 @@ export default class LogDataList extends Vue {
   private handelDeleteTopic(item: { id: string; topicName: string; topicInterFaceType: number }) {
     this.HConfirmShow = true
     this.HConfirmItem = { ...item }
+  }
+
+  // showTopicAlert
+  private async showTopicAlert(item: { id: number }) {
+    this.$set(item, `logLoading`, true)
+    // 默认显示10条
+    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG', {
+      topicId: item.id,
+      pageSize: 5,
+      pageNum: 1
+    })
+
+    this.formProvide.title = `主题${item.id}报警信息`
+    this.formProvide.formObj = {
+      id: item.id,
+      total: data ? data.total : 0
+    }
+    this.tDialogFlag = true
+    this.tDialogShow = 2
+
+    this.dessertsObj = data ? data.list : []
+    this.$set(item, `logLoading`, false)
   }
 
   // 启动

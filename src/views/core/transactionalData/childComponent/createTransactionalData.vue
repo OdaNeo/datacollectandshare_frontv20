@@ -14,7 +14,7 @@
             v-model="formProvide.formObj.id"
             :description="`选择主题ID`"
             :items="formProvide.formObj.activeTopicIDs"
-            @input="$emit('changeTopic', $event)"
+            @input="changeTopic"
           />
 
           <HSimpleInput
@@ -24,7 +24,7 @@
             :rules="[...h_validator.noEmpty('主题名称')]"
           />
 
-          <HColumnList :description="`主题结构数据`" />
+          <ColumnList :description="`主题结构数据`" />
         </v-row>
       </v-window-item>
 
@@ -153,13 +153,13 @@ import HStep from '@/components/h-step.vue'
 import HSimpleInput from '@/components/h-simple-input.vue'
 import HSelect from '@/components/h-select.vue'
 import HSlider from '@/components/h-slider.vue'
-import HColumnList from '@/components/h-column-list.vue'
+import ColumnList from './columnList.vue'
 @Component({
   components: {
     HSimpleInput,
     HSelect,
     HSlider,
-    HColumnList,
+    ColumnList,
     HStep
   }
 })
@@ -196,6 +196,38 @@ export default class CreateTransactionalData extends Vue {
       return
     } else {
       this.step++
+    }
+  }
+
+  // 选择主题回显
+  private changeTopic(val: string | null) {
+    // 非新建 , 不需要验重
+    if (val && val !== this.formProvide.formObj.activeTopicIDs[0].value) {
+      const item = this.formProvide.formObj.activeTopicIDs
+      let obj1: any
+
+      item.forEach((item: { value: string | null; dataStruct: string }) => {
+        if (item.value === val) {
+          obj1 = JSON.parse(item.dataStruct)
+        }
+      })
+      this.formProvide.formObj.id = val
+      this.formProvide.formObj.topicName = val
+      this.formProvide.formObj.canNotEdit = true
+      this.formProvide.formObj.column = obj1.map((item: {}) => ({ ...item, disabled: true }))
+    } else {
+      // 新建 需要验重
+      this.formProvide.formObj.id = val
+      this.formProvide.formObj.topicName = ''
+      this.formProvide.formObj.canNotEdit = false
+      this.formProvide.formObj.column = [
+        {
+          field: '',
+          type: 'string',
+          iskey: 'false',
+          disabled: false
+        }
+      ]
     }
   }
 }

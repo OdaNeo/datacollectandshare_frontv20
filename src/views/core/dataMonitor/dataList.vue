@@ -206,6 +206,12 @@ export default class dataMonitor extends Vue {
     this.queryServerName = ''
     this.queryStatus = ''
     this.dates = []
+    if (this.$route.query.topicId) {
+      this.$router.push({
+        query: {}
+      })
+    }
+
     this.searchHandler(1)
   }
   // 搜索
@@ -270,6 +276,7 @@ export default class dataMonitor extends Vue {
 
   created(): void {
     this.pageNum = 1
+    this.queryTopicID = this.$route.query.topicId ? this.$route.query.topicId.toString() : ''
     this.searchHandler(1)
   }
 }

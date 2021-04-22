@@ -200,14 +200,14 @@ export default class OnlineDataTopicList extends Vue {
       value: 'topicName'
     },
     {
-      text: '订阅用户数',
-      align: 'center',
-      slot: 'subUsers'
-    },
-    {
       text: '所属用户',
       align: 'center',
       value: 'userName'
+    },
+    {
+      text: '订阅用户数',
+      align: 'center',
+      slot: 'subUsers'
     },
     {
       text: '接口类型',
@@ -250,11 +250,11 @@ export default class OnlineDataTopicList extends Vue {
       handle: this.downloadFile
     },
     {
-      text: `启动`,
+      text: `打开`,
       tab: 1
     },
     {
-      text: `停止`,
+      text: `关闭`,
       tab: 1
     },
     {

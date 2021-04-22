@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="12" class="HColumnList d-flex">
+  <v-col cols="12" class="columnList d-flex">
     <label class="label mr-2"><span v-if="required" class="require-span">*</span>{{ description }}</label>
     <div class="ml-4">
       <v-row
@@ -86,7 +86,7 @@ import { mdiPlus, mdiMinus } from '@mdi/js'
 // required 会在 description 前添加 * 标识
 @Component({})
 @Validator(['noEmpty', 'topicNameFormatter'])
-export default class HColumnList extends Vue {
+export default class columnList extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   @Prop({ default: true }) private required!: boolean
   @Prop() private description!: string

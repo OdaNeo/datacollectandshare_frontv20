@@ -18,6 +18,7 @@ export type paramsType = {
   startTime?: number
   endTime?: number
   videoKeyword?: string
+  type?: number
 }
 
 export type returnTypeData = {

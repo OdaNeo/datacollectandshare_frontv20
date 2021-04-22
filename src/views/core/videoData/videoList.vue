@@ -57,9 +57,9 @@
           <template v-slot:buttons="{ item }">
             <v-btn text color="primary" @click="showVideoDetail(item)">视频详情信息</v-btn>
           </template>
-          <!-- 实时监控 -->
-          <template v-slot:monitor="{}">
-            <v-btn text color="primary">实时监控</v-btn>
+          <!-- 报警信息 -->
+          <template v-slot:monitor="{ item }">
+            <v-btn text color="primary" :loading="!!item.videoLoading" @click="showTopicAlert(item)">报警信息</v-btn>
           </template>
           <!-- 操作 -->
           <template v-slot:buttons2="{ item }">
@@ -97,7 +97,8 @@
 
     <!-- 表格显示 -->
     <TDialog v-model="tDialogFlag">
-      <VideoDetail :dessertsObj="dessertsObj" />
+      <VideoDetail v-if="tDialogShow === 1" :dessertsObj="dessertsObj" />
+      <TopicAlert v-if="tDialogShow === 2" :dessertsObj="dessertsObj" />
     </TDialog>
 
     <!-- 视频 -->
@@ -135,6 +136,7 @@ import VideoDetail from './childComponent/videoDetail.vue'
 import HTabs from '@/components/h-tabs.vue'
 import VideoDatePicker from './childComponent/videoDatePicker.vue'
 import { videoState } from '@/enum/state-enum'
+import TopicAlert from '@/components/h-topic-alert.vue'
 
 @Component({
   components: {
@@ -148,7 +150,8 @@ import { videoState } from '@/enum/state-enum'
     TDialog,
     VideoDetail,
     HTabs,
-    VideoDatePicker
+    VideoDatePicker,
+    TopicAlert
   }
 })
 @http
@@ -181,6 +184,7 @@ export default class VideoDataList extends Vue {
   private dialogFlag = false // 弹窗展示
   private tDialogFlag = false // 表格展示
   private dialogShow = 0 // 展示哪个弹窗 1.创建主题 2.日期选择
+  private tDialogShow = 1
   // 删除确认
   private HConfirmShow = false
   private HConfirmItem = {
@@ -238,7 +242,7 @@ export default class VideoDataList extends Vue {
       slot: 'buttons'
     },
     {
-      text: '实时监控',
+      text: '报警信息查询',
       align: 'center',
       slot: 'monitor'
     },
@@ -589,7 +593,32 @@ export default class VideoDataList extends Vue {
     this.formProvide.title = '视频详情信息'
 
     this.tDialogFlag = true
+    this.tDialogShow = 1
   }
+
+  // showTopicAlert
+  private async showTopicAlert(item: { id: number }) {
+    this.$set(item, `videoLoading`, true)
+    // 默认显示10条
+    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG', {
+      topicId: item.id,
+      pageSize: 5,
+      pageNum: 1
+    })
+
+    this.formProvide.title = `主题${item.id}报警信息`
+    this.formProvide.formObj = {
+      id: item.id,
+      total: data ? data.total : 0
+    }
+    this.tDialogFlag = true
+    this.tDialogShow = 2
+
+    this.dessertsObj = data ? data.list : []
+    this.$set(item, `videoLoading`, false)
+  }
+
+  // 跳转到  报警管理
 
   // 视频启动
   private async startVideo(item: { id: number }) {

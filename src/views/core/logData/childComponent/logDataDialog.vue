@@ -13,7 +13,24 @@ import HTable from '@/components/h-table.vue'
   }
 })
 export default class LogDataDialog extends Vue {
-  @Prop() private headersObj!: unknown
   @Prop() private dessertsObj!: unknown
+
+  private headersObj = [
+    {
+      text: '服务器地址',
+      align: 'center',
+      value: 'logIp'
+    },
+    {
+      text: '服务器用户名',
+      align: 'center',
+      value: 'logUserName'
+    },
+    {
+      text: '日志采集路径',
+      align: 'center',
+      value: 'savePath'
+    }
+  ]
 }
 </script>

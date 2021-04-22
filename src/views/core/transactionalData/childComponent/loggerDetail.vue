@@ -1,5 +1,5 @@
 <template>
-  <div id="VideoDetail">
+  <div id="LoggerDetail">
     <h-table :headers="headers" :desserts="dessertsObj"></h-table>
   </div>
 </template>
@@ -14,27 +14,32 @@ import { topicTable } from '@/type/topic.type'
     HTable
   }
 })
-export default class VideoDetail extends Vue {
+export default class loggerDetail extends Vue {
   @Prop() private dessertsObj!: Partial<topicTable>[]
 
   private headers: tableHeaderType[] = [
     {
-      text: '本系统rtmp地址',
+      text: '自增属性最大值',
       align: 'center',
-      width: 200,
-      value: 'serverUrl'
+      value: 't',
+      format: (t: { maxValues: string }) => {
+        return t.maxValues
+      }
     },
     {
-      text: '摄像头物理地址',
+      text: '创建时间',
       align: 'center',
-      width: 200,
-      value: 'address'
+      value: 'createTime'
     },
     {
-      text: '摄像头rtsp/rtmp地址',
+      text: '最后运行时间',
       align: 'center',
-      width: 200,
-      value: 'sourceUrl'
+      value: 'lastRunTime'
+    },
+    {
+      text: '修改时间',
+      align: 'center',
+      value: 'updateTime'
     }
   ]
 }

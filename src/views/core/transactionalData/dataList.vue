@@ -3,14 +3,23 @@
     <v-row>
       <HSearch
         v-model="queryTopicID"
-        label="请输入查找的事务主题ID"
+        label="请输入查找的任务ID"
         @append="searchTopic"
         @enter="searchTopic"
         @clear="tabChange(tab)"
         v-only-num
       />
       <v-col>
-        <v-btn color="primary" depressed class="mr-6" small dark @click="createTransactionalData()">创建任务</v-btn>
+        <v-btn
+          color="primary"
+          depressed
+          class="mr-6"
+          :loading="createLoading"
+          small
+          dark
+          @click="createTransactionalData()"
+          >创建任务</v-btn
+        >
         <v-btn color="primary" :loading="uploadBtnLoading" depressed class="mr-6" small dark @click="uploadSQL">
           上传SQL
         </v-btn>
@@ -32,21 +41,22 @@
         >
           <!-- 当前状态 -->
           <template v-slot:state="{ item }">
-            <v-btn text color="primary">{{ transactionalState[item.state] }}</v-btn>
+            <v-btn text color="primary">{{ transactionalState[item.isRun] }}</v-btn>
           </template>
           <!-- 脚本 -->
           <template v-slot:content="{ item }">
-            <v-btn text color="primary" @click="sqlMaxContentDetails(item)">自增属性</v-btn>
-            <v-btn text color="primary" @click="jsonContentDetails(item)">DataX</v-btn>
+            <v-btn text color="primary" @click="sqlMaxContentDetails(item.t)">自增属性</v-btn>
+            <v-btn text color="primary" @click="jsonContentDetails(item.t)">DataX</v-btn>
           </template>
           <!-- 日志 -->
           <template v-slot:log="{ item }">
             <v-btn text color="primary" :loading="!!item.loading" @click.stop="getCurrentLog(item)">最新日志</v-btn>
             <v-btn text color="primary" @click.stop="getHistoryLog(item.id)">历史日志</v-btn>
+            <v-btn text color="primary" @click.stop="showTimerLog(item)">其他信息</v-btn>
           </template>
-          <!-- 实时监控 -->
+          <!-- 报警信息 -->
           <template v-slot:monitor="{}">
-            <v-btn text color="primary">实时监控</v-btn>
+            <v-btn text color="primary">报警信息</v-btn>
           </template>
           <!-- 操作 -->
           <template v-slot:buttons="{ item }">
@@ -80,7 +90,7 @@
     </v-tabs-items>
     <!-- 表单展示 -->
     <f-dialog v-if="fDialogFlag" v-model="fDialogFlag" :indeterminate="false" :value="upLoadingProgress">
-      <CreateTransactionalData v-if="dialogFlag === 1" @changeTopic="handleSelectTopic" />
+      <CreateTransactionalData v-if="dialogFlag === 1" />
       <UploadSQL v-if="dialogFlag === 2" @change="transformSQLFile" />
     </f-dialog>
 
@@ -89,8 +99,10 @@
       <!-- default -->
       <ContentDetails slot="default" v-if="dialogFlag === 3" :rowJson="rowJson" />
       <HSimpleDetails slot="default" v-if="dialogFlag === 4" :str="str" />
+      <LoggerDetail slot="default" v-if="dialogFlag === 5" :dessertsObj="dessertsObj" />
       <!-- button -->
       <v-btn
+        v-if="dialogFlag === 3 || dialogFlag === 4"
         slot="button"
         color="primary"
         :disabled="!(dialogFlag === 3 ? rowJson : str)"
@@ -116,7 +128,6 @@ import HConfirm from '@/components/h-confirm.vue'
 import TDialog from '@/components/t-dialog.vue'
 import FDialog from '@/components/h-dialog.vue'
 import util from '@/decorator/utilsDecorator'
-import { dataType } from '@/enum/topic-datatype-enum'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import { FormObj } from '@/type/dialog-form.type'
 import CreateTransactionalData from './childComponent/createTransactionalData.vue'
@@ -132,6 +143,7 @@ import HTabs from '@/components/h-tabs.vue'
 import { transactionalTableType } from '@/type/transactional-data.type'
 import cronstrue from 'cronstrue/i18n'
 import { transactionalState } from '@/enum/state-enum'
+import LoggerDetail from './childComponent/loggerDetail.vue'
 @Component({
   components: {
     HTable,
@@ -143,7 +155,8 @@ import { transactionalState } from '@/enum/state-enum'
     UploadSQL,
     HSimpleDetails,
     HSearch,
-    HTabs
+    HTabs,
+    LoggerDetail
   }
 })
 @http
@@ -183,11 +196,14 @@ export default class transactionalDataList extends Vue {
 
   private rowJson = ''
   private str = ''
+  private dessertsObj = {}
+
   private sqlFile: File | null = null
   private sqlForms = new FormData()
   private sqlTimer = 0
 
   private uploadBtnLoading = false
+  private createLoading = false
 
   private get upLoadingProgress() {
     return uploadStoreModule.upLoadingProgress
@@ -198,8 +214,7 @@ export default class transactionalDataList extends Vue {
     value: string
     topicName: string
     dataStruct: string
-    dsAnnotation: string
-  }[] = [{ text: `新增主题`, value: `新增主题`, topicName: '', dataStruct: '', dsAnnotation: '' }] // 第0项 为新建主题，其余异步获取
+  }[] = [] // 第0项 为新建主题，其余异步获取
 
   private desserts: Array<topicTable> = [] // 数据列表
   private loading = true
@@ -207,20 +222,14 @@ export default class transactionalDataList extends Vue {
   private get headers(): Array<tableHeaderType> {
     return [
       {
-        text: '主题ID',
+        text: '任务ID',
         align: 'center',
         value: 'id'
       },
-      // {
-      //   text: '任务ID',
-      //   align: 'center',
-      //   value: 'taskId',
-      //   isHide: this.tab === 2
-      // },
       {
-        text: '主题名称',
+        text: '任务名称',
         align: 'center',
-        value: 'topicName'
+        value: 'taskName'
       },
       {
         text: '所属用户',
@@ -242,12 +251,6 @@ export default class transactionalDataList extends Vue {
         }
       },
       {
-        text: '自增属性最大值',
-        align: 'center',
-        value: 'maxValue',
-        isHide: this.tab === 2
-      },
-      {
         text: '脚本',
         align: 'center',
         slot: 'content',
@@ -260,7 +263,7 @@ export default class transactionalDataList extends Vue {
         isHide: this.tab === 2
       },
       {
-        text: '实时监控',
+        text: '报警信息',
         align: 'center',
         slot: 'monitor',
         isHide: this.tab === 2
@@ -311,12 +314,24 @@ export default class transactionalDataList extends Vue {
   ]
 
   // 创建 修改事务性数据，添加任务
-  private createTransactionalData(items?: transactionalTableType) {
+  private async createTransactionalData(items?: transactionalTableType) {
+    this.createLoading = true
     //  异步获取主题列表
-    this.getActiveTopics()
+    const data = await this.getActiveTopics()
+
+    data.unshift({
+      text: `新增主题`,
+      value: `新增主题`,
+      topicName: '',
+      dataStruct: ''
+    })
+
+    this.activeTopicIDs = [...data]
+    // loading
+    this.createLoading = false
     // 创建
     this.formProvide.btnName = items ? ['立即修改'] : ['立即提交']
-    this.formProvide.title = items?.inputContent ? '修改任务' : '添加任务'
+    this.formProvide.title = items?.inputContent ? '修改任务' : '创建任务'
     this.formProvide.methodName = 'addTransactionalData'
     this.formProvide.formObj = {
       cron: '0',
@@ -328,11 +343,12 @@ export default class transactionalDataList extends Vue {
           disabled: false
         }
       ],
-      activeTopicIDs: [...this.activeTopicIDs],
+      activeTopicIDs: this.activeTopicIDs,
       id: this.activeTopicIDs[0].value
     }
     this.fDialogFlag = true
     this.dialogFlag = 1
+
     if (items) {
       // 修改，可以更换主题
       this.formProvide.formObj.id = items.id // 回显选择的主题
@@ -362,51 +378,6 @@ export default class transactionalDataList extends Vue {
           }
         }
       )
-      // this.formProvide.formObj.sqlMaxContent = items.sqlMaxContent
-      // this.formProvide.formObj.jsonContent = items.jsonContent
-    }
-  }
-
-  // // 根据主题创建任务
-  // private addTask(item: transactionalTableType) {
-  //   this.createTransactionalData()
-  //   this.handleSelectTopic(item.id.toString())
-  // }
-
-  // 选择主题回显
-  private handleSelectTopic(val: string | null) {
-    // 非新建 , 不需要验重
-    if (val && val !== this.activeTopicIDs[0].value) {
-      this.formProvide.formObj.id = val
-      this.formProvide.formObj.topicName = val
-      this.formProvide.formObj.canNotEdit = true
-      this.formProvide.formObj.column = [
-        {
-          field: '123sfa',
-          type: 'string',
-          iskey: 'false',
-          disabled: true
-        },
-        {
-          field: val,
-          type: 'string',
-          iskey: 'false',
-          disabled: true
-        }
-      ]
-    } else {
-      // 新建
-      this.formProvide.formObj.id = val
-      this.formProvide.formObj.topicName = ''
-      this.formProvide.formObj.canNotEdit = false
-      this.formProvide.formObj.column = [
-        {
-          field: '',
-          type: 'string',
-          iskey: 'false',
-          disabled: false
-        }
-      ]
     }
   }
 
@@ -414,45 +385,34 @@ export default class transactionalDataList extends Vue {
   private async getActiveTopics() {
     const { data } = await this.h_request.httpGET(`GET_TASKINFO_SELECTTRANSCATIONTOPIC`, {})
     if (data) {
-      const _data = data.map(
-        ({
-          id,
-          topicName,
-          dataStruct,
-          dsAnnotation
-        }: {
-          id: number
-          topicName: string
-          dataStruct: string
-          dsAnnotation: string
-        }) => {
-          return {
-            text: id.toString(),
-            value: id.toString(),
-            topicName: topicName,
-            dataStruct: dataStruct,
-            dsAnnotation: dsAnnotation
-          }
+      const _data = data.map(({ id, topicName, dataStruct }: { id: number; topicName: string; dataStruct: string }) => {
+        return {
+          text: id.toString(),
+          value: id.toString(),
+          topicName: topicName,
+          dataStruct: dataStruct
         }
-      )
-      this.activeTopicIDs.concat(_data)
+      })
+      return Promise.resolve(_data)
+    } else {
+      return Promise.resolve([])
     }
   }
 
   // 自增属性显示
-  private sqlMaxContentDetails(item: { sqlMaxContent: string }) {
+  private sqlMaxContentDetails(t: { sqlMaxContent: string }) {
     this.tDialogFlag = true
     this.formProvide.title = '自增属性查询脚本'
     this.dialogFlag = 3
-    this.rowJson = item.sqlMaxContent
+    this.rowJson = t.sqlMaxContent
   }
 
   // datax回显
-  private jsonContentDetails(item: { jsonContent: string }) {
+  private jsonContentDetails(t: { jsonContent: string }) {
     this.tDialogFlag = true
     this.formProvide.title = 'DataX脚本'
     this.dialogFlag = 3
-    this.rowJson = item.jsonContent
+    this.rowJson = t.jsonContent
   }
 
   // 提交事务性数据
@@ -517,8 +477,7 @@ export default class transactionalDataList extends Vue {
           topicName,
           reader: '',
           writer: '',
-          dataStruct: '',
-          dsAnnotation: ''
+          dataStruct: ''
         }
       }
     )
@@ -605,8 +564,8 @@ export default class transactionalDataList extends Vue {
   // 查询通用调用方法
   private async searchMethod(bool: boolean, params: paramsType, tab: number) {
     this.loading = true
-    params.faceTypes = `${topicInterFaceType['事务数据']}`
-    params.dataType = dataType['结构化']
+    // 事务 任务 =8
+    params.type = topicInterFaceType[`事务数据`]
 
     if (tab === 0) {
       // 所有任务
@@ -755,7 +714,7 @@ export default class transactionalDataList extends Vue {
   }
 
   // 最新日志
-  private async getCurrentLog(item: { id: number; loading: boolean | undefined }) {
+  private async getCurrentLog(item: { id: number }) {
     this.$set(item, `loading`, true)
     this.rowJson = ''
     const { data } = await this.h_request.httpGET('GET_TOPICS_GETOFFLINELOGBYTOPICID', { taskId: item.id, num: 1 })
@@ -782,6 +741,14 @@ export default class transactionalDataList extends Vue {
         topicId: `${topicId}`
       }
     })
+  }
+
+  // 时间信息
+  private showTimerLog(item: transactionalTableType) {
+    this.tDialogFlag = true
+    this.dialogFlag = 5
+    this.formProvide.title = '其他信息'
+    this.dessertsObj = item
   }
 
   // 复制
