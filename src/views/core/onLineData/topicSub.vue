@@ -95,6 +95,7 @@
     <t-dialog v-model="dialogFlag">
       <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <UserSubNameList :rowObj="rowObj" v-else-if="tDialogShow === 2" />
+      <HSimpleDetails :str="str" v-else-if="tDialogShow === 3" class="mb-2" />
     </t-dialog>
   </div>
 </template>
@@ -113,6 +114,7 @@ import { tableHeaderType } from '@/type/table.type'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import HSearch from '@/components/h-search.vue'
 import HTabs from '@/components/h-tabs.vue'
+import HSimpleDetails from '@/components/h-simple-details.vue'
 // topicInterFaceType = 1，4，6
 @Component({
   components: {
@@ -121,7 +123,8 @@ import HTabs from '@/components/h-tabs.vue'
     DataStructureDialog,
     HSearch,
     UserSubNameList,
-    HTabs
+    HTabs,
+    HSimpleDetails
   }
 })
 @http
@@ -157,6 +160,7 @@ export default class TopicSub extends Vue {
 
   private desserts: Array<topicTable> = []
   private rowObj: object = {}
+  private str: string | undefined = ''
   private pageNum = 1
   private pageSize = 20
   private paginationLength = 0
@@ -276,12 +280,19 @@ export default class TopicSub extends Vue {
     this.loading = false
   }
 
-  // 数据结构详情
+  // 数据结构展示方法
   private dataStructure(item: topicTable) {
-    this.rowObj = item
     this.dialogFlag = true
-    this.tDialogShow = 1
     this.formObj.title = '数据结构详情'
+    // protobuf
+    if (item.topicInterFaceType === 6) {
+      this.tDialogShow = 3
+      this.str = item.dataStruct
+    } else {
+      // rest
+      this.tDialogShow = 1
+      this.rowObj = item
+    }
   }
 
   // 订阅用户详情

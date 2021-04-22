@@ -30,6 +30,11 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
+          <!-- 当前状态 -->
+          <template v-slot:state="{ item }">
+            <v-btn text color="primary">{{ transactionalState[item.state] }}</v-btn>
+          </template>
+          <!-- 脚本 -->
           <template v-slot:content="{ item }">
             <v-btn text color="primary" @click="sqlMaxContentDetails(item)">自增属性</v-btn>
             <v-btn text color="primary" @click="jsonContentDetails(item)">DataX</v-btn>
@@ -126,7 +131,7 @@ import { uploadStoreModule } from '@/store/modules/upload'
 import HTabs from '@/components/h-tabs.vue'
 import { transactionalTableType } from '@/type/transactional-data.type'
 import cronstrue from 'cronstrue/i18n'
-
+import { transactionalState } from '@/enum/state-enum'
 @Component({
   components: {
     HTable,
@@ -155,12 +160,15 @@ export default class transactionalDataList extends Vue {
       }
     }
   })
+
   private tab = 0
-  private items = ['所有任务', '我的任务', '主题列表']
+  private items = ['所有任务', '我的任务', '所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示
   private dialogFlag = 0
   private tDialogFlag = false // 表格展示
   private queryTopicID = '' // 查询主题ID input框内容
+
+  private transactionalState = transactionalState
 
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
@@ -203,12 +211,12 @@ export default class transactionalDataList extends Vue {
         align: 'center',
         value: 'id'
       },
-      {
-        text: '任务ID',
-        align: 'center',
-        value: 'taskId',
-        isHide: this.tab === 2
-      },
+      // {
+      //   text: '任务ID',
+      //   align: 'center',
+      //   value: 'taskId',
+      //   isHide: this.tab === 2
+      // },
       {
         text: '主题名称',
         align: 'center',
@@ -218,6 +226,11 @@ export default class transactionalDataList extends Vue {
         text: '所属用户',
         align: 'center',
         value: 'userName'
+      },
+      {
+        text: '当前状态',
+        align: 'center',
+        slot: 'state'
       },
       {
         text: '运行周期',
@@ -274,13 +287,13 @@ export default class transactionalDataList extends Vue {
     },
     {
       text: `启动`,
-      tab: [0],
+      tab: [1],
       state: 1,
       handle: this.stateTransactionalData
     },
     {
       text: `停止`,
-      tab: [0],
+      tab: [1],
       state: 2,
       handle: this.stopTransactionalData
     },

@@ -15,8 +15,7 @@
 import { Component, Vue, Prop, Inject } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import { mdiCloseCircleOutline } from '@mdi/js'
-// required 会在 description 前添加 * 标识
-// 触发input事件传递，父组件可使用input 或者 v-model语法糖接收
+
 @Component({})
 export default class HMultiInput extends Vue {
   @Inject() private readonly formProvide!: H_Vue

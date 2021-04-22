@@ -1,17 +1,40 @@
 <template>
   <div id="videoDataList">
     <v-row>
-      <HSearch
-        v-model="queryVideoTopicID"
-        v-only-num
-        label="请输入查找的视频主题ID"
-        @append="searchVideoTopic"
-        @enter="searchVideoTopic"
-        @clear="tabChange(tab)"
-      />
-      <v-col>
+      <transition name="fade" mode="out-in">
+        <HSearch
+          v-if="searchMode === `id`"
+          v-model="queryVideoTopicID"
+          :label="`请输入主题ID`"
+          @append="searchVideoTopic"
+          @enter="searchVideoTopic"
+          @clear="tabChange(tab)"
+          v-only-num
+          key="id"
+        />
+
+        <HSearch
+          v-else-if="searchMode === `videoKeyword`"
+          v-model="queryVideoTopicID"
+          :label="`请输入关键字`"
+          @append="searchVideoTopic"
+          @enter="searchVideoTopic"
+          @clear="tabChange(tab)"
+          key="videoKeyword"
+        />
+      </transition>
+      <v-col cols="1">
         <v-btn color="primary" depressed dark small @click.stop="createTopicVideo()">创建视频</v-btn>
       </v-col>
+      <v-switch
+        style="padding-top: 2px; width: 180px"
+        class="ml-6"
+        dense
+        v-model="switchMode"
+        flat
+        :label="switchMode ? `按照主题ID查询` : `按照关键字查询`"
+        @change="changeSearchMode"
+      ></v-switch>
     </v-row>
     <!-- tab -->
     <HTabs v-model="tab" :items="items" @change="tabChange" />
@@ -147,7 +170,13 @@ export default class VideoDataList extends Vue {
       }
     }
   })
-  private tab = null
+
+  // 搜索方法，默认搜索id
+  private searchMode: `id` | `videoKeyword` = `id`
+  // 切换开关
+  private switchMode = true
+
+  private tab = 0
   private items = ['所有主题', '我的主题']
   private dialogFlag = false // 弹窗展示
   private tDialogFlag = false // 表格展示
@@ -480,7 +509,8 @@ export default class VideoDataList extends Vue {
         {
           pageNum: 1,
           pageSize: this.pageSize,
-          topicID: this.queryVideoTopicID
+          topicID: this.searchMode === `id` ? this.queryVideoTopicID : '',
+          videoKeyword: this.searchMode === `videoKeyword` ? this.queryVideoTopicID : ''
         },
         !!this.tab
       )
@@ -499,6 +529,11 @@ export default class VideoDataList extends Vue {
       !!tab
     )
     this.pageNum = 1
+  }
+
+  // 改变用搜索方式
+  private changeSearchMode() {
+    this.searchMode === `id` ? (this.searchMode = `videoKeyword`) : (this.searchMode = `id`)
   }
 
   // handelDeleteTopic
@@ -581,3 +616,20 @@ export default class VideoDataList extends Vue {
   }
 }
 </script>
+<style>
+/* fade-transform */
+.fade-leave-active,
+.fade-enter-active {
+  transition: all 0.5s;
+}
+
+.fade-enter {
+  opacity: 0;
+  transform: translateX(-20px);
+}
+
+.fade-leave-to {
+  opacity: 0;
+  transform: translateX(20px);
+}
+</style>

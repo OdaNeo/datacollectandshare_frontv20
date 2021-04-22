@@ -84,6 +84,7 @@ const GET_TOPICS_GETVIDEO = '/topics/getVideo'
 const GET_TOPICS_STARTVIDEOTOPIC = '/topics/startVideoTopic' // 启动视频
 const GET_TOPICS_STOPVIDEOTOPIC = '/topics/stopVideoTopic' // 停止视频
 const POST_TOPICS_UPDATEVIDEOTOPIC = '/topics/updateVideoTopic' // 更新视频主题
+const GET_STATISTICS_STATVIDEOTOPICDATA = '/statistics/statVideoTopicData'
 
 // ----------------------------- 日志数据 ---------------------------
 const POST_TOPICS_ADDLOGGERTOPIC = '/topics/addLoggerTopic'
@@ -221,7 +222,8 @@ const REQUEST_NAME = {
   POST_TOPICS_UPDATEVIDEOTOPIC,
   GET_TOPICS_STATISTICSALLLOGGERTOPICBYDAYTIME,
   GET_TOPICS_STOPLOGGERCOLLECTIONTASK,
-  GET_TOPICS_STARTLOGGERCOLLECTIONTASK
+  GET_TOPICS_STARTLOGGERCOLLECTIONTASK,
+  GET_STATISTICS_STATVIDEOTOPICDATA
 }
 
 export default REQUEST_NAME

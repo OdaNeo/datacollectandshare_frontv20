@@ -1,50 +1,62 @@
 <template>
   <div id="LogDataStatistics">
-    <v-row>
-      <!-- 搜索框 -->
-      <HSearch :cols="3" :showAppEnd="false" v-model="queryTopicID" label="日志主题ID" v-only-num />
-      <v-col cols="3">
-        <v-menu
-          ref="menu"
-          v-model="showMenu"
-          :close-on-content-click="false"
-          :return-value.sync="queryTopicDate"
-          transition="scale-transition"
-          offset-y
-        >
-          <template v-slot:activator="{ on, attrs }">
-            <v-text-field
-              outlined
-              dense
-              height="35px"
-              v-model="queryTopicDate"
-              label="截止日期"
-              readonly
-              clearable
-              :clear-icon="mdiCloseCircleOutline"
-              v-bind="attrs"
-              v-on="on"
-            ></v-text-field>
-          </template>
-          <v-date-picker
-            locale="zh-cn"
-            v-model="queryTopicDate"
-            @click.native="$refs.menu.save(queryTopicDate)"
-            @change="getOption1(123)"
-            no-title
-            scrollable
-          >
-          </v-date-picker>
-        </v-menu>
-      </v-col>
-      <v-col>
-        <v-btn color="primary" small depressed dark @click="searchMethod">开始查询</v-btn>
-      </v-col>
-    </v-row>
-    <!-- 默认日历表 -->
-    <div id="eCharts1"></div>
-    <!-- eChartsDataDom -->
-    <div id="eCharts2"></div>
+    <!-- tab -->
+    <HTabs v-model="tab" :items="items" @change="tabChange" />
+    <!-- 切换 -->
+    <v-tabs-items v-model="tab">
+      <v-tab-item eager>
+        <!-- 默认日历表 -->
+        <div id="eCharts3"></div>
+      </v-tab-item>
+      <v-tab-item eager>
+        <v-row class="mt-2 ml-2">
+          <!-- 搜索框 主题ID-->
+          <HSearch :cols="3" :showAppEnd="false" v-model="queryTopicID" label="日志主题ID" v-only-num />
+          <!-- 搜索框 日期 -->
+          <v-col cols="3">
+            <v-menu
+              ref="menu"
+              v-model="showMenu"
+              :close-on-content-click="false"
+              :return-value.sync="queryTopicDate"
+              transition="scale-transition"
+              offset-y
+            >
+              <template v-slot:activator="{ on, attrs }">
+                <v-text-field
+                  outlined
+                  dense
+                  height="35px"
+                  v-model="queryTopicDate"
+                  label="截止日期"
+                  readonly
+                  clearable
+                  :clear-icon="mdiCloseCircleOutline"
+                  v-bind="attrs"
+                  v-on="on"
+                ></v-text-field>
+              </template>
+              <v-date-picker
+                locale="zh-cn"
+                v-model="queryTopicDate"
+                @click.native="$refs.menu.save(queryTopicDate)"
+                @change="getOption1(123)"
+                no-title
+                scrollable
+              >
+              </v-date-picker>
+            </v-menu>
+          </v-col>
+          <v-col>
+            <v-btn color="primary" small depressed dark @click="searchMethod">开始查询</v-btn>
+          </v-col>
+        </v-row>
+        <!-- 默认日历表 -->
+        <div id="eCharts1"></div>
+        <!-- eChartsDataDom -->
+        <div id="eCharts2"></div>
+      </v-tab-item>
+    </v-tabs-items>
   </div>
 </template>
 <script lang="ts">
@@ -55,10 +67,11 @@ import echarts from '@/decorator/echartsDecorator'
 import util from '@/decorator/utilsDecorator'
 import { mdiCloseCircleOutline } from '@mdi/js'
 import Moment from 'moment'
-
+import HTabs from '@/components/h-tabs.vue'
 @Component({
   components: {
-    HSearch
+    HSearch,
+    HTabs
   }
 })
 @http
@@ -69,9 +82,10 @@ export default class LogDataStatistics extends Vue {
 
   private myChartElement1: any = null
   private myChartElement2: any = null
+  private myChartElement3: any = null
   // tab
   private tab = 0
-  private items = ['日志主题占比', '视频文件数量概况']
+  private items = ['日志主题占比', '日志主题查询']
 
   // 默认显示我的主题中的第一条
   // 默认显示当天
@@ -243,6 +257,7 @@ export default class LogDataStatistics extends Vue {
     })
   }
 
+  // 获取今日日志条数
   private async getStatisticsAllLoggerTopicByDayTime() {
     const { data } = await this.h_request.httpGET('GET_TOPICS_STATISTICSALLLOGGERTOPICBYDAYTIME', {
       dayTime: Moment(new Date()).format(`YYYY-MM-DD`)
@@ -250,30 +265,32 @@ export default class LogDataStatistics extends Vue {
     console.log(data)
   }
 
-  // echarts1 handle
-  private initECharts1() {
+  // echarts1 2 3 handle
+  private initECharts() {
     this.$nextTick(() => {
       const element = document.getElementById('eCharts1')
+      const element2 = document.getElementById('eCharts2')
+      const element3 = document.getElementById('eCharts3')
+
       this.myChartElement1 = this.h_echarts.init(element as HTMLCanvasElement, 'light', { renderer: 'svg' })
+      this.myChartElement2 = this.h_echarts.init(element2 as HTMLCanvasElement, 'light', { renderer: 'svg' })
+      this.myChartElement3 = this.h_echarts.init(element3 as HTMLCanvasElement, 'light', { renderer: 'svg' })
+
+      // 点击获取某天详情
       this.myChartElement1.on('click', (item: { data: [string, number] }) => {
-        // 点击获取某天详情
         this.getStatisticsLoggerTopicByTopicIdAndDay({ topicId: Number(this.queryTopicID), timeDate: item.data[0] })
       })
     })
   }
 
-  // echarts2 handle
-  private initECharts2() {
-    this.$nextTick(() => {
-      const element = document.getElementById('eCharts2')
-      this.myChartElement2 = this.h_echarts.init(element as HTMLCanvasElement, 'light', { renderer: 'svg' })
-    })
+  // tab 切换
+  private tabChange(number: number) {
+    console.log(number)
   }
   mounted(): void {
     // 初始化
-    this.initECharts1()
-    this.initECharts2()
-    this.getStatisticsAllLoggerTopicByDayTime()
+    this.initECharts()
+    // this.getStatisticsAllLoggerTopicByDayTime()
     // [{
     //       count: 1
     // daytime: "2021-04-21"
@@ -291,6 +308,11 @@ export default class LogDataStatistics extends Vue {
 #eCharts2 {
   width: 95%;
   height: 250px;
+  margin: 0 auto;
+}
+#eCharts3 {
+  width: 95%;
+  height: 400px;
   margin: 0 auto;
 }
 </style>

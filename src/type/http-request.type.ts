@@ -17,6 +17,7 @@ export type paramsType = {
   taskId?: string
   startTime?: number
   endTime?: number
+  videoKeyword?: string
 }
 
 export type returnTypeData = {

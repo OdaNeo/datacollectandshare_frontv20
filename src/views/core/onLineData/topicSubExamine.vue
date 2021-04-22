@@ -31,7 +31,8 @@
     </h-table>
 
     <t-dialog v-model="dialogFlag">
-      <data-structure-dialog :rowObj="rowObj"></data-structure-dialog>
+      <DataStructureDialog v-if="tDialogShow === 1" :rowObj="rowObj" />
+      <HSimpleDetails v-if="tDialogShow === 2" :str="str" class="mb-2" />
     </t-dialog>
   </div>
 </template>
@@ -48,12 +49,15 @@ import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
+import HSimpleDetails from '@/components/h-simple-details.vue'
+
 @Component({
   components: {
     HTable,
     TDialog,
     DataStructureDialog,
-    HSearch
+    HSearch,
+    HSimpleDetails
   }
 })
 @http
@@ -82,6 +86,10 @@ export default class TopicSubExamine extends Vue {
   private pageSize = 20
   private dialogFlag = false
   private paginationLength = 0
+
+  private tDialogShow = 0
+  private str: string | undefined = ''
+
   private loading = true
   private queryExamineUser = ''
   private headers = [
@@ -147,10 +155,19 @@ export default class TopicSubExamine extends Vue {
     this.loading = false
   }
 
-  private dataStructure(item: any) {
+  // 数据结构展示方法
+  private dataStructure(item: topicTable) {
     this.dialogFlag = true
-    this.rowObj = item
     this.formObj.title = '数据结构详情'
+    // protobuf
+    if (item.topicInterFaceType === 6) {
+      this.tDialogShow = 2
+      this.str = item.dataStruct
+    } else {
+      // rest
+      this.tDialogShow = 1
+      this.rowObj = item
+    }
   }
 
   private async examine(item: any, status: number) {

@@ -27,10 +27,9 @@
     <HSimpleInput v-model="formProvide.formObj['videoDescribe']" :required="false" :description="`视频描述`" />
 
     <!-- 关键字 -->
-    <HMultiInput :required="false" :description="`关键字`" />
+    <MultiInput :required="false" :description="`关键字`" />
 
-    <!--  -->
-    <div class="description">注：添加主题成功后会自动启动</div>
+    <div class="ml-10">注：添加主题成功后视频流会自动启动</div>
   </v-row>
 </template>
 <script lang="ts">
@@ -38,12 +37,12 @@ import { Component, Vue, Inject } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
 import HSimpleInput from '@/components/h-simple-input.vue'
-import HMultiInput from '@/components/h-multi-input.vue'
+import MultiInput from './multiInput.vue'
 
 @Component({
   components: {
     HSimpleInput,
-    HMultiInput
+    MultiInput
   }
 })
 @Validator(['topicNameFormatter', 'noEmpty'])
@@ -66,8 +65,3 @@ export default class CreateVideoTopicDialog extends Vue {
   }
 }
 </script>
-<style scoped>
-.description {
-  margin-left: 35px;
-}
-</style>

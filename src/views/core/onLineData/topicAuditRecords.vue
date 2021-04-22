@@ -64,6 +64,7 @@
       <DataStructureDialog v-if="dialogShow === 1" :rowObj="rowObj" />
       <SubDetails v-else-if="dialogShow === 2" :rowObj="rowObj" />
       <AllDetails v-else-if="dialogShow === 3" :rowObj="rowObj" />
+      <HSimpleDetails v-else-if="dialogShow === 4" :str="str" class="mb-2" />
     </t-dialog>
   </div>
 </template>
@@ -84,6 +85,7 @@ import { examineTypeColor } from '@/enum/topic-audit-enum'
 import { tableHeaderType } from '@/type/table.type'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import HTabs from '@/components/h-tabs.vue'
+import HSimpleDetails from '@/components/h-simple-details.vue'
 
 @Component({
   components: {
@@ -93,7 +95,8 @@ import HTabs from '@/components/h-tabs.vue'
     HSearch,
     SubDetails,
     AllDetails,
-    HTabs
+    HTabs,
+    HSimpleDetails
   }
 })
 @http
@@ -122,8 +125,7 @@ export default class TopicAuditRecords extends Vue {
 
   private examineTypeColor = examineTypeColor
   private desserts: Array<topicTable> = []
-
-  // private tab = 0
+  private str: string | undefined = ''
   private rowObj: topicTable = {}
   private pageNum = 1
   private pageSize = 20
@@ -200,12 +202,19 @@ export default class TopicAuditRecords extends Vue {
     this.loading = false
   }
 
-  // 数据结构详情
+  // 数据结构展示方法
   private dataStructure(item: topicTable) {
-    this.rowObj = item
-    this.formObj.title = '数据结构详情'
     this.dialogFlag = true
-    this.dialogShow = 1
+    this.formObj.title = '数据结构详情'
+    // protobuf
+    if (item.topicInterFaceType === 6) {
+      this.dialogShow = 4
+      this.str = item.dataStruct
+    } else {
+      // rest
+      this.dialogShow = 1
+      this.rowObj = item
+    }
   }
 
   // 订阅详情
