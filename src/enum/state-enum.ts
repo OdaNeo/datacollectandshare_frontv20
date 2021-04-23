@@ -1,4 +1,9 @@
 /* eslint-disable no-unused-vars */
+export enum stateColor {
+  warning,
+  success
+}
+
 // 视频
 export enum videoState {
   已停止,
@@ -6,12 +11,22 @@ export enum videoState {
 }
 // 日志
 export enum logState {
-  未启动,
+  已停止,
   已启动
 }
 // 事务
 export enum transactionalState {
-  未知 = -1,
-  已启动 = 1,
-  已停止
+  已停止,
+  已启动
+}
+// 事务执行结果
+export enum transactionalResult {
+  失败,
+  成功,
+  异常
+}
+export enum transactionalResultColor {
+  error,
+  success,
+  warning
 }

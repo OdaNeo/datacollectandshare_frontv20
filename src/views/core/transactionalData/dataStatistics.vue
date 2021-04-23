@@ -2,7 +2,7 @@
   <div id="TransactionalDataStatistics">
     <v-row>
       <HSearch
-        v-model="currentTopicId"
+        v-model="currenttaskId"
         @append="changeQuery"
         @enter="changeQuery"
         @clear="clearInput"
@@ -18,12 +18,13 @@
       @PaginationNow="PaginationNow"
       :paginationLength="paginationLength"
     >
+      <!-- 执行结果 -->
       <template v-slot:status="{ item }">
-        <!-- 有res ：success，无res：error -->
-        <v-btn text :color="transactionalStatus(item) ? `success` : `error`">
-          {{ transactionalStatus(item) ? `成功` : '失败' }}
+        <v-btn text :color="transactionalResultColor[item.result]">
+          {{ transactionalResult[item.result] }}
         </v-btn>
       </template>
+      <!-- buttons -->
       <template v-slot:buttons="{ item }">
         <v-btn text color="primary" @click="offlineLogDetails(item)">查看离线日志详情</v-btn>
       </template>
@@ -49,7 +50,6 @@ import { Component, Vue, Provide, Watch } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
 import { topicTable } from '@/type/topic.type'
 import { paramsType, returnType } from '@/type/http-request.type'
-import { dataType } from '@/enum/topic-datatype-enum'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
@@ -57,6 +57,7 @@ import TDialog from '@/components/t-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import ContentDetails from '@/components/h-content-details.vue'
 import HSearch from '@/components/h-search.vue'
+import { transactionalResult, transactionalResultColor } from '@/enum/state-enum'
 @Component({
   components: {
     HTable,
@@ -81,7 +82,9 @@ export default class TransactionalDataStatistics extends Vue {
 
   private tDialogFlag = false
   private rowJson = ''
-  private currentTopicId = ''
+  private currenttaskId = ''
+  private transactionalResult = transactionalResult
+  private transactionalResultColor = transactionalResultColor
 
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
@@ -91,25 +94,20 @@ export default class TransactionalDataStatistics extends Vue {
   private headers = [
     // 表头内容 所有主题
     {
-      text: 'ID',
+      text: '日志ID',
       align: 'center',
       value: 'id'
     },
     {
-      text: '主题ID',
+      text: '执行时间',
       align: 'center',
-      value: 'topicId'
-    },
-    {
-      text: '创建时间',
-      align: 'center',
-      value: 'createTime',
-      format: (createTime: string) => {
-        return this.h_utils.timeUtil['stamptoFullTime'](new Date(createTime).getTime(), '/')
+      value: 'executeTime',
+      format: (time: string) => {
+        return this.h_utils.timeUtil['stamptoFullTime'](new Date(time).getTime(), '/')
       }
     },
     {
-      text: '状态',
+      text: '执行结果',
       align: 'center',
       slot: 'status'
     },
@@ -128,30 +126,16 @@ export default class TransactionalDataStatistics extends Vue {
   }
 
   // 查询通用调用方法
-  private async searchMethod(params: paramsType, topicId: string) {
+  private async searchMethod(params: paramsType, taskId: string) {
     this.loading = true
+    params.type = topicInterFaceType['事务数据']
+    taskId && (params.taskId = taskId)
 
-    if (!topicId) {
-      // 获得全部
-      params.faceTypes = `${topicInterFaceType['事务数据']}`
-      params.dataType = dataType['结构化']
-      const { data }: returnType = await this.h_request['httpGET']<object>('GET_TOPICS_GETOFFLINELOG', params)
-      this.desserts = data ? [...data.list] : []
-      this.paginationLength = Math.ceil(data?.['total'] / this.pageSize) || 1
-    } else {
-      // 按照topicId查询
-      params.topicId = topicId
-      params.num = -1
-      const { data } = await this.h_request['httpGET']('GET_TOPICS_GETOFFLINELOGBYTOPICID', params)
-      this.desserts = data ? [...data.list] : []
-      this.paginationLength = Math.ceil(data?.['total'] / this.pageSize) || 1
-    }
+    const { data }: returnType = await this.h_request['httpGET']<object>('GET_TASKINFO_FINDTRANSCATIONLOG', params)
+
+    this.desserts = data ? [...data.list] : []
+    this.paginationLength = Math.ceil(data?.['total'] / this.pageSize) || 1
     this.loading = false
-  }
-
-  // 任务状态
-  private transactionalStatus(item: { log: string }) {
-    return !!JSON.parse(item.log)['res']
   }
 
   // 改变query
@@ -159,7 +143,7 @@ export default class TransactionalDataStatistics extends Vue {
     // 防止路由重复点击报错
     this.$router.replace({
       query: {
-        topicId: this.currentTopicId ? this.currentTopicId : undefined
+        taskId: this.currenttaskId ? this.currenttaskId : undefined
       }
     })
   }
@@ -168,7 +152,7 @@ export default class TransactionalDataStatistics extends Vue {
   private clearInput() {
     this.$router.replace({
       query: {
-        topicId: undefined
+        taskId: undefined
       }
     })
   }
@@ -181,7 +165,7 @@ export default class TransactionalDataStatistics extends Vue {
         pageSize: this.pageSize,
         pageNum: this.pageNum
       },
-      this.$route.query.topicId ? this.$route.query.topicId.toString() : ''
+      this.$route.query.taskId ? this.$route.query.taskId.toString() : ''
     )
   }
 
@@ -194,9 +178,9 @@ export default class TransactionalDataStatistics extends Vue {
     this.h_utils.alertUtil.open('复制失败', true, 'error', 1500)
   }
 
-  @Watch(`$route.query.topicId`, { immediate: true })
+  @Watch(`$route.query.taskId`, { immediate: true })
   private test(val: string) {
-    this.currentTopicId = val
+    this.currenttaskId = val
     this.pageNum = 1
     this.searchMethod(
       {
@@ -208,7 +192,7 @@ export default class TransactionalDataStatistics extends Vue {
   }
 
   created(): void {
-    this.currentTopicId = this.$route.query.topicId ? this.$route.query.topicId.toString() : ''
+    this.currenttaskId = this.$route.query.taskId ? this.$route.query.taskId.toString() : ''
   }
 }
 </script>

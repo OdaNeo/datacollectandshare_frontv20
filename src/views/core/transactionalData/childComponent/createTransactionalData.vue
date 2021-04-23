@@ -12,14 +12,14 @@
           <HSelect
             class="mt-6"
             v-model="formProvide.formObj.id"
-            :description="`选择主题ID`"
+            :description="`选择/新建主题ID`"
             :items="formProvide.formObj.activeTopicIDs"
             @input="changeTopic"
           />
 
           <HSimpleInput
             v-model="formProvide.formObj['topicName']"
-            :disabled="formProvide.formObj.canNotEdit"
+            :disabled="!formProvide.formObj.newTopics"
             :description="`主题名称`"
             :rules="[...h_validator.noEmpty('主题名称')]"
           />
@@ -31,9 +31,16 @@
       <!-- 2 -->
       <v-window-item :value="2" class="ml-6" eager>
         <v-row no-gutters>
+          <!-- taskName -->
+          <HSimpleInput
+            class="mt-6"
+            :disabled="formProvide.formObj.isEdit"
+            v-model="formProvide.formObj['taskName']"
+            :description="`任务名称`"
+            :rules="[...h_validator.noEmpty('任务名称')]"
+          />
           <!-- cron -->
           <HSlider
-            class="mt-6"
             :description="`每日运行周期`"
             :polyfill="`时`"
             :polyfillWidth="35"
@@ -202,24 +209,26 @@ export default class CreateTransactionalData extends Vue {
   // 选择主题回显
   private changeTopic(val: string | null) {
     // 非新建 , 不需要验重
-    if (val && val !== this.formProvide.formObj.activeTopicIDs[0].value) {
+    if (val && val !== `新增主题`) {
       const item = this.formProvide.formObj.activeTopicIDs
       let obj1: any
+      let topicName = ''
 
-      item.forEach((item: { value: string | null; dataStruct: string }) => {
+      item.forEach((item: { value: string | null; dataStruct: string; topicName: string }) => {
         if (item.value === val) {
           obj1 = JSON.parse(item.dataStruct)
+          topicName = item.topicName
         }
       })
       this.formProvide.formObj.id = val
-      this.formProvide.formObj.topicName = val
-      this.formProvide.formObj.canNotEdit = true
-      this.formProvide.formObj.column = obj1.map((item: {}) => ({ ...item, disabled: true }))
+      this.formProvide.formObj.topicName = topicName
+      this.formProvide.formObj.newTopics = false
+      this.formProvide.formObj.column = obj1.map((item: any) => ({ ...item, iskey: `${item.iskey}`, disabled: true }))
     } else {
       // 新建 需要验重
       this.formProvide.formObj.id = val
       this.formProvide.formObj.topicName = ''
-      this.formProvide.formObj.canNotEdit = false
+      this.formProvide.formObj.newTopics = true
       this.formProvide.formObj.column = [
         {
           field: '',

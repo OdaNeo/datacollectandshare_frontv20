@@ -51,7 +51,7 @@
         >
           <!-- 当前状态 -->
           <template v-slot:videoState="{ item }">
-            <v-btn text color="primary">{{ videoState[item.videoState] }}</v-btn>
+            <v-btn text :color="stateColor[item.videoState]">{{ videoState[item.videoState] }}</v-btn>
           </template>
           <!-- 显示详情 -->
           <template v-slot:buttons="{ item }">
@@ -135,7 +135,7 @@ import TDialog from '@/components/t-dialog.vue'
 import VideoDetail from './childComponent/videoDetail.vue'
 import HTabs from '@/components/h-tabs.vue'
 import VideoDatePicker from './childComponent/videoDatePicker.vue'
-import { videoState } from '@/enum/state-enum'
+import { videoState, stateColor } from '@/enum/state-enum'
 import TopicAlert from '@/components/h-topic-alert.vue'
 
 @Component({
@@ -194,6 +194,7 @@ export default class VideoDataList extends Vue {
   }
   private showVideoPopup = false
   private videoState = videoState
+  private stateColor = stateColor
 
   private desserts: Array<topicTable> = [] // 数据列表
   private dessertsObj: Partial<Array<topicTable>> = [] // 表格弹框

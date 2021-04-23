@@ -5,7 +5,7 @@ const gitRevisionPlugin = new GitRevisionPlugin()
 
 // 生产环境版本号
 // 版本号 3.[月份].[自增打包次数]，自增打包次数每月一日重置
-if (process.env.NODE_ENV === 'production') {
+if (process.env.NODE_ENV === 'production' && !process.env.VUE_APP_NINJA_CAT) {
   const fs = require('fs')
   const packageJSON = require('./package.json')
 

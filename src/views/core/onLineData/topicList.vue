@@ -474,6 +474,7 @@ export default class OnlineDataTopicList extends Vue {
         !!this.tab
       )
     } else {
+      console.log(`ondata` + this.queryTopicID)
       this.searchMethod(
         true,
         {

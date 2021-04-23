@@ -31,7 +31,7 @@
         >
           <!-- 当前状态 -->
           <template v-slot:logState="{ item }">
-            <v-btn text color="primary">{{ logState[item.logState] }}</v-btn>
+            <v-btn text :color="stateColor[item.logState]">{{ logState[item.logState] }}</v-btn>
           </template>
           <!-- 服务器详情 -->
           <template v-slot:detail="{ item }">
@@ -103,7 +103,7 @@ import HSearch from '@/components/h-search.vue'
 import { tableHeaderType } from '@/type/table.type'
 import { loggerParamType } from '@/type/logger.type'
 import HTabs from '@/components/h-tabs.vue'
-import { logState } from '@/enum/state-enum'
+import { logState, stateColor } from '@/enum/state-enum'
 import TopicAlert from '@/components/h-topic-alert.vue'
 @Component({
   components: {
@@ -136,6 +136,7 @@ export default class LogDataList extends Vue {
   private fDialogFlag = false // 弹窗展示
   private fDialogShow = 0
   private logState = logState
+  private stateColor = stateColor
 
   private tDialogFlag = false
   private tDialogShow = 0

@@ -21,7 +21,7 @@ if (process.env.VUE_APP_NINJA_CAT && !sessionStorage.getItem('staging')) {
 
 export const VUE_APP_BASE_API = process.env.VUE_APP_NINJA_CAT
   ? sessionStorage.getItem('staging') || undefined
-  : 'http://192.168.59.235:8080'
+  : 'http://172.51.216.106:49090'
 
 export const BASE_REQUEST_TIME_OUT = 60000
 

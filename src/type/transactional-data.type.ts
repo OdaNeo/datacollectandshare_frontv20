@@ -1,10 +1,22 @@
 import { baseType } from './params.type'
 
 export interface transactionalTableType extends baseType {
-  maxValue: string
+  maxValues: string
   cron: string
-  inputContent: string
-  canNotEdit: boolean
+  taskName: string
+  t: {
+    inputContent: string
+    topicId: number
+    topicName: string
+    dataStruct: string
+  }
+  newTopics: boolean
+  taskId: number
+  id: number | string
+  taskConfigId: number
+  isEdit: boolean
+  dataStruct: string
+  taskInfoList: Array<unknown>
   column: { field: string; type: string; iskey: string }[]
   increment: string
   reader_database: string

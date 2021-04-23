@@ -3,7 +3,7 @@
     <v-row>
       <HSearch
         v-model="queryTopicID"
-        label="请输入查找的任务ID"
+        :label="`请输入查找的${searchLabel}ID`"
         @append="searchTopic"
         @enter="searchTopic"
         @clear="tabChange(tab)"
@@ -41,7 +41,7 @@
         >
           <!-- 当前状态 -->
           <template v-slot:state="{ item }">
-            <v-btn text color="primary">{{ transactionalState[item.isRun] }}</v-btn>
+            <v-btn text :color="stateColor[item.isRun]">{{ transactionalState[item.isRun] }}</v-btn>
           </template>
           <!-- 脚本 -->
           <template v-slot:content="{ item }">
@@ -58,6 +58,21 @@
           <template v-slot:monitor="{}">
             <v-btn text color="primary">报警信息</v-btn>
           </template>
+          <!-- 主题数据结构 -->
+          <template v-slot:column="{ item }">
+            <v-btn text color="primary" @click.stop="showColumn(item)">主题数据结构</v-btn>
+          </template>
+          <!-- 关联任务 -->
+          <template v-slot:taskInfoList="{ item }">
+            <v-btn
+              text
+              color="primary"
+              :disabled="!item.taskInfoList || (item.taskInfoList && !item.taskInfoList.length > 0)"
+              @click.stop="showTaskInfoList(item)"
+            >
+              关联任务详情
+            </v-btn>
+          </template>
           <!-- 操作 -->
           <template v-slot:buttons="{ item }">
             <!-- 操作下拉框 -->
@@ -68,19 +83,15 @@
               <v-list dense>
                 <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
                   <v-btn
-                    :disabled="
-                      (i.tab && !i.tab.includes(tab)) ||
-                      item.state === undefined ||
-                      item.state === -1 ||
-                      (i.state && item.state === i.state)
-                    "
+                    :disabled="(i.tab && !i.tab.includes(tab)) || (i.state && item.isRun === Number(i.state))"
                     class="pa-0"
                     width="100%"
                     :color="i.color ? i.color : `primary`"
                     text
-                    @click="i.handle(item)"
-                    >{{ i.text }}</v-btn
+                    @click="i.handle && i.handle(item)"
                   >
+                    {{ i.text }}
+                  </v-btn>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -89,17 +100,19 @@
       </v-tab-item>
     </v-tabs-items>
     <!-- 表单展示 -->
-    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag" :indeterminate="false" :value="upLoadingProgress">
+    <HDialog v-if="fDialogFlag" v-model="fDialogFlag" :indeterminate="false" :value="upLoadingProgress">
       <CreateTransactionalData v-if="dialogFlag === 1" />
       <UploadSQL v-if="dialogFlag === 2" @change="transformSQLFile" />
-    </f-dialog>
+    </HDialog>
 
     <!-- 表格显示 -->
-    <t-dialog v-model="tDialogFlag">
+    <TDialog v-model="tDialogFlag" :width="dialogFlag === 7 ? 950 : 700">
       <!-- default -->
       <ContentDetails slot="default" v-if="dialogFlag === 3" :rowJson="rowJson" />
       <HSimpleDetails slot="default" v-if="dialogFlag === 4" :str="str" />
       <LoggerDetail slot="default" v-if="dialogFlag === 5" :dessertsObj="dessertsObj" />
+      <ColumnDetail slot="default" v-if="dialogFlag === 6" :dessertsObj="dessertsObj" />
+      <TaskInfoListDetail slot="default" v-if="dialogFlag === 7" :dessertsObj="dessertsObj" />
       <!-- button -->
       <v-btn
         v-if="dialogFlag === 3 || dialogFlag === 4"
@@ -113,7 +126,7 @@
       >
         一键复制
       </v-btn>
-    </t-dialog>
+    </TDialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
   </div>
@@ -126,7 +139,7 @@ import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
 import TDialog from '@/components/t-dialog.vue'
-import FDialog from '@/components/h-dialog.vue'
+import HDialog from '@/components/h-dialog.vue'
 import util from '@/decorator/utilsDecorator'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import { FormObj } from '@/type/dialog-form.type'
@@ -142,21 +155,27 @@ import { uploadStoreModule } from '@/store/modules/upload'
 import HTabs from '@/components/h-tabs.vue'
 import { transactionalTableType } from '@/type/transactional-data.type'
 import cronstrue from 'cronstrue/i18n'
-import { transactionalState } from '@/enum/state-enum'
+import { transactionalState, stateColor } from '@/enum/state-enum'
 import LoggerDetail from './childComponent/loggerDetail.vue'
+import { dataType } from '@/enum/topic-datatype-enum'
+import ColumnDetail from './childComponent/columnDetail.vue'
+import TaskInfoListDetail from './childComponent/taskInfoListDetail.vue'
+
 @Component({
   components: {
     HTable,
     HConfirm,
     TDialog,
-    FDialog,
+    HDialog,
     CreateTransactionalData,
     ContentDetails,
     UploadSQL,
     HSimpleDetails,
     HSearch,
     HTabs,
-    LoggerDetail
+    LoggerDetail,
+    ColumnDetail,
+    TaskInfoListDetail
   }
 })
 @http
@@ -180,8 +199,10 @@ export default class transactionalDataList extends Vue {
   private dialogFlag = 0
   private tDialogFlag = false // 表格展示
   private queryTopicID = '' // 查询主题ID input框内容
+  private searchLabel: `任务` | `主题` = `任务`
 
   private transactionalState = transactionalState
+  private stateColor = stateColor
 
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
@@ -209,13 +230,6 @@ export default class transactionalDataList extends Vue {
     return uploadStoreModule.upLoadingProgress
   }
 
-  private activeTopicIDs: {
-    text: string
-    value: string
-    topicName: string
-    dataStruct: string
-  }[] = [] // 第0项 为新建主题，其余异步获取
-
   private desserts: Array<topicTable> = [] // 数据列表
   private loading = true
 
@@ -224,12 +238,14 @@ export default class transactionalDataList extends Vue {
       {
         text: '任务ID',
         align: 'center',
-        value: 'id'
+        value: 'id',
+        isHide: this.tab === 2 || this.tab === 3
       },
       {
-        text: '任务名称',
+        text: '主题ID',
         align: 'center',
-        value: 'taskName'
+        value: 'id',
+        isHide: this.tab === 0 || this.tab === 1
       },
       {
         text: '所属用户',
@@ -237,15 +253,41 @@ export default class transactionalDataList extends Vue {
         value: 'userName'
       },
       {
+        text: '主题名称',
+        align: 'center',
+        value: 'topicName',
+        isHide: this.tab === 0 || this.tab === 1
+      },
+      {
+        text: '主题数据结构',
+        align: 'center',
+        slot: 'column',
+        isHide: this.tab === 0 || this.tab === 1
+      },
+      {
+        text: '关联任务',
+        align: 'center',
+        slot: 'taskInfoList',
+        isHide: this.tab === 0 || this.tab === 1
+      },
+      {
+        text: '任务名称',
+        align: 'center',
+        value: 'taskName',
+        isHide: this.tab === 2 || this.tab === 3
+      },
+      {
         text: '当前状态',
         align: 'center',
-        slot: 'state'
+        slot: 'state',
+        isHide: this.tab === 2 || this.tab === 3
       },
       {
         text: '运行周期',
         align: 'center',
         value: 'cron',
-        isHide: this.tab === 2,
+        width: 100,
+        isHide: this.tab === 2 || this.tab === 3,
         format: (cron: string) => {
           return cron ? cronstrue.toString(cron, { locale: 'zh_CN' }) : ''
         }
@@ -254,24 +296,25 @@ export default class transactionalDataList extends Vue {
         text: '脚本',
         align: 'center',
         slot: 'content',
-        isHide: this.tab === 2
+        isHide: this.tab === 2 || this.tab === 3
       },
       {
         text: '日志',
         align: 'center',
         slot: 'log',
-        isHide: this.tab === 2
+        isHide: this.tab === 2 || this.tab === 3
       },
       {
         text: '报警信息',
         align: 'center',
         slot: 'monitor',
-        isHide: this.tab === 2
+        isHide: this.tab === 2 || this.tab === 3
       },
       {
         text: '操作',
         align: 'center',
-        slot: 'buttons'
+        slot: 'buttons',
+        isHide: this.tab !== 1
       }
     ]
   }
@@ -291,18 +334,18 @@ export default class transactionalDataList extends Vue {
     {
       text: `启动`,
       tab: [1],
-      state: 1,
-      handle: this.stateTransactionalData
+      state: `1`,
+      handle: this.startTransactionalData
     },
     {
       text: `停止`,
       tab: [1],
-      state: 2,
+      state: `0`,
       handle: this.stopTransactionalData
     },
     {
       text: `重跑`,
-      tab: [0],
+      tab: [1],
       handle: this.reloadTransactionalData
     },
     {
@@ -315,69 +358,84 @@ export default class transactionalDataList extends Vue {
 
   // 创建 修改事务性数据，添加任务
   private async createTransactionalData(items?: transactionalTableType) {
-    this.createLoading = true
+    items ? (this.createLoading = false) : (this.createLoading = true)
+    console.log(items)
     //  异步获取主题列表
-    const data = await this.getActiveTopics()
+    const activeTopicIDs = await this.getActiveTopics()
 
-    data.unshift({
-      text: `新增主题`,
-      value: `新增主题`,
-      topicName: '',
-      dataStruct: ''
-    })
-
-    this.activeTopicIDs = [...data]
     // loading
     this.createLoading = false
-    // 创建
+
     this.formProvide.btnName = items ? ['立即修改'] : ['立即提交']
-    this.formProvide.title = items?.inputContent ? '修改任务' : '创建任务'
+    this.formProvide.title = items ? '修改任务' : '创建任务'
     this.formProvide.methodName = 'addTransactionalData'
-    this.formProvide.formObj = {
-      cron: '0',
-      column: [
-        {
-          field: '',
-          type: 'string',
-          iskey: 'false',
-          disabled: false
-        }
-      ],
-      activeTopicIDs: this.activeTopicIDs,
-      id: this.activeTopicIDs[0].value
-    }
+
     this.fDialogFlag = true
     this.dialogFlag = 1
 
+    // 修改 不能新建主题，只能复用
     if (items) {
+      const _inputContent = JSON.parse(items.t.inputContent)
+      activeTopicIDs.unshift({
+        text: items.t.topicId.toString(),
+        value: items.t.topicId.toString(),
+        topicName: items.t.topicName,
+        dataStruct: items.t.dataStruct
+      })
       // 修改，可以更换主题
-      this.formProvide.formObj.id = items.id // 回显选择的主题
-      this.formProvide.formObj.canNotEdit = true
-      this.formProvide.formObj.topicName = items.topicName
-      this.formProvide.formObj.maxValue = items.maxValue
-      this.formProvide.formObj.cron = items.cron
-      const _inputContent = JSON.parse(items.inputContent)
-      console.log(_inputContent)
-      this.formProvide.formObj.increment = _inputContent.reader.info.increment
-      this.formProvide.formObj.reader_database = _inputContent.reader.database
-      this.formProvide.formObj.reader_jdbcUrl = _inputContent.reader.info.jdbcurl.replaceAll('jdbc:mysql://', '')
-      this.formProvide.formObj.reader_password = _inputContent.reader.info.password
-      this.formProvide.formObj.reader_table = _inputContent.reader.info.table
-      this.formProvide.formObj.reader_username = _inputContent.reader.info.username
-
-      this.formProvide.formObj.writer_database = _inputContent.writer.database
-      this.formProvide.formObj.writer_table = _inputContent.writer.info.table
-      this.formProvide.formObj.writer_zookeeper_url = _inputContent.writer.info.zookeeper_url
-
-      this.formProvide.formObj.column = _inputContent.column.map(
-        (item: { field: string; type: string; iskey: boolean }) => {
+      this.formProvide.formObj = {
+        taskId: items.id,
+        id: items.t.topicId.toString(),
+        taskConfigId: items.taskConfigId,
+        topicName: items.t.topicName,
+        activeTopicIDs: activeTopicIDs,
+        taskName: items.taskName,
+        canNotEdit: true,
+        isEdit: true,
+        newTopics: false,
+        maxValues: items.maxValues,
+        cron: items.cron,
+        increment: _inputContent.reader.info.increment,
+        reader_database: _inputContent.reader.database,
+        reader_jdbcUrl: _inputContent.reader.info.jdbcurl.replaceAll('jdbc:mysql://', ''),
+        reader_password: _inputContent.reader.info.password,
+        reader_table: _inputContent.reader.info.table,
+        reader_username: _inputContent.reader.info.username,
+        writer_database: _inputContent.writer.database,
+        writer_table: _inputContent.writer.info.table,
+        writer_zookeeper_url: _inputContent.writer.info.zookeeper_url,
+        column: _inputContent.column.map((item: { field: string; type: string; iskey: boolean }) => {
           return {
             ...item,
             iskey: `${item.iskey}`,
             disabled: true
           }
-        }
-      )
+        })
+      }
+    } else {
+      // 创建
+      activeTopicIDs.unshift({
+        text: `新增主题`,
+        value: '新增主题',
+        topicName: '',
+        dataStruct: ''
+      })
+      this.formProvide.formObj = {
+        isEdit: false,
+        canNotEdit: true,
+        newTopics: true,
+        activeTopicIDs: activeTopicIDs,
+        id: activeTopicIDs[0].value,
+        cron: '0',
+        column: [
+          {
+            field: '',
+            type: 'string',
+            iskey: 'false',
+            disabled: false
+          }
+        ]
+      }
     }
   }
 
@@ -415,17 +473,21 @@ export default class transactionalDataList extends Vue {
     this.rowJson = t.jsonContent
   }
 
-  // 提交事务性数据
+  // 提交事务性数据 后台验重，绕过验重
   private async addTransactionalData(item: transactionalTableType) {
-    const canNotEdit = item.canNotEdit
+    const isEdit = item.isEdit
+    const newTopics = item.newTopics
     const params: any = {}
     const {
       topicName,
+      taskName,
       id,
+      taskId,
       cron,
       column,
       increment,
-      maxValue,
+      maxValues,
+      taskConfigId,
       reader_database,
       reader_jdbcUrl,
       reader_password,
@@ -435,6 +497,9 @@ export default class transactionalDataList extends Vue {
       writer_table,
       writer_zookeeper_url
     } = item
+
+    const topicId = !newTopics ? id : undefined
+    const _id = isEdit ? taskId : undefined
 
     // reader
     params.reader = {
@@ -455,6 +520,7 @@ export default class transactionalDataList extends Vue {
         table: writer_table
       }
     }
+
     // column
     params.column = column.map((item: { field: string; type: string; iskey: string }) => {
       return {
@@ -463,27 +529,31 @@ export default class transactionalDataList extends Vue {
         iskey: JSON.parse(item.iskey)
       }
     })
-    console.log(params)
 
+    // 全量更新
     const { success } = await this.h_request['httpPOST'](
-      !canNotEdit ? 'POST_TASKINFO_FINDALLTASKBYTASKID' : 'POST_TOPICS_UPDATETRANSACTIONALTOPIC',
+      !isEdit ? 'POST_TASKINFO_ADDDATATASK' : 'POST_TASKINFO_UPDATETASKINFORDB',
       {
+        id: _id,
         cron: `0 0 ${cron} * * ?`,
-        taskType: 8,
+        taskType: topicInterFaceType[`事务数据`],
+        taskName: taskName,
+        taskConfigId,
         t: {
-          maxValues: maxValue,
+          maxValues: maxValues,
           inputContent: JSON.stringify(params),
-          topicId: id,
+          topicId,
           topicName,
-          reader: '',
-          writer: '',
-          dataStruct: ''
+          reader: JSON.stringify(params.reader),
+          writer: JSON.stringify(params.writer),
+          dataStruct: JSON.stringify(params.column),
+          dsAnnotation: JSON.stringify(params.column[0])
         }
       }
     )
 
     if (success) {
-      this.h_utils['alertUtil'].open(!canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
+      this.h_utils['alertUtil'].open(!isEdit ? '主题创建成功' : '主题修改成功', true, 'success')
       this.searchMethod(
         false,
         {
@@ -560,14 +630,13 @@ export default class transactionalDataList extends Vue {
     }
     this.sqlFile = e
   }
-  // TODO:搜索tab修改
   // 查询通用调用方法
   private async searchMethod(bool: boolean, params: paramsType, tab: number) {
     this.loading = true
-    // 事务 任务 =8
-    params.type = topicInterFaceType[`事务数据`]
+    // 事务 任务/主题 =8
 
     if (tab === 0) {
+      params.type = topicInterFaceType[`事务数据`]
       // 所有任务
       const { data }: returnType = bool
         ? await this.h_request['httpGET']('GET_TASKINFO_FINDALLTASKBYTASKID', params)
@@ -576,17 +645,31 @@ export default class transactionalDataList extends Vue {
       this.desserts = data ? [...data.list] : []
       this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
     } else if (tab === 1) {
+      params.type = topicInterFaceType[`事务数据`]
       // 我的任务
       const { data }: returnType = bool
-        ? await this.h_request['httpGET']('GET_TOPICS_MYTOPICSBYID', params)
-        : await this.h_request['httpGET']('GET_TOPICS_MYTOPICS', params)
+        ? await this.h_request['httpGET']('GET_TASKINFO_FINDALLMYTASKBYID', params)
+        : await this.h_request['httpGET']('GET_TASKINFO_FINDALLMYTASK', params)
+
       this.desserts = data ? [...data.list] : []
       this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
-    } else {
-      // 主题列表
+    } else if (tab === 2) {
+      params['faceTypes'] = topicInterFaceType['事务数据']
+      params['dataType'] = dataType['结构化']
+      // 所有主题
       const { data }: returnType = bool
         ? await this.h_request['httpGET']('GET_TOPICS_SELECTTOPIC', params)
         : await this.h_request['httpGET']('GET_TOPICS_FIND_ALL', params)
+
+      this.desserts = data ? [...data.list] : []
+      this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
+    } else {
+      params['faceTypes'] = topicInterFaceType['事务数据']
+      params['dataType'] = dataType['结构化']
+      // 我的主题
+      const { data }: returnType = bool
+        ? await this.h_request['httpGET']('GET_TOPICS_MYTOPICSBYID', params)
+        : await this.h_request['httpGET']('GET_TOPICS_MYTOPICS', params)
 
       this.desserts = data ? [...data.list] : []
       this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
@@ -605,10 +688,8 @@ export default class transactionalDataList extends Vue {
     if (this.HConfirmItem.id === undefined) {
       return
     }
-    const { success } = await this.h_request['httpGET']('GET_TOPICS_DELETE', {
-      taskId: this.HConfirmItem.id,
-      topicName: this.HConfirmItem.topicName,
-      topicInterFaceType: this.HConfirmItem.topicInterFaceType
+    const { success } = await this.h_request['httpGET']('GET_TASKINFO_DELETEDATATASK', {
+      taskId: this.HConfirmItem.id
     })
     if (success) {
       this.HConfirmShow = false
@@ -619,7 +700,7 @@ export default class transactionalDataList extends Vue {
           pageSize: this.pageSize,
           pageNum: 1
         },
-        2
+        this.tab
       )
       this.pageNum = 1
     }
@@ -627,6 +708,7 @@ export default class transactionalDataList extends Vue {
 
   // tab切换方法
   private tabChange(tab: number) {
+    tab === 0 || tab === 1 ? (this.searchLabel = '任务') : (this.searchLabel = '主题')
     this.searchMethod(
       false,
       {
@@ -663,10 +745,11 @@ export default class transactionalDataList extends Vue {
         this.tab
       )
     } else {
+      const _query = this.tab === 0 || this.tab === 1 ? `taskId` : `topicID`
       this.searchMethod(
         true,
         {
-          taskId: this.queryTopicID,
+          [_query]: this.queryTopicID,
           pageNum: 1,
           pageSize: this.pageSize
         },
@@ -677,35 +760,36 @@ export default class transactionalDataList extends Vue {
   }
 
   // 启动
-  private async stateTransactionalData(item: { id: number }) {
-    const { success } = await this.h_request['httpGET']('GET_TOPICS_UPDATETRANSACTIONALTOPICSTATE', {
-      taskId: item.id,
-      state: 1
+  private async startTransactionalData(item: { id: number }) {
+    const { success } = await this.h_request['httpGET']('GET_TASKINFO_UPDATETASKINFOSTATE', {
+      id: item.id,
+      isRun: 1
     })
 
     if (success) {
       this.h_utils['alertUtil'].open(`主题${item.id}启动成功`, true, 'success')
       // 乐观更新
-      this.$set(item, `state`, 1)
+      this.$set(item, `isRun`, 1)
     }
   }
 
   // 停止
   private async stopTransactionalData(item: { id: number }) {
-    const { success } = await this.h_request['httpGET']('GET_TOPICS_UPDATETRANSACTIONALTOPICSTATE', {
-      taskId: item.id,
-      state: 2
+    const { success } = await this.h_request['httpGET']('GET_TASKINFO_UPDATETASKINFOSTATE', {
+      id: item.id,
+      isRun: 0
     })
 
     if (success) {
       this.h_utils['alertUtil'].open(`主题${item.id}停止成功`, true, 'success')
       // 乐观更新
-      this.$set(item, `state`, 2)
+      this.$set(item, `isRun`, 0)
     }
   }
+
   // 重跑
   private async reloadTransactionalData(item: { id: number }) {
-    const { success } = await this.h_request['httpGET']('GET_TOPICS_RUNTRANSACTIONALTOPICAGAIN', {
+    const { success } = await this.h_request['httpGET']('GET_TASKINFO_RUNTASKAGAIN', {
       taskId: item.id
     })
     if (success) {
@@ -717,8 +801,18 @@ export default class transactionalDataList extends Vue {
   private async getCurrentLog(item: { id: number }) {
     this.$set(item, `loading`, true)
     this.rowJson = ''
-    const { data } = await this.h_request.httpGET('GET_TOPICS_GETOFFLINELOGBYTOPICID', { taskId: item.id, num: 1 })
-    if (data && data.list.length > 0) {
+    const { data } = await this.h_request.httpGET('GET_TASKINFO_FINDTRANSCATIONLOG', {
+      taskId: item.id,
+      type: topicInterFaceType['事务数据'],
+      pageNum: 1,
+      pageSize: 1
+    })
+    if (!data) {
+      this.$set(item, `loading`, false)
+      return
+    }
+
+    if (data.list.length > 0) {
       this.rowJson = data.list[0].log
       this.formProvide.title = `创建时间：${Moment(data.list[0].createTime).format('YYYY/MM/DD k:mm:ss')}`
     } else {
@@ -734,11 +828,11 @@ export default class transactionalDataList extends Vue {
   }
 
   // 历史日志
-  private async getHistoryLog(topicId: number) {
+  private async getHistoryLog(taskId: number) {
     this.$router.push({
       name: `事务数据统计`,
       query: {
-        topicId: `${topicId}`
+        taskId: `${taskId}`
       }
     })
   }
@@ -749,6 +843,22 @@ export default class transactionalDataList extends Vue {
     this.dialogFlag = 5
     this.formProvide.title = '其他信息'
     this.dessertsObj = item
+  }
+
+  // 主题数据结构
+  private showColumn(item: transactionalTableType) {
+    this.tDialogFlag = true
+    this.dialogFlag = 6
+    this.formProvide.title = '主题数据结构'
+    this.dessertsObj = item.dataStruct ? JSON.parse(item.dataStruct) : ''
+  }
+
+  // 关联任务
+  private showTaskInfoList(item: transactionalTableType) {
+    this.tDialogFlag = true
+    this.dialogFlag = 7
+    this.formProvide.title = '关联任务列表'
+    this.dessertsObj = item.taskInfoList
   }
 
   // 复制

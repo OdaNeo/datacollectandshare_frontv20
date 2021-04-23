@@ -1,6 +1,6 @@
 {
   "name": "tctdatacenter",
-  "version": "3.4.10",
+  "version": "3.4.12",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
