@@ -485,13 +485,13 @@ export default class VideoDataList extends Vue {
 
     if (tab) {
       const { data } = bool
-        ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
+        ? await this.h_request['httpGET']<object>('GET_SELECT_MYVIDEO_TOPIC_BY_ID_OR_KEYWORD', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICS', params)
 
       _data = data ? { ...data } : undefined
     } else {
       const { data } = bool
-        ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTTOPIC', params)
+        ? await this.h_request['httpGET']<object>('GET_SELECT_VIDEO_TOPIC_BY_ID_OR_KEYWORD', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL', params)
       _data = data ? { ...data } : undefined
     }

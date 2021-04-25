@@ -85,6 +85,8 @@ const GET_TOPICS_STARTVIDEOTOPIC = '/topics/startVideoTopic' // 启动视频
 const GET_TOPICS_STOPVIDEOTOPIC = '/topics/stopVideoTopic' // 停止视频
 const POST_TOPICS_UPDATEVIDEOTOPIC = '/topics/updateVideoTopic' // 更新视频主题
 const GET_STATISTICS_STATVIDEOTOPICDATA = '/statistics/statVideoTopicData'
+const GET_SELECT_VIDEO_TOPIC_BY_ID_OR_KEYWORD = `/topics/selectVideoTopicByIdOrKeyword` //视频主题按主题ID或者关键字查询
+const GET_SELECT_MYVIDEO_TOPIC_BY_ID_OR_KEYWORD=`/topics/selectMyVideoTopicByIdOrKeyword` //我的视频主题按主题ID或者关键字查询
 
 // ----------------------------- 日志数据 ---------------------------
 const POST_TOPICS_ADDLOGGERTOPIC = '/topics/addLoggerTopic'
@@ -197,6 +199,8 @@ const REQUEST_NAME = {
   GET_TOPICS_FINDALLSUBTOPIC,
   GET_TOPICS_SELECTSUBTOPICBYIDORNAME,
   GET_VIDEO_ADDRESS,
+  GET_SELECT_VIDEO_TOPIC_BY_ID_OR_KEYWORD,
+  GET_SELECT_MYVIDEO_TOPIC_BY_ID_OR_KEYWORD,
   POST_TOPIC_ADDPROTOBUFTOPIC,
   GET_CMD_FINDMYCMDINFOBYID,
   GET_TOPICS_GETOFFLINELOG,
