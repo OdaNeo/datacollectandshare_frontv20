@@ -17,18 +17,7 @@
     </h-table>
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
-      <HSimpleDetails slot="default" :str="str" />
-      <!-- button -->
-      <v-btn
-        slot="button"
-        color="primary"
-        :disabled="!str"
-        text
-        v-clipboard:copy="str"
-        v-clipboard:success="onCopy"
-        v-clipboard:error="onError"
-        >一键复制</v-btn
-      >
+      <HContentDetails :row="row" />
     </t-dialog>
   </div>
 </template>
@@ -41,13 +30,13 @@ import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
-import HSimpleDetails from '@/components/h-simple-details.vue'
+import HContentDetails from '@/components/h-content-details.vue'
 
 @Component({
   components: {
     HTable,
     TDialog,
-    HSimpleDetails
+    HContentDetails
   }
 })
 @http
@@ -65,7 +54,7 @@ export default class SqlStatistics extends Vue {
   })
 
   private tDialogFlag = false
-  private str = ''
+  private row = ''
 
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
@@ -108,7 +97,7 @@ export default class SqlStatistics extends Vue {
 
   // 查看日志详情
   private sqlLogDetails(item: { log: string }) {
-    this.str = item.log
+    this.row = item.log
     this.tDialogFlag = true
     this.formProvide.title = '查看SQL日志详情'
   }

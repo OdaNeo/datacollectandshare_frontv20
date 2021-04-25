@@ -3,6 +3,7 @@
     <!-- 上传文件 -->
     <HFileUpLoad
       accept=".sql"
+      class="mt-2"
       label="支持.sql格式的单文件上传"
       outlined
       description="上传文件"

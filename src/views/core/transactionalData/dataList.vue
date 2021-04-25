@@ -45,7 +45,9 @@
           </template>
           <!-- 脚本 -->
           <template v-slot:content="{ item }">
-            <v-btn text color="primary" @click="sqlMaxContentDetails(item.t)">自增属性</v-btn>
+            <v-btn text color="primary" :disabled="!item.t.sqlMaxContent" @click="sqlMaxContentDetails(item.t)"
+              >自增属性</v-btn
+            >
             <v-btn text color="primary" @click="jsonContentDetails(item.t)">DataX</v-btn>
           </template>
           <!-- 日志 -->
@@ -106,29 +108,12 @@
     </HDialog>
 
     <!-- 表格显示 -->
-    <TDialog v-model="tDialogFlag" :width="dialogFlag === 7 ? 950 : 700">
-      <!-- default -->
-      <ContentDetails slot="default" v-if="dialogFlag === 3" :rowJson="rowJson" />
-      <HSimpleDetails slot="default" v-if="dialogFlag === 4" :str="str" />
-      <LoggerDetail slot="default" v-if="dialogFlag === 5" :dessertsObj="dessertsObj" />
-      <ColumnDetail slot="default" v-if="dialogFlag === 6" :dessertsObj="dessertsObj" />
-      <TaskInfoListDetail slot="default" v-if="dialogFlag === 7" :dessertsObj="dessertsObj" />
-      <!-- button -->
-      <v-btn
-        v-if="dialogFlag === 3 || dialogFlag === 4"
-        slot="button"
-        color="primary"
-        :disabled="!(dialogFlag === 3 ? rowJson : str)"
-        text
-        v-clipboard:copy="dialogFlag === 3 ? rowJson : str"
-        v-clipboard:success="onCopy"
-        v-clipboard:error="onError"
-      >
-        一键复制
-      </v-btn>
+    <TDialog v-model="tDialogFlag" :width="dialogFlag === 5 ? 950 : 700">
+      <HContentDetails v-if="dialogFlag === 3" :row="row" />
+      <HTable v-if="dialogFlag === 4 || dialogFlag === 5" :headers="headersObj" :desserts="dessertsObj"></HTable>
     </TDialog>
 
-    <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
+    <HConfirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
   </div>
 </template>
 <script lang="ts">
@@ -145,10 +130,9 @@ import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import { FormObj } from '@/type/dialog-form.type'
 import CreateTransactionalData from './childComponent/createTransactionalData.vue'
 import UploadSQL from './childComponent/uploadSQL.vue'
-import ContentDetails from '@/components/h-content-details.vue'
+import HContentDetails from '@/components/h-content-details.vue'
 import { tableHeaderType } from '@/type/table.type'
 import upload from '@/decorator/uploadDecorator'
-import HSimpleDetails from '@/components/h-simple-details.vue'
 import HSearch from '@/components/h-search.vue'
 import Moment from 'moment'
 import { uploadStoreModule } from '@/store/modules/upload'
@@ -156,10 +140,7 @@ import HTabs from '@/components/h-tabs.vue'
 import { transactionalTableType } from '@/type/transactional-data.type'
 import cronstrue from 'cronstrue/i18n'
 import { transactionalState, stateColor } from '@/enum/state-enum'
-import LoggerDetail from './childComponent/loggerDetail.vue'
 import { dataType } from '@/enum/topic-datatype-enum'
-import ColumnDetail from './childComponent/columnDetail.vue'
-import TaskInfoListDetail from './childComponent/taskInfoListDetail.vue'
 
 @Component({
   components: {
@@ -168,14 +149,10 @@ import TaskInfoListDetail from './childComponent/taskInfoListDetail.vue'
     TDialog,
     HDialog,
     CreateTransactionalData,
-    ContentDetails,
+    HContentDetails,
     UploadSQL,
-    HSimpleDetails,
     HSearch,
-    HTabs,
-    LoggerDetail,
-    ColumnDetail,
-    TaskInfoListDetail
+    HTabs
   }
 })
 @http
@@ -215,8 +192,9 @@ export default class transactionalDataList extends Vue {
     topicInterFaceType: 0
   }
 
-  private rowJson = ''
-  private str = ''
+  private row = ''
+
+  private headersObj: Array<tableHeaderType> = []
   private dessertsObj = {}
 
   private sqlFile: File | null = null
@@ -382,18 +360,20 @@ export default class transactionalDataList extends Vue {
         topicName: items.t.topicName,
         dataStruct: items.t.dataStruct
       })
-      // 修改，可以更换主题
+      const _colum: { field: string; type: string; iskey: boolean }[] = JSON.parse(activeTopicIDs[0].dataStruct)
+
       this.formProvide.formObj = {
+        canNotEdit: true,
+        isEdit: true,
+        newTopics: false,
         taskId: items.id,
         id: items.t.topicId.toString(),
         taskConfigId: items.taskConfigId,
         topicName: items.t.topicName,
         activeTopicIDs: activeTopicIDs,
         taskName: items.taskName,
-        canNotEdit: true,
-        isEdit: true,
-        newTopics: false,
-        maxValues: items.maxValues,
+        t_id: items.t.id,
+        maxValues: items.t.maxValues,
         cron: items.cron,
         increment: _inputContent.reader.info.increment,
         reader_database: _inputContent.reader.database,
@@ -404,7 +384,7 @@ export default class transactionalDataList extends Vue {
         writer_database: _inputContent.writer.database,
         writer_table: _inputContent.writer.info.table,
         writer_zookeeper_url: _inputContent.writer.info.zookeeper_url,
-        column: _inputContent.column.map((item: { field: string; type: string; iskey: boolean }) => {
+        column: _colum.map((item: { field: string; type: string; iskey: boolean }) => {
           return {
             ...item,
             iskey: `${item.iskey}`,
@@ -462,7 +442,7 @@ export default class transactionalDataList extends Vue {
     this.tDialogFlag = true
     this.formProvide.title = '自增属性查询脚本'
     this.dialogFlag = 3
-    this.rowJson = t.sqlMaxContent
+    this.row = JSON.parse(t.sqlMaxContent)
   }
 
   // datax回显
@@ -470,7 +450,7 @@ export default class transactionalDataList extends Vue {
     this.tDialogFlag = true
     this.formProvide.title = 'DataX脚本'
     this.dialogFlag = 3
-    this.rowJson = t.jsonContent
+    this.row = JSON.parse(t.jsonContent)
   }
 
   // 提交事务性数据 后台验重，绕过验重
@@ -482,6 +462,7 @@ export default class transactionalDataList extends Vue {
       topicName,
       taskName,
       id,
+      t_id,
       taskId,
       cron,
       column,
@@ -543,6 +524,7 @@ export default class transactionalDataList extends Vue {
           maxValues: maxValues,
           inputContent: JSON.stringify(params),
           topicId,
+          id: t_id,
           topicName,
           reader: JSON.stringify(params.reader),
           writer: JSON.stringify(params.writer),
@@ -613,9 +595,9 @@ export default class transactionalDataList extends Vue {
 
       if (data !== 0) {
         // SQL日志详情
-        this.str = message
+        this.row = message
         this.tDialogFlag = true
-        this.dialogFlag = 4
+        this.dialogFlag = 3
         this.formProvide.title = 'SQL日志详情'
 
         clearInterval(this.sqlTimer)
@@ -767,7 +749,7 @@ export default class transactionalDataList extends Vue {
     })
 
     if (success) {
-      this.h_utils['alertUtil'].open(`主题${item.id}启动成功`, true, 'success')
+      this.h_utils['alertUtil'].open(`主题${item.id}已启动`, true, 'success')
       // 乐观更新
       this.$set(item, `isRun`, 1)
     }
@@ -781,7 +763,7 @@ export default class transactionalDataList extends Vue {
     })
 
     if (success) {
-      this.h_utils['alertUtil'].open(`主题${item.id}停止成功`, true, 'success')
+      this.h_utils['alertUtil'].open(`主题${item.id}已停止`, true, 'success')
       // 乐观更新
       this.$set(item, `isRun`, 0)
     }
@@ -793,14 +775,14 @@ export default class transactionalDataList extends Vue {
       taskId: item.id
     })
     if (success) {
-      this.h_utils['alertUtil'].open(`主题${item.id}重跑成功`, true, 'success')
+      this.h_utils['alertUtil'].open(`主题${item.id}已重跑`, true, 'success')
     }
   }
 
   // 最新日志
   private async getCurrentLog(item: { id: number }) {
     this.$set(item, `loading`, true)
-    this.rowJson = ''
+    this.row = ''
     const { data } = await this.h_request.httpGET('GET_TASKINFO_FINDTRANSCATIONLOG', {
       taskId: item.id,
       type: topicInterFaceType['事务数据'],
@@ -813,10 +795,10 @@ export default class transactionalDataList extends Vue {
     }
 
     if (data.list.length > 0) {
-      this.rowJson = data.list[0].log
+      this.row = data.list[0].log
       this.formProvide.title = `创建时间：${Moment(data.list[0].createTime).format('YYYY/MM/DD k:mm:ss')}`
     } else {
-      this.rowJson = ''
+      this.row = ''
       this.$set(item, `loading`, false)
       this.h_utils['alertUtil'].open(`未查询到最新日志`, true, 'error')
       return
@@ -839,35 +821,103 @@ export default class transactionalDataList extends Vue {
 
   // 时间信息
   private showTimerLog(item: transactionalTableType) {
-    this.tDialogFlag = true
-    this.dialogFlag = 5
-    this.formProvide.title = '其他信息'
+    this.headersObj = [
+      {
+        text: '自增属性最大值',
+        align: 'center',
+        value: 't',
+        format: (t: { maxValues: string }) => {
+          return t.maxValues
+        }
+      },
+      {
+        text: '创建时间',
+        align: 'center',
+        value: 'createTime'
+      },
+      {
+        text: '最后运行时间',
+        align: 'center',
+        value: 'lastRunTime'
+      },
+      {
+        text: '修改时间',
+        align: 'center',
+        value: 'updateTime'
+      }
+    ]
     this.dessertsObj = item
+    this.tDialogFlag = true
+    this.dialogFlag = 4
+    this.formProvide.title = '其他信息'
   }
 
   // 主题数据结构
   private showColumn(item: transactionalTableType) {
-    this.tDialogFlag = true
-    this.dialogFlag = 6
     this.formProvide.title = '主题数据结构'
     this.dessertsObj = item.dataStruct ? JSON.parse(item.dataStruct) : ''
+    this.headersObj = [
+      {
+        text: '字段名',
+        align: 'center',
+        value: 'field'
+      },
+      {
+        text: '类型',
+        align: 'center',
+        value: 'type'
+      },
+      {
+        text: '是否为key',
+        align: 'center',
+        value: 'iskey'
+      }
+    ]
+    this.tDialogFlag = true
+    this.dialogFlag = 4
   }
 
   // 关联任务
   private showTaskInfoList(item: transactionalTableType) {
-    this.tDialogFlag = true
-    this.dialogFlag = 7
-    this.formProvide.title = '关联任务列表'
     this.dessertsObj = item.taskInfoList
-  }
-
-  // 复制
-  private onCopy() {
-    this.h_utils.alertUtil.open('复制成功', true, 'success', 1500)
-  }
-  // 复制
-  private onError() {
-    this.h_utils.alertUtil.open('复制失败', true, 'error', 1500)
+    this.headersObj = [
+      {
+        text: '任务ID',
+        align: 'center',
+        value: 'id'
+      },
+      {
+        text: '任务名称',
+        align: 'center',
+        value: 'taskName'
+      },
+      {
+        text: '运行周期',
+        align: 'center',
+        value: 'cron',
+        format: (cron: string) => {
+          return cron ? cronstrue.toString(cron, { locale: 'zh_CN' }) : ''
+        }
+      },
+      {
+        text: '创建时间',
+        align: 'center',
+        value: 'createTime'
+      },
+      {
+        text: '最后运行时间',
+        align: 'center',
+        value: 'lastRunTime'
+      },
+      {
+        text: '修改时间',
+        align: 'center',
+        value: 'updateTime'
+      }
+    ]
+    this.tDialogFlag = true
+    this.dialogFlag = 5
+    this.formProvide.title = '关联任务列表'
   }
 
   // 清除timer

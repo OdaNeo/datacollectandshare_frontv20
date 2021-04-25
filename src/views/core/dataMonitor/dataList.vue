@@ -7,7 +7,6 @@
           v-model="queryTopicID"
           outlined
           dense
-          :clear-icon="mdiCloseCircleOutline"
           height="35px"
           label="请输入作业ID"
           v-only-num
@@ -20,7 +19,6 @@
           outlined
           dense
           :items="serverNameItems"
-          :clear-icon="mdiCloseCircleOutline"
           height="35px"
           label="请选择作业名"
           v-only-num
@@ -33,7 +31,6 @@
           outlined
           dense
           :items="statusItems"
-          :clear-icon="mdiCloseCircleOutline"
           height="35px"
           label="请选择作业状态"
           v-only-num
@@ -96,7 +93,7 @@
 
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
-      <HSimpleDetails :str="str" v-if="tDialogShow === 1" class="mb-2" />
+      <HContentDetails :row="row" v-if="tDialogShow === 1" />
     </t-dialog>
   </div>
 </template>
@@ -109,9 +106,8 @@ import { realTimeData } from '@/type/calendar'
 import { calendarType, calendarColorType } from '@/enum/calendar-enum'
 import { paramsType, returnType } from '@/type/http-request.type'
 import TDialog from '@/components/t-dialog.vue'
-import HSimpleDetails from '@/components/h-simple-details.vue'
+import HContentDetails from '@/components/h-content-details.vue'
 import { FormObj } from '@/type/dialog-form.type'
-import { mdiCloseCircleOutline } from '@mdi/js'
 import { mdiMagnify } from '@mdi/js'
 import Moment from 'moment'
 
@@ -119,7 +115,7 @@ import Moment from 'moment'
   components: {
     HTable,
     TDialog,
-    HSimpleDetails
+    HContentDetails
   }
 })
 @http
@@ -135,7 +131,6 @@ export default class dataMonitor extends Vue {
       }
     }
   })
-  private mdiCloseCircleOutline = mdiCloseCircleOutline
 
   private calendarType = calendarType
   private calendarColorType = calendarColorType
@@ -161,7 +156,7 @@ export default class dataMonitor extends Vue {
   private paginationLength = 1
   private loading = true
 
-  private str = ''
+  private row = ''
   private tDialogFlag = false // 表格展示
   private tDialogShow = 0 // 展示哪个弹窗
 
@@ -271,7 +266,7 @@ export default class dataMonitor extends Vue {
     this.tDialogFlag = true
     this.formProvide.title = '日志信息详情'
     this.tDialogShow = 1
-    this.str = remarks
+    this.row = remarks
   }
 
   created(): void {

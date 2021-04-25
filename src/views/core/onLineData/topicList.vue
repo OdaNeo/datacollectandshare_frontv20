@@ -83,7 +83,7 @@
       <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <TopicAncillaryInformationDialog :rowObj="rowObj" v-else-if="tDialogShow === 2" />
       <UserSubNameList :rowObj="rowObj" v-else-if="tDialogShow === 3" />
-      <HSimpleDetails :str="str" v-else-if="tDialogShow === 4" class="mb-2" />
+      <HContentDetails :row="str" v-else-if="tDialogShow === 4" />
     </t-dialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -116,8 +116,7 @@ import UserSubNameList from './childComponent/userSubNameList.vue'
 import HSearch from '@/components/h-search.vue'
 import { onlineDataParamType } from '@/type/online-data.type'
 import HTabs from '@/components/h-tabs.vue'
-import HSimpleDetails from '@/components/h-simple-details.vue'
-
+import HContentDetails from '@/components/h-content-details.vue'
 @Component({
   components: {
     HTable,
@@ -132,7 +131,7 @@ import HSimpleDetails from '@/components/h-simple-details.vue'
     HSearch,
     UserSubNameList,
     HTabs,
-    HSimpleDetails
+    HContentDetails
   }
 })
 @http

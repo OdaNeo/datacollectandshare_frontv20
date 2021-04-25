@@ -9,10 +9,10 @@
     <div class="ml-8 mt-4" v-if="formProvide.formObj.total > 5">
       ...... 还有{{ formProvide.formObj.total - 5 }}条报警信息
     </div>
-    <div class="mb-1 d-flex" v-if="formProvide.formObj.total !== 0">
-      <v-spacer />
-      <v-btn class="mx-4" text color="primary" @click="router">查看更多详情</v-btn>
-    </div>
+    <v-card-actions v-if="formProvide.formObj.total !== 0" class="pa-0">
+      <v-spacer></v-spacer>
+      <v-btn text color="primary" @click="router">查看更多详情</v-btn>
+    </v-card-actions>
   </div>
 </template>
 <script lang="ts">
@@ -23,6 +23,7 @@ import { topicTable } from '@/type/topic.type'
 import { calendarType, calendarColorType } from '@/enum/calendar-enum'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Moment from 'moment'
+
 @Component({
   components: {
     HTable

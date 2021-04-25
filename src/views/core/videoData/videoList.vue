@@ -57,9 +57,10 @@
           <template v-slot:buttons="{ item }">
             <v-btn text color="primary" @click="showVideoDetail(item)">视频详情信息</v-btn>
           </template>
-          <!-- 报警信息 -->
+          <!-- 报警状态 -->
           <template v-slot:monitor="{ item }">
-            <v-btn text color="primary" :loading="!!item.videoLoading" @click="showTopicAlert(item)">报警信息</v-btn>
+            <v-btn text color="error">告警</v-btn>
+            <v-btn text color="primary" @click="showTopicAlert(item)">更多</v-btn>
           </template>
           <!-- 操作 -->
           <template v-slot:buttons2="{ item }">
@@ -98,7 +99,6 @@
     <!-- 表格显示 -->
     <TDialog v-model="tDialogFlag">
       <VideoDetail v-if="tDialogShow === 1" :dessertsObj="dessertsObj" />
-      <TopicAlert v-if="tDialogShow === 2" :dessertsObj="dessertsObj" />
     </TDialog>
 
     <!-- 视频 -->
@@ -136,8 +136,7 @@ import VideoDetail from './childComponent/videoDetail.vue'
 import HTabs from '@/components/h-tabs.vue'
 import VideoDatePicker from './childComponent/videoDatePicker.vue'
 import { videoState, stateColor } from '@/enum/state-enum'
-import TopicAlert from '@/components/h-topic-alert.vue'
-
+import { calendarType, calendarColorType } from '@/enum/calendar-enum'
 @Component({
   components: {
     HTable,
@@ -150,8 +149,7 @@ import TopicAlert from '@/components/h-topic-alert.vue'
     TDialog,
     VideoDetail,
     HTabs,
-    VideoDatePicker,
-    TopicAlert
+    VideoDatePicker
   }
 })
 @http
@@ -178,6 +176,8 @@ export default class VideoDataList extends Vue {
   private searchMode: `id` | `videoKeyword` = `id`
   // 切换开关
   private switchMode = true
+  private calendarType = calendarType
+  private calendarColorType = calendarColorType
 
   private tab = 0
   private items = ['所有主题', '我的主题']
@@ -243,7 +243,7 @@ export default class VideoDataList extends Vue {
       slot: 'buttons'
     },
     {
-      text: '报警信息查询',
+      text: '报警状态',
       align: 'center',
       slot: 'monitor'
     },
@@ -367,7 +367,10 @@ export default class VideoDataList extends Vue {
     params['topicInterFaceType'] = topicInterFaceType['VIDEO']
     params['dataType'] = dataType['非结构化']
     params['videoDescribe'] = formObj.videoDescribe
-    params['videoKeyword'] = formObj.videoKeyword.map(item => item.keyword).join(',')
+    params['videoKeyword'] = formObj.videoKeyword
+      .map(item => item.keyword)
+      .filter(item => item)
+      .join(',')
     // edit
     canNotEdit && (params['id'] = formObj.id)
 
@@ -597,26 +600,17 @@ export default class VideoDataList extends Vue {
     this.tDialogShow = 1
   }
 
-  // showTopicAlert
+  // 更多告警信息
   private async showTopicAlert(item: { id: number }) {
-    this.$set(item, `videoLoading`, true)
-    // 默认显示10条
-    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG', {
-      topicId: item.id,
-      pageSize: 5,
-      pageNum: 1
-    })
-
-    this.formProvide.title = `主题${item.id}报警信息`
-    this.formProvide.formObj = {
-      id: item.id,
-      total: data ? data.total : 0
+    if (!item.id) {
+      return
     }
-    this.tDialogFlag = true
-    this.tDialogShow = 2
-
-    this.dessertsObj = data ? data.list : []
-    this.$set(item, `videoLoading`, false)
+    this.$router.push({
+      name: `监控日志`,
+      query: {
+        topicId: `${item.id}`
+      }
+    })
   }
 
   // 跳转到  报警管理

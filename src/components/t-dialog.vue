@@ -17,11 +17,6 @@
           <slot />
         </v-container>
       </v-card-text>
-      <!-- 按钮插槽 -->
-      <v-card-actions v-if="$slots[`button`]" class="pt-0 pb-2 pr-8">
-        <v-spacer></v-spacer>
-        <slot name="button" />
-      </v-card-actions>
     </v-card>
   </v-dialog>
 </template>

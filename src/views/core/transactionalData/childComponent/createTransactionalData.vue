@@ -78,7 +78,7 @@
               dense
               height="35"
               label="自增属性最大值"
-              v-model="formProvide.formObj['maxValue']"
+              v-model="formProvide.formObj['maxValues']"
               v-only-num
               class="ml-2 mr-15"
             ></v-text-field>
