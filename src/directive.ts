@@ -18,7 +18,6 @@ Vue.directive('onlyNum', {
     ele.oninput = function () {
       let val = ele.value
       val = val.replace(/[^0-9]/g, '') // 清除"数字"和"."以外的字符
-      console.log(val)
       val = val.replace(/^0+/, '') // 首匹配去0
       // 不能超过init最大值
       if (val > 2147483647) {

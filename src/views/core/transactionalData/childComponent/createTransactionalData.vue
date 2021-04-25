@@ -1,11 +1,11 @@
 <template>
   <div id="CreateTransactionalData">
     <!-- 步骤条 -->
-    <HStep :step="step" :stepTitle="stepTitle" :MAX="4" @nextStep="nextStep" @prevStep="prevStep" />
+    <HStep :step="step" :stepTitle="stepTitle" :MAX="4" @nextStep="step++" @prevStep="step--" />
 
     <v-window v-model="step">
       <!-- 1 -->
-      <v-window-item :value="1" class="ml-6" eager>
+      <v-window-item :value="1" eager>
         <!-- 主题名称 -->
         <v-row no-gutters>
           <!-- 选择主题ID -->
@@ -29,7 +29,7 @@
       </v-window-item>
 
       <!-- 2 -->
-      <v-window-item :value="2" class="ml-6" eager>
+      <v-window-item :value="2" eager>
         <v-row no-gutters>
           <!-- taskName -->
           <HSimpleInput
@@ -52,7 +52,7 @@
       </v-window-item>
 
       <!-- 3 -->
-      <v-window-item :value="3" class="ml-6" eager>
+      <v-window-item :value="3" eager>
         <v-row no-gutters>
           <HSelect
             class="mt-6"
@@ -124,7 +124,7 @@
         </v-row>
       </v-window-item>
 
-      <v-window-item :value="4" class="ml-6" eager>
+      <v-window-item :value="4" eager>
         <v-row no-gutters>
           <!-- 4 -->
           <!-- 写要求  -->
@@ -187,24 +187,6 @@ export default class CreateTransactionalData extends Vue {
     '任务属性信息——目标数据库'
   ]
   // 控制打开面板
-
-  private prevStep() {
-    if (this.step < 1) {
-      this.step = 1
-      return
-    } else {
-      this.step--
-    }
-  }
-
-  private nextStep() {
-    if (this.step > 4) {
-      this.step = 4
-      return
-    } else {
-      this.step++
-    }
-  }
 
   // 选择主题回显
   private changeTopic(val: string | null) {

@@ -52,13 +52,14 @@
           </template>
           <!-- 日志 -->
           <template v-slot:log="{ item }">
-            <v-btn text color="primary" :loading="!!item.loading" @click.stop="getCurrentLog(item)">最新日志</v-btn>
-            <v-btn text color="primary" @click.stop="getHistoryLog(item.id)">历史日志</v-btn>
-            <v-btn text color="primary" @click.stop="showTimerLog(item)">其他信息</v-btn>
+            <v-btn text color="primary" :loading="!!item.loading" @click.stop="getCurrentLog(item)">最新</v-btn>
+            <v-btn text color="primary" @click.stop="getHistoryLog(item.id)">历史</v-btn>
+            <v-btn text color="primary" @click.stop="showTimerLog(item)">其他</v-btn>
           </template>
-          <!-- 报警信息 -->
-          <template v-slot:monitor="{}">
-            <v-btn text color="primary">报警信息</v-btn>
+          <!-- 报警状态 -->
+          <template v-slot:monitor="{ item }">
+            <v-btn text color="error">告警</v-btn>
+            <v-btn text color="primary" @click="showTopicAlert(item)">更多</v-btn>
           </template>
           <!-- 主题数据结构 -->
           <template v-slot:column="{ item }">
@@ -134,12 +135,11 @@ import HContentDetails from '@/components/h-content-details.vue'
 import { tableHeaderType } from '@/type/table.type'
 import upload from '@/decorator/uploadDecorator'
 import HSearch from '@/components/h-search.vue'
-import Moment from 'moment'
 import { uploadStoreModule } from '@/store/modules/upload'
 import HTabs from '@/components/h-tabs.vue'
 import { transactionalTableType } from '@/type/transactional-data.type'
 import cronstrue from 'cronstrue/i18n'
-import { transactionalState, stateColor } from '@/enum/state-enum'
+import { transactionalState, stateColor, transactionalResult } from '@/enum/state-enum'
 import { dataType } from '@/enum/topic-datatype-enum'
 
 @Component({
@@ -277,15 +277,15 @@ export default class transactionalDataList extends Vue {
         isHide: this.tab === 2 || this.tab === 3
       },
       {
-        text: '日志',
+        text: '报警状态',
         align: 'center',
-        slot: 'log',
+        slot: 'monitor',
         isHide: this.tab === 2 || this.tab === 3
       },
       {
-        text: '报警信息',
+        text: '日志及其他',
         align: 'center',
-        slot: 'monitor',
+        slot: 'log',
         isHide: this.tab === 2 || this.tab === 3
       },
       {
@@ -299,11 +299,6 @@ export default class transactionalDataList extends Vue {
 
   // 操作下拉框
   private buttonItems = [
-    // {
-    //   text: `创建任务`,
-    //   tab: [2],
-    //   handle: this.addTask
-    // },
     {
       text: `修改`,
       tab: [1],
@@ -665,6 +660,19 @@ export default class transactionalDataList extends Vue {
     this.HConfirmItem = { ...item }
   }
 
+  // 更多告警信息
+  private async showTopicAlert(item: { id: number }) {
+    if (!item.id) {
+      return
+    }
+    this.$router.push({
+      name: `监控日志`,
+      query: {
+        topicId: `${item.id}`
+      }
+    })
+  }
+
   // 删除
   private async deleteTopic() {
     if (this.HConfirmItem.id === undefined) {
@@ -749,7 +757,7 @@ export default class transactionalDataList extends Vue {
     })
 
     if (success) {
-      this.h_utils['alertUtil'].open(`主题${item.id}已启动`, true, 'success')
+      this.h_utils['alertUtil'].open(`任务${item.id}已启动`, true, 'success')
       // 乐观更新
       this.$set(item, `isRun`, 1)
     }
@@ -763,7 +771,7 @@ export default class transactionalDataList extends Vue {
     })
 
     if (success) {
-      this.h_utils['alertUtil'].open(`主题${item.id}已停止`, true, 'success')
+      this.h_utils['alertUtil'].open(`任务${item.id}已停止`, true, 'success')
       // 乐观更新
       this.$set(item, `isRun`, 0)
     }
@@ -775,7 +783,7 @@ export default class transactionalDataList extends Vue {
       taskId: item.id
     })
     if (success) {
-      this.h_utils['alertUtil'].open(`主题${item.id}已重跑`, true, 'success')
+      this.h_utils['alertUtil'].open(`任务${item.id}已重跑`, true, 'success')
     }
   }
 
@@ -795,12 +803,19 @@ export default class transactionalDataList extends Vue {
     }
 
     if (data.list.length > 0) {
-      this.row = data.list[0].log
-      this.formProvide.title = `创建时间：${Moment(data.list[0].createTime).format('YYYY/MM/DD k:mm:ss')}`
+      const item = data.list[0]
+      this.row = `
+      <v-card-text>
+        <div>时间：${item.executeTime}</div>
+        <div>状态：${transactionalResult[item.result]}</div>
+        <div>日志：${item.log}</div>
+      </v-card-text>
+      `
+      this.formProvide.title = `最新日志`
     } else {
       this.row = ''
       this.$set(item, `loading`, false)
-      this.h_utils['alertUtil'].open(`未查询到最新日志`, true, 'error')
+      this.h_utils['alertUtil'].open(`未查询到最新日志`, true, 'error', 1500)
       return
     }
 

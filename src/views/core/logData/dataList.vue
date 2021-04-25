@@ -39,7 +39,8 @@
           </template>
           <!-- 报警信息 -->
           <template v-slot:monitor="{ item }">
-            <v-btn text color="primary" :loading="!!item.logLoading" @click="showTopicAlert(item)">报警信息</v-btn>
+            <v-btn text color="error">告警</v-btn>
+            <v-btn text color="primary" @click="showTopicAlert(item)">更多</v-btn>
           </template>
           <!-- 操作 -->
           <template v-slot:buttons="{ item }">
@@ -77,7 +78,6 @@
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
       <LogDataDialog v-if="tDialogShow === 1" :dessertsObj="dessertsObj" />
-      <TopicAlert v-if="tDialogShow === 2" :dessertsObj="dessertsObj" />
     </t-dialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -104,7 +104,7 @@ import { tableHeaderType } from '@/type/table.type'
 import { loggerParamType } from '@/type/logger.type'
 import HTabs from '@/components/h-tabs.vue'
 import { logState, stateColor } from '@/enum/state-enum'
-import TopicAlert from '@/components/h-topic-alert.vue'
+
 @Component({
   components: {
     HConfirm,
@@ -114,8 +114,7 @@ import TopicAlert from '@/components/h-topic-alert.vue'
     LogDataDialog,
     TDialog,
     HSearch,
-    HTabs,
-    TopicAlert
+    HTabs
   }
 })
 @http
@@ -427,24 +426,15 @@ export default class LogDataList extends Vue {
 
   // showTopicAlert
   private async showTopicAlert(item: { id: number }) {
-    this.$set(item, `logLoading`, true)
-    // 默认显示10条
-    const { data } = await this.h_request['httpGET']('GET_MONITOR_FIND_ALL_MONITOR_LOG', {
-      topicId: item.id,
-      pageSize: 5,
-      pageNum: 1
-    })
-
-    this.formProvide.title = `主题${item.id}报警信息`
-    this.formProvide.formObj = {
-      id: item.id,
-      total: data ? data.total : 0
+    if (!item.id) {
+      return
     }
-    this.tDialogFlag = true
-    this.tDialogShow = 2
-
-    this.dessertsObj = data ? data.list : []
-    this.$set(item, `logLoading`, false)
+    this.$router.push({
+      name: `监控日志`,
+      query: {
+        topicId: `${item.id}`
+      }
+    })
   }
 
   // 启动

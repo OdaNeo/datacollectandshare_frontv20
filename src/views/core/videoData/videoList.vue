@@ -228,14 +228,14 @@ export default class VideoDataList extends Vue {
       slot: 'videoState'
     },
     {
-      text: '描述',
-      align: 'center',
-      value: 'videoDescribe'
-    },
-    {
       text: '关键字',
       align: 'center',
       value: 'videoKeyword'
+    },
+    {
+      text: '描述',
+      align: 'center',
+      value: 'videoDescribe'
     },
     {
       text: '详情信息',

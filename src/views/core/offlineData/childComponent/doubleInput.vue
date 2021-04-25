@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="12" class="HDoubleInput d-flex">
+  <v-col cols="12" class="DoubleInput d-flex">
     <label class="label mr-2"><span v-if="required" class="require-span">*</span>{{ description }}</label>
     <div class="ml-4 flex-grow-1">
       <v-row
@@ -14,7 +14,6 @@
             dense
             outlined
             clearable
-            :disabled="formProvide.formObj.canNotEdit"
             :clear-icon="mdiCloseCircleOutline"
             :label="object[0].text"
             height="35"
@@ -25,7 +24,6 @@
           <v-text-field
             v-model="item[object[1].value]"
             dense
-            :disabled="formProvide.formObj.canNotEdit"
             outlined
             :label="object[1].text"
             clearable
@@ -38,7 +36,6 @@
         <v-col v-if="accumulation" class="d-flex justify-space-around flex-grow-0" style="min-width: 60px">
           <v-btn
             v-if="formProvide.formObj.header.length === index + 1"
-            :disabled="formProvide.formObj.canNotEdit"
             fab
             dark
             depressed
@@ -52,7 +49,6 @@
           </v-btn>
           <v-btn
             v-if="formProvide.formObj.header.length > 1"
-            :disabled="formProvide.formObj.canNotEdit"
             fab
             dark
             depressed
@@ -77,7 +73,7 @@ import { mdiPlus, mdiMinus, mdiCloseCircleOutline } from '@mdi/js'
 // required 会在 description 前添加 * 标识
 // 触发change事件传递 File，父组件可使用change 或者 v-model语法糖接收
 @Component({})
-export default class HDoubleInput extends Vue {
+export default class DoubleInput extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   @Prop({ default: true }) private required!: boolean
   @Prop() private description!: string

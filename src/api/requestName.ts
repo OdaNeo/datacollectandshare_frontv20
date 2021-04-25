@@ -53,6 +53,20 @@ const GET_SUBMODERATIONS_SELECTMYSUBTOPICBYTOPICIDORNAME = '/subModerations/sele
 // /topics/alterTopic ?
 // /topics/addSubUser ?
 
+// ---------------------------  离线数据 ----------------------------
+const GET_OFFLINE_FINDALLTASK = '/offline/findAllTask' //查询所有任务
+const GET_OFFLINE_FINDALLTASKBYID = '/offline/findAllTaskById' //根据id查询所有任务
+const GET_OFFLINE_FINDMYTASK = '/offline/findMyTask' //查询我的任务
+const GET_OFFLINE_FINDMYTASKBYID = '/offline/findMyTaskById' //根据id查询我的任务
+const GET_OFFLINE_STOPTASK = '/offline/stopTask' //停止任务
+const GET_OFFLINE_STARTTASK = '/offline/startTask' //启动任务
+const GET_OFFLINE_DELETETASK = '/offline/deleteTask' //删除任务
+const GET_OFFLINE_RUNTASKAGAIN = '/offline/runTaskAgain' //重跑任务
+const POST_OFFLINE_SAVEURLTASK = '/offline/saveUrlTask' //添加url任务
+const POST_OFFLINE_SAVEFTPTASK = '/offline/saveFtpTask' //添加ftp任务
+const POST_OFFLINE_UPDATEURLTASK = '/offline/updateUrlTask' //修改url任务
+const POST_OFFLINE_UPDATEFTPTASK = '/offline/updateFtpTask' //修改ftp任务
+
 // --------------------------- 系统管理 --------------------------
 const GET_SYSTEM_FINDALL = '/system/findAll' // 获取系统列表
 const GET_SYSTEM_GETINFOBYTYPENAME = '/system/getInfoByTypeName'
@@ -86,7 +100,7 @@ const GET_TOPICS_STOPVIDEOTOPIC = '/topics/stopVideoTopic' // 停止视频
 const POST_TOPICS_UPDATEVIDEOTOPIC = '/topics/updateVideoTopic' // 更新视频主题
 const GET_STATISTICS_STATVIDEOTOPICDATA = '/statistics/statVideoTopicData'
 const GET_SELECT_VIDEO_TOPIC_BY_ID_OR_KEYWORD = `/topics/selectVideoTopicByIdOrKeyword` //视频主题按主题ID或者关键字查询
-const GET_SELECT_MYVIDEO_TOPIC_BY_ID_OR_KEYWORD=`/topics/selectMyVideoTopicByIdOrKeyword` //我的视频主题按主题ID或者关键字查询
+const GET_SELECT_MYVIDEO_TOPIC_BY_ID_OR_KEYWORD = `/topics/selectMyVideoTopicByIdOrKeyword` //我的视频主题按主题ID或者关键字查询
 
 // ----------------------------- 日志数据 ---------------------------
 const POST_TOPICS_ADDLOGGERTOPIC = '/topics/addLoggerTopic'
@@ -136,6 +150,18 @@ const GET_TRANSMISSION_HISTORY = '/transmission/history/ATS'
 //  const GET_TOPICS_FIND_ALL_TOPIC = '/topics/findAllTopic'
 
 const REQUEST_NAME = {
+  GET_OFFLINE_FINDALLTASK,
+  GET_OFFLINE_FINDALLTASKBYID,
+  GET_OFFLINE_FINDMYTASK,
+  GET_OFFLINE_FINDMYTASKBYID,
+  GET_OFFLINE_STOPTASK,
+  GET_OFFLINE_STARTTASK,
+  GET_OFFLINE_DELETETASK,
+  GET_OFFLINE_RUNTASKAGAIN,
+  POST_OFFLINE_SAVEURLTASK,
+  POST_OFFLINE_SAVEFTPTASK,
+  POST_OFFLINE_UPDATEURLTASK,
+  POST_OFFLINE_UPDATEFTPTASK,
   POST_LOGIN_LOGIN,
   GET_USER_FIND_ALL_USER,
   GET_USER_FIND_ALL_USER_BY_PARAM,

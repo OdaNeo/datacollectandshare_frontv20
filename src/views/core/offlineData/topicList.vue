@@ -11,8 +11,12 @@
       />
       <v-col>
         <!-- <v-btn color="primary" depressed class="mr-6" small dark @click="createDataBaseAcquisition()">数据库采集</v-btn> -->
-        <v-btn color="primary" depressed class="mr-6" small dark @click="createServePull()">主动拉取</v-btn>
-        <v-btn color="primary" depressed class="mr-6" small dark @click="pullFTP">FTP</v-btn>
+        <v-btn color="primary" depressed class="mr-6" :loading="createUrlLoading" small dark @click="createServePull()"
+          >主动拉取URL</v-btn
+        >
+        <v-btn color="primary" depressed class="mr-6" :loading="createFtpLoading" small dark @click="pullFTP()"
+          >FTP</v-btn
+        >
       </v-col>
     </v-row>
     <!-- tab -->
@@ -28,22 +32,23 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
+          <!-- 当前状态 -->
+          <template v-slot:state="{ item }">
+            <v-btn text :color="stateColor[item.isRun]">{{ offlineState[item.isRun] }}</v-btn>
+          </template>
           <!-- 数据结构 -->
           <template v-slot:buttons="{ item }">
-            <v-btn :disabled="item.topicInterFaceType === 5" text color="primary" @click="dataStructureDetails(item)"
-              >数据结构详情
+            <v-btn :disabled="item.topicInterFaceType === 5" text color="primary" @click="dataStructureDetails(item)">
+              数据结构详情
             </v-btn>
           </template>
           <!-- 附加信息 -->
           <template v-slot:details="{ item }">
-            <v-btn
-              text
-              color="primary"
-              :loading="!!item.loading"
-              :disabled="item.topicInterFaceType === 5"
-              @click="getTopicInformation(item)"
-              >查看附加信息</v-btn
-            >
+            <v-btn text color="primary" @click.stop="showTimerLog(item)">时间信息</v-btn>
+
+            <v-btn text color="primary" :disabled="item.taskType === 5" @click="getTopicInformation(item)">
+              查看附加信息
+            </v-btn>
           </template>
           <!-- 操作 -->
           <template v-slot:buttons2="{ item }">
@@ -76,7 +81,7 @@
     <!-- 表单展示 -->
     <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
       <CreateDataBaseAcquisition v-if="fDialogShow === 1" />
-      <CreateServePull v-else-if="fDialogShow === 2" @changeTopic="handleSelectTopic" />
+      <CreateServePull v-else-if="fDialogShow === 2" />
       <PullFTP v-else-if="fDialogShow === 3" />
     </f-dialog>
 
@@ -84,6 +89,7 @@
     <t-dialog v-model="tDialogFlag">
       <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <TopicAncillaryInformationDialog :otherObj="otherObj" v-else-if="tDialogShow === 2" />
+      <HTable v-else-if="tDialogShow === 3" :headers="headersObj" :desserts="otherObj"></HTable>
     </t-dialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -112,6 +118,9 @@ import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInformationDialog.vue'
 import HTabs from '@/components/h-tabs.vue'
 import { tableHeaderType } from '@/type/table.type'
+import { offlineTableType } from '@/type/offline-data.type'
+import { offlineState, stateColor } from '@/enum/state-enum'
+import cronstrue from 'cronstrue/i18n'
 
 @Component({
   components: {
@@ -148,9 +157,11 @@ export default class OfflineTopicList extends Vue {
     }
   })
   private tab = 0
-  private items = ['所有任务', '我的任务', '主题列表']
+  private items = ['所有任务', '我的任务', '所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示
   private tDialogFlag = false // 表格展示
+  private offlineState = offlineState
+  private stateColor = stateColor
 
   private fDialogShow = 0 // 展示哪个弹窗 1.数据库采集 2.服务主动拉取 3.拉取FTP
   private tDialogShow = 0 // 展示哪个弹窗 1.数据结构 2.其他信息
@@ -159,14 +170,12 @@ export default class OfflineTopicList extends Vue {
   private otherObj: object = {}
 
   private loading = true
-
-  private activeTopicIDs = [`新建主题`, '123', '1231', '23423', '34534'] // 第0项 为新建主题，其余异步获取
+  private createUrlLoading = false
+  private createFtpLoading = false
 
   private HConfirmShow = false
   private HConfirmItem = {
-    id: '',
-    topicName: '',
-    topicInterFaceType: 0
+    id: ''
   }
 
   private protoFile: File | null = null
@@ -177,28 +186,79 @@ export default class OfflineTopicList extends Vue {
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
+  private headersObj: Array<tableHeaderType> = []
+
   private get headers(): Array<tableHeaderType> {
     return [
       // 表头内容 所有主题
       {
+        text: '任务ID',
+        align: 'center',
+        value: 'id',
+        isHide: this.tab === 2 || this.tab === 3
+      },
+      {
         text: '主题ID',
         align: 'center',
-        value: 'id'
+        value: 'id',
+        isHide: this.tab === 0 || this.tab === 1
       },
       {
         text: '主题名称',
         align: 'center',
-        value: 'topicName'
+        value: 'topicName',
+        isHide: this.tab === 0 || this.tab === 1
+      },
+      {
+        text: '任务名称',
+        align: 'center',
+        value: 'taskName',
+        isHide: this.tab === 2 || this.tab === 3
       },
       {
         text: '所属用户',
         align: 'center',
-        value: 'userName'
+        value: 'userName',
+        isHide: this.tab === 0 || this.tab === 1
       },
       {
-        text: '接口类型',
+        text: '当前状态',
         align: 'center',
-        value: 'topicInterFaceType',
+        slot: 'state',
+        isHide: this.tab === 2 || this.tab === 3
+      },
+      {
+        text: '是否写入ES',
+        align: 'center',
+        value: 't',
+        format: val => {
+          return val ? (val.saveEs === 1 ? '是' : '否') : '未知'
+        },
+        isHide: this.tab === 2 || this.tab === 3
+      },
+      {
+        text: '是否写入HBase',
+        align: 'center',
+        value: 't',
+        format: val => {
+          return val ? (val.saveHbase === 1 ? '是' : '否') : '未知'
+        },
+        isHide: this.tab === 2 || this.tab === 3
+      },
+      {
+        text: '运行周期',
+        align: 'center',
+        value: 'cron',
+        width: 100,
+        isHide: this.tab === 2 || this.tab === 3,
+        format: (cron: string) => {
+          return cron ? cronstrue.toString(cron, { locale: 'zh_CN' }) : ''
+        }
+      },
+      {
+        text: '任务类型',
+        align: 'center',
+        value: 'taskType',
         format: (val: number) => {
           return topicInterFaceType[val]
         }
@@ -206,18 +266,20 @@ export default class OfflineTopicList extends Vue {
       {
         text: '数据结构',
         align: 'center',
-        slot: 'buttons'
+        slot: 'buttons',
+        isHide: this.tab === 0 || this.tab === 1
       },
       {
         text: '附加信息',
         align: 'center',
         slot: 'details',
-        isHide: this.tab === 2
+        isHide: this.tab === 2 || this.tab === 3
       },
       {
         text: '操作',
         align: 'center',
-        slot: 'buttons2'
+        slot: 'buttons2',
+        isHide: this.tab !== 1
       }
     ]
   }
@@ -225,24 +287,24 @@ export default class OfflineTopicList extends Vue {
   // 操作下拉框
   private buttonItems = [
     {
-      text: `创建任务`,
-      tab: [2],
-      faceType: 3,
-      handle: this.addTask
+      text: `修改`,
+      tab: [1],
+      handle: this.addItems
     },
-    // {
-    //   text: `增加字段`,
-    //   tab: [1],
-    //   faceType: 3,
-    //   handle: this.addItems
-    // },
     {
       text: `启动`,
-      tab: [1]
+      tab: [1],
+      handle: this.startOfflineData
     },
     {
       text: `停止`,
-      tab: [1]
+      tab: [1],
+      handle: this.stopOfflineData
+    },
+    {
+      text: `重跑`,
+      tab: [1],
+      handle: this.reloadOfflineData
     },
     {
       text: '删除',
@@ -336,16 +398,20 @@ export default class OfflineTopicList extends Vue {
   }
 
   // 服务主动拉取 新建任务 和 修改
-  private createServePull(item?: any) {
+  private async createServePull(item?: any) {
+    item ? (this.createUrlLoading = false) : (this.createUrlLoading = true)
+    console.log(item)
+    //  异步获取主题列表
+    const activeTopicIDs = await this.getActiveTopics(topicInterFaceType['服务主动拉取'])
+
+    // loading
+    this.createUrlLoading = false
+
     this.formProvide.btnName = ['立即提交']
     this.formProvide.title = '服务主动拉取'
     this.formProvide.methodName = 'addServePull'
     this.fDialogFlag = true
     this.fDialogShow = 2
-    const _obj = {
-      activeTopicIDs: [...this.activeTopicIDs],
-      id: this.activeTopicIDs[0]
-    }
 
     if (item) {
       const obj1: any = JSON.parse(item.dsAnnotation)
@@ -361,9 +427,11 @@ export default class OfflineTopicList extends Vue {
       }
       const _header = JSON.parse(item.header)
       this.formProvide.formObj = {
-        ..._obj,
         canNotEdit: true,
+        isEdit: true,
+        newTopics: false,
         topicName: item.topicName,
+        activeTopicIDs: activeTopicIDs,
         id: item.id,
         url: item.url,
         type: item.type,
@@ -385,8 +453,20 @@ export default class OfflineTopicList extends Vue {
             ]
       }
     } else {
+      // 创建
+      activeTopicIDs.unshift({
+        text: `新增主题`,
+        value: '新增主题',
+        topicName: '',
+        dataStruct: ''
+      })
       this.formProvide.formObj = {
-        ..._obj,
+        isEdit: false,
+        canNotEdit: true,
+        newTopics: true,
+        cron: '0',
+        activeTopicIDs: activeTopicIDs,
+        id: activeTopicIDs[0].value,
         AuthorizationObj: [
           {
             key: '',
@@ -399,6 +479,8 @@ export default class OfflineTopicList extends Vue {
             value: ''
           }
         ],
+        saveEs: '1',
+        saveHbase: `1`,
         topicList: [
           {
             key: '',
@@ -411,43 +493,62 @@ export default class OfflineTopicList extends Vue {
     }
   }
   // addServePull
-  private async addServePull(formObj: TopicAdd) {
-    const canNotEdit = formObj.canNotEdit
-    const dataStruct: any = {}
-    const dataStructNumber: any = {}
+  private async addServePull(items: offlineTableType) {
+    const {
+      id,
+      topicName,
+      topicList,
+      taskName,
+      isEdit,
+      newTopics,
+      header,
+      AuthorizationObj,
+      url,
+      type,
+      body,
+      cron,
+      saveEs,
+      saveHbase
+    } = items
 
-    formObj.topicList.forEach(val => {
-      dataStruct[val.key] = val.description
-      dataStructNumber[val.key] = val.type === 'TimeStamp' ? Date.now() : val.type
-    })
-    const _numberS = JSON.stringify(dataStruct)
-    const _keyS = '[' + JSON.stringify(dataStructNumber) + ']'
-    const params: any = {
-      dataStruct: _keyS,
-      dsAnnotation: _numberS,
-      dataType: dataType['结构化']
-    }
-    canNotEdit && (params.id = formObj.id)
+    const [_numberS, _keyS] = this.transTopicListToJson(topicList)
 
     // 去除key为空的项
-    let _obj = [...this.cleanObj(formObj.header)]
+    let _obj = [...this.cleanObj(header)]
+
     // 只在添加的时候 转base64
-    if (!canNotEdit && formObj.AuthorizationObj[0].key && formObj.AuthorizationObj[0].value) {
-      _obj.unshift(this.authorizationBase64(formObj.AuthorizationObj))
+    if (!isEdit && AuthorizationObj[0].key && AuthorizationObj[0].value) {
+      _obj.unshift(this.authorizationBase64(AuthorizationObj))
     }
+    // 1 是 0 否
+    const params: any = {
+      taskName,
+      cron: `0 0 ${cron} * * ?`,
+      t: {
+        url,
+        type,
+        header: JSON.stringify(_obj),
+        saveEs,
+        saveHbase
+      }
+    }
+    // 如果是复用主题，只传入id
+    newTopics
+      ? ((params.t.topicName = topicName), (params.t.dataStruct = _keyS), (params.t.dsAnnotation = _numberS))
+      : (params.t.topicId = id)
 
-    params.topicInterFaceType = 3
-    params.topicName = formObj.topicName
-    params.url = formObj.url
-    params.header = JSON.stringify(_obj)
-    params.type = formObj.type
     // 如果是post请求，会有body字段
-    formObj.body && (params.body = formObj.body.replace(/\s+/g, ''))
+    type === `post` && (params.t.body = body.replace(/\s+/g, ''))
 
-    const { success } = await this.h_request['httpPOST'](!canNotEdit ? 'POST_TOPICS_ADD' : 'POST_TOPICS_UPDATE', params)
+    console.log(params)
+
+    const { success } = await this.h_request['httpPOST'](
+      !isEdit ? 'POST_OFFLINE_SAVEURLTASK' : 'POST_OFFLINE_UPDATEURLTASK',
+      params
+    )
 
     if (success) {
-      this.h_utils['alertUtil'].open(!canNotEdit ? '主题创建成功' : '主题修改成功', true, 'success')
+      this.h_utils['alertUtil'].open(!isEdit ? '任务创建成功' : '任务修改成功', true, 'success')
       this.searchMethod(
         false,
         {
@@ -481,38 +582,123 @@ export default class OfflineTopicList extends Vue {
     return _object
   }
 
+  // 转化 topicList
+  private transTopicListToJson(topicList: { key: string; type: string; description: string }[]) {
+    const dataStruct: any = {}
+    const dataStructNumber: any = {}
+
+    topicList.forEach(val => {
+      dataStruct[val.key] = val.description
+      dataStructNumber[val.key] = val.type === 'TimeStamp' ? Date.now() : val.type
+    })
+    const _numberS = JSON.stringify(dataStruct)
+    const _keyS = '[' + JSON.stringify(dataStructNumber) + ']'
+
+    return [_numberS, _keyS] as const
+  }
+
   // pullFTP
-  private pullFTP() {
+  private async pullFTP(item?: unknown) {
+    item ? (this.createFtpLoading = false) : (this.createFtpLoading = true)
+    console.log(item)
+    //  异步获取主题列表
+    const activeTopicIDs = await this.getActiveTopics(topicInterFaceType['拉取FTP'])
+
+    // loading
+    this.createFtpLoading = false
+
     this.fDialogFlag = true
     this.fDialogShow = 3
     this.formProvide.btnName = ['立即提交']
     this.formProvide.title = '拉取FTP'
     this.formProvide.methodName = 'addFTP' // 立即提交
-    this.formProvide.formObj = {
-      ftp: [
-        {
-          host: '',
-          port: ''
-        }
-      ]
+    if (item) {
+      this.formProvide.formObj = {
+        canNotEdit: true,
+        isEdit: true,
+        newTopics: false,
+        activeTopicIDs: activeTopicIDs
+      }
+    } else {
+      // 创建
+      activeTopicIDs.unshift({
+        text: `新增主题`,
+        value: '新增主题',
+        topicName: '',
+        dataStruct: ''
+      })
+      this.formProvide.formObj = {
+        isEdit: false,
+        canNotEdit: true,
+        newTopics: true,
+        cron: '0',
+        activeTopicIDs: activeTopicIDs,
+        id: activeTopicIDs[0].value,
+        ftp: [
+          {
+            host: '',
+            port: ''
+          }
+        ],
+        topicList: [
+          {
+            key: '',
+            description: '',
+            type: '',
+            disabled: false
+          }
+        ]
+      }
     }
   }
   // addFTP
-  private async addFTP(formObj: TopicAdd) {
-    const params: any = {}
+  private async addFTP(items: offlineTableType) {
+    const {
+      id,
+      topicName,
+      topicList,
+      taskName,
+      isEdit,
+      newTopics,
+      cron,
+      basePath,
+      filePrefix,
+      tableName,
+      username,
+      password,
+      ftp
+    } = items
 
-    params.dataType = dataType['结构化']
-    params.topicInterFaceType = 5
-    params.topicName = formObj.topicName
-    params.port = formObj.ftp[0].port
-    params.host = formObj.ftp[0].host
-    params.baseUrl = formObj.baseUrl
-    params.userName = formObj.userName
-    params.password = formObj.password
+    // 获得转化后的 topicList
+    const [_numberS, _keyS] = this.transTopicListToJson(topicList)
 
-    const { success } = await this.h_request['httpPOST']('POST_TOPICS_ADD', params)
+    let params: any = {}
+
+    params = {
+      taskName,
+      cron: `0 0 ${cron} * * ?`,
+      t: {
+        basePath,
+        filePrefix,
+        tableName,
+        username,
+        password,
+        host: ftp[0].host,
+        port: ftp[0].port
+      }
+    }
+    // 如果是复用主题，只传入id
+    newTopics
+      ? ((params.t.topicName = topicName), (params.t.dataStruct = _keyS), (params.t.dsAnnotation = _numberS))
+      : (params.t.topicId = id)
+
+    const { success } = await this.h_request['httpPOST'](
+      !isEdit ? 'POST_OFFLINE_SAVEFTPTASK' : 'POST_OFFLINE_UPDATEFTPTASK',
+      params
+    )
+
     if (success) {
-      this.h_utils['alertUtil'].open('主题创建成功', true, 'success')
+      this.h_utils['alertUtil'].open(!isEdit ? '任务创建成功' : '任务修改成功', true, 'success')
       this.searchMethod(
         false,
         {
@@ -523,6 +709,30 @@ export default class OfflineTopicList extends Vue {
       )
       this.pageNum = 1
       return Promise.resolve(success)
+    }
+  }
+
+  // 获得可用topics
+  private async getActiveTopics(type: number) {
+    const { data } = await this.h_request.httpGET(`GET_TOPICS_FIND_ALL`, {
+      pageNum: 1,
+      pageSize: 100,
+      dataType: dataType['结构化'],
+      faceTypes: type
+    })
+
+    if (data) {
+      const _data = data.map(({ id, topicName, dataStruct }: { id: number; topicName: string; dataStruct: string }) => {
+        return {
+          text: id.toString(),
+          value: id.toString(),
+          topicName: topicName,
+          dataStruct: dataStruct
+        }
+      })
+      return Promise.resolve(_data)
+    } else {
+      return Promise.resolve([])
     }
   }
 
@@ -537,70 +747,40 @@ export default class OfflineTopicList extends Vue {
     }
   }
 
-  // 创建任务
-  private addTask(item: any) {
-    this.createServePull()
-    this.handleSelectTopic(item.id)
-  }
-
-  // 选择主题回显
-  private handleSelectTopic(val: string) {
-    // 非新建
-    if (val && val !== this.activeTopicIDs[0]) {
-      this.formProvide.formObj.id = val
-      this.formProvide.formObj.useSelectID = true
-      this.formProvide.formObj.topicName = val
-      this.formProvide.formObj.topicList = [
-        {
-          key: '123',
-          description: '1',
-          type: '1',
-          disabled: true
-        }
-      ]
-    } else {
-      // 新建
-      this.formProvide.formObj.id = val
-      this.formProvide.formObj.useSelectID = false
-      this.formProvide.formObj.topicName = ''
-      this.formProvide.formObj.topicList = [
-        {
-          key: '',
-          description: '',
-          type: '',
-          disabled: false
-        }
-      ]
-    }
-  }
-
   // 查询通用调用方法 结构化数据
   private async searchMethod(bool: boolean, params: paramsType, tab: number) {
     this.loading = true
     let _data: returnTypeData
+    if (tab === 2 || tab === 3) {
+      params.dataType = dataType['结构化']
+      // params.faceTypes = `${topicInterFaceType['数据库采集']},${topicInterFaceType['服务主动拉取']},${topicInterFaceType['拉取FTP']}`
+      params.faceTypes = `${topicInterFaceType['服务主动拉取']},${topicInterFaceType['拉取FTP']}`
+    }
 
-    params.dataType = dataType['结构化']
-    // params.faceTypes = `${topicInterFaceType['数据库采集']},${topicInterFaceType['服务主动拉取']},${topicInterFaceType['拉取FTP']}`
-    params.faceTypes = `${topicInterFaceType['服务主动拉取']},${topicInterFaceType['拉取FTP']}`
-    if (tab === 1) {
+    if (tab === 0) {
       const { data }: returnType = bool
-        ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
-        : await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICS', params)
+        ? await this.h_request['httpGET']<object>('GET_OFFLINE_FINDALLTASKBYID', params)
+        : await this.h_request['httpGET']<object>('GET_OFFLINE_FINDALLTASK', params)
       _data = data ? { ...data } : undefined
-    } else {
+    } else if (tab === 1) {
+      const { data }: returnType = bool
+        ? await this.h_request['httpGET']<object>('GET_OFFLINE_FINDMYTASKBYID', params)
+        : await this.h_request['httpGET']<object>('GET_OFFLINE_FINDMYTASK', params)
+      _data = data ? { ...data } : undefined
+    } else if (tab === 2) {
       const { data }: returnType = bool
         ? await this.h_request['httpGET']<object>('GET_TOPICS_SELECTTOPIC', params)
         : await this.h_request['httpGET']<object>('GET_TOPICS_FIND_ALL', params)
       _data = data ? { ...data } : undefined
+    } else {
+      const { data }: returnType = bool
+        ? await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICSBYID', params)
+        : await this.h_request['httpGET']<object>('GET_TOPICS_MYTOPICS', params)
+      _data = data ? { ...data } : undefined
     }
+
     // flag用于标识是否已经拉取附加信息
-    this.desserts = _data
-      ? [
-          ..._data.list.map(item => {
-            return { ...item, flag: false }
-          })
-        ]
-      : []
+    this.desserts = _data && _data.list ? [..._data.list] : []
     this.paginationLength = Math.ceil(_data?.total / this.pageSize) || 1
     this.loading = false
   }
@@ -652,38 +832,72 @@ export default class OfflineTopicList extends Vue {
   }
 
   // 附加信息
-  private async getTopicInformation(item: any) {
-    if (!item.flag) {
-      this.$set(item, 'loading', true)
-
-      const { data } = await this.h_request['httpGET']('GET_TOPICS_INFORMATION', {
-        topicID: item.id,
-        topicName: item.topicName,
-        topicInterFaceType: item.topicInterFaceType
-      })
-
-      if (data && data.length > 0) {
-        item.dataBaseIp = data[0].dataBaseIp
-        item.dataBaseType = data[0].dataBaseType
-        item.url = data[0].url
-        item.header = data[0].header
-        item.flag = true
-      } else if (data.length === 0) {
-        // 数据为空
-        item.flag = true
-      } else {
-        // 查询失败
-        this.$set(item, 'loading', false)
-        item.flag = false
-        return
-      }
-    }
-    this.$set(item, 'loading', false)
+  private async getTopicInformation(item: { t: object; taskType: number }) {
     this.tDialogFlag = true
     this.tDialogShow = 2
-    this.otherObj = {}
     this.formProvide.title = '附加信息'
-    this.otherObj = { ...item }
+    item.t && (this.otherObj = { taskType: item.taskType, ...item.t })
+  }
+
+  // 时间信息
+  private showTimerLog(item: offlineTableType) {
+    this.headersObj = [
+      {
+        text: '创建时间',
+        align: 'center',
+        value: 'createTime'
+      },
+      {
+        text: '最后运行时间',
+        align: 'center',
+        value: 'lastRunTime'
+      },
+      {
+        text: '修改时间',
+        align: 'center',
+        value: 'updateTime'
+      }
+    ]
+    this.otherObj = item
+    this.tDialogFlag = true
+    this.tDialogShow = 3
+    this.formProvide.title = '时间信息'
+  }
+
+  // 启动
+  private async startOfflineData(item: { id: number }) {
+    const { success } = await this.h_request['httpGET']('GET_OFFLINE_STARTTASK', {
+      taskId: item.id
+    })
+
+    if (success) {
+      this.h_utils['alertUtil'].open(`任务${item.id}已启动`, true, 'success')
+      // 乐观更新
+      this.$set(item, `isRun`, 1)
+    }
+  }
+
+  // 停止
+  private async stopOfflineData(item: { id: number }) {
+    const { success } = await this.h_request['httpGET']('GET_OFFLINE_STOPTASK', {
+      taskId: item.id
+    })
+
+    if (success) {
+      this.h_utils['alertUtil'].open(`任务${item.id}已停止`, true, 'success')
+      // 乐观更新
+      this.$set(item, `isRun`, 0)
+    }
+  }
+
+  // 重跑
+  private async reloadOfflineData(item: { id: number }) {
+    const { success } = await this.h_request['httpGET']('GET_TASKINFO_RUNTASKAGAIN', {
+      taskId: item.id
+    })
+    if (success) {
+      this.h_utils['alertUtil'].open(`任务${item.id}已重跑`, true, 'success')
+    }
   }
 
   // 删除
@@ -691,14 +905,12 @@ export default class OfflineTopicList extends Vue {
     if (this.HConfirmItem.id === undefined) {
       return
     }
-    const { success } = await this.h_request['httpGET']('GET_TOPICS_DELETE', {
-      topicID: this.HConfirmItem.id,
-      topicName: this.HConfirmItem.topicName,
-      topicInterFaceType: this.HConfirmItem.topicInterFaceType
+    const { success } = await this.h_request['httpGET']('GET_OFFLINE_DELETETASK', {
+      taskId: this.HConfirmItem.id
     })
     if (success) {
       this.HConfirmShow = false
-      this.h_utils['alertUtil'].open('主题删除成功', true, 'success')
+      this.h_utils['alertUtil'].open('任务删除成功', true, 'success')
       this.searchMethod(
         false,
         {
