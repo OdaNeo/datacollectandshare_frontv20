@@ -268,13 +268,7 @@ export default class User extends Vue {
     // 如果是添加 验重
     if (!formObj.canNotEdit && formObj.loginName) {
       const text = await this.h_utils['noRepeat'].loginName(formObj.loginName)
-
-      if (text === undefined) {
-        // 网络错误
-        return
-      } else if (text) {
-        // 如果重复，阻止提交
-        this.h_utils.alertUtil.open(text, true, 'error')
+      if (!text) {
         return
       }
     }

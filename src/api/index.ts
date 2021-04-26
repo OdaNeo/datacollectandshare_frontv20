@@ -6,6 +6,7 @@ import { cancelTokenModule } from '../store/modules/request'
 import alertUtil from '../utils/alertUtil'
 import { VUE_APP_BASE_API, BASE_REQUEST_TIME_OUT } from '../../config'
 import { uploadStoreModule } from '@/store/modules/upload'
+import { httpErrorMsg } from '@/enum/http-enum'
 
 class RequestData {
   private axiosIns: AxiosInstance = axios.create({
@@ -66,7 +67,11 @@ class RequestData {
         } else if (error.message.includes('路由跳转取消请求')) {
           _msg = '取消'
         }
-        return Promise.reject({ code: error.response?.status || _msg })
+        return Promise.reject({
+          httpStatus: error.response?.status || _msg,
+          code: error.response?.data.code,
+          message: error.response?.data.message
+        })
       }
     )
   }
@@ -222,6 +227,7 @@ class RequestData {
 
     switch (code) {
       case 200:
+        alertUtil.close()
         callback(response)
         break
 
@@ -233,10 +239,14 @@ class RequestData {
     }
   }
   // 捕捉http错误：显示http错误码
-  private httpErrorHandle(err: { code: string | number }, callback: Function, data?: Array<unknown>) {
-    // console.log('error code:' + err.code)
+  private httpErrorHandle(
+    err: { httpStatus: string | number; code: number; message: string },
+    callback: Function,
+    data?: Array<unknown>
+  ) {
+    // console.log('error status:' + err.status)
     let _message = ''
-    switch (err.code) {
+    switch (err.httpStatus) {
       case '取消':
         // 如果是取消请求，直接返回，不提示错误
         return
@@ -246,39 +256,11 @@ class RequestData {
       case '超时':
         _message = '请求超时，请重试'
         break
-      case 400:
-        _message = `HTTP_ERROR：${err.code}，错误信息：请求错误`
-        break
-      case 401:
-        _message = `HTTP_ERROR：${err.code}，错误信息：认证失败`
-        break
-      case 403:
-        _message = `HTTP_ERROR：${err.code}，错误信息：资源拒绝访问`
-        break
-      case 404:
-        _message = `HTTP_ERROR：${err.code}，错误信息：接口或资源不存在`
-        break
-      case 405:
-        _message = `HTTP_ERROR：${err.code}，错误信息：请求方法错误`
-        break
-      case 408:
-        _message = `HTTP_ERROR：${err.code}，错误信息：请求超时，请重试`
-        break
-      case 500:
-        _message = `HTTP_ERROR：${err.code}，错误信息：服务器错误`
-        break
-      case 501:
-        _message = `HTTP_ERROR：${err.code}，错误信息：服务器错误`
-        break
-      case 502:
-        _message = `HTTP_ERROR：${err.code}，错误信息：网关错误`
-        break
-      case 503:
-        _message = `HTTP_ERROR：${err.code}，错误信息：服务器暂时不可用`
-        break
       default:
         console.error(err)
-        _message = '未知错误'
+        _message = `错误代码：${err.code}，HTTP错误码：${err.httpStatus}，${err.message}：${
+          httpErrorMsg[Number(err.httpStatus)]
+        }`
         break
     }
 

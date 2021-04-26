@@ -66,6 +66,8 @@ const POST_OFFLINE_SAVEURLTASK = '/offline/saveUrlTask' //添加url任务
 const POST_OFFLINE_SAVEFTPTASK = '/offline/saveFtpTask' //添加ftp任务
 const POST_OFFLINE_UPDATEURLTASK = '/offline/updateUrlTask' //修改url任务
 const POST_OFFLINE_UPDATEFTPTASK = '/offline/updateFtpTask' //修改ftp任务
+const GET_OFFLINE_SELECTTOPICBYTYPE = '/offline/selectTopicByType' // 获得可用主题
+const GET_OFFLINE_SELECTOFFLINELOG = '/offline/selectOfflineLog'
 
 // --------------------------- 系统管理 --------------------------
 const GET_SYSTEM_FINDALL = '/system/findAll' // 获取系统列表
@@ -267,7 +269,9 @@ const REQUEST_NAME = {
   GET_TASKINFO_UPDATETASKINFOSTATE,
   GET_TASKINFO_RUNTASKAGAIN,
   GET_TASKINFO_FINDALLMYTASKBYID,
-  GET_TASKINFO_FINDTRANSCATIONLOG
+  GET_TASKINFO_FINDTRANSCATIONLOG,
+  GET_OFFLINE_SELECTTOPICBYTYPE,
+  GET_OFFLINE_SELECTOFFLINELOG
 }
 
 export default REQUEST_NAME

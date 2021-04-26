@@ -48,7 +48,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 22. ~~日志主题创建 loading 图优化，改的不那么浮夸~~
 23. ~~实时数据监控：仅显示一天内的数据，纵轴显示作业 ID ( 有分类 )，横轴按照作业起止时间实时显示数据流速度，（视频 ：视频流速度；事务、日志：数据读写速度）~~
 24. ~~去掉面包屑~~
-25. add e2e test
+25. add jest test
 26. ~~multi-checkbox 组件构建~~
 27. ~~文件下载动画，浏览器自带~~
 28. ~~作业监控页面 data-zoom 优化~~
@@ -80,7 +80,8 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 54. 搜索框偶有字符键入
 55. ~~表单弹框关闭动画缺失，需要优化~~
 56. 刷新重新拉取用户权限
-57. 用户名验重 自定义Class，事务不发送验重请求
+57. ~~用户名验重 自定义Class，事务不发送验重请求~~
+58. 登录记住密码：明文
 
 
 ## 常见问题

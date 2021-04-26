@@ -37,11 +37,6 @@
           <template v-slot:detail="{ item }">
             <v-btn text color="primary" @click="showLogDataDetail(item)">服务器详情</v-btn>
           </template>
-          <!-- 报警信息 -->
-          <template v-slot:monitor="{ item }">
-            <v-btn text color="error">告警</v-btn>
-            <v-btn text color="primary" @click="showTopicAlert(item)">更多</v-btn>
-          </template>
           <!-- 操作 -->
           <template v-slot:buttons="{ item }">
             <!-- 操作下拉框 -->
@@ -194,11 +189,6 @@ export default class LogDataList extends Vue {
         slot: 'detail'
       },
       {
-        text: '报警信息查询',
-        align: 'center',
-        slot: 'monitor'
-      },
-      {
         text: '操作',
         align: 'center',
         slot: 'buttons',
@@ -264,20 +254,25 @@ export default class LogDataList extends Vue {
   // 创建日志主题
   private async addLogTopic(formObj: TopicAdd) {
     const canNotEdit = formObj.canNotEdit
-    // 创建主题 有loading，修改主题没有loading
-
     const params: Partial<loggerParamType> = {}
+
+    // edit
+    if (canNotEdit) {
+      params['id'] = formObj.id
+    } else {
+      params.logPassWord = formObj.logPassWord
+      //  验重
+      const text = await this.h_utils['noRepeat'].topicName(formObj.topicName)
+      if (!text) {
+        return
+      }
+    }
 
     params.dataType = dataType['结构化']
     params.topicName = formObj.topicName
     params.logIp = formObj.logIp
     params.logUserName = formObj.logUserName
-    // 修改不传密码，传id
-    if (!canNotEdit) {
-      params.logPassWord = formObj.logPassWord
-    } else {
-      params.id = formObj.id
-    }
+
     params.savePath = formObj.savePath
     params.saveType = formObj.saveType.join('+')
     params.keywords = formObj.keywords ? formObj.keywords : ''
@@ -422,19 +417,6 @@ export default class LogDataList extends Vue {
   private handelDeleteTopic(item: { id: string; topicName: string; topicInterFaceType: number }) {
     this.HConfirmShow = true
     this.HConfirmItem = { ...item }
-  }
-
-  // showTopicAlert
-  private async showTopicAlert(item: { id: number }) {
-    if (!item.id) {
-      return
-    }
-    this.$router.push({
-      name: `监控日志`,
-      query: {
-        topicId: `${item.id}`
-      }
-    })
   }
 
   // 启动

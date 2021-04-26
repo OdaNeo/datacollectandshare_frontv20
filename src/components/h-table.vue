@@ -102,9 +102,7 @@ export default class HTable extends Vue {
   }
 
   private get realHeaders(): Array<tableHeaderType> {
-    return this.headers.filter((item: tableHeaderType) => {
-      return !item.isHide
-    })
+    return this.headers.filter((item: tableHeaderType) => !item.isHide)
   }
 
   private showFun(parentid: number) {

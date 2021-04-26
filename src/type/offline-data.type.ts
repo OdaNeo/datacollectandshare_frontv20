@@ -15,18 +15,22 @@ export interface offlineTableType extends baseType {
   header: { key: string }[]
   AuthorizationObj: { key: string; value: string }[]
   url: string
+  taskId: number
   type: string
   body: string
   taskName: string
   cron: string
   topicId: number
+  uid: number
   saveEs: string
   saveHbase: string
+  taskConfigId: number
   basePath: string
   filePrefix: string
   tableName: string
   username: string
   password: string
+  t_id: number
   ftp: [
     {
       host: string

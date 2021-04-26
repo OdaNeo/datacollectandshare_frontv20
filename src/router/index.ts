@@ -92,7 +92,6 @@ const routes: Array<RouteConfig> = [
         name: '用户管理',
         meta: {
           title: '用户管理',
-          // icon: 'mdi-shield-account',
           access: true,
           url: '/rootMGT/userMGT'
         }
@@ -103,7 +102,6 @@ const routes: Array<RouteConfig> = [
         name: '角色管理',
         meta: {
           title: '角色管理',
-          // icon: 'mdi-account-tie',
           access: true,
           url: '/rootMGT/roleMGT'
         }
@@ -114,7 +112,6 @@ const routes: Array<RouteConfig> = [
         name: '资源管理',
         meta: {
           title: '资源管理',
-          // icon: 'mdi-briefcase-check',
           access: true,
           url: '/rootMGT/resourcesMGT'
         }
@@ -140,7 +137,6 @@ const routes: Array<RouteConfig> = [
         name: '实时主题',
         meta: {
           title: '实时主题',
-          // icon: 'mdi-folder-multiple',
           access: true,
           url: '/onLineData/topicList'
         }
@@ -151,7 +147,6 @@ const routes: Array<RouteConfig> = [
         name: '实时数据统计',
         meta: {
           title: '实时数据统计',
-          // icon: 'mdi-folder-multiple',
           access: true,
           url: '/onLineData/dataStatistics'
         }
@@ -162,7 +157,6 @@ const routes: Array<RouteConfig> = [
         name: '主题订阅',
         meta: {
           title: '主题订阅',
-          // icon: 'mdi-folder-heart',
           access: true,
           url: '/onLineData/topicSub'
         }
@@ -173,7 +167,6 @@ const routes: Array<RouteConfig> = [
         name: '主题订阅审核',
         meta: {
           title: '主题订阅审核',
-          // icon: 'mdi-folder-edit',
           access: true,
           url: '/onLineData/topicSubExamine'
         }
@@ -184,7 +177,6 @@ const routes: Array<RouteConfig> = [
         name: '主题审核记录',
         meta: {
           title: '主题审核记录',
-          // icon: 'mdi-folder-clock',
           access: true,
           url: '/onLineData/topicAuditRecords'
         }
@@ -210,7 +202,6 @@ const routes: Array<RouteConfig> = [
         name: '视频主题',
         meta: {
           title: '视频主题',
-          // icon: 'mdi-file-video',
           access: true,
           url: '/videoData/videoList'
         }
@@ -221,7 +212,6 @@ const routes: Array<RouteConfig> = [
         name: '视频数据统计',
         meta: {
           title: '视频数据统计',
-          // icon: 'mdi-file-video',
           access: true,
           url: '/videoData/dataStatistics'
         }
@@ -247,7 +237,6 @@ const routes: Array<RouteConfig> = [
         name: '离线主题',
         meta: {
           title: '离线主题',
-          // icon: 'mdi-file-video',
           access: true,
           url: '/offlineData/topicList'
         }
@@ -257,8 +246,7 @@ const routes: Array<RouteConfig> = [
         component: () => import('@/views/core/offlineData/dataStatistics.vue'),
         name: '离线数据统计',
         meta: {
-          title: '离线数据统计',
-          // icon: 'mdi-file-video',
+          title: '离线作业列表',
           access: true,
           url: '/offlineData/dataStatistics'
         }
@@ -283,8 +271,7 @@ const routes: Array<RouteConfig> = [
         component: () => import('@/views/core/transactionalData/dataList.vue'),
         name: '事务主题',
         meta: {
-          title: '事务主题',
-          // icon: 'mdi-file-video',
+          title: '事务任务管理',
           access: true,
           url: '/transactionalData/dataList'
         }
@@ -294,8 +281,7 @@ const routes: Array<RouteConfig> = [
         component: () => import('@/views/core/transactionalData/dataStatistics.vue'),
         name: '事务数据统计',
         meta: {
-          title: '事务数据统计',
-          // icon: 'mdi-file-video',
+          title: '事务作业列表',
           access: true,
           url: '/transactionalData/dataStatistics'
         }
@@ -306,7 +292,6 @@ const routes: Array<RouteConfig> = [
         name: '上传历史',
         meta: {
           title: '上传历史',
-          // icon: 'mdi-file-video',
           access: true,
           url: '/transactionalData/sqlStatistics'
         }
@@ -332,7 +317,6 @@ const routes: Array<RouteConfig> = [
         name: '日志主题',
         meta: {
           title: '日志主题',
-          // icon: 'mdi-file-video',
           access: true,
           url: '/logData/dataList'
         }
@@ -343,7 +327,6 @@ const routes: Array<RouteConfig> = [
         name: '日志数据统计',
         meta: {
           title: '日志数据统计',
-          // icon: 'mdi-file-video',
           access: true,
           url: '/logData/dataStatistics'
         }
@@ -429,7 +412,6 @@ const routes: Array<RouteConfig> = [
         name: '系统配置',
         meta: {
           title: '系统配置',
-          // icon: 'mdi-monitor-edit',
           access: true,
           url: '/systemMGT/systemConfig'
         }
@@ -440,7 +422,6 @@ const routes: Array<RouteConfig> = [
         name: '绑定网络',
         meta: {
           title: '绑定网络',
-          // icon: 'mdi-monitor-star',
           access: true,
           url: '/systemMGT/bindNetwork'
         }
@@ -466,7 +447,6 @@ const routes: Array<RouteConfig> = [
         name: '日志审查',
         meta: {
           title: '日志审查',
-          // icon: 'mdi-clipboard-search',
           access: true,
           url: '/logMGT/viewLog'
         }
@@ -492,7 +472,6 @@ const routes: Array<RouteConfig> = [
   //       name: '数据统计',
   //       meta: {
   //         title: '数据统计',
-  //         // icon: 'mdi-database-clock',
   //         access: false,
   //         url: '/dataMGT/dataStatistics'
   //       }

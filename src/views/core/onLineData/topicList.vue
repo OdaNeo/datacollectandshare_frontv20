@@ -55,7 +55,9 @@
               <v-list dense>
                 <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
                   <v-btn
-                    :disabled="(i.tab && tab !== i.tab) || (i.faceType && item.topicInterFaceType !== i.faceType)"
+                    :disabled="
+                      (i.tab && tab !== Number(i.tab)) || (i.faceType && item.topicInterFaceType !== i.faceType)
+                    "
                     class="pa-0"
                     width="100%"
                     :color="i.color ? i.color : `primary`"
@@ -117,6 +119,7 @@ import HSearch from '@/components/h-search.vue'
 import { onlineDataParamType } from '@/type/online-data.type'
 import HTabs from '@/components/h-tabs.vue'
 import HContentDetails from '@/components/h-content-details.vue'
+import { tableHeaderType } from '@/type/table.type'
 @Component({
   components: {
     HTable,
@@ -186,60 +189,63 @@ export default class OnlineDataTopicList extends Vue {
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
   private loading = true
-  private headers = [
-    // 表头内容 所有主题
-    {
-      text: '主题ID',
-      align: 'center',
-      value: 'id'
-    },
-    {
-      text: '主题名称',
-      align: 'center',
-      value: 'topicName'
-    },
-    {
-      text: '所属用户',
-      align: 'center',
-      value: 'userName'
-    },
-    {
-      text: '订阅用户数',
-      align: 'center',
-      slot: 'subUsers'
-    },
-    {
-      text: '接口类型',
-      align: 'center',
-      value: 'topicInterFaceType',
-      format: (val: number) => {
-        return topicInterFaceType[val]
+  private get headers(): Array<tableHeaderType> {
+    return [
+      // 表头内容 所有主题
+      {
+        text: '主题ID',
+        align: 'center',
+        value: 'id'
+      },
+      {
+        text: '主题名称',
+        align: 'center',
+        value: 'topicName'
+      },
+      {
+        text: '所属用户',
+        align: 'center',
+        value: 'userName'
+      },
+      {
+        text: '订阅用户数',
+        align: 'center',
+        slot: 'subUsers'
+      },
+      {
+        text: '接口类型',
+        align: 'center',
+        value: 'topicInterFaceType',
+        format: (val: number) => {
+          return topicInterFaceType[val]
+        }
+      },
+      {
+        text: '消息类型',
+        align: 'center',
+        value: 'queneType',
+        format: (quene: number) => {
+          return this.h_enum['queneType'][quene]
+        }
+      },
+      {
+        text: '显示详情',
+        align: 'center',
+        slot: 'buttons2'
+      },
+      {
+        text: '操作',
+        align: 'center',
+        slot: 'buttons',
+        isHide: this.tab === 0
       }
-    },
-    {
-      text: '消息类型',
-      align: 'center',
-      value: 'queneType',
-      format: (quene: number) => {
-        return this.h_enum['queneType'][quene]
-      }
-    },
-    {
-      text: '显示详情',
-      align: 'center',
-      slot: 'buttons2'
-    },
-    {
-      text: '操作',
-      align: 'center',
-      slot: 'buttons'
-    }
-  ]
+    ]
+  }
   // 操作下拉框
   private buttonItems = [
     {
       text: `增加字段`,
-      tab: 1,
+      tab: `1`,
       faceType: 1,
       handle: this.addItems
     },
@@ -250,15 +256,15 @@ export default class OnlineDataTopicList extends Vue {
     },
     {
       text: `打开`,
-      tab: 1
+      tab: `1`
     },
     {
       text: `关闭`,
-      tab: 1
+      tab: `1`
     },
     {
       text: '删除',
-      tab: 1,
+      tab: `1`,
       color: `error`,
       handle: this.handelDeleteTopic
     }
@@ -334,7 +340,15 @@ export default class OnlineDataTopicList extends Vue {
     params.queneType = formObj.queneType
     params.topicInterFaceType = 1
 
-    canNotEdit && (params.id = formObj.id)
+    // 发送验重请求
+    if (canNotEdit) {
+      params.id = formObj.id
+    } else {
+      const text = await this.h_utils['noRepeat'].topicName(params.topicName)
+      if (!text) {
+        return
+      }
+    }
 
     const { success } = await this.h_request['httpPOST'](!canNotEdit ? 'POST_TOPICS_ADD' : 'POST_TOPICS_UPDATE', params)
     if (success) {
@@ -367,6 +381,12 @@ export default class OnlineDataTopicList extends Vue {
     if (!this.protoFile) {
       return
     }
+    //  验重
+    const text = await this.h_utils['noRepeat'].topicName(formObj.topicName)
+    if (!text) {
+      return
+    }
+
     this.protoForms = new FormData()
     // topicInterFaceType = 6
     this.protoForms.append('protoFile', this.protoFile)
@@ -402,6 +422,14 @@ export default class OnlineDataTopicList extends Vue {
   }
   // addJson
   private async addJson(formObj: TopicAdd) {
+    //  验重
+    if (!formObj.canNotEdit) {
+      const text = await this.h_utils['noRepeat'].topicName(formObj.topicName)
+      if (!text) {
+        return
+      }
+    }
+
     const params: Partial<onlineDataParamType> = {}
 
     params.dataType = dataType['结构化']

@@ -51,8 +51,10 @@ import { rootStoreModule } from '@/store/modules/root'
 import { userState } from '@/enum/user-enum'
 import { PROJECT_TITLE, PROJECT_SUB_TITLE } from '../../../../config'
 import { mdiAccount } from '@mdi/js'
+import util from '@/decorator/utilsDecorator'
 
 @Component
+@util
 export default class TopBar extends Vue {
   // private dialog = false
   // private titleState = false
@@ -99,13 +101,9 @@ export default class TopBar extends Vue {
   }
 
   clickLogout(): void {
-    // 清除vuex 的状态
-    rootStoreModule.logout()
-    // 页面跳转
-    this.$router.replace({
-      path: '/login'
-    })
+    this.h_utils.authUtil.logout()
   }
+
   private handleNavRouter() {
     this.$router.push('/statePage/welcome')
   }

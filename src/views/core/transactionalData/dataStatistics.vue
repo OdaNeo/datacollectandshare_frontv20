@@ -26,7 +26,7 @@
       </template>
       <!-- buttons -->
       <template v-slot:buttons="{ item }">
-        <v-btn text color="primary" @click="offlineLogDetails(item)">查看离线日志详情</v-btn>
+        <v-btn text color="primary" @click="offlineLogDetails(item)">查看日志详情</v-btn>
       </template>
     </h-table>
     <!-- 表格显示 -->
@@ -84,7 +84,12 @@ export default class TransactionalDataStatistics extends Vue {
   private headers = [
     // 表头内容 所有主题
     {
-      text: '任务ID',
+      text: '作业ID',
+      align: 'center',
+      value: 'id'
+    },
+    {
+      text: '所属任务ID',
       align: 'center',
       value: 'taskId'
     },

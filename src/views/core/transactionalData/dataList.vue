@@ -56,11 +56,6 @@
             <v-btn text color="primary" @click.stop="getHistoryLog(item.id)">历史</v-btn>
             <v-btn text color="primary" @click.stop="showTimerLog(item)">其他</v-btn>
           </template>
-          <!-- 报警状态 -->
-          <template v-slot:monitor="{ item }">
-            <v-btn text color="error">告警</v-btn>
-            <v-btn text color="primary" @click="showTopicAlert(item)">更多</v-btn>
-          </template>
           <!-- 主题数据结构 -->
           <template v-slot:column="{ item }">
             <v-btn text color="primary" @click.stop="showColumn(item)">主题数据结构</v-btn>
@@ -228,7 +223,8 @@ export default class transactionalDataList extends Vue {
       {
         text: '所属用户',
         align: 'center',
-        value: 'userName'
+        value: 'userName',
+        isHide: this.tab === 1 || this.tab === 3
       },
       {
         text: '主题名称',
@@ -274,12 +270,6 @@ export default class transactionalDataList extends Vue {
         text: '脚本',
         align: 'center',
         slot: 'content',
-        isHide: this.tab === 2 || this.tab === 3
-      },
-      {
-        text: '报警状态',
-        align: 'center',
-        slot: 'monitor',
         isHide: this.tab === 2 || this.tab === 3
       },
       {
@@ -658,19 +648,6 @@ export default class transactionalDataList extends Vue {
   private handelDeleteTopic(item: Partial<transactionalTableType>) {
     this.HConfirmShow = true
     this.HConfirmItem = { ...item }
-  }
-
-  // 更多告警信息
-  private async showTopicAlert(item: { id: number }) {
-    if (!item.id) {
-      return
-    }
-    this.$router.push({
-      name: `监控日志`,
-      query: {
-        topicId: `${item.id}`
-      }
-    })
   }
 
   // 删除
