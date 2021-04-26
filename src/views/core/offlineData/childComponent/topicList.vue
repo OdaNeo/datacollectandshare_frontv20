@@ -1,5 +1,5 @@
 <template>
-  <v-col cols="12" class="HTopicList d-flex">
+  <v-col cols="12" class="TopicList d-flex">
     <label class="label mr-2"><span v-if="required" class="require-span">*</span>{{ description }}</label>
     <div class="ml-4">
       <v-row
@@ -45,7 +45,7 @@
         <!-- 按钮 -->
         <v-col class="d-flex justify-space-around flex-grow-0" style="min-width: 60px">
           <v-btn
-            v-if="formProvide.formObj['topicList'].length === index + 1"
+            v-if="!item.disabled && formProvide.formObj['topicList'].length === index + 1"
             fab
             dark
             depressed
@@ -83,7 +83,7 @@ import { mdiPlus, mdiMinus } from '@mdi/js'
 // required 会在 description 前添加 * 标识
 @Component({})
 @Validator(['noEmpty', 'topicNameFormatter'])
-export default class HTopicList extends Vue {
+export default class TopicList extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   @Prop({ default: true }) private required!: boolean
   @Prop() private description!: string

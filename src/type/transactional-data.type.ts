@@ -9,7 +9,10 @@ export interface transactionalTableType extends baseType {
     topicId: number
     topicName: string
     dataStruct: string
+    maxValues: string
+    id: number
   }
+  t_id: number
   newTopics: boolean
   taskId: number
   id: number | string

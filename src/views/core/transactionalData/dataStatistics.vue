@@ -6,7 +6,7 @@
         @append="changeQuery"
         @enter="changeQuery"
         @clear="clearInput"
-        label="请输入查找的事务主题ID"
+        label="请输入查找的任务ID"
         v-only-num
       />
     </v-row>
@@ -31,17 +31,7 @@
     </h-table>
     <!-- 表格显示 -->
     <t-dialog v-model="tDialogFlag">
-      <ContentDetails slot="default" :rowJson="rowJson" />
-      <v-btn
-        slot="button"
-        color="primary"
-        :disabled="!rowJson"
-        text
-        v-clipboard:copy="rowJson"
-        v-clipboard:success="onCopy"
-        v-clipboard:error="onError"
-        >一键复制</v-btn
-      >
+      <HContentDetails slot="default" :row="row" />
     </t-dialog>
   </div>
 </template>
@@ -55,7 +45,7 @@ import http from '@/decorator/httpDecorator'
 import util from '@/decorator/utilsDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
-import ContentDetails from '@/components/h-content-details.vue'
+import HContentDetails from '@/components/h-content-details.vue'
 import HSearch from '@/components/h-search.vue'
 import { transactionalResult, transactionalResultColor } from '@/enum/state-enum'
 @Component({
@@ -63,7 +53,7 @@ import { transactionalResult, transactionalResultColor } from '@/enum/state-enum
     HTable,
     TDialog,
     HSearch,
-    ContentDetails
+    HContentDetails
   }
 })
 @http
@@ -81,7 +71,7 @@ export default class TransactionalDataStatistics extends Vue {
   })
 
   private tDialogFlag = false
-  private rowJson = ''
+  private row = ''
   private currenttaskId = ''
   private transactionalResult = transactionalResult
   private transactionalResultColor = transactionalResultColor
@@ -94,17 +84,14 @@ export default class TransactionalDataStatistics extends Vue {
   private headers = [
     // 表头内容 所有主题
     {
-      text: '日志ID',
+      text: '任务ID',
       align: 'center',
-      value: 'id'
+      value: 'taskId'
     },
     {
       text: '执行时间',
       align: 'center',
-      value: 'executeTime',
-      format: (time: string) => {
-        return this.h_utils.timeUtil['stamptoFullTime'](new Date(time).getTime(), '/')
-      }
+      value: 'executeTime'
     },
     {
       text: '执行结果',
@@ -122,7 +109,7 @@ export default class TransactionalDataStatistics extends Vue {
   private offlineLogDetails(item: { log: string }) {
     this.tDialogFlag = true
     this.formProvide.title = '查看离线日志详情'
-    this.rowJson = item.log
+    this.row = item.log
   }
 
   // 查询通用调用方法
@@ -167,15 +154,6 @@ export default class TransactionalDataStatistics extends Vue {
       },
       this.$route.query.taskId ? this.$route.query.taskId.toString() : ''
     )
-  }
-
-  // 复制
-  private onCopy() {
-    this.h_utils.alertUtil.open('复制成功', true, 'success', 1500)
-  }
-  // 复制
-  private onError() {
-    this.h_utils.alertUtil.open('复制失败', true, 'error', 1500)
   }
 
   @Watch(`$route.query.taskId`, { immediate: true })

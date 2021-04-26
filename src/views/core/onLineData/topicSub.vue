@@ -60,26 +60,14 @@
           </template>
           <!-- 数据结构详情 -->
           <template v-slot:buttons="{ item }">
-            <v-btn text color="primary" class="my-2" @click="dataStructure(item)">数据结构详情</v-btn>
+            <v-btn text color="primary" @click="dataStructure(item)">数据结构详情</v-btn>
           </template>
           <!-- 订阅 -->
           <template v-slot:operation="{ item }">
-            <v-btn
-              text
-              v-if="!item.status"
-              color="primary"
-              :loading="!!item.subloading"
-              class="my-2"
-              @click="subscribe(item)"
+            <v-btn text v-if="!item.status" color="primary" :loading="!!item.subloading" @click="subscribe(item)"
               >订阅</v-btn
             >
-            <v-btn
-              text
-              v-if="item.status"
-              :loading="!!item.subloading"
-              color="warning"
-              class="my-2"
-              @click="cancelScribe(item)"
+            <v-btn text v-if="item.status" :loading="!!item.subloading" color="warning" @click="cancelScribe(item)"
               >取消订阅</v-btn
             >
           </template>
@@ -95,7 +83,7 @@
     <t-dialog v-model="dialogFlag">
       <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <UserSubNameList :rowObj="rowObj" v-else-if="tDialogShow === 2" />
-      <HSimpleDetails :str="str" v-else-if="tDialogShow === 3" class="mb-2" />
+      <HContentDetails :row="str" v-else-if="tDialogShow === 3" />
     </t-dialog>
   </div>
 </template>
@@ -114,7 +102,7 @@ import { tableHeaderType } from '@/type/table.type'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import HSearch from '@/components/h-search.vue'
 import HTabs from '@/components/h-tabs.vue'
-import HSimpleDetails from '@/components/h-simple-details.vue'
+import HContentDetails from '@/components/h-content-details.vue'
 // topicInterFaceType = 1，4，6
 @Component({
   components: {
@@ -124,7 +112,7 @@ import HSimpleDetails from '@/components/h-simple-details.vue'
     HSearch,
     UserSubNameList,
     HTabs,
-    HSimpleDetails
+    HContentDetails
   }
 })
 @http

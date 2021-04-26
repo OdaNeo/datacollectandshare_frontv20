@@ -9,11 +9,19 @@ export enum videoState {
   已停止,
   已启动
 }
+
 // 日志
 export enum logState {
   已停止,
   已启动
 }
+
+// 离线
+export enum offlineState {
+  已停止,
+  已启动
+}
+
 // 事务
 export enum transactionalState {
   已停止,

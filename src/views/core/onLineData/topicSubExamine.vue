@@ -32,7 +32,7 @@
 
     <t-dialog v-model="dialogFlag">
       <DataStructureDialog v-if="tDialogShow === 1" :rowObj="rowObj" />
-      <HSimpleDetails v-if="tDialogShow === 2" :str="str" class="mb-2" />
+      <HContentDetails v-if="tDialogShow === 2" :row="str" />
     </t-dialog>
   </div>
 </template>
@@ -49,15 +49,14 @@ import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
-import HSimpleDetails from '@/components/h-simple-details.vue'
-
+import HContentDetails from '@/components/h-content-details.vue'
 @Component({
   components: {
     HTable,
     TDialog,
     DataStructureDialog,
     HSearch,
-    HSimpleDetails
+    HContentDetails
   }
 })
 @http

@@ -64,7 +64,7 @@
       <DataStructureDialog v-if="dialogShow === 1" :rowObj="rowObj" />
       <SubDetails v-else-if="dialogShow === 2" :rowObj="rowObj" />
       <AllDetails v-else-if="dialogShow === 3" :rowObj="rowObj" />
-      <HSimpleDetails v-else-if="dialogShow === 4" :str="str" class="mb-2" />
+      <HContentDetails v-else-if="dialogShow === 4" :row="str" />
     </t-dialog>
   </div>
 </template>
@@ -85,7 +85,7 @@ import { examineTypeColor } from '@/enum/topic-audit-enum'
 import { tableHeaderType } from '@/type/table.type'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import HTabs from '@/components/h-tabs.vue'
-import HSimpleDetails from '@/components/h-simple-details.vue'
+import HContentDetails from '@/components/h-content-details.vue'
 
 @Component({
   components: {
@@ -96,7 +96,7 @@ import HSimpleDetails from '@/components/h-simple-details.vue'
     SubDetails,
     AllDetails,
     HTabs,
-    HSimpleDetails
+    HContentDetails
   }
 })
 @http

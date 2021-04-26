@@ -1,7 +1,7 @@
 <template>
   <div id="topicAncillaryInformationDialog">
     <h-table :headers="tableHeader" :desserts="otherObj"></h-table>
-    <h-table v-if="otherObj.topicInterFaceType === 3" :headers="headers" :desserts="headerValue"></h-table>
+    <h-table v-if="otherObj.taskType === 3" :headers="headers" :desserts="headerValue"></h-table>
   </div>
 </template>
 <script lang="ts">
@@ -17,7 +17,7 @@ export default class TopicAncillaryInformationDialog extends Vue {
   @Prop() private otherObj!: any
 
   get tableHeader(): Array<{}> {
-    switch (this.otherObj.topicInterFaceType) {
+    switch (this.otherObj.taskType) {
       case 2:
         return [
           {
