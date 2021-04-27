@@ -236,21 +236,31 @@ const routes: Array<RouteConfig> = [
         component: () => import('@/views/core/offlineData/topicList.vue'),
         name: '离线主题',
         meta: {
-          title: '离线主题',
+          title: '离线任务管理',
           access: true,
           url: '/offlineData/topicList'
         }
       },
       {
-        path: 'dataStatistics',
-        component: () => import('@/views/core/offlineData/dataStatistics.vue'),
-        name: '离线数据统计',
+        path: 'taskList',
+        component: () => import('@/views/core/offlineData/taskList.vue'),
+        name: '离线作业列表',
         meta: {
           title: '离线作业列表',
           access: true,
-          url: '/offlineData/dataStatistics'
+          url: '/offlineData/taskList'
         }
       }
+      // {
+      //   path: 'dataStatistics',
+      //   component: () => import('@/views/core/offlineData/dataStatistics.vue'),
+      //   name: '离线数据统计',
+      //   meta: {
+      //     title: '离线数据统计',
+      //     access: true,
+      //     url: '/offlineData/dataStatistics'
+      //   }
+      // }
     ]
   },
   // 事务数据
@@ -530,6 +540,15 @@ const routes: Array<RouteConfig> = [
         name: '监控日志2',
         meta: {
           title: '监控日志2',
+          access: false
+        }
+      },
+      {
+        path: 'cron',
+        component: () => import('@/components/h-cron/index.vue'),
+        name: 'cron',
+        meta: {
+          title: 'cron',
           access: false
         }
       }

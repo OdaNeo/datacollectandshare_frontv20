@@ -26,7 +26,7 @@
         <v-btn class="close-btn" icon color="white" @click="handleHideAlert" small>
           <v-icon>{{ mdiClose }}</v-icon>
         </v-btn>
-        <v-alert style="font-size: 13px" v-for="item in events" :key="item.id" :color="item.color" dark dense>
+        <v-alert style="font-size: 0.875rem" v-for="item in events" :key="item.id" :color="item.color" dark dense>
           <span>主题ID: {{ item.name }}</span>
           <br />
           <span>状态: {{ item.status }}</span>
@@ -103,7 +103,7 @@ export default class Layout extends Vue {
       date: new Date().getTime()
     })
 
-    // 如果 data 不存在，说明没有权限或者http请求出错，清空定时器不在轮询
+    // 如果 data 不存在，说明没有权限或者http请求出错，清空定时器不再轮询
     if (data === undefined) {
       this.h_utils.alertUtil.close()
       clearInterval(this.timer)
@@ -203,7 +203,7 @@ export default class Layout extends Vue {
   width: 100%;
 }
 .main-container-inner {
-  width: 97%;
+  width: 98.5%;
   margin: 0 auto;
 }
 

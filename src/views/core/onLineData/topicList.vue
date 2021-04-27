@@ -616,7 +616,7 @@ export default class OnlineDataTopicList extends Vue {
 
         // 表格需命名为sheet1
         if (!Sheets[`sheet1`]) {
-          this.h_utils['alertUtil'].open('表格格式有误', true, 'error')
+          this.h_utils['alertUtil'].open('表格格式有误，请将表格命名为sheet1', true, 'error')
           return
         } else {
           this.sheetObj = Sheets[`sheet1`]
@@ -697,6 +697,7 @@ export default class OnlineDataTopicList extends Vue {
     const data = await this.h_download.httpGET('GET_TOPICS_PROTOBUFDOWNLOAD', {
       id: item.id
     })
+    console.log(data)
 
     if (data.filename) {
       const blob = new Blob([data] as any, {

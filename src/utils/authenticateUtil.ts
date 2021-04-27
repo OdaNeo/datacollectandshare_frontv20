@@ -2,7 +2,7 @@ import { rootStoreModule } from '@/store/modules/root'
 import router from '@/router'
 
 export default class authUtil {
-  public static logout() {
+  public static logout(): void {
     // 清除vuex 的状态
     rootStoreModule.logout()
     // 跳转

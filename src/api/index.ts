@@ -4,6 +4,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } f
 import { rootStoreModule } from '../store/modules/root'
 import { cancelTokenModule } from '../store/modules/request'
 import alertUtil from '../utils/alertUtil'
+import authUtil from '../utils/authenticateUtil'
 import { VUE_APP_BASE_API, BASE_REQUEST_TIME_OUT } from '../../config'
 import { uploadStoreModule } from '@/store/modules/upload'
 import { httpErrorMsg } from '@/enum/http-enum'
@@ -203,9 +204,8 @@ class RequestData {
 
     if (Array.isArray(response)) {
       // 找出第一个错误项
-      const _error_item = response.filter(item => {
-        return item.code !== 200
-      })
+      const _error_item = response.filter(item => item.code !== 200)
+
       if (_error_item.length === 0) {
         code = 200
       } else {
@@ -226,6 +226,17 @@ class RequestData {
     }
 
     switch (code) {
+      // -1000是登录超时，用户需要重新登陆，2秒后
+      case -1000:
+        alertUtil.open(`${message}，请尝试重新登录`, true, 'error')
+        // 登出
+        setTimeout(() => {
+          authUtil.logout()
+        }, 2000)
+
+        callback(_error)
+        break
+
       case 200:
         alertUtil.close()
         callback(response)

@@ -36,6 +36,10 @@
           <template v-slot:state="{ item }">
             <v-btn text :color="stateColor[item.isRun]">{{ offlineState[item.isRun] }}</v-btn>
           </template>
+          <!-- 关联主题 -->
+          <template v-slot:topic="{ item }">
+            <v-btn text color="primary" @click.stop="showTopicDetail(item)">详情</v-btn>
+          </template>
           <!-- 数据结构 -->
           <template v-slot:buttons="{ item }">
             <v-btn text color="primary" @click="dataStructureDetails(item)">数据结构详情</v-btn>
@@ -48,7 +52,6 @@
           <!-- 附加信息 -->
           <template v-slot:details="{ item }">
             <v-btn text color="primary" @click.stop="showTimerLog(item)">时间信息</v-btn>
-
             <v-btn text color="primary" @click="getTopicInformation(item)">附加信息</v-btn>
           </template>
           <!-- 操作 -->
@@ -215,6 +218,12 @@ export default class OfflineTopicList extends Vue {
         isHide: this.tab === 2 || this.tab === 3
       },
       {
+        text: '主题关联',
+        align: 'center',
+        slot: 'topic',
+        isHide: this.tab === 2 || this.tab === 3
+      },
+      {
         text: '主题名称',
         align: 'center',
         value: 'topicName',
@@ -239,7 +248,7 @@ export default class OfflineTopicList extends Vue {
         width: 100,
         isHide: this.tab === 2 || this.tab === 3,
         format: (cron: string) => {
-          return cron ? cronstrue.toString(cron, { locale: 'zh_CN' }) : ''
+          return cron ? cronstrue.toString(cron, { locale: 'zh_CN', use24HourTimeFormat: true }) : ''
         }
       },
       {
@@ -848,7 +857,7 @@ export default class OfflineTopicList extends Vue {
   // 历史日志
   private async getHistoryLog(taskId: number) {
     this.$router.push({
-      name: `离线数据统计`,
+      name: `离线作业列表`,
       query: {
         taskId: `${taskId}`
       }
@@ -861,6 +870,26 @@ export default class OfflineTopicList extends Vue {
     this.tDialogShow = 2
     this.formProvide.title = '附加信息'
     item.t && (this.otherObj = { taskType: item.taskType, ...item.t })
+  }
+
+  // 主题详情
+  private showTopicDetail(item: { t: object }) {
+    this.headersObj = [
+      {
+        text: '主题ID',
+        align: 'center',
+        value: 'topicId'
+      },
+      {
+        text: '主题名称',
+        align: 'center',
+        value: 'topicName'
+      }
+    ]
+    item.t && (this.otherObj = { ...item.t })
+    this.tDialogFlag = true
+    this.tDialogShow = 3
+    this.formProvide.title = '主题信息'
   }
 
   // 时间信息

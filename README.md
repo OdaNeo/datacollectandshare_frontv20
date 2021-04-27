@@ -92,4 +92,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 - 隐藏页面 /private，包含废弃页面
 - 线上查看 git 版本页面 /private/bulkCreateTopic
 - 页面跳转以及tab页切换会批量取消上一个页面的请求
-- npm run staging 打包成后端可配的页面，其余与生产环境相同，详见 .env.staging 文件
+- npm run staging 可以打包成后端可配请求baseUrl的页面，其余与生产环境相同，详见 .env.staging 文件
+- 登录超时30分钟，需要重新登录

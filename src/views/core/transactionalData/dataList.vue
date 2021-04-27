@@ -39,6 +39,10 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
+          <!-- 关联主题 -->
+          <template v-slot:topic="{ item }">
+            <v-btn text color="primary" @click.stop="showTopicDetail(item)">详情</v-btn>
+          </template>
           <!-- 当前状态 -->
           <template v-slot:state="{ item }">
             <v-btn text :color="stateColor[item.isRun]">{{ transactionalState[item.isRun] }}</v-btn>
@@ -233,6 +237,12 @@ export default class transactionalDataList extends Vue {
         isHide: this.tab === 0 || this.tab === 1
       },
       {
+        text: '主题关联',
+        align: 'center',
+        slot: 'topic',
+        isHide: this.tab === 2 || this.tab === 3
+      },
+      {
         text: '主题数据结构',
         align: 'center',
         slot: 'column',
@@ -263,7 +273,7 @@ export default class transactionalDataList extends Vue {
         width: 100,
         isHide: this.tab === 2 || this.tab === 3,
         format: (cron: string) => {
-          return cron ? cronstrue.toString(cron, { locale: 'zh_CN' }) : ''
+          return cron ? cronstrue.toString(cron, { locale: 'zh_CN', use24HourTimeFormat: true }) : ''
         }
       },
       {
@@ -726,6 +736,26 @@ export default class transactionalDataList extends Vue {
     this.pageNum = 1
   }
 
+  // 主题详情
+  private showTopicDetail(item: { t: object }) {
+    this.headersObj = [
+      {
+        text: '主题ID',
+        align: 'center',
+        value: 'topicId'
+      },
+      {
+        text: '主题名称',
+        align: 'center',
+        value: 'topicName'
+      }
+    ]
+    item.t && (this.dessertsObj = { ...item.t })
+    this.tDialogFlag = true
+    this.dialogFlag = 4
+    this.formProvide.title = '主题信息'
+  }
+
   // 启动
   private async startTransactionalData(item: { id: number }) {
     const { success } = await this.h_request['httpGET']('GET_TASKINFO_UPDATETASKINFOSTATE', {
@@ -888,7 +918,7 @@ export default class transactionalDataList extends Vue {
         align: 'center',
         value: 'cron',
         format: (cron: string) => {
-          return cron ? cronstrue.toString(cron, { locale: 'zh_CN' }) : ''
+          return cron ? cronstrue.toString(cron, { locale: 'zh_CN', use24HourTimeFormat: true }) : ''
         }
       },
       {
