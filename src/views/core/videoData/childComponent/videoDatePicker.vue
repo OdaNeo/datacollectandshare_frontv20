@@ -112,12 +112,9 @@ export default class VideoDatePicker extends Vue {
 
   private showDateList = false
 
-  private dateEvents = [...Array(6)].map(() => {
-        const day = Math.floor(Math.random() * 30)
-        const d = new Date()
-        d.setDate(24)
-        return d.toISOString().substr(0, 10)
-      })
+  private dateEvents = this.formProvide.formObj.videoTimeRang.map((time:String) => {
+    return time
+  })
 
   // 默认显示当前周
   private dates = [
@@ -147,13 +144,13 @@ export default class VideoDatePicker extends Vue {
     const createTime = this.h_utils.timeUtil.timeToStamp(this.formProvide.formObj.videoCreateTime, '-')
     const overTime = this.h_utils.timeUtil.timeToStamp(this.formProvide.formObj.videoOverTime,"-")
     if (this.dates.length === 0) {
-      return Date.parse(val) > createTime&&Date.parse(val)<overTime
+      return Date.parse(val) >= createTime&&Date.parse(val)<=overTime
     } else if (this.dates.length === 1) {
       const beginTime = this.h_utils.timeUtil.timeToStamp(val, '-')
       const endTime = this.h_utils.timeUtil.timeToStamp(this.dates[0], '-')
-      return beginTime + 24 * 60 * 60 * 1000 > endTime && beginTime < endTime + 7 * 24 * 60 * 60 * 1000 &&Date.parse(val) > createTime&&Date.parse(val)<overTime
+      return beginTime + 24 * 60 * 60 * 1000 > endTime && beginTime < endTime + 7 * 24 * 60 * 60 * 1000 &&Date.parse(val) >= createTime&&Date.parse(val)<=overTime
     } else {
-      return Date.parse(val) > createTime&&Date.parse(val)<overTime
+      return Date.parse(val) >= createTime&&Date.parse(val)<=overTime
     }
   }
   private get dateRangeText() {

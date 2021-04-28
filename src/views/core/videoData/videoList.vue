@@ -54,7 +54,13 @@
             <v-btn text :color="stateColor[item.videoState]">{{ videoState[item.videoState] }}</v-btn>
           </template>
           <template v-slot:viewVideo="{ item }">
-            <v-btn text color="primary" @click="showVideoDatePicker(item)">暂无视频</v-btn>
+            <v-btn 
+            text 
+            color="primary" 
+            @click="item.existVideo?showVideoDatePicker(item):''" 
+            :disabled="item.existVideo?false:true">
+            {{item.existVideo?"选择视频":"暂无视频"}}
+            </v-btn>
           </template>
           <!-- 显示详情 -->
           <template v-slot:buttons="{ item }">
@@ -443,15 +449,18 @@ export default class VideoDataList extends Vue {
   }
 
   // showVideoDatePicker
-  private showVideoDatePicker(item: { id: number; bucketName: string }) {
-    let videoCreateTime:String = "2021-04-20" 
-    let videoOverTime:String = "2021-04-25"
+  private async showVideoDatePicker(item: { id: number; bucketName: string }) {
+    const { data } = await this.h_request['httpGET']('GET_VIDEO_PERIOD', {
+      "topicId":item.id
+    })
+    let videoCreateTime:String = data[0] 
+    let videoOverTime:String = data[data.length-1]
     //去请求
     this.curItem = item
     this.dialogFlag = true
     this.dialogShow = 3
     //需要获取时间段
-    this.formProvide.title = '主题'+item.id+"在2012-01-02至2012-01-03时间段内存在视频"
+    this.formProvide.title = `主题${item.id}在${videoCreateTime}至${videoOverTime}时间段内存在视频`
     this.formProvide.btnName = ['立即观看', '取消']
     this.formProvide.methodName = 'getVideoDatePicker'
     this.formProvide.formObj = {
@@ -459,7 +468,8 @@ export default class VideoDataList extends Vue {
       bucketName: item.bucketName,
       videoListAvailable: [],
       videoCreateTime:videoCreateTime,
-      videoOverTime:videoOverTime
+      videoOverTime:videoOverTime,
+      videoTimeRang:data
     }
   }
 

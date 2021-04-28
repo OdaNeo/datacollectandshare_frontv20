@@ -76,10 +76,12 @@ const GET_SYSNET_GETBINDLIST = '/sysnet/getBindList' // 绑定网络
 const GET_SYSNET_GETBINDBYNAME = '/sysnet/getBindByName'
 const GET_SYSNET_GETSYSNETLIST = '/sysnet/getSysNetList'
 const GET_SYSNET_ADDBINDINFO = '/sysnet/addBindInfo'
-const POST_SYSNET_DELETEBINDINFO = '/sysnet/delBindInfo'
+const POST_SYSNET_DELETEBINDINFO = '/sysnet/delBindInfo' 
 
 // ---------------------------- 操作日志 ---------------------------
 const GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG = '/logMGT/viewLog/log/findAllLog'
+const GET_LOGMGT_VIEWLOG_LOG_EXPORTSYSLOG = '/logMGT/viewLog/log/exportSysLog'
+const GET_LOGMGT_VIEWLOG_LOG_SYSLOGCOUNT = '/logMGT/viewLog/log/sysLogCount'
 // /logMGT/viewLog/log/findAllLogByParam ？
 
 // ---------------------------- 可靠通道 ---------------------------
@@ -101,6 +103,7 @@ const POST_TOPICS_UPDATEVIDEOTOPIC = '/topics/updateVideoTopic' // 更新视频�
 const GET_STATISTICS_STATVIDEOTOPICDATA = '/statistics/statVideoTopicData'
 const GET_SELECT_VIDEO_TOPIC_BY_ID_OR_KEYWORD = `/topics/selectVideoTopicByIdOrKeyword` //视频主题按主题ID或者关键字查询
 const GET_SELECT_MYVIDEO_TOPIC_BY_ID_OR_KEYWORD = `/topics/selectMyVideoTopicByIdOrKeyword` //我的视频主题按主题ID或者关键字查询
+const GET_VIDEO_PERIOD = `/topics/videoPeriod` //视频时间区间
 
 // ----------------------------- 日志数据 ---------------------------
 const POST_TOPICS_ADDLOGGERTOPIC = '/topics/addLoggerTopic'
@@ -201,6 +204,7 @@ const REQUEST_NAME = {
   GET_SYSNET_GETBINDBYNAME,
   GET_SYSNET_GETSYSNETLIST,
   GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG,
+  GET_LOGMGT_VIEWLOG_LOG_EXPORTSYSLOG,
   // GET_SYSTEM_GETSYSTEMINFO,
   POST_TOPICS_ADD,
   GET_TOPICS_DELETE,
@@ -227,6 +231,7 @@ const REQUEST_NAME = {
   GET_VIDEO_ADDRESS,
   GET_SELECT_VIDEO_TOPIC_BY_ID_OR_KEYWORD,
   GET_SELECT_MYVIDEO_TOPIC_BY_ID_OR_KEYWORD,
+  GET_VIDEO_PERIOD,
   POST_TOPIC_ADDPROTOBUFTOPIC,
   GET_CMD_FINDMYCMDINFOBYID,
   GET_TOPICS_GETOFFLINELOG,
@@ -267,7 +272,8 @@ const REQUEST_NAME = {
   GET_TASKINFO_UPDATETASKINFOSTATE,
   GET_TASKINFO_RUNTASKAGAIN,
   GET_TASKINFO_FINDALLMYTASKBYID,
-  GET_TASKINFO_FINDTRANSCATIONLOG
+  GET_TASKINFO_FINDTRANSCATIONLOG,
+  GET_LOGMGT_VIEWLOG_LOG_SYSLOGCOUNT
 }
 
 export default REQUEST_NAME
