@@ -12,26 +12,17 @@
 <script lang="ts">
 import { Component, Vue, Prop } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
-
+import util from '@/decorator/utilsDecorator'
 @Component({
   components: {
     HTable
   }
 })
+@util
 export default class DataStructureDialog extends Vue {
   @Prop() private rowObj!: any
   get desserts(): Array<{}> {
-    const arr = []
-    const dataStruct = JSON.parse(this.rowObj.dataStruct)[0]
-    const dsAnnotation = JSON.parse(this.rowObj.dsAnnotation)
-    for (const key in dataStruct) {
-      arr.push({
-        key: key,
-        value: dataStruct[key],
-        description: dsAnnotation[key]
-      })
-    }
-    return arr
+    return this.h_utils.topicListUtil.transJsonToTopicList(this.rowObj.dataStruct, this.rowObj.dsAnnotation)
   }
   private headers = [
     {
@@ -42,7 +33,7 @@ export default class DataStructureDialog extends Vue {
     {
       text: '数据value',
       align: 'center',
-      value: 'value'
+      value: 'type'
     },
     {
       text: '描述',

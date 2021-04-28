@@ -1,6 +1,6 @@
 <template>
-  <div id="TransactionalDataStatistics">
-    <v-row>
+  <div id="taskList">
+    <v-row no-gutters>
       <HSearch
         v-model="currenttaskId"
         @append="changeQuery"
@@ -20,8 +20,8 @@
     >
       <!-- 执行结果 -->
       <template v-slot:status="{ item }">
-        <v-btn text :color="transactionalResultColor[item.result]">
-          {{ transactionalResult[item.result] }}
+        <v-btn text :color="offlineResultColor[item.result]">
+          {{ offlineResult[item.result] }}
         </v-btn>
       </template>
       <!-- buttons -->
@@ -35,30 +35,33 @@
     </t-dialog>
   </div>
 </template>
+
 <script lang="ts">
-import { Component, Vue, Provide, Watch } from 'vue-property-decorator'
-import HTable from '@/components/h-table.vue'
-import { topicTable } from '@/type/topic.type'
-import { paramsType, returnType } from '@/type/http-request.type'
-import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
+import { Component, Vue, Watch, Provide } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
+import { paramsType, returnType } from '@/type/http-request.type'
 import util from '@/decorator/utilsDecorator'
-import TDialog from '@/components/t-dialog.vue'
-import { FormObj } from '@/type/dialog-form.type'
-import HContentDetails from '@/components/h-content-details.vue'
+import HTabs from '@/components/h-tabs.vue'
+import { topicTable } from '@/type/topic.type'
+import HTable from '@/components/h-table.vue'
 import HSearch from '@/components/h-search.vue'
-import { transactionalResult, transactionalResultColor } from '@/enum/state-enum'
+import { offlineResult, offlineResultColor } from '@/enum/state-enum'
+import { FormObj } from '@/type/dialog-form.type'
+import TDialog from '@/components/t-dialog.vue'
+import HContentDetails from '@/components/h-content-details.vue'
+
 @Component({
   components: {
+    HTabs,
     HTable,
-    TDialog,
     HSearch,
+    TDialog,
     HContentDetails
   }
 })
 @http
 @util
-export default class TransactionalDataStatistics extends Vue {
+export default class TaskList extends Vue {
   @Provide('formProvide') private formProvide: FormObj = new Vue({
     data() {
       return {
@@ -72,10 +75,11 @@ export default class TransactionalDataStatistics extends Vue {
 
   private tDialogFlag = false
   private row = ''
-  private currenttaskId = ''
-  private transactionalResult = transactionalResult
-  private transactionalResultColor = transactionalResultColor
 
+  private offlineResult = offlineResult
+  private offlineResultColor = offlineResultColor
+
+  private currenttaskId = ''
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
   private pageSize = 10 // 每页展示多少条数据
@@ -110,20 +114,12 @@ export default class TransactionalDataStatistics extends Vue {
     }
   ]
 
-  // 查看日志详情
-  private offlineLogDetails(item: { log: string }) {
-    this.tDialogFlag = true
-    this.formProvide.title = '查看离线日志详情'
-    this.row = item.log
-  }
-
   // 查询通用调用方法
   private async searchMethod(params: paramsType, taskId: string) {
     this.loading = true
-    params.type = topicInterFaceType['事务数据']
     taskId && (params.taskId = taskId)
 
-    const { data }: returnType = await this.h_request['httpGET']<object>('GET_TASKINFO_FINDTRANSCATIONLOG', params)
+    const { data }: returnType = await this.h_request['httpGET']<object>('GET_OFFLINE_SELECTOFFLINELOG', params)
 
     this.desserts = data ? [...data.list] : []
     this.paginationLength = Math.ceil(data?.['total'] / this.pageSize) || 1
@@ -147,6 +143,13 @@ export default class TransactionalDataStatistics extends Vue {
         taskId: undefined
       }
     })
+  }
+
+  // 查看日志详情
+  private offlineLogDetails(item: { log: string }) {
+    this.tDialogFlag = true
+    this.formProvide.title = '查看离线日志详情'
+    this.row = item.log
   }
 
   // 分页方法

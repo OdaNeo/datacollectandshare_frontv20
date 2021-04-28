@@ -23,7 +23,7 @@
         :to="subItem.meta.url"
       >
         <v-list-item-content class="ml-0">
-          <v-list-item-title v-text="subItem.name"></v-list-item-title>
+          <v-list-item-title v-text="subItem.meta.title"></v-list-item-title>
         </v-list-item-content>
       </v-list-item>
     </v-list-group>

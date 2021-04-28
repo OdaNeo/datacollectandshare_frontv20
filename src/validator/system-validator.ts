@@ -1,5 +1,7 @@
 import { ValidatorType } from '../type/validator.type'
 
+const PASSWORD_REGEXP = /^(?=.*[a-z])(?=.*[0-9])[^]{8,16}$/
+
 class SystemValidator {
   public readonly typeInputRules = (): ValidatorType => {
     return [
@@ -17,6 +19,10 @@ class SystemValidator {
   }
   public readonly valueRules = (): ValidatorType => {
     return [(v: string): boolean | string => (v && v.length <= 120) || '长度最大为120个字符']
+  }
+  // 密码
+  public readonly passwordRules = (): ValidatorType => {
+    return [(v: string): boolean | string => (v && PASSWORD_REGEXP.test(v)) || '密码必须为数字字母混合，且长度为8-16位']
   }
 }
 

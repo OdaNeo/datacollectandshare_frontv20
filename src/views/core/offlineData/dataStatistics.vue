@@ -1,5 +1,6 @@
 <template>
   <div id="OfflineDataStatistics">
+    <!-- 图表 -->
     <v-row>
       <v-col cols="3">
         <v-menu
@@ -48,7 +49,7 @@
     <!-- 图表显示区域 -->
     <div class="echartsContainer">
       <!-- loading -->
-      <HOverLay :loading="loading" />
+      <HOverLay :loading="overLayLoading" />
       <div id="eCharts1"></div>
       <div v-if="!showECharts" class="showECharts">
         <div style="font-size: 1rem; color: #666">查无数据</div>
@@ -63,17 +64,18 @@ import { Component, Vue } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
 import { returnType } from '@/type/http-request.type'
 import Moment from 'moment'
-import util from '@/decorator/utilsDecorator'
 import HOverLay from '@/components/h-overlay.vue'
 import echarts from '@/decorator/echartsDecorator'
 import { offlineDataStatisticsType } from '@/type/offline-data.type'
+import HSearch from '@/components/h-search.vue'
+
 @Component({
   components: {
-    HOverLay
+    HOverLay,
+    HSearch
   }
 })
 @http
-@util
 @echarts
 export default class OfflineDataStatistics extends Vue {
   private myChartElement1: any = null
@@ -81,7 +83,7 @@ export default class OfflineDataStatistics extends Vue {
   private DEFAULT_RANGE = 30
   private showMenu = false
 
-  private loading = true
+  private overLayLoading = true
   private showECharts = false
   // 起始时间
   private get startTime() {
@@ -139,7 +141,7 @@ export default class OfflineDataStatistics extends Vue {
 
   // 获取数据
   private async getRelease(params: Partial<offlineDataStatisticsType>) {
-    this.loading = true
+    this.overLayLoading = true
     // 离线不区分系统，故传 -1
     params.systemId = `-1`
     params.dataType = 4
@@ -150,7 +152,7 @@ export default class OfflineDataStatistics extends Vue {
     )
 
     this.showECharts = true
-    this.loading = false
+    this.overLayLoading = false
     if (data && data.list) {
       this.paginationLength = Math.ceil(data?.total / this.pageSize) || 1
       this.handleECharts1(data.list)
@@ -247,7 +249,6 @@ export default class OfflineDataStatistics extends Vue {
       ]
     }
   }
-
   mounted(): void {
     // 初始化
     this.initECharts1()

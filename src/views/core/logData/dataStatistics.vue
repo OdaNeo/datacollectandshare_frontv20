@@ -287,16 +287,10 @@ export default class LogDataStatistics extends Vue {
   private tabChange(number: number) {
     console.log(number)
   }
+
   mounted(): void {
     // 初始化
     this.initECharts()
-    // this.getStatisticsAllLoggerTopicByDayTime()
-    // [{
-    //       count: 1
-    // daytime: "2021-04-21"
-    // id: 18
-    // topicId: 9008598
-    //     }]
   }
 }
 </script>

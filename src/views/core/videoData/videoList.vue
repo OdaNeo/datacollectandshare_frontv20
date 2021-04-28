@@ -66,11 +66,6 @@
           <template v-slot:buttons="{ item }">
             <v-btn text color="primary" @click="showVideoDetail(item)">视频详情信息</v-btn>
           </template>
-          <!-- 报警状态 -->
-          <template v-slot:monitor="{ item }">
-            <v-btn text color="error">告警</v-btn>
-            <v-btn text color="primary" @click="showTopicAlert(item)">更多</v-btn>
-          </template>
           <!-- 操作 -->
           <template v-slot:buttons2="{ item }">
             <!-- 操作下拉框 -->
@@ -215,65 +210,57 @@ export default class VideoDataList extends Vue {
   private loading = true
 
   // 表头内容 所有主题
-  private headers: tableHeaderType[] = [
-    {
-      text: '主题ID',
-      align: 'center',
-      value: 'id'
-    },
-    {
-      text: '主题名称',
-      align: 'center',
-      value: 'topicName'
-    },
-    {
-      text: '所属用户',
-      align: 'center',
-      value: 'userName'
-    },
-    {
-      text: '当前状态',
-      align: 'center',
-      slot: 'videoState'
-    },
-    {
-      text: '关键字',
-      align: 'center',
-      value: 'videoKeyword'
-    },
-    {
-      text: '描述',
-      align: 'center',
-      value: 'videoDescribe'
-    },
-    {
-      text: '查看视频',
-      align: 'center',
-      slot: 'viewVideo'
-    },
-    {
-      text: '详情信息',
-      align: 'center',
-      slot: 'buttons'
-    },
-    {
-      text: '报警状态',
-      align: 'center',
-      slot: 'monitor'
-    },
-    {
-      text: '操作',
-      align: 'center',
-      slot: 'buttons2'
-    }
-  ]
+  private get headers(): tableHeaderType[] {
+    return [
+      {
+        text: '主题ID',
+        align: 'center',
+        value: 'id'
+      },
+      {
+        text: '主题名称',
+        align: 'center',
+        value: 'topicName'
+      },
+      {
+        text: '所属用户',
+        align: 'center',
+        value: 'userName'
+      },
+      {
+        text: '当前状态',
+        align: 'center',
+        slot: 'videoState'
+      },
+      {
+        text: '关键字',
+        align: 'center',
+        value: 'videoKeyword'
+      },
+      {
+        text: '描述',
+        align: 'center',
+        value: 'videoDescribe'
+      },
+      {
+        text: '详情信息',
+        align: 'center',
+        slot: 'buttons'
+      },
+      {
+        text: '操作',
+        align: 'center',
+        slot: 'buttons2',
+        isHide: this.tab === 0
+      }
+    ]
+  }
   // 操作下拉框
   private buttonItems = [
     // {
     //   text: `选择视频`,
     //   handle: this.showVideoDatePicker
     // },
-
     {
       text: `修改`,
       tab: 1,
@@ -375,6 +362,17 @@ export default class VideoDataList extends Vue {
     const canNotEdit = formObj.canNotEdit
     const params: any = {}
 
+    // edit
+    if (canNotEdit) {
+      params['id'] = formObj.id
+    } else {
+      //  验重
+      const text = await this.h_utils['noRepeat'].topicName(formObj.topicName)
+      if (!text) {
+        return
+      }
+    }
+
     params['topicName'] = formObj.topicName
     params['address'] = formObj.address
     params['sourceUrl'] = formObj.sourceUrl
@@ -385,8 +383,6 @@ export default class VideoDataList extends Vue {
       .map(item => item.keyword)
       .filter(item => item)
       .join(',')
-    // edit
-    canNotEdit && (params['id'] = formObj.id)
 
     const { success } = await this.h_request['httpPOST'](
       !canNotEdit ? 'POST_TOPICS_ADD' : 'POST_TOPICS_UPDATEVIDEOTOPIC',
@@ -623,21 +619,6 @@ export default class VideoDataList extends Vue {
     this.tDialogFlag = true
     this.tDialogShow = 1
   }
-
-  // 更多告警信息
-  private async showTopicAlert(item: { id: number }) {
-    if (!item.id) {
-      return
-    }
-    this.$router.push({
-      name: `监控日志`,
-      query: {
-        topicId: `${item.id}`
-      }
-    })
-  }
-
-  // 跳转到  报警管理
 
   // 视频启动
   private async startVideo(item: { id: number }) {

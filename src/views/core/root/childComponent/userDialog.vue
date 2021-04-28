@@ -12,7 +12,7 @@
     <HSimpleInput
       v-if="!formProvide.formObj.canNotEdit"
       v-model="formProvide.formObj['loginPwd']"
-      :rules="[...h_validator.noEmpty('密码')]"
+      :rules="[...h_validator.noEmpty('密码'), ...h_validator.passwordRules()]"
       :description="`密码`"
     />
 
@@ -58,7 +58,7 @@ import HSelect from '@/components/h-select.vue'
     HSelect
   }
 })
-@Validator(['noEmpty'])
+@Validator(['noEmpty', 'passwordRules'])
 export default class userDialog extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   @Prop() private userRoots!: Array<userFormVar>

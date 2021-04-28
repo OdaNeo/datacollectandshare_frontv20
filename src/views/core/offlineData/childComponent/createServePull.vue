@@ -13,6 +13,7 @@
             class="mt-6"
             v-model="formProvide.formObj.id"
             :description="`选择/新建主题ID`"
+            :disabled="formProvide.formObj.isEdit"
             :items="formProvide.formObj.activeTopicIDs"
             @input="changeTopic"
           />
@@ -26,7 +27,7 @@
           />
 
           <!-- 数据结构 -->
-          <TopicList :description="`数据结构`" />
+          <TopicList v-if="!formProvide.formObj.isEdit" :description="`数据结构`" />
         </v-row>
       </v-window-item>
 
@@ -59,6 +60,7 @@
           <!--AuthorizationObj  -->
           <DoubleInput
             class="mt-6"
+            :disabled="formProvide.formObj.isEdit"
             :required="false"
             :description="`Authorization`"
             :object="AuthorizationObj"
@@ -68,32 +70,34 @@
           <!-- url -->
           <HSimpleInput
             v-model="formProvide.formObj['url']"
+            :disabled="formProvide.formObj.isEdit"
             :description="`URL`"
             :rules="[...h_validator.noEmpty('URL')]"
           />
 
           <!-- 是否存入ES -->
           <HRadioGroup
-            :description="`是否存入ES`"
+            :description="`是否写入ES`"
             v-model="formProvide.formObj['saveEs']"
-            :rules="[...h_validator.noEmpty('是否存入ES'), ...mastHaveEsOrHBase]"
+            :rules="[...h_validator.noEmpty('是否存入ES'), ...EsOrHBase]"
             :items="saveESItem"
-            @input="handleMastHaveEsOrHBase"
+            @input="handleEsOrHBase"
           />
 
           <!-- 是否存入HBase -->
           <HRadioGroup
-            :description="`是否存入HBase`"
+            :description="`是否写入HBase`"
             v-model="formProvide.formObj['saveHbase']"
-            :rules="[...h_validator.noEmpty('是否存入HBase'), ...mastHaveEsOrHBase]"
+            :rules="[...h_validator.noEmpty('是否存入HBase'), ...EsOrHBase]"
             :items="saveHBaseItem"
-            @input="handleMastHaveEsOrHBase"
+            @input="handleEsOrHBase"
           />
 
           <!-- 请求类型 -->
           <HSelect
             :description="`请求类型`"
             v-model="formProvide.formObj['type']"
+            :disabled="formProvide.formObj.isEdit"
             :rules="[...h_validator.noEmpty('请求类型')]"
             :items="typeItem"
           />
@@ -102,6 +106,7 @@
           <HTextArea
             v-if="formProvide.formObj['type'] === 'post'"
             v-model="formProvide.formObj['body']"
+            :disabled="formProvide.formObj.isEdit"
             :description="`body`"
             :rules="[...h_validator.noEmpty('body'), ...h_validator.isJSON()]"
           />
@@ -110,6 +115,7 @@
           <DoubleInput
             :required="false"
             :description="`头信息`"
+            :disabled="formProvide.formObj.isEdit"
             :object="header"
             :formObj="`header`"
             :accumulation="true"
@@ -131,6 +137,8 @@ import DoubleInput from './doubleInput.vue'
 import HStep from '@/components/h-step.vue'
 import HSlider from '@/components/h-slider.vue'
 import HRadioGroup from '@/components/h-radio-group.vue'
+import util from '@/decorator/utilsDecorator'
+
 @Component({
   components: {
     HStep,
@@ -143,13 +151,14 @@ import HRadioGroup from '@/components/h-radio-group.vue'
     HRadioGroup
   }
 })
+@util
 @Validator(['noEmpty', 'isJSON', 'topicNameFormatter'])
 export default class CreateServePull extends Vue {
   @Inject() private readonly formProvide!: H_Vue
 
   private typeItem = ['get', 'post']
 
-  private mastHaveEsOrHBase: string[] = []
+  private EsOrHBase: string[] = []
 
   private AuthorizationObj = [
     { text: '用户名', value: 'key' },
@@ -175,19 +184,49 @@ export default class CreateServePull extends Vue {
   // 标题
   private stepTitle = ['主题结构数据信息', '任务属性信息-1', '任务属性信息-2']
 
-  //
-  private changeTopic(val: number) {
-    console.log(val)
+  // 切换主题
+  private changeTopic(val: string | null) {
+    if (val && val !== `新增主题`) {
+      const item = this.formProvide.formObj.activeTopicIDs
+      let obj1: any
+      let obj2: any
+      let topicName = ''
+      item.forEach((item: { value: string | null; dataStruct: string; topicName: string; dsAnnotation: string }) => {
+        if (item.value === val) {
+          obj1 = item.dataStruct
+          obj2 = item.dsAnnotation
+          topicName = item.topicName
+        }
+      })
+      const topicList = this.h_utils.topicListUtil.transJsonToTopicList(obj1, obj2)
+
+      this.formProvide.formObj.id = val
+      this.formProvide.formObj.topicName = topicName
+      this.formProvide.formObj.newTopics = false
+      this.formProvide.formObj.topicList = topicList.map((item: {}) => ({ ...item, disabled: true }))
+    } else {
+      this.formProvide.formObj.id = val
+      this.formProvide.formObj.topicName = ''
+      this.formProvide.formObj.newTopics = true
+      this.formProvide.formObj.topicList = [
+        {
+          key: '',
+          description: '',
+          type: '',
+          disabled: false
+        }
+      ]
+    }
   }
 
-  private handleMastHaveEsOrHBase() {
+  private handleEsOrHBase() {
     const _saveEs = Number(this.formProvide.formObj.saveEs)
     const _saveHbase = Number(this.formProvide.formObj.saveHbase)
 
     if (_saveEs === 0 && _saveHbase === 0) {
-      this.mastHaveEsOrHBase = [`至少存入ES或HBase其中之一`]
+      this.EsOrHBase = [`至少存入ES或HBase其中之一`]
     } else {
-      this.mastHaveEsOrHBase = []
+      this.EsOrHBase = []
     }
   }
 }

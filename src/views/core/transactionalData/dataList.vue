@@ -39,6 +39,10 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
+          <!-- 关联主题 -->
+          <template v-slot:topic="{ item }">
+            <v-btn text color="primary" @click.stop="showTopicDetail(item)">详情</v-btn>
+          </template>
           <!-- 当前状态 -->
           <template v-slot:state="{ item }">
             <v-btn text :color="stateColor[item.isRun]">{{ transactionalState[item.isRun] }}</v-btn>
@@ -55,11 +59,6 @@
             <v-btn text color="primary" :loading="!!item.loading" @click.stop="getCurrentLog(item)">最新</v-btn>
             <v-btn text color="primary" @click.stop="getHistoryLog(item.id)">历史</v-btn>
             <v-btn text color="primary" @click.stop="showTimerLog(item)">其他</v-btn>
-          </template>
-          <!-- 报警状态 -->
-          <template v-slot:monitor="{ item }">
-            <v-btn text color="error">告警</v-btn>
-            <v-btn text color="primary" @click="showTopicAlert(item)">更多</v-btn>
           </template>
           <!-- 主题数据结构 -->
           <template v-slot:column="{ item }">
@@ -228,13 +227,20 @@ export default class transactionalDataList extends Vue {
       {
         text: '所属用户',
         align: 'center',
-        value: 'userName'
+        value: 'userName',
+        isHide: this.tab === 1 || this.tab === 3
       },
       {
         text: '主题名称',
         align: 'center',
         value: 'topicName',
         isHide: this.tab === 0 || this.tab === 1
+      },
+      {
+        text: '主题关联',
+        align: 'center',
+        slot: 'topic',
+        isHide: this.tab === 2 || this.tab === 3
       },
       {
         text: '主题数据结构',
@@ -267,19 +273,13 @@ export default class transactionalDataList extends Vue {
         width: 100,
         isHide: this.tab === 2 || this.tab === 3,
         format: (cron: string) => {
-          return cron ? cronstrue.toString(cron, { locale: 'zh_CN' }) : ''
+          return cron ? cronstrue.toString(cron, { locale: 'zh_CN', use24HourTimeFormat: true }) : ''
         }
       },
       {
         text: '脚本',
         align: 'center',
         slot: 'content',
-        isHide: this.tab === 2 || this.tab === 3
-      },
-      {
-        text: '报警状态',
-        align: 'center',
-        slot: 'monitor',
         isHide: this.tab === 2 || this.tab === 3
       },
       {
@@ -660,19 +660,6 @@ export default class transactionalDataList extends Vue {
     this.HConfirmItem = { ...item }
   }
 
-  // 更多告警信息
-  private async showTopicAlert(item: { id: number }) {
-    if (!item.id) {
-      return
-    }
-    this.$router.push({
-      name: `监控日志`,
-      query: {
-        topicId: `${item.id}`
-      }
-    })
-  }
-
   // 删除
   private async deleteTopic() {
     if (this.HConfirmItem.id === undefined) {
@@ -747,6 +734,26 @@ export default class transactionalDataList extends Vue {
       )
     }
     this.pageNum = 1
+  }
+
+  // 主题详情
+  private showTopicDetail(item: { t: object }) {
+    this.headersObj = [
+      {
+        text: '主题ID',
+        align: 'center',
+        value: 'topicId'
+      },
+      {
+        text: '主题名称',
+        align: 'center',
+        value: 'topicName'
+      }
+    ]
+    item.t && (this.dessertsObj = { ...item.t })
+    this.tDialogFlag = true
+    this.dialogFlag = 4
+    this.formProvide.title = '主题信息'
   }
 
   // 启动
@@ -911,7 +918,7 @@ export default class transactionalDataList extends Vue {
         align: 'center',
         value: 'cron',
         format: (cron: string) => {
-          return cron ? cronstrue.toString(cron, { locale: 'zh_CN' }) : ''
+          return cron ? cronstrue.toString(cron, { locale: 'zh_CN', use24HourTimeFormat: true }) : ''
         }
       },
       {

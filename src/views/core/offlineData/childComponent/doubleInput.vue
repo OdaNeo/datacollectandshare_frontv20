@@ -14,6 +14,7 @@
             dense
             outlined
             clearable
+            :disabled="disabled"
             :clear-icon="mdiCloseCircleOutline"
             :label="object[0].text"
             height="35"
@@ -27,6 +28,7 @@
             outlined
             :label="object[1].text"
             clearable
+            :disabled="disabled"
             :clear-icon="mdiCloseCircleOutline"
             :rules="rules2 ? [...rules2] : undefined"
             height="35"
@@ -35,7 +37,7 @@
         <!-- 累加按钮 -->
         <v-col v-if="accumulation" class="d-flex justify-space-around flex-grow-0" style="min-width: 60px">
           <v-btn
-            v-if="formProvide.formObj.header.length === index + 1"
+            v-if="!disabled && formProvide.formObj.header.length === index + 1"
             fab
             dark
             depressed
@@ -48,7 +50,7 @@
             <v-icon dark>{{ mdiPlus }}</v-icon>
           </v-btn>
           <v-btn
-            v-if="formProvide.formObj.header.length > 1"
+            v-if="!disabled && formProvide.formObj.header.length > 1"
             fab
             dark
             depressed
@@ -86,6 +88,8 @@ export default class DoubleInput extends Vue {
   // 校验规则
   @Prop({ default: undefined }) private rules1!: any | undefined
   @Prop({ default: undefined }) private rules2!: any | undefined
+  // 是否可修改
+  @Prop({ default: false }) private disabled!: boolean
   private mdiPlus = mdiPlus
   private mdiMinus = mdiMinus
   private mdiCloseCircleOutline = mdiCloseCircleOutline

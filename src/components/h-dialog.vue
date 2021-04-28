@@ -48,10 +48,8 @@
 import { Component, Vue, Model, Inject, Ref, Prop } from 'vue-property-decorator'
 import { H_Vue } from '@/declaration/vue-prototype'
 import { mdiClose } from '@mdi/js'
-import util from '@/decorator/utilsDecorator'
 
 @Component
-@util
 export default class FDialog extends Vue {
   @Ref('userDialogForm') readonly udf!: HTMLFormElement
   @Inject() private readonly formProvide!: H_Vue
@@ -75,23 +73,6 @@ export default class FDialog extends Vue {
 
   private async validate() {
     this.loading = true
-    const topicName = this.formProvide.formObj.topicName
-
-    // 如果包含topicName，且不为修改 主题 (undefined) ， 就要发送验重请求
-    if (topicName && !this.formProvide.formObj.canNotEdit) {
-      const text = await this.h_utils['noRepeat'].topicName(topicName)
-
-      if (text === undefined) {
-        // 网络错误
-        this.loading = false
-        return
-      } else if (text) {
-        // 如果重复，阻止提交
-        this.h_utils.alertUtil.open(text, true, 'error')
-        this.loading = false
-        return
-      }
-    }
 
     if (this.udf.validate() && this.formProvide.methodName) {
       const parent = this.$parent as any
@@ -132,9 +113,6 @@ export default class FDialog extends Vue {
 
   mounted(): void {
     // deep-copy default value
-    // for (let p in this.formProvide.formObj) {
-    //     this.defaultFormObj[p] = this.formProvide.formObj[p]
-    // }
     this.defaultFormObj = JSON.parse(JSON.stringify(this.formProvide.formObj))
   }
 }
