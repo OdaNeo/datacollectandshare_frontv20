@@ -53,6 +53,15 @@
           <template v-slot:videoState="{ item }">
             <v-btn text :color="stateColor[item.videoState]">{{ videoState[item.videoState] }}</v-btn>
           </template>
+          <template v-slot:viewVideo="{ item }">
+            <v-btn 
+            text 
+            color="primary" 
+            @click="item.existVideo?showVideoDatePicker(item):''" 
+            :disabled="item.existVideo?false:true">
+            {{item.existVideo?"选择视频":"暂无视频"}}
+            </v-btn>
+          </template>
           <!-- 显示详情 -->
           <template v-slot:buttons="{ item }">
             <v-btn text color="primary" @click="showVideoDetail(item)">视频详情信息</v-btn>
@@ -248,10 +257,10 @@ export default class VideoDataList extends Vue {
   }
   // 操作下拉框
   private buttonItems = [
-    {
-      text: `选择视频`,
-      handle: this.showVideoDatePicker
-    },
+    // {
+    //   text: `选择视频`,
+    //   handle: this.showVideoDatePicker
+    // },
     {
       text: `修改`,
       tab: 1,
@@ -436,17 +445,27 @@ export default class VideoDataList extends Vue {
   }
 
   // showVideoDatePicker
-  private showVideoDatePicker(item: { id: number; bucketName: string }) {
+  private async showVideoDatePicker(item: { id: number; bucketName: string }) {
+    const { data } = await this.h_request['httpGET']('GET_VIDEO_PERIOD', {
+      "topicId":item.id
+    })
+    let videoCreateTime:String = data[0] 
+    let videoOverTime:String = data[data.length-1]
+    //去请求
     this.curItem = item
     this.dialogFlag = true
     this.dialogShow = 3
-    this.formProvide.title = '请选择时间段并勾选要观看的视频'
+    //需要获取时间段
+    this.formProvide.title = `主题${item.id}在${videoCreateTime}至${videoOverTime}时间段内存在视频`
     this.formProvide.btnName = ['立即观看', '取消']
     this.formProvide.methodName = 'getVideoDatePicker'
     this.formProvide.formObj = {
       topicId: item.id,
       bucketName: item.bucketName,
-      videoListAvailable: []
+      videoListAvailable: [],
+      videoCreateTime:videoCreateTime,
+      videoOverTime:videoOverTime,
+      videoTimeRang:data
     }
   }
 

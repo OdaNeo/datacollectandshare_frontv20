@@ -25,7 +25,15 @@
               v-on="on"
             ></v-text-field>
           </template>
-          <v-date-picker locale="zh-Hans" v-model="dates" no-title range :allowed-dates="allowedDates">
+          <v-date-picker 
+          locale="zh-Hans" 
+          v-model="dates" 
+          no-title 
+          range 
+          :allowed-dates="allowedDates"
+          :events="dateEvents"
+          event-color="green lighten-1"
+          >
             <v-spacer></v-spacer>
             <v-btn text color="grey" @click="menu = false">取消</v-btn>
             <v-btn
@@ -44,7 +52,7 @@
       </v-col>
     </v-row>
     <!-- 查看日期 -->
-    <div class="weektime">
+    <div class="weektime" :style="showDateList?'display:block':'display:none'">
       <div class="weektime-main">
         <div class="weektime-hd">
           <div class="weektime-hd-title">日期\时间</div>
@@ -74,7 +82,6 @@
               }}</v-icon>
             </div>
           </div>
-          <!-- loading -->
           <div v-else class="time-body" style="background-color: #f7f7f9"></div>
         </div>
       </div>
@@ -103,10 +110,16 @@ export default class VideoDatePicker extends Vue {
 
   private curTime = new Date().getTime()
 
+  private showDateList = false
+
+  private dateEvents = this.formProvide.formObj.videoTimeRang.map((time:String) => {
+    return time
+  })
+
   // 默认显示当前周
   private dates = [
-    this.h_utils.timeUtil.stamptoTime(this.curTime - 6 * 24 * 60 * 60 * 1000, '-'),
-    this.h_utils.timeUtil.stamptoTime(this.curTime, '-')
+    // this.h_utils.timeUtil.stamptoTime(this.curTime - 6 * 24 * 60 * 60 * 1000, '-'),
+    // this.h_utils.timeUtil.stamptoTime(this.curTime, '-')
   ]
 
   private get weekDays() {
@@ -128,14 +141,16 @@ export default class VideoDatePicker extends Vue {
   }
 
   private allowedDates(val: string) {
+    const createTime = this.h_utils.timeUtil.timeToStamp(this.formProvide.formObj.videoCreateTime, '-')
+    const overTime = this.h_utils.timeUtil.timeToStamp(this.formProvide.formObj.videoOverTime,"-")
     if (this.dates.length === 0) {
-      return true
+      return Date.parse(val) >= createTime&&Date.parse(val)<=overTime
     } else if (this.dates.length === 1) {
       const beginTime = this.h_utils.timeUtil.timeToStamp(val, '-')
       const endTime = this.h_utils.timeUtil.timeToStamp(this.dates[0], '-')
-      return beginTime + 24 * 60 * 60 * 1000 > endTime && beginTime < endTime + 7 * 24 * 60 * 60 * 1000
+      return beginTime + 24 * 60 * 60 * 1000 > endTime && beginTime < endTime + 7 * 24 * 60 * 60 * 1000 &&Date.parse(val) >= createTime&&Date.parse(val)<=overTime
     } else {
-      return true
+      return Date.parse(val) >= createTime&&Date.parse(val)<=overTime
     }
   }
   private get dateRangeText() {
@@ -143,6 +158,7 @@ export default class VideoDatePicker extends Vue {
   }
   // 获得视频列表
   private async getVideoList() {
+    this.showDateList = true
     this.isSearching = true
     const params: any = {}
     // -8小时，服务器时间有误
@@ -205,6 +221,19 @@ export default class VideoDatePicker extends Vue {
     }
   }
 
+  // this.dateEvents = ()=>{
+  //   // const createTime = this.h_utils.timeUtil.timeToStamp(this.formProvide.formObj.videoCreateTime, '-')
+  //   // console.log(createTime)
+  //   // return [createTime]
+  //     [...Array(6)].map(() => {
+  //       const day = Math.floor(Math.random() * 30)
+  //       const d = new Date()
+  //       d.setDate(24)
+  //       return d.toISOString().substr(0, 10)
+  //     })
+  // }
+
+
   @Watch(`menu`)
   private handleIsSearching(val: boolean) {
     if (val) {
@@ -212,14 +241,14 @@ export default class VideoDatePicker extends Vue {
     }
   }
 
-  created(): void {
-    this.getVideoList()
-  }
+  // created(): void {
+  //   this.getVideoList()
+  // }
 }
 </script>
 <style scoped>
 #videoDatePicker {
-  height: 350px;
+  max-height: 350px;
 }
 .weektime {
   width: 688px;
