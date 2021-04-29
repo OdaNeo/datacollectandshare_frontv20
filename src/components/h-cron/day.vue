@@ -1,24 +1,37 @@
 <template>
   <v-radio-group
-    :disabled="cronProvide.week.cronEvery !== '1'"
+    :disabled="cronProvide.mutexDayAndWeek === 'week'"
     :hide-details="true"
     v-model="cronProvide.day.cronEvery"
     column
   >
-    <v-radio value="1">
+    <v-radio value="5">
       <div slot="label">不设置（日和周只能设置其中之一）</div>
     </v-radio>
-    <v-radio value="2">
-      <div slot="label">每一天</div>
+    <v-radio value="1">
+      <div slot="label">每日</div>
     </v-radio>
-    <v-radio value="3">
+    <v-radio value="2">
       <div slot="label" class="cronItem">
-        每隔
+        从
         <v-text-field
           :hide-details="true"
           dense
           outlined
-          :disabled="cronProvide.day.cronEvery !== `3`"
+          :min="1"
+          :max="31"
+          :height="30"
+          :disabled="cronProvide.day.cronEvery !== `2`"
+          v-model="cronProvide.day.incrementStart"
+          type="number"
+          class="cronInput"
+        ></v-text-field>
+        天开始，每隔
+        <v-text-field
+          :hide-details="true"
+          dense
+          outlined
+          :disabled="cronProvide.day.cronEvery !== `2`"
           v-model="cronProvide.day.incrementIncrement"
           :min="1"
           :max="31"
@@ -26,30 +39,17 @@
           type="number"
           class="cronInput"
         ></v-text-field>
-        天执行，从
-        <v-text-field
-          :hide-details="true"
-          dense
-          outlined
-          :min="1"
-          :max="31"
-          :height="30"
-          :disabled="cronProvide.day.cronEvery !== `3`"
-          v-model="cronProvide.day.incrementStart"
-          type="number"
-          class="cronInput"
-        ></v-text-field>
-        天开始
+        天执行
       </div>
     </v-radio>
-    <v-radio value="4">
-      <div slot="label" class="cronItem" style="min-width: 400px">
+    <v-radio value="3">
+      <div slot="label" class="cronItem" style="min-width: 450px">
         具体天数（可多选）
         <v-combobox
           dense
           outlined
           full-width
-          :disabled="cronProvide.day.cronEvery !== `4`"
+          :disabled="cronProvide.day.cronEvery !== `3`"
           v-model="cronProvide.day.specificSpecific"
           :items="specificSpecificItems"
           placeholder="具体天数"
@@ -59,14 +59,14 @@
         ></v-combobox>
       </div>
     </v-radio>
-    <v-radio value="5">
+    <v-radio value="4">
       <div slot="label" class="cronItem">
         周期：从
         <v-text-field
           :hide-details="true"
           dense
           outlined
-          :disabled="cronProvide.day.cronEvery !== `5`"
+          :disabled="cronProvide.day.cronEvery !== `4`"
           v-model="cronProvide.day.rangeStart"
           :min="1"
           :max="30"
@@ -79,7 +79,7 @@
           :hide-details="true"
           dense
           outlined
-          :disabled="cronProvide.day.cronEvery !== `5`"
+          :disabled="cronProvide.day.cronEvery !== `4`"
           v-model="cronProvide.day.rangeEnd"
           :min="Number(cronProvide.day.rangeStart) + 1"
           :max="31"

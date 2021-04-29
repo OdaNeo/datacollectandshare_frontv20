@@ -236,12 +236,7 @@ export default class transactionalDataList extends Vue {
         value: 'topicName',
         isHide: this.tab === 0 || this.tab === 1
       },
-      {
-        text: '主题关联',
-        align: 'center',
-        slot: 'topic',
-        isHide: this.tab === 2 || this.tab === 3
-      },
+
       {
         text: '主题数据结构',
         align: 'center',
@@ -275,6 +270,12 @@ export default class transactionalDataList extends Vue {
         format: (cron: string) => {
           return cron ? cronstrue.toString(cron, { locale: 'zh_CN', use24HourTimeFormat: true }) : ''
         }
+      },
+      {
+        text: '主题关联',
+        align: 'center',
+        slot: 'topic',
+        isHide: this.tab === 2 || this.tab === 3
       },
       {
         text: '脚本',
@@ -332,7 +333,6 @@ export default class transactionalDataList extends Vue {
   // 创建 修改事务性数据，添加任务
   private async createTransactionalData(items?: transactionalTableType) {
     items ? (this.createLoading = false) : (this.createLoading = true)
-    console.log(items)
     //  异步获取主题列表
     const activeTopicIDs = await this.getActiveTopics()
 
@@ -358,7 +358,6 @@ export default class transactionalDataList extends Vue {
       const _colum: { field: string; type: string; iskey: boolean }[] = JSON.parse(activeTopicIDs[0].dataStruct)
 
       this.formProvide.formObj = {
-        canNotEdit: true,
         isEdit: true,
         newTopics: false,
         taskId: items.id,
@@ -397,11 +396,10 @@ export default class transactionalDataList extends Vue {
       })
       this.formProvide.formObj = {
         isEdit: false,
-        canNotEdit: true,
         newTopics: true,
         activeTopicIDs: activeTopicIDs,
         id: activeTopicIDs[0].value,
-        cron: '0',
+        cron: '* * * * * ?',
         column: [
           {
             field: '',
@@ -448,7 +446,7 @@ export default class transactionalDataList extends Vue {
     this.row = JSON.parse(t.jsonContent)
   }
 
-  // 提交事务性数据 后台验重，绕过验重
+  // 提交事务性数据 后台验重
   private async addTransactionalData(item: transactionalTableType) {
     const isEdit = item.isEdit
     const newTopics = item.newTopics
@@ -476,6 +474,11 @@ export default class transactionalDataList extends Vue {
 
     const topicId = !newTopics ? id : undefined
     const _id = isEdit ? taskId : undefined
+    // 验证cron合法性
+    const cronValidated = this.h_utils.cronUtil.cronValidator(cron)
+    if (!cronValidated) {
+      return
+    }
 
     // reader
     params.reader = {
@@ -511,7 +514,7 @@ export default class transactionalDataList extends Vue {
       !isEdit ? 'POST_TASKINFO_ADDDATATASK' : 'POST_TASKINFO_UPDATETASKINFORDB',
       {
         id: _id,
-        cron: `0 0 ${cron} * * ?`,
+        cron,
         taskType: topicInterFaceType[`事务数据`],
         taskName: taskName,
         taskConfigId,

@@ -94,7 +94,7 @@ class topicRanking {
           calculable: true,
           grid: {
             left: '15%',
-            right: '12%',
+            right: '16%',
             bottom: '14%',
             top: '5%',
             containLabel: true
@@ -157,7 +157,7 @@ class topicRanking {
           xAxis: [
             {
               type: 'value',
-              name: '主题数目',
+              name: `发送消息数目`,
               splitNumber: 5,
               min: 0,
               minInterval: 1,

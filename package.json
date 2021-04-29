@@ -15,6 +15,7 @@
     "@types/file-saver": "^2.0.1",
     "axios": "^0.19.2",
     "core-js": "^3.6.5",
+    "cron-validator": "^1.2.1",
     "cronstrue": "^1.112.0",
     "echarts": "^4.8.0",
     "echarts-liquidfill": "^2.0.6",

@@ -5,20 +5,7 @@
     </v-radio>
     <v-radio value="2">
       <div slot="label" class="cronItem">
-        每隔
-        <v-text-field
-          :hide-details="true"
-          dense
-          outlined
-          :disabled="cronProvide.minute.cronEvery !== `2`"
-          v-model="cronProvide.minute.incrementIncrement"
-          :min="1"
-          :max="60"
-          :height="30"
-          type="number"
-          class="cronInput"
-        ></v-text-field>
-        分执行，从
+        从
         <v-text-field
           :hide-details="true"
           dense
@@ -31,11 +18,24 @@
           type="number"
           class="cronInput"
         ></v-text-field>
-        分开始
+        分开始，每隔
+        <v-text-field
+          :hide-details="true"
+          dense
+          outlined
+          :disabled="cronProvide.minute.cronEvery !== `2`"
+          v-model="cronProvide.minute.incrementIncrement"
+          :min="1"
+          :max="60"
+          :height="30"
+          type="number"
+          class="cronInput"
+        ></v-text-field>
+        分执行
       </div>
     </v-radio>
     <v-radio value="3">
-      <div slot="label" class="cronItem" style="min-width: 400px">
+      <div slot="label" class="cronItem" style="min-width: 450px">
         具体分钟数（可多选）
         <v-combobox
           dense

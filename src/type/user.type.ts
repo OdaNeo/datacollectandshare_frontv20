@@ -53,6 +53,8 @@ export type userFormObj = {
   userId?: any
   [key: string]: string | FormStructure
   id: any
+  newLoginPwd: string
+  newLoginPwd2: string
 }
 
 export interface dialogRequestStructure2 {
@@ -60,9 +62,17 @@ export interface dialogRequestStructure2 {
   userType: string
   userState: string
   systemName: string
+  passWord1: string
+  passWord2: string
   [key: string]: string
 }
 
 export interface dialogRequestStructure extends dialogRequestStructure2 {
   loginPwd: string
+}
+
+export interface updateUserPassword {
+  oldPass: string
+  passWord1: string
+  passWord2: string
 }

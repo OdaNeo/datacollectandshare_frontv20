@@ -43,14 +43,7 @@
             :rules="[...h_validator.noEmpty('任务名称')]"
           />
           <!-- cron -->
-          <HSlider
-            :description="`每日运行周期`"
-            :polyfill="`时`"
-            :polyfillWidth="35"
-            min="0"
-            max="23"
-            v-model="formProvide.formObj['cron']"
-          />
+          <HCron v-model="formProvide.formObj['cron']" />
         </v-row>
       </v-window-item>
 
@@ -135,9 +128,9 @@ import HSelect from '@/components/h-select.vue'
 import TopicList from './topicList.vue'
 import DoubleInput from './doubleInput.vue'
 import HStep from '@/components/h-step.vue'
-import HSlider from '@/components/h-slider.vue'
 import HRadioGroup from '@/components/h-radio-group.vue'
 import util from '@/decorator/utilsDecorator'
+import HCron from '@/components/h-cron/index.vue'
 
 @Component({
   components: {
@@ -147,8 +140,8 @@ import util from '@/decorator/utilsDecorator'
     HSelect,
     TopicList,
     DoubleInput,
-    HSlider,
-    HRadioGroup
+    HRadioGroup,
+    HCron
   }
 })
 @util

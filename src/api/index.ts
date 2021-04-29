@@ -226,19 +226,22 @@ class RequestData {
     }
 
     switch (code) {
-      // -1000是登录超时，用户需要重新登陆，2秒后
+      // -1000是登录超时，用户需要重新登陆，3秒后
       case -1000:
-        alertUtil.open(`${message}，请尝试重新登录`, true, 'error')
+        // 异步弹出重新登录的请求，防止与其他弹框冲突
+        setTimeout(() => {
+          alertUtil.close()
+          alertUtil.open(`${message}，请尝试重新登录`, true, 'error')
+        }, 100)
         // 登出
         setTimeout(() => {
           authUtil.logout()
-        }, 2000)
+        }, 3000)
 
         callback(_error)
         break
 
       case 200:
-        alertUtil.close()
         callback(response)
         break
 

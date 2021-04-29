@@ -40,14 +40,7 @@
             :rules="[...h_validator.noEmpty('任务名称')]"
           />
           <!-- cron -->
-          <HSlider
-            :description="`每日运行周期`"
-            :polyfill="`时`"
-            :polyfillWidth="35"
-            min="0"
-            max="23"
-            v-model="formProvide.formObj['cron']"
-          />
+          <HCron v-model="formProvide.formObj['cron']" />
         </v-row>
       </v-window-item>
 
@@ -161,13 +154,16 @@ import HSimpleInput from '@/components/h-simple-input.vue'
 import HSelect from '@/components/h-select.vue'
 import HSlider from '@/components/h-slider.vue'
 import ColumnList from './columnList.vue'
+import HCron from '@/components/h-cron/index.vue'
+
 @Component({
   components: {
     HSimpleInput,
     HSelect,
     HSlider,
     ColumnList,
-    HStep
+    HStep,
+    HCron
   }
 })
 @Validator(['noEmpty'])

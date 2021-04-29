@@ -1,30 +1,36 @@
 <template>
-  <div id="HCron">
-    <div>{{ cron }}</div>
-    <!-- tab -->
-    <HTabs v-model="tab" :items="items" />
-    <v-tabs-items v-model="tab" class="px-4 pb-4">
-      <!-- 秒 -->
-      <v-tab-item eager>
-        <CronSecond />
-      </v-tab-item>
-      <v-tab-item eager>
-        <CronMinute />
-      </v-tab-item>
-      <v-tab-item eager>
-        <CronHour />
-      </v-tab-item>
-      <v-tab-item eager>
-        <CronDay />
-      </v-tab-item>
-      <v-tab-item eager>
-        <CronMonth />
-      </v-tab-item>
-      <v-tab-item eager>
-        <CronWeek />
-      </v-tab-item>
-    </v-tabs-items>
-  </div>
+  <v-col cols="12">
+    <div class="d-flex">
+      <label class="label mr-2"><span class="require-span">*</span>运行周期</label>
+      <v-text-field disabled outlined dense height="35px" class="ml-4 mr-15" :value="cron"></v-text-field>
+    </div>
+    <div id="HCron">
+      <!-- tab -->
+      <HTabs v-model="tab" :items="items" />
+      <!-- items -->
+      <v-tabs-items v-model="tab" class="px-4 pb-4">
+        <!-- 秒 -->
+        <v-tab-item eager>
+          <CronSecond />
+        </v-tab-item>
+        <v-tab-item eager>
+          <CronMinute />
+        </v-tab-item>
+        <v-tab-item eager>
+          <CronHour />
+        </v-tab-item>
+        <v-tab-item eager>
+          <CronDay />
+        </v-tab-item>
+        <v-tab-item eager>
+          <CronMonth />
+        </v-tab-item>
+        <v-tab-item eager>
+          <CronWeek />
+        </v-tab-item>
+      </v-tabs-items>
+    </div>
+  </v-col>
 </template>
 <script lang="ts">
 import { Component, Vue, Prop, Watch, Provide } from 'vue-property-decorator'
@@ -48,7 +54,7 @@ import CronWeek from './week.vue'
   }
 })
 export default class HCron extends Vue {
-  @Prop({ default: '* * * * * ?' }) private PropCron!: string
+  @Prop({ default: '* * * * * ?' }) private value!: string
 
   @Provide('cronProvide') private cronProvide: any = new Vue({
     data() {
@@ -60,7 +66,7 @@ export default class HCron extends Vue {
           incrementIncrement: '5',
           rangeStart: '0',
           rangeEnd: '59',
-          specificSpecific: []
+          specificSpecific: [`0`]
         },
         // 分
         minute: {
@@ -69,7 +75,7 @@ export default class HCron extends Vue {
           incrementIncrement: '5',
           rangeStart: '0',
           rangeEnd: '59',
-          specificSpecific: []
+          specificSpecific: [`0`]
         },
         // 小时
         hour: {
@@ -78,7 +84,7 @@ export default class HCron extends Vue {
           incrementIncrement: '1',
           rangeStart: '0',
           rangeEnd: '23',
-          specificSpecific: []
+          specificSpecific: [`0`]
         },
         // 日
         day: {
@@ -87,7 +93,7 @@ export default class HCron extends Vue {
           incrementIncrement: '1',
           rangeStart: '1',
           rangeEnd: '31',
-          specificSpecific: []
+          specificSpecific: [`1`]
         },
         //   月
         month: {
@@ -96,7 +102,7 @@ export default class HCron extends Vue {
           incrementIncrement: '1',
           rangeStart: '1',
           rangeEnd: '12',
-          specificSpecific: []
+          specificSpecific: [`1`]
         },
         //   周
         week: {
@@ -105,8 +111,10 @@ export default class HCron extends Vue {
           incrementIncrement: '1',
           rangeStart: '0',
           rangeEnd: '1',
-          specificSpecific: []
-        }
+          specificSpecific: [`0`]
+        },
+        // 日期和周互斥，默认是'day'
+        mutexDayAndWeek: 'day'
       }
     }
   })
@@ -198,24 +206,29 @@ export default class HCron extends Vue {
     let cronEvery = this.cronProvide.day.cronEvery
     switch (cronEvery.toString()) {
       case '1':
-        days = '?'
-        break
-      case '2':
         days = '*'
         break
-      case '3':
+      case '2':
         days = this.cronProvide.day.incrementStart + '/' + this.cronProvide.day.incrementIncrement
         break
-      case '4':
+      case '3':
         this.cronProvide.day.specificSpecific.map((val: string) => {
           days += val + ','
         })
         days ? (days = days.slice(0, -1)) : (days = '*')
         break
-      case '5':
+      case '4':
         days = this.cronProvide.day.rangeStart + '-' + this.cronProvide.day.rangeEnd
         break
-
+      case '5':
+        days = '?'
+        // 如果日期和周都是不设置'?'，则都可以点击
+        if (this.cronProvide.week.cronEvery.toString() === '5') {
+          this.cronProvide.mutexDayAndWeek = 'mutex'
+        } else {
+          this.cronProvide.mutexDayAndWeek = 'week'
+        }
+        break
       default:
         days = '*'
         break
@@ -254,20 +267,27 @@ export default class HCron extends Vue {
     let weeks = ''
     let cronEvery = this.cronProvide.week.cronEvery
     switch (cronEvery.toString()) {
-      case '1':
-        weeks = '?'
-        break
       case '2':
         weeks = this.cronProvide.week.incrementStart + '/' + this.cronProvide.week.incrementIncrement
         break
       case '3':
-        this.cronProvide.week.specificSpecific.map((val: { value: string }) => {
-          weeks += val.value + ','
+        this.cronProvide.week.specificSpecific.map((val: string) => {
+          weeks += val + ','
         })
+
         weeks ? (weeks = weeks.slice(0, -1)) : (weeks = '*')
         break
       case '4':
         weeks = this.cronProvide.week.rangeStart + '-' + this.cronProvide.week.rangeEnd
+        break
+      case '5':
+        weeks = '?'
+        // 如果日期和周都是不设置'?'，则都可以点击
+        if (this.cronProvide.day.cronEvery.toString() === '5') {
+          this.cronProvide.mutexDayAndWeek = 'mutex'
+        } else {
+          this.cronProvide.mutexDayAndWeek = 'day'
+        }
         break
       default:
         weeks = '?'
@@ -276,19 +296,58 @@ export default class HCron extends Vue {
     return weeks
   }
 
+  // cron计算方法
   private get cron() {
-    return `${this.secondsText} ${this.minutesText} ${this.hoursText} ${this.daysText} ${this.monthsText} ${this.weeksText}`
+    const _text = `${this.secondsText} ${this.minutesText} ${this.hoursText} ${this.daysText} ${this.monthsText} ${this.weeksText}`
+    this.$emit('input', _text)
+    return _text
   }
 
-  @Watch('PropCron', { immediate: true })
+  // 回显cron
+  private handlePropCron(val: string, key: string) {
+    if (val.includes('/')) {
+      // 3/4
+      const _val = val.split('/')
+      this.cronProvide[key].cronEvery = '2'
+      this.cronProvide[key].incrementStart = _val[0]
+      this.cronProvide[key].incrementIncrement = _val[1]
+    } else if (val.includes('-')) {
+      // 1-2
+      const _val = val.split('-')
+      this.cronProvide[key].cronEvery = '4'
+      this.cronProvide[key].rangeStart = _val[0]
+      this.cronProvide[key].rangeEnd = _val[1]
+    } else if (val === '?') {
+      // ?
+      this.cronProvide[key].cronEvery = '5'
+    } else if (val === '*') {
+      // *
+      this.cronProvide[key].cronEvery = '1'
+    } else {
+      // 1,2,3,4 或 1
+      const _val = val.split(',')
+      this.cronProvide[key].cronEvery = '3'
+      this.cronProvide[key].specificSpecific = [..._val]
+    }
+  }
+
+  @Watch('value', { immediate: true })
   private setCron(val: string) {
-    const _val = val.replaceAll(' ', '')
-    console.log(_val)
-    // this.second = _val[0]
+    const _val = val.split(' ')
+    const _arr = [`second`, `minute`, 'hour', 'day', 'month', 'week']
+
+    _arr.forEach((item, index) => {
+      this.handlePropCron(_val[index], item)
+    })
   }
 }
 </script>
 <style scoped>
+#HCron {
+  height: 270px;
+  width: 540px;
+  margin: 0 auto;
+}
 #HCron >>> .v-input__append-inner {
   margin-top: 3px !important;
 }

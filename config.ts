@@ -37,3 +37,6 @@ window.document.title = PROJECT_TITLE
 // eslint-disable-next-line
 const packageJSON = require('./package.json')
 export const PROJECT_SUB_TITLE = `${packageJSON.version}-${process.env.BRANCH}`
+
+// 可以修改密码的角色白名单
+export const CAN_EDIT_PASSWORD_WHITE_LIST = ['超级管理员', '管理员']
