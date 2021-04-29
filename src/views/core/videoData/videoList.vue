@@ -54,12 +54,13 @@
             <v-btn text :color="stateColor[item.videoState]">{{ videoState[item.videoState] }}</v-btn>
           </template>
           <template v-slot:viewVideo="{ item }">
-            <v-btn 
-            text 
-            color="primary" 
-            @click="item.existVideo?showVideoDatePicker(item):''" 
-            :disabled="item.existVideo?false:true">
-            {{item.existVideo?"选择视频":"暂无视频"}}
+            <v-btn
+              text
+              color="primary"
+              @click="item.existVideo ? showVideoDatePicker(item) : ''"
+              :disabled="item.existVideo ? false : true"
+            >
+              {{ item.existVideo ? '选择视频' : '暂无视频' }}
             </v-btn>
           </template>
           <!-- 显示详情 -->
@@ -447,10 +448,10 @@ export default class VideoDataList extends Vue {
   // showVideoDatePicker
   private async showVideoDatePicker(item: { id: number; bucketName: string }) {
     const { data } = await this.h_request['httpGET']('GET_VIDEO_PERIOD', {
-      "topicId":item.id
+      topicId: item.id
     })
-    let videoCreateTime:String = data[0] 
-    let videoOverTime:String = data[data.length-1]
+    let videoCreateTime: string = data[0]
+    let videoOverTime: string = data[data.length - 1]
     //去请求
     this.curItem = item
     this.dialogFlag = true
@@ -463,9 +464,9 @@ export default class VideoDataList extends Vue {
       topicId: item.id,
       bucketName: item.bucketName,
       videoListAvailable: [],
-      videoCreateTime:videoCreateTime,
-      videoOverTime:videoOverTime,
-      videoTimeRang:data
+      videoCreateTime: videoCreateTime,
+      videoOverTime: videoOverTime,
+      videoTimeRang: data
     }
   }
 
