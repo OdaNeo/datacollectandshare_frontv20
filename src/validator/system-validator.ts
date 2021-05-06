@@ -22,7 +22,9 @@ class SystemValidator {
   }
   // 密码
   public readonly passwordRules = (): ValidatorType => {
-    return [(v: string): boolean | string => (v && PASSWORD_REGEXP.test(v)) || '密码必须为数字字母混合，且长度为8-16位']
+    return [
+      (v: string): boolean | string => (v ? PASSWORD_REGEXP.test(v) : true) || '密码必须为数字字母混合，且长度为8-16位'
+    ]
   }
 }
 

@@ -5,6 +5,7 @@ import topicRanking from './topicRanking'
 import noRepeat from './noRepeat'
 import topicListUtil from './topicListUtil'
 import authUtil from './authenticateUtil'
+import cronUtil from './cronUtil'
 
 class Utils {
   public timeUtil = timeUtil
@@ -14,6 +15,7 @@ class Utils {
   public noRepeat = noRepeat
   public topicListUtil = topicListUtil
   public authUtil = authUtil
+  public cronUtil = cronUtil
 }
 
 export default Utils

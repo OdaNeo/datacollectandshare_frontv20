@@ -55,7 +55,10 @@ import FDialog from '@/components/h-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import HTable from '@/components/h-table.vue'
 import HSearch from '@/components/h-search.vue'
-
+import { rootStoreModule } from '@/store/modules/root'
+import { CAN_EDIT_PASSWORD_WHITE_LIST } from '../../../../config'
+// 用户管理 只有 超管理管理员  admin 才能改  2个新密码
+// 用户只能自己修改自己的密码，老密码+2个新密码
 @Component({
   components: {
     UserDialog,
@@ -95,6 +98,11 @@ export default class User extends Vue {
 
   private userRoots: Array<userFormVar> = []
   private systemNames: Array<userFormVar> = []
+
+  private get userType(): string {
+    const _str = rootStoreModule.UserState.userMessage.userTypeName
+    return _str ? _str : ''
+  }
 
   private headers = [
     {
@@ -161,7 +169,10 @@ export default class User extends Vue {
     this.formProvide.title = '创建用户'
     this.formProvide.btnName = ['立即创建', '取消']
     this.formProvide.methodName = 'addUser'
-    this.formProvide.formObj = {}
+    this.formProvide.formObj = {
+      canEditPassword: false,
+      canNotEdit: false
+    }
   }
 
   private async editItem(item: userInfo) {
@@ -181,6 +192,8 @@ export default class User extends Vue {
     this.formProvide.methodName = 'editUser'
     this.formProvide.formObj = {
       loginName: item.loginName,
+      // 超级管理员才能修改密码
+      canEditPassword: CAN_EDIT_PASSWORD_WHITE_LIST.includes(this.userType),
       userType: { text: item.phone, value: item.userType.toString() },
       userState: item.userState.toString(),
       systemName: { text: item.systemName.toString(), value: item.email },
@@ -274,7 +287,7 @@ export default class User extends Vue {
     }
 
     const { loginName, loginPwd, userType, userState, systemName } = formObj
-    const { success } = await this.h_request['httpPOST']<dialogRequestStructure>('POST_USER_ADD_USER', {
+    const { success } = await this.h_request['httpPOST']<Partial<dialogRequestStructure>>('POST_USER_ADD_USER', {
       loginName,
       loginPwd,
       userType: userType.value || userType.toString(),
@@ -291,16 +304,27 @@ export default class User extends Vue {
       return Promise.resolve(success)
     }
   }
+
   // 修改用户
   private async editUser(formObj: userFormObj) {
-    const { loginName, userType, userState, systemName, userId } = formObj
-    const { success } = await this.h_request['httpPUT']<dialogRequestStructure2>('POST_USER_UPDATE_USER', {
+    const { loginName, userType, userState, systemName, userId, newLoginPwd, newLoginPwd2 } = formObj
+
+    const params: Partial<dialogRequestStructure> = {
       loginName: loginName,
       userType: userType.value || userType.toString(),
       userState: userState,
       systemName: systemName.value || systemName.toString(),
       id: userId
-    })
+    }
+    if (newLoginPwd && newLoginPwd2 && newLoginPwd === newLoginPwd2) {
+      params.passWord1 = newLoginPwd
+      params.passWord2 = newLoginPwd2
+    }
+
+    const { success } = await this.h_request['httpPUT']<Partial<dialogRequestStructure2>>(
+      'POST_USER_UPDATE_USER',
+      params
+    )
     if (success) {
       const params: paramsType = {
         pageSize: this.pageSize,

@@ -7,7 +7,16 @@
           <span class="subTitle">版本：{{ PROJECT_SUB_TITLE }}</span>
         </div>
         <v-row class="userMenu">
-          <v-menu left offset-y bottom max-width="200px" min-width="200px" rounded attach>
+          <v-menu
+            left
+            offset-y
+            bottom
+            max-width="200px"
+            min-width="200px"
+            rounded
+            attach
+            :close-on-content-click="true"
+          >
             <template v-slot:activator="{ on }">
               <div class="userMenuBtn" v-on="on">
                 <v-avatar color="white" size="30" class="ml-4">
@@ -26,15 +35,10 @@
                   <div class="user">{{ userToken }}</div>
 
                   <v-divider class="my-1"></v-divider>
-                  <v-btn
-                    color="error"
-                    style="display: block; margin: auto"
-                    depressed
-                    rounded
-                    text
-                    @click.stop="clickLogout"
-                    >注销</v-btn
-                  >
+                  <div class="btn">
+                    <v-btn color="primary" depressed rounded text @click="updatePassword">修改密码</v-btn>
+                    <v-btn color="error" depressed rounded text @click="clickLogout">注销</v-btn>
+                  </div>
                 </div>
               </v-list-item-content>
             </v-card>
@@ -42,42 +46,66 @@
         </v-row>
       </v-col>
     </v-row>
+    <!-- 修改密码弹框 -->
+    <FDialog v-if="dialogFlag" v-model="dialogFlag">
+      <UpdatePassword v-if="fDialogFlag === 1" />
+    </FDialog>
   </div>
 </template>
 
 <script lang="ts">
-import { Component, Vue } from 'vue-property-decorator'
+import { Component, Vue, Provide } from 'vue-property-decorator'
 import { rootStoreModule } from '@/store/modules/root'
 import { userState } from '@/enum/user-enum'
 import { PROJECT_TITLE, PROJECT_SUB_TITLE } from '../../../../config'
 import { mdiAccount } from '@mdi/js'
 import util from '@/decorator/utilsDecorator'
-
-@Component
+import FDialog from '@/components/h-dialog.vue'
+import { FormObj } from '@/type/dialog-form.type'
+import { updateUserPassword } from '@/type/user.type'
+import UpdatePassword from './updatePassword.vue'
+import http from '@/decorator/httpDecorator'
+import { returnType } from '@/type/http-request.type'
+@Component({
+  components: {
+    FDialog,
+    UpdatePassword
+  }
+})
 @util
+@http
 export default class TopBar extends Vue {
-  // private dialog = false
-  // private titleState = false
-  // private userMenuState = false
+  @Provide('formProvide') private formProvide: FormObj = new Vue({
+    data() {
+      return {
+        title: '',
+        btnName: [] as string[],
+        methodName: '',
+        formObj: {}
+      }
+    }
+  })
   private userInfoObj = rootStoreModule.UserState
   private mdiAccount = mdiAccount
+  private dialogFlag = false
+  private fDialogFlag = 0
 
   private PROJECT_TITLE = PROJECT_TITLE
   private PROJECT_SUB_TITLE = PROJECT_SUB_TITLE
 
-  get username(): string {
+  private get username(): string {
     return rootStoreModule.UserState.username
   }
 
-  get userName(): string {
+  private get userName(): string {
     return '用户姓名：' + rootStoreModule.UserState.userMessage.loginName
   }
 
-  get userType(): string {
+  private get userType(): string {
     return '用户类型：' + rootStoreModule.UserState.userMessage.userTypeName
   }
 
-  get userStatus(): string {
+  private get userStatus(): string {
     if (rootStoreModule.UserState.userMessage.userState) {
       return `用户状态：${userState[rootStoreModule.UserState.userMessage.userState]}`
     } else {
@@ -85,7 +113,7 @@ export default class TopBar extends Vue {
     }
   }
 
-  get userSysName(): string {
+  private get userSysName(): string {
     const data = JSON.parse(sessionStorage.systemInfo)
     let name = ''
     for (let i = 0; i < data.length; i++) {
@@ -96,12 +124,37 @@ export default class TopBar extends Vue {
     return `系统名称：${name}`
   }
 
-  get userToken(): string {
+  private get userToken(): string {
     return '用户Token：' + rootStoreModule.UserState.userMessage.userToken
   }
 
-  clickLogout(): void {
+  private clickLogout(): void {
     this.h_utils.authUtil.logout()
+  }
+
+  // 修改密码
+  private updatePassword() {
+    this.formProvide.title = '修改个人密码'
+    this.formProvide.methodName = 'handleUpdate'
+    this.formProvide.btnName = [`立即修改`]
+    this.formProvide.formObj = {}
+    this.dialogFlag = true
+    this.fDialogFlag = 1
+  }
+  // handle
+  private async handleUpdate(formObj: updateUserPassword) {
+    console.log(formObj)
+    const { oldPass, passWord1, passWord2 } = formObj
+    const { success }: returnType = await this.h_request['httpPOST']('POST_USER_UPDATEPASSWORD', {
+      oldPass,
+      passWord1,
+      passWord2
+    })
+    console.log(success)
+    if (success) {
+      this.h_utils['alertUtil'].open('密码修改成功', true, 'success')
+      return Promise.resolve(true)
+    }
   }
 
   private handleNavRouter() {
@@ -152,5 +205,11 @@ export default class TopBar extends Vue {
 .subTitle {
   padding-left: 40px;
   font-size: 18px;
+}
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  width: 100%;
 }
 </style>

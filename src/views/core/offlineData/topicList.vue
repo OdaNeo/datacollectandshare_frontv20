@@ -12,11 +12,11 @@
       <v-col>
         <!-- <v-btn color="primary" depressed class="mr-6" small dark @click="createDataBaseAcquisition()">数据库采集</v-btn> -->
         <v-btn color="primary" depressed class="mr-6" :loading="createUrlLoading" small dark @click="createServePull()"
-          >主动拉取URL</v-btn
-        >
+          >主动拉取URL
+        </v-btn>
         <v-btn color="primary" depressed class="mr-6" :loading="createFtpLoading" small dark @click="pullFTP()"
-          >FTP</v-btn
-        >
+          >FTP
+        </v-btn>
       </v-col>
     </v-row>
     <!-- tab -->
@@ -404,7 +404,7 @@ export default class OfflineTopicList extends Vue {
         isEdit: false,
         canNotEdit: true,
         newTopics: true,
-        cron: '0',
+        cron: '* * * * * ?',
         activeTopicIDs: activeTopicIDs,
         id: activeTopicIDs[0].value,
         AuthorizationObj: [
@@ -462,6 +462,12 @@ export default class OfflineTopicList extends Vue {
       taskConfigId
     } = items
 
+    // 验证cron合法性
+    const cronValidated = this.h_utils.cronUtil.cronValidator(cron)
+    if (!cronValidated) {
+      return
+    }
+
     const [numberS, keyS] = this.h_utils.topicListUtil.transTopicListToJson(topicList)
 
     // 去除key为空的项
@@ -475,7 +481,7 @@ export default class OfflineTopicList extends Vue {
     // 请求体
     const params: any = {
       taskName,
-      cron: `0 0 ${cron} * * ?`,
+      cron: cron,
       t: {
         url,
         type,
@@ -536,7 +542,6 @@ export default class OfflineTopicList extends Vue {
       } = item.t
 
       this.formProvide.formObj = {
-        canNotEdit: true,
         isEdit: true,
         newTopics: false,
         topicName: topicName,
@@ -592,9 +597,8 @@ export default class OfflineTopicList extends Vue {
       })
       this.formProvide.formObj = {
         isEdit: false,
-        canNotEdit: true,
         newTopics: true,
-        cron: '0',
+        cron: '* * * * * ?',
         activeTopicIDs: activeTopicIDs,
         id: activeTopicIDs[0].value,
         ftp: [
@@ -643,12 +647,18 @@ export default class OfflineTopicList extends Vue {
       ftp
     } = items
 
+    // 验证cron合法性
+    const cronValidated = this.h_utils.cronUtil.cronValidator(cron)
+    if (!cronValidated) {
+      return
+    }
+
     // 获得转化后的 topicList
     const [numberS, keyS] = this.h_utils.topicListUtil.transTopicListToJson(topicList)
 
     const params: any = {
       taskName,
-      cron: `0 0 ${cron} * * ?`,
+      cron,
       t: {
         basePath,
         filePrefix,

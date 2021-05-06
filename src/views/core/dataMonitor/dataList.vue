@@ -1,17 +1,6 @@
 <template>
   <div id="dataMonitor">
     <v-row>
-      <!-- 作业ID -->
-      <v-col cols="2">
-        <v-text-field
-          v-model="queryTopicID"
-          outlined
-          dense
-          height="35px"
-          label="请输入作业ID"
-          v-only-num
-        ></v-text-field>
-      </v-col>
       <!-- 作业名 -->
       <v-col cols="2">
         <v-select
@@ -21,8 +10,22 @@
           :items="serverNameItems"
           height="35px"
           label="请选择作业名"
+          @change="searchHandler(1)"
           v-only-num
         ></v-select>
+      </v-col>
+      <!-- 作业ID -->
+      <v-col cols="2">
+        <v-text-field
+          v-model="queryTopicID"
+          :disabled="!queryServerName"
+          outlined
+          dense
+          height="35px"
+          @keyup.enter="searchHandler(1)"
+          :label="`请输入${topicTaskFlag}ID`"
+          v-only-num
+        ></v-text-field>
       </v-col>
       <!-- 状态 -->
       <v-col cols="2">
@@ -32,7 +35,7 @@
           dense
           :items="statusItems"
           height="35px"
-          label="请选择作业状态"
+          :label="`请选择${topicTaskFlag}状态`"
           v-only-num
         ></v-select>
       </v-col>
@@ -110,6 +113,7 @@ import HContentDetails from '@/components/h-content-details.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { mdiMagnify } from '@mdi/js'
 import Moment from 'moment'
+import { tableHeaderType } from '@/type/table.type'
 
 @Component({
   components: {
@@ -134,11 +138,7 @@ export default class dataMonitor extends Vue {
 
   private calendarType = calendarType
   private calendarColorType = calendarColorType
-  // 搜索
-  private queryTopicID = ''
-  private queryServerName = ''
-  private queryStatus = ''
-  // 时间范围 v-model
+
   private dates: string[] = []
   // 显示的时间范围
   private get dateRangeText() {
@@ -150,6 +150,20 @@ export default class dataMonitor extends Vue {
   private serverNameItems = [`事务`, `日志`, `视频`]
   private statusItems = [`异常`, `离线`, `警告`]
 
+  private get topicTaskFlag() {
+    if (this.queryServerName === this.serverNameItems[0]) {
+      return `任务`
+    } else {
+      return `主题`
+    }
+  }
+
+  // 搜索
+  private queryTopicID = ''
+  private queryServerName = ''
+  private queryStatus = ''
+  // 时间范围 v-model
+
   private desserts: Array<realTimeData> = []
   private pageNum = 1
   private pageSize = 20
@@ -160,48 +174,58 @@ export default class dataMonitor extends Vue {
   private tDialogFlag = false // 表格展示
   private tDialogShow = 0 // 展示哪个弹窗
 
-  private headers = [
-    {
-      text: '作业ID',
-      align: 'center',
-      value: 'topicId'
-    },
-    {
-      text: '作业名',
-      align: 'center',
-      value: 'serverName'
-    },
-    {
-      text: '时间',
-      align: 'center',
-      value: 'createTime',
-      format: (value: string) => {
-        return this.h_utils.timeUtil.stamptoFullTime(value, '/')
+  private get headers(): Array<tableHeaderType> {
+    return [
+      {
+        text: '任务ID',
+        align: 'center',
+        value: 'taskId',
+        format: (value: number) => {
+          return !value ? '-' : value
+        }
+      },
+      {
+        text: '主题ID',
+        align: 'center',
+        value: 'topicId'
+      },
+      {
+        text: '作业名',
+        align: 'center',
+        value: 'serverName'
+      },
+      {
+        text: '时间',
+        align: 'center',
+        value: 'createTime',
+        format: (value: string) => {
+          return this.h_utils.timeUtil.stamptoFullTime(value, '/')
+        }
+      },
+      {
+        text: '状态',
+        align: 'center',
+        slot: 'status'
+      },
+      {
+        text: '描述信息',
+        align: 'center',
+        value: 'tip'
+      },
+      {
+        text: '日志信息',
+        align: 'center',
+        slot: 'details'
       }
-    },
-    {
-      text: '状态',
-      align: 'center',
-      slot: 'status'
-    },
-    {
-      text: '描述信息',
-      align: 'center',
-      value: 'tip'
-    },
-    {
-      text: '日志信息',
-      align: 'center',
-      slot: 'details'
-    }
-  ]
+    ]
+  }
   // 清空搜索条件
   private resetSearchQuery() {
     this.queryTopicID = ''
     this.queryServerName = ''
     this.queryStatus = ''
     this.dates = []
-    if (this.$route.query.topicId) {
+    if (this.$route.query.id) {
       this.$router.push({
         query: {}
       })
@@ -221,8 +245,9 @@ export default class dataMonitor extends Vue {
       pageSize: this.pageSize,
       pageNum: this.pageNum
     }
-    // taskId
-    this.queryTopicID && (params.topicId = this.queryTopicID)
+
+    const _query = this.queryServerName === this.serverNameItems[0] ? `taskId` : `topicId`
+    this.queryTopicID && (params[_query] = this.queryTopicID)
     this.queryServerName && (params.serverName = this.queryServerName)
     this.queryStatus && (params.status = calendarType[this.queryStatus as keyof typeof calendarType])
     this.dates.length === 2 &&
@@ -272,7 +297,7 @@ export default class dataMonitor extends Vue {
 
   created(): void {
     this.pageNum = 1
-    this.queryTopicID = this.$route.query.topicId ? this.$route.query.topicId.toString() : ''
+    this.queryTopicID = this.$route.query.id ? this.$route.query.id.toString() : ''
     this.searchHandler(1)
   }
 }

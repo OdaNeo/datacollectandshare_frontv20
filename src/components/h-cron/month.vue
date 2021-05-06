@@ -5,20 +5,7 @@
     </v-radio>
     <v-radio value="2">
       <div slot="label" class="cronItem">
-        每隔
-        <v-text-field
-          :hide-details="true"
-          dense
-          outlined
-          :disabled="cronProvide.month.cronEvery !== `2`"
-          v-model="cronProvide.month.incrementIncrement"
-          :min="1"
-          :max="12"
-          :height="30"
-          type="number"
-          class="cronInput"
-        ></v-text-field>
-        月执行，从
+        从
         <v-text-field
           :hide-details="true"
           dense
@@ -31,11 +18,24 @@
           type="number"
           class="cronInput"
         ></v-text-field>
-        月开始
+        月开始，每隔
+        <v-text-field
+          :hide-details="true"
+          dense
+          outlined
+          :disabled="cronProvide.month.cronEvery !== `2`"
+          v-model="cronProvide.month.incrementIncrement"
+          :min="1"
+          :max="12"
+          :height="30"
+          type="number"
+          class="cronInput"
+        ></v-text-field>
+        月执行
       </div>
     </v-radio>
     <v-radio value="3">
-      <div slot="label" class="cronItem" style="min-width: 400px">
+      <div slot="label" class="cronItem" style="min-width: 450px">
         具体月数（可多选）
         <v-combobox
           dense
@@ -94,7 +94,7 @@ export default class CronMonth extends Vue {
   private get specificSpecificItems() {
     let _arr = []
     for (let i = 0; i < 12; i++) {
-      _arr[i] = i + 1
+      _arr[i] = (i + 1).toString()
     }
     return _arr
   }

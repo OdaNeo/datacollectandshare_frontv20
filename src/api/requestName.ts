@@ -22,6 +22,7 @@ const GET_PERMISSION_AUTHORIZATION_FINDPERMISSIONLISTBYROLEID = '/permission/aut
 const POST_PERMISSION_AUTHORIZATION_ADDROLEIDPERMISSIONID = '/permission/authorization/addRoleIdPermissionId'
 const GET_STATISTICS_STAT_TOPIC_DATA = '/statistics/statTopicData' // 系统统计 隐藏页
 const GET_STATISTICS_STAT_SYS_TOPIC = '/statistics/statSysTopic' // 系统统计 隐藏页
+const POST_USER_UPDATEPASSWORD = '/user/updatePassword' // 用户修改自己密码
 // const GET_SYSTEM_GETSYSTEMINFO = '/system/getSystemInfo' // 获取系统信息 全局 与 /user/addUser/getSystemInfoAndAddUser 重复
 // /system/getSystemTypeInfo ？
 // /user/delete/* ?
@@ -277,7 +278,8 @@ const REQUEST_NAME = {
   GET_TASKINFO_FINDTRANSCATIONLOG,
   GET_LOGMGT_VIEWLOG_LOG_SYSLOGCOUNT,
   GET_OFFLINE_SELECTTOPICBYTYPE,
-  GET_OFFLINE_SELECTOFFLINELOG
+  GET_OFFLINE_SELECTOFFLINELOG,
+  POST_USER_UPDATEPASSWORD
 }
 
 export default REQUEST_NAME

@@ -198,7 +198,7 @@ export default class VideoDataStatistics extends Vue {
     if (this.videoList.length === 0) {
       const { data } = await this.h_request['httpGET']('GET_TOPICS_GETVIDEO', {})
       this.videoList = [...data]
-      this.maxValue = data.length
+      this.maxValue = data.length > 20 ? 20 : data.length
       this.handelECharts('echarts1', this.getOption1(this.videoList, this.sliderNumber))
     } else {
       setTimeout(() => {

@@ -250,17 +250,17 @@ const routes: Array<RouteConfig> = [
           access: true,
           url: '/offlineData/taskList'
         }
+      },
+      {
+        path: 'dataStatistics',
+        component: () => import('@/views/core/offlineData/dataStatistics.vue'),
+        name: '离线数据统计',
+        meta: {
+          title: '离线数据统计',
+          access: true,
+          url: '/offlineData/dataStatistics'
+        }
       }
-      // {
-      //   path: 'dataStatistics',
-      //   component: () => import('@/views/core/offlineData/dataStatistics.vue'),
-      //   name: '离线数据统计',
-      //   meta: {
-      //     title: '离线数据统计',
-      //     access: true,
-      //     url: '/offlineData/dataStatistics'
-      //   }
-      // }
     ]
   },
   // 事务数据
@@ -464,30 +464,6 @@ const routes: Array<RouteConfig> = [
     ]
   },
   // 系统统计--隐藏页，在private中查看
-  // {
-  //   path: '/dataMGT',
-  //   name: '系统统计',
-  //   component: StatePage,
-  //   redirect: '/dataMGT/dataStatistics',
-  //   meta: {
-  //     title: '系统统计',
-  //     icon: mdiDatabaseCog,
-  //     access: false,
-  //     url: '/dataMGT'
-  //   },
-  //   children: [
-  //     {
-  //       path: 'dataStatistics',
-  //       component: () => import('@/views/core/data/dataStatistics.vue'),
-  //       name: '数据统计',
-  //       meta: {
-  //         title: '数据统计',
-  //         access: false,
-  //         url: '/dataMGT/dataStatistics'
-  //       }
-  //     }
-  //   ]
-  // },
   {
     path: '/private',
     name: '内部调试页面',
@@ -540,15 +516,6 @@ const routes: Array<RouteConfig> = [
         name: '监控日志2',
         meta: {
           title: '监控日志2',
-          access: false
-        }
-      },
-      {
-        path: 'cron',
-        component: () => import('@/components/h-cron/index.vue'),
-        name: 'cron',
-        meta: {
-          title: 'cron',
           access: false
         }
       }
