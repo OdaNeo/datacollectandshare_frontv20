@@ -4,7 +4,7 @@ import axios, { AxiosInstance, AxiosRequestConfig, AxiosResponse, AxiosError } f
 import { rootStoreModule } from '../store/modules/root'
 import { cancelTokenModule } from '../store/modules/request'
 import alertUtil from '../utils/alertUtil'
-import authUtil from '../utils/authenticateUtil'
+import lib from '../utils/lib'
 import { VUE_APP_BASE_API, BASE_REQUEST_TIME_OUT } from '../../config'
 import { uploadStoreModule } from '@/store/modules/upload'
 import { httpErrorMsg } from '@/enum/http-enum'
@@ -54,7 +54,7 @@ class RequestData {
     this.axiosIns.interceptors.response.use(
       ({ data, headers }: AxiosResponse) => {
         // 如果有content-disposition 响应头，认为是文件下载
-        const filename = headers['content-disposition']?.split('=')[1].split('"')[1]
+        const filename = headers['content-disposition']
         filename && (data.filename = filename)
         return Promise.resolve(data)
       },
@@ -235,8 +235,8 @@ class RequestData {
         }, 100)
         // 登出
         setTimeout(() => {
-          authUtil.logout()
-        }, 3000)
+          lib.logout()
+        }, 2500)
 
         callback(_error)
         break

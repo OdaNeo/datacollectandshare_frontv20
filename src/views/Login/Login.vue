@@ -81,7 +81,7 @@ export default class Login extends Vue {
     const bool: boolean = await rootStoreModule.login({ username, result })
 
     // systemInfo 需要token
-    const { data } = await this.h_request.httpGET('GET_USER_ADDUSER_GET_SYSTEM_INFO_ADD_ADDUSER', {})
+    const { data } = await this.h_request.httpGET('GET_SYSTEM_GETSYSTEMINFO', {})
     sessionStorage.systemInfo = JSON.stringify(data)
 
     this.loading = false

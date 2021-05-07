@@ -470,8 +470,8 @@ export default class OnlineDataTopicList extends Vue {
     this.loading = true
     let _data: returnTypeData
 
-    // params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['多级嵌套免校验']},${topicInterFaceType['PROTOBUF']}`
-    params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['PROTOBUF']}`
+    params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['多级嵌套免校验']},${topicInterFaceType['PROTOBUF']}`
+    // params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['PROTOBUF']}`
     params.dataType = dataType['结构化']
 
     if (tab) {
@@ -697,26 +697,10 @@ export default class OnlineDataTopicList extends Vue {
     const data = await this.h_download.httpGET('GET_TOPICS_PROTOBUFDOWNLOAD', {
       id: item.id
     })
-    console.log(data)
+    const filename = data.filename?.split('=')[1]?.split('"')[1]
 
-    if (data.filename) {
-      const blob = new Blob([data] as any, {
-        type: 'application/octet-stream'
-      })
-      const tempLink = document.createElement('a')
-      const blobURL = window.URL.createObjectURL(blob)
-
-      tempLink.style.display = 'none'
-      tempLink.href = blobURL
-      tempLink.setAttribute('download', decodeURI(data.filename))
-
-      if (typeof tempLink.download === 'undefined') {
-        tempLink.setAttribute('target', '_blank')
-      }
-      document.body.appendChild(tempLink)
-      tempLink.click()
-      document.body.removeChild(tempLink)
-      window.URL.revokeObjectURL(blobURL)
+    if (filename) {
+      this.h_utils.lib.downloadUtil(data, filename)
     } else {
       this.h_utils['alertUtil'].open('文件不存在或者下载失败', true, 'error')
     }

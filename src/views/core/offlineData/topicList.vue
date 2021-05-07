@@ -248,7 +248,14 @@ export default class OfflineTopicList extends Vue {
         width: 100,
         isHide: this.tab === 2 || this.tab === 3,
         format: (cron: string) => {
-          return cron ? cronstrue.toString(cron, { locale: 'zh_CN', use24HourTimeFormat: true }) : ''
+          // cronstrue 插件报错会导致整个dom树崩掉
+          let _corn = ''
+          try {
+            _corn = cronstrue.toString(cron, { locale: 'zh_CN', use24HourTimeFormat: true })
+          } catch {
+            _corn = cron
+          }
+          return _corn
         }
       },
       {
@@ -463,7 +470,7 @@ export default class OfflineTopicList extends Vue {
     } = items
 
     // 验证cron合法性
-    const cronValidated = this.h_utils.cronUtil.cronValidator(cron)
+    const cronValidated = this.h_utils.lib.cronValidator(cron)
     if (!cronValidated) {
       return
     }
@@ -648,7 +655,7 @@ export default class OfflineTopicList extends Vue {
     } = items
 
     // 验证cron合法性
-    const cronValidated = this.h_utils.cronUtil.cronValidator(cron)
+    const cronValidated = this.h_utils.lib.cronValidator(cron)
     if (!cronValidated) {
       return
     }

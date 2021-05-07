@@ -72,11 +72,12 @@ import HDialog from '@/components/h-dialog.vue'
 import { mdiCloseCircleOutline } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
 import ExportExcelFromDialog from './child/exportExcelFromDialog.vue'
-import axios from 'axios'
-import { VUE_APP_BASE_API } from '../../../../config'
-import REQUEST_NAME from '@/api/requestName'
-import { rootStoreModule } from '@/store/modules/root'
+// import axios from 'axios'
+// import { VUE_APP_BASE_API } from '../../../../config'
+// import REQUEST_NAME from '@/api/requestName'
+// import { rootStoreModule } from '@/store/modules/root'
 import { FormObj } from '@/type/dialog-form.type'
+import download from '@/decorator/downloadDecorator'
 
 @Component({
   components: {
@@ -89,6 +90,7 @@ import { FormObj } from '@/type/dialog-form.type'
 })
 @http
 @util
+@download
 export default class ViewLog extends Vue {
   @Provide('formProvide') private formProvide: FormObj = new Vue({
     data() {
@@ -225,40 +227,58 @@ export default class ViewLog extends Vue {
         ? new Date().getTime()
         : this.h_utils.timeUtil.timeToStamp(this.beginDate, '-') + this.timeRang.val * 24 * 3600 * 1000
 
-    axios({
-      method: 'get',
-      url: VUE_APP_BASE_API + REQUEST_NAME.GET_LOGMGT_VIEWLOG_LOG_EXPORTSYSLOG,
-      responseType: 'blob',
-      headers: {
-        Authorization: rootStoreModule.UserState.token
-      },
-      params: {
-        username: this.queryUserName ? this.queryUserName : null,
-        method: this.queryMethodName ? this.queryMethodName : null,
-        operationType: this.queryMethodType ? this.queryMethodType : null,
-        startTime: startTime,
-        endTime: endTime
-      }
+    const data = await this.h_download.httpGET('GET_LOGMGT_VIEWLOG_LOG_EXPORTSYSLOG', {
+      username: this.queryUserName ? this.queryUserName : null,
+      method: this.queryMethodName ? this.queryMethodName : null,
+      operationType: this.queryMethodType ? this.queryMethodType : null,
+      startTime: startTime,
+      endTime: endTime
     })
-      .then(res => {
-        this.waitExportAlterFlag = false
-        clearInterval(timer)
-        if (res.data) {
-          //获取文件名
-          let fileName = res.headers['content-disposition'].substring(
-            res.headers['content-disposition'].indexOf('=') + 1
-          )
-          let blob = new Blob([res.data], { type: 'application/x-xls' })
-          var link = document.createElement('a')
-          link.href = window.URL.createObjectURL(blob)
-          link.download = fileName
-          link.click()
-          window.URL.revokeObjectURL(link.href)
-        }
-      })
-      .catch(err => {
-        console.log(err)
-      })
+
+    const filename = data.filename?.split('=')[1]
+
+    if (filename) {
+      this.h_utils.lib.downloadUtil(data, filename)
+    } else {
+      this.h_utils['alertUtil'].open('文件不存在或者下载失败', true, 'error')
+    }
+    this.waitExportAlterFlag = false
+    clearInterval(timer)
+
+    // axios({
+    //   method: 'get',
+    //   url: VUE_APP_BASE_API + REQUEST_NAME.GET_LOGMGT_VIEWLOG_LOG_EXPORTSYSLOG,
+    //   responseType: 'blob',
+    //   headers: {
+    //     Authorization: rootStoreModule.UserState.token
+    //   },
+    //   params: {
+    //     username: this.queryUserName ? this.queryUserName : null,
+    //     method: this.queryMethodName ? this.queryMethodName : null,
+    //     operationType: this.queryMethodType ? this.queryMethodType : null,
+    //     startTime: startTime,
+    //     endTime: endTime
+    //   }
+    // })
+    //   .then(res => {
+    //     this.waitExportAlterFlag = false
+    //     clearInterval(timer)
+    //     if (res.data) {
+    //       //获取文件名
+    //       let fileName = res.headers['content-disposition'].substring(
+    //         res.headers['content-disposition'].indexOf('=') + 1
+    //       )
+    //       let blob = new Blob([res.data], { type: 'application/x-xls' })
+    //       var link = document.createElement('a')
+    //       link.href = window.URL.createObjectURL(blob)
+    //       link.download = fileName
+    //       link.click()
+    //       window.URL.revokeObjectURL(link.href)
+    //     }
+    //   })
+    //   .catch(err => {
+    //     console.log(err)
+    //   })
   }
 
   private async exportFromDialog() {
