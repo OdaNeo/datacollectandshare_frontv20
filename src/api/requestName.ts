@@ -79,7 +79,7 @@ const GET_SYSNET_GETBINDLIST = '/sysnet/getBindList' // 绑定网络
 const GET_SYSNET_GETBINDBYNAME = '/sysnet/getBindByName'
 const GET_SYSNET_GETSYSNETLIST = '/sysnet/getSysNetList'
 const GET_SYSNET_ADDBINDINFO = '/sysnet/addBindInfo'
-const POST_SYSNET_DELETEBINDINFO = '/sysnet/delBindInfo' 
+const POST_SYSNET_DELETEBINDINFO = '/sysnet/delBindInfo'
 
 // ---------------------------- 操作日志 ---------------------------
 const GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG = '/logMGT/viewLog/log/findAllLog'

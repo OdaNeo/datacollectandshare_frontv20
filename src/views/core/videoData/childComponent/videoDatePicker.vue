@@ -25,14 +25,14 @@
               v-on="on"
             ></v-text-field>
           </template>
-          <v-date-picker 
-          locale="zh-Hans" 
-          v-model="dates" 
-          no-title 
-          range 
-          :allowed-dates="allowedDates"
-          :events="dateEvents"
-          event-color="green lighten-1"
+          <v-date-picker
+            locale="zh-Hans"
+            v-model="dates"
+            no-title
+            range
+            :allowed-dates="allowedDates"
+            :events="dateEvents"
+            event-color="green lighten-1"
           >
             <v-spacer></v-spacer>
             <v-btn text color="grey" @click="menu = false">取消</v-btn>
@@ -52,7 +52,7 @@
       </v-col>
     </v-row>
     <!-- 查看日期 -->
-    <div class="weektime" :style="showDateList?'display:block':'display:none'">
+    <div class="weektime" :style="showDateList ? 'display:block' : 'display:none'">
       <div class="weektime-main">
         <div class="weektime-hd">
           <div class="weektime-hd-title">日期\时间</div>
@@ -112,7 +112,7 @@ export default class VideoDatePicker extends Vue {
 
   private showDateList = false
 
-  private dateEvents = this.formProvide.formObj.videoTimeRang.map((time:String) => {
+  private dateEvents = this.formProvide.formObj.videoTimeRang.map((time: String) => {
     return time
   })
 
@@ -142,15 +142,20 @@ export default class VideoDatePicker extends Vue {
 
   private allowedDates(val: string) {
     const createTime = this.h_utils.timeUtil.timeToStamp(this.formProvide.formObj.videoCreateTime, '-')
-    const overTime = this.h_utils.timeUtil.timeToStamp(this.formProvide.formObj.videoOverTime,"-")
+    const overTime = this.h_utils.timeUtil.timeToStamp(this.formProvide.formObj.videoOverTime, '-')
     if (this.dates.length === 0) {
-      return Date.parse(val) >= createTime&&Date.parse(val)<=overTime
+      return Date.parse(val) >= createTime && Date.parse(val) <= overTime
     } else if (this.dates.length === 1) {
       const beginTime = this.h_utils.timeUtil.timeToStamp(val, '-')
       const endTime = this.h_utils.timeUtil.timeToStamp(this.dates[0], '-')
-      return beginTime + 24 * 60 * 60 * 1000 > endTime && beginTime < endTime + 7 * 24 * 60 * 60 * 1000 &&Date.parse(val) >= createTime&&Date.parse(val)<=overTime
+      return (
+        beginTime + 24 * 60 * 60 * 1000 > endTime &&
+        beginTime < endTime + 7 * 24 * 60 * 60 * 1000 &&
+        Date.parse(val) >= createTime &&
+        Date.parse(val) <= overTime
+      )
     } else {
-      return Date.parse(val) >= createTime&&Date.parse(val)<=overTime
+      return Date.parse(val) >= createTime && Date.parse(val) <= overTime
     }
   }
   private get dateRangeText() {
@@ -232,7 +237,6 @@ export default class VideoDatePicker extends Vue {
   //       return d.toISOString().substr(0, 10)
   //     })
   // }
-
 
   @Watch(`menu`)
   private handleIsSearching(val: boolean) {
