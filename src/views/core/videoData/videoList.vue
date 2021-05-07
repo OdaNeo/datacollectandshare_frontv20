@@ -128,7 +128,6 @@ import SetDateRange from './childComponent/setDateRange.vue'
 import VideoPopup from './childComponent/videoPopup.vue'
 import { VideoTimeRange, VideoTopicAdd, VideoTopicTable } from '@/type/video-add.type'
 import util from '@/decorator/utilsDecorator'
-import Enum from '@/decorator/enumDecorator'
 import { dataType } from '@/enum/topic-datatype-enum'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import FDialog from '@/components/h-dialog.vue'
@@ -140,8 +139,9 @@ import TDialog from '@/components/t-dialog.vue'
 import VideoDetail from './childComponent/videoDetail.vue'
 import HTabs from '@/components/h-tabs.vue'
 import VideoDatePicker from './childComponent/videoDatePicker.vue'
-import { videoState, stateColor } from '@/enum/state-enum'
+import { topicState, stateColor } from '@/enum/state-enum'
 import { calendarType, calendarColorType } from '@/enum/calendar-enum'
+
 @Component({
   components: {
     HTable,
@@ -159,12 +159,6 @@ import { calendarType, calendarColorType } from '@/enum/calendar-enum'
 })
 @http
 @util
-@Enum([
-  {
-    tsFileName: 'topic-datatype-enum',
-    enumName: 'dataType'
-  }
-])
 export default class VideoDataList extends Vue {
   @Provide('formProvide') private formProvide: FormObj = new Vue({
     data() {
@@ -198,7 +192,7 @@ export default class VideoDataList extends Vue {
     topicInterFaceType: 0
   }
   private showVideoPopup = false
-  private videoState = videoState
+  private videoState = topicState
   private stateColor = stateColor
 
   private desserts: Array<topicTable> = [] // 数据列表

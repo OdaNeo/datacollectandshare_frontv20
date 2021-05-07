@@ -73,7 +73,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 47. ~~http download~~
 48. ~~上传rest文件错误上报以及验重bug~~
 49. ~~路由跳转取消上一页请求~~
-50. 提升首页性能，优化统计图表显示样式
+50. ~~提升首页性能，优化统计图表显示样式~~
 51. 搜索框偶有字符键入
 52. ~~表单弹框关闭动画缺失，需要优化~~
 53. 刷新重新拉取用户权限
@@ -86,10 +86,11 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ## 常见问题
 
 - 新增接口后 需要在权限管理处进行配置 否则会报错 401 身份验证失败
+- 2.0页面 master分支，3.0页面在dev分支
 - 后端接口配置在 config.ts > VUE_APP_BASE_API
 - 页面左侧菜单栏顺序 配置在 src/router/index.ts > routes, 可同时修改一级列表和二级列表顺序
 - 隐藏页面 /private，包含废弃页面
 - 线上查看 git 版本页面 /private/bulkCreateTopic
 - 页面跳转以及tab页切换会批量取消上一个页面的请求
 - npm run staging 可以打包成后端可配请求baseUrl的页面，其余与生产环境相同，详见 .env.staging 文件
-- 登录超时30分钟，需要重新登录
+- 登录超时30分钟会自动退出，需要重新登录

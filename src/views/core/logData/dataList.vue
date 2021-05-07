@@ -98,7 +98,7 @@ import HSearch from '@/components/h-search.vue'
 import { tableHeaderType } from '@/type/table.type'
 import { loggerParamType } from '@/type/logger.type'
 import HTabs from '@/components/h-tabs.vue'
-import { logState, stateColor } from '@/enum/state-enum'
+import { topicState, stateColor } from '@/enum/state-enum'
 
 @Component({
   components: {
@@ -129,7 +129,7 @@ export default class LogDataList extends Vue {
   private items = ['所有主题', '我的主题']
   private fDialogFlag = false // 弹窗展示
   private fDialogShow = 0
-  private logState = logState
+  private logState = topicState
   private stateColor = stateColor
 
   private tDialogFlag = false

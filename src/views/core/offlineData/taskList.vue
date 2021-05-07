@@ -45,7 +45,7 @@ import HTabs from '@/components/h-tabs.vue'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import HSearch from '@/components/h-search.vue'
-import { offlineResult, offlineResultColor } from '@/enum/state-enum'
+import { taskResult, taskResultColor } from '@/enum/state-enum'
 import { FormObj } from '@/type/dialog-form.type'
 import TDialog from '@/components/t-dialog.vue'
 import HContentDetails from '@/components/h-content-details.vue'
@@ -76,8 +76,8 @@ export default class TaskList extends Vue {
   private tDialogFlag = false
   private row = ''
 
-  private offlineResult = offlineResult
-  private offlineResultColor = offlineResultColor
+  private offlineResult = taskResult
+  private offlineResultColor = taskResultColor
 
   private currenttaskId = ''
   private paginationLength = 0 // 分页数

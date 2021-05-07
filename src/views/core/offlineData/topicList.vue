@@ -106,7 +106,6 @@ import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
-import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import FDialog from '@/components/h-dialog.vue'
 import { TopicAdd } from '@/type/topic-add.type'
@@ -123,9 +122,9 @@ import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInfo
 import HTabs from '@/components/h-tabs.vue'
 import { tableHeaderType } from '@/type/table.type'
 import { offlineTableType } from '@/type/offline-data.type'
-import { offlineState, stateColor } from '@/enum/state-enum'
+import { topicState, stateColor } from '@/enum/state-enum'
 import cronstrue from 'cronstrue/i18n'
-import { offlineResult } from '@/enum/state-enum'
+import { taskResult } from '@/enum/state-enum'
 import HContentDetails from '@/components/h-content-details.vue'
 @Component({
   components: {
@@ -144,12 +143,6 @@ import HContentDetails from '@/components/h-content-details.vue'
   }
 })
 @http
-@Enum([
-  {
-    tsFileName: 'topic-list-enum',
-    enumName: 'queneType'
-  }
-])
 @util
 export default class OfflineTopicList extends Vue {
   @Provide('formProvide') private formProvide: FormObj = new Vue({
@@ -167,7 +160,7 @@ export default class OfflineTopicList extends Vue {
   private searchLabel: `任务` | `主题` = `任务`
   private fDialogFlag = false // 弹窗展示
   private tDialogFlag = false // 表格展示
-  private offlineState = offlineState
+  private offlineState = topicState
   private stateColor = stateColor
 
   private fDialogShow = 0 // 展示哪个弹窗 1.数据库采集 2.服务主动拉取 3.拉取FTP
@@ -854,7 +847,7 @@ export default class OfflineTopicList extends Vue {
       this.row = `
       <v-card-text>
         <div>时间：${item.executeTime}</div>
-        <div>状态：${offlineResult[item.result]}</div>
+        <div>状态：${taskResult[item.result]}</div>
         <div>日志：${item.log}</div>
       </v-card-text>
       `
@@ -1022,24 +1015,15 @@ export default class OfflineTopicList extends Vue {
 
     // 修改
     if (item) {
-      const obj1: any = JSON.parse(item.dsAnnotation)
-      const obj2: any = JSON.parse(item.dataStruct)[0]
-      let _topicList = []
-      for (const k in obj1) {
-        _topicList.push({
-          key: k,
-          description: obj1[k],
-          type: typeof obj2[k] === 'number' && obj2[k] > 1 ? 'TimeStamp' : obj2[k],
-          disabled: true
-        })
-      }
+      const _topicList = this.h_utils.topicListUtil.transJsonToTopicList(item.dataStruct, item.dsAnnotation)
+
       this.formProvide.formObj = {
         canNotEdit: true,
         id: item.id,
         topicName: item.topicName,
         dataBaseType: item.dataBaseType,
         dataBaseIp: item.dataBaseIp,
-        topicList: _topicList
+        topicList: _topicList.map((item: {}) => ({ ...item, disabled: true }))
       }
     } else {
       this.formProvide.formObj = {
@@ -1059,18 +1043,12 @@ export default class OfflineTopicList extends Vue {
   private async addDataBaseAcquisition(formObj: TopicAdd) {
     const canNotEdit = formObj.canNotEdit
 
-    const dataStruct: any = {}
-    const dataStructNumber: any = {}
+    // 获得转化后的 topicList
+    const [numberS, keyS] = this.h_utils.topicListUtil.transTopicListToJson(formObj.topicList)
 
-    formObj.topicList.forEach(val => {
-      dataStruct[val.key] = val.description
-      dataStructNumber[val.key] = val.type === 'TimeStamp' ? Date.now() : val.type
-    })
-    const _numberS = JSON.stringify(dataStruct)
-    const _keyS = '[' + JSON.stringify(dataStructNumber) + ']'
     const params: any = {
-      dataStruct: _keyS,
-      dsAnnotation: _numberS,
+      dataStruct: keyS,
+      dsAnnotation: numberS,
       dataType: dataType['结构化']
     }
     params.topicName = formObj.topicName

@@ -16,9 +16,8 @@ import { returnType } from '@/type/http-request.type'
 import { userProportion, topicRankingInfo } from '@/type/welcome.type'
 import { userInfo } from '@/type/user.type'
 import echarts from '@/decorator/echartsDecorator'
-import Enum from '@/decorator/enumDecorator'
 import HOverLay from '@/components/h-overlay.vue'
-
+import { userState } from '@/enum/user-enum'
 @Component({
   components: {
     HOverLay
@@ -26,12 +25,6 @@ import HOverLay from '@/components/h-overlay.vue'
 })
 @echarts
 @http
-@Enum([
-  {
-    tsFileName: 'user-enum',
-    enumName: 'userState'
-  }
-])
 export default class UserProportion extends Vue {
   private loading = true
 
@@ -39,13 +32,13 @@ export default class UserProportion extends Vue {
     const roolList: Array<userProportion> = []
     data.list.forEach((element: userInfo) => {
       const flag = roolList.find((item: userProportion) => {
-        return item.name === (str === 'userState' ? this.h_enum.userState[element[str]] : element[str])
+        return item.name === (str === 'userState' ? userState[element[str]] : element[str])
       })
       if (flag) {
         flag.value += 1
       } else {
         roolList.push({
-          name: str === 'userState' ? this.h_enum.userState[element[str]] : element[str],
+          name: str === 'userState' ? userState[element[str]] : element[str],
           value: 1
         })
       }

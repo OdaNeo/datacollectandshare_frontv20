@@ -1,7 +1,7 @@
 import Vue from 'vue'
-import RequestData from '@/api/index'
+// import RequestData from '@/api/index'
 
-const request = new RequestData()
+// const request = new RequestData()
 
 // 搜索框仅数字
 Vue.directive('onlyNum', {
@@ -34,33 +34,33 @@ Vue.directive('onlyNum', {
 //     noRepeat = [...n]
 //   }
 // }" -->
-Vue.directive('topicNameNoRepeat', {
-  bind: (el, binding) => {
-    let ele: any[] | any = el.tagName === 'INPUT' ? el : el.querySelectorAll('input')
-    switch (ele.length) {
-      case 1:
-        ele = ele[0]
-        break
-      case 2:
-        ele = ele[1]
-    }
-    let timer = 0
+// Vue.directive('topicNameNoRepeat', {
+//   bind: (el, binding) => {
+//     let ele: any[] | any = el.tagName === 'INPUT' ? el : el.querySelectorAll('input')
+//     switch (ele.length) {
+//       case 1:
+//         ele = ele[0]
+//         break
+//       case 2:
+//         ele = ele[1]
+//     }
+//     let timer = 0
 
-    ele.oninput = async () => {
-      if (!ele.value) {
-        return
-      }
-      clearTimeout(timer)
-      timer = setTimeout(async () => {
-        const { success } = await request['httpGET']('GET_TOPICS_CHECKED', {
-          topicName: ele.value
-        })
-        if (success) {
-          binding.value.set(['主题名称已被注册'])
-        } else {
-          binding.value.set([])
-        }
-      }, 200)
-    }
-  }
-})
+//     ele.oninput = async () => {
+//       if (!ele.value) {
+//         return
+//       }
+//       clearTimeout(timer)
+//       timer = setTimeout(async () => {
+//         const { success } = await request['httpGET']('GET_TOPICS_CHECKED', {
+//           topicName: ele.value
+//         })
+//         if (success) {
+//           binding.value.set(['主题名称已被注册'])
+//         } else {
+//           binding.value.set([])
+//         }
+//       }, 200)
+//     }
+//   }
+// })

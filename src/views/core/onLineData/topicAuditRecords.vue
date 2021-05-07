@@ -75,7 +75,6 @@ import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import util from '@/decorator/utilsDecorator'
-import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import SubDetails from './childComponent/subDetails.vue'
@@ -86,6 +85,7 @@ import { tableHeaderType } from '@/type/table.type'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import HTabs from '@/components/h-tabs.vue'
 import HContentDetails from '@/components/h-content-details.vue'
+import { queneType } from '@/enum/topic-list-enum'
 
 @Component({
   components: {
@@ -101,12 +101,6 @@ import HContentDetails from '@/components/h-content-details.vue'
 })
 @http
 @util
-@Enum([
-  {
-    tsFileName: 'topic-list-enum',
-    enumName: 'queneType'
-  }
-])
 /* 接口类型  订阅用户-订阅时间 审核人-审核时间*/
 export default class TopicAuditRecords extends Vue {
   @Provide('formProvide') private formObj = new Vue({
@@ -163,8 +157,8 @@ export default class TopicAuditRecords extends Vue {
         text: '消息类型',
         align: 'center',
         value: 'queneType',
-        format: (quene: number): number => {
-          return this.h_enum['queneType'][quene]
+        format: (quene: number): string => {
+          return queneType[quene]
         }
       },
       {

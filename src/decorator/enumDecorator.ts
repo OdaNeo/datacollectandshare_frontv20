@@ -10,8 +10,8 @@ const Enum = (enums: Array<enumType>) => {
     if (!target.prototype.h_enum) {
       target.prototype.h_enum = {}
     }
-    enums.forEach(async e => {
-      const example = await import(`../enum/${e.tsFileName}`)
+    enums.forEach(e => {
+      const example = require(`../enum/${e.tsFileName}`)
       if (example) {
         target.prototype.h_enum[e.enumName] = example[e.enumName]
       } else {

@@ -138,7 +138,7 @@ import { uploadStoreModule } from '@/store/modules/upload'
 import HTabs from '@/components/h-tabs.vue'
 import { transactionalTableType } from '@/type/transactional-data.type'
 import cronstrue from 'cronstrue/i18n'
-import { transactionalState, stateColor, transactionalResult } from '@/enum/state-enum'
+import { topicState, stateColor, taskResult } from '@/enum/state-enum'
 import { dataType } from '@/enum/topic-datatype-enum'
 
 @Component({
@@ -177,7 +177,7 @@ export default class transactionalDataList extends Vue {
   private queryTopicID = '' // 查询主题ID input框内容
   private searchLabel: `任务` | `主题` = `任务`
 
-  private transactionalState = transactionalState
+  private transactionalState = topicState
   private stateColor = stateColor
 
   private paginationLength = 0 // 分页数
@@ -412,6 +412,7 @@ export default class transactionalDataList extends Vue {
             field: '',
             type: 'string',
             iskey: 'false',
+            // description: '',
             disabled: false
           }
         ]
@@ -508,10 +509,11 @@ export default class transactionalDataList extends Vue {
     }
 
     // column
-    params.column = column.map((item: { field: string; type: string; iskey: string }) => {
+    params.column = column.map((item: { field: string; type: string; description?: string; iskey: string }) => {
       return {
         field: item.field,
         type: item.type,
+        // description: item.description,
         iskey: JSON.parse(item.iskey)
       }
     })
@@ -555,7 +557,6 @@ export default class transactionalDataList extends Vue {
   }
 
   // 上传SQl文件
-  // TODO: 表字段说明不能有英文的分号 ❓ ⭕
   private async uploadSQL() {
     // 查询当前是否有任务在执行
     this.uploadBtnLoading = true
@@ -824,7 +825,7 @@ export default class transactionalDataList extends Vue {
       this.row = `
       <v-card-text>
         <div>时间：${item.executeTime}</div>
-        <div>状态：${transactionalResult[item.result]}</div>
+        <div>状态：${taskResult[item.result]}</div>
         <div>日志：${item.log}</div>
       </v-card-text>
       `
@@ -895,9 +896,14 @@ export default class transactionalDataList extends Vue {
         value: 'field'
       },
       {
-        text: '类型',
+        text: '字段类型',
         align: 'center',
         value: 'type'
+      },
+      {
+        text: '描述',
+        align: 'center',
+        value: `description`
       },
       {
         text: '是否为key',
