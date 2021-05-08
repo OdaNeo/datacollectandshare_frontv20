@@ -38,7 +38,7 @@
           </template>
           <!-- 关联主题 -->
           <template v-slot:topic="{ item }">
-            <v-btn text color="primary" @click.stop="showTopicDetail(item)">详情</v-btn>
+            <v-btn text color="primary" @click="showTopicDetail(item)">详情</v-btn>
           </template>
           <!-- 数据结构 -->
           <template v-slot:buttons="{ item }">
@@ -46,13 +46,14 @@
           </template>
           <!-- 日志 -->
           <template v-slot:log="{ item }">
-            <v-btn text color="primary" :loading="!!item.loading" @click.stop="getCurrentLog(item)">最新</v-btn>
-            <v-btn text color="primary" @click.stop="getHistoryLog(item.id)">历史</v-btn>
+            <v-btn text color="primary" :loading="!!item.loading" @click="getCurrentLog(item)">最新</v-btn>
+            <v-btn text color="primary" @click="getHistoryLog(item.id)">历史</v-btn>
           </template>
           <!-- 附加信息 -->
           <template v-slot:details="{ item }">
-            <v-btn text color="primary" @click.stop="showTimerLog(item)">时间信息</v-btn>
+            <v-btn text color="primary" @click="showTimerLog(item)">时间信息</v-btn>
             <v-btn text color="primary" @click="getTopicInformation(item)">附加信息</v-btn>
+            <v-btn text color="primary" @click="validationInfo(item)">预处理</v-btn>
           </template>
           <!-- 操作 -->
           <template v-slot:buttons2="{ item }">
@@ -880,6 +881,11 @@ export default class OfflineTopicList extends Vue {
     this.tDialogShow = 2
     this.formProvide.title = '附加信息'
     item.t && (this.otherObj = { taskType: item.taskType, ...item.t })
+  }
+
+  // 预处理
+  private validationInfo(item: { id: number }) {
+    console.log(item.id)
   }
 
   // 主题详情

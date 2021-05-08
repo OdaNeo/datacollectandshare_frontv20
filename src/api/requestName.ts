@@ -50,6 +50,7 @@ const GET_SUBMODERATIONS_SELECTBYUSERNAMESTATUS = '/subModerations/selectByUserN
 const GET_SUBMODERATIONS_SELECTAUDITSTATUSBYTOPICID = '/subModerations/selectAuditStatusByTopicID' // 通过ID获取主题审核记录
 const GET_SUBMODERATIONS_SELECTMYSUBTOPICLIST = '/subModerations/selectMySubTopicList' // 查看我的订阅
 const GET_SUBMODERATIONS_SELECTMYSUBTOPICBYTOPICIDORNAME = '/subModerations/selectMySubTopicByTopicIdOrTopicName' // 搜索我的订阅
+const GET_VALIDATION_LOG = '/validation/log'
 // /topics/alterTopic ?
 // /topics/addSubUser ?
 
@@ -278,7 +279,8 @@ const REQUEST_NAME = {
   GET_LOGMGT_VIEWLOG_LOG_SYSLOGCOUNT,
   GET_OFFLINE_SELECTTOPICBYTYPE,
   GET_OFFLINE_SELECTOFFLINELOG,
-  POST_USER_UPDATEPASSWORD
+  POST_USER_UPDATEPASSWORD,
+  GET_VALIDATION_LOG
 }
 
 export default REQUEST_NAME

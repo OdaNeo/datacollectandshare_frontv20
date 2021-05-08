@@ -24,7 +24,7 @@ class RequestData {
     // withCredentials: true
   })
 
-  private DEFAULT_CONFIG = {
+  private DEFAULT_CONFIG: Partial<AxiosRequestConfig> = {
     timeout: BASE_REQUEST_TIME_OUT
   }
 
@@ -54,6 +54,7 @@ class RequestData {
     this.axiosIns.interceptors.response.use(
       ({ data, headers }: AxiosResponse) => {
         // 如果有content-disposition 响应头，认为是文件下载
+        // 将响应头全部透传给 业务逻辑组件，方法内不关心文件名具体是什么
         const filename = headers['content-disposition']
         filename && (data.filename = filename)
         return Promise.resolve(data)
@@ -77,74 +78,40 @@ class RequestData {
     )
   }
 
+  // get
   public httpGET = async <T>(
     requestName: keyof typeof REQUEST_NAME,
     params: T,
     ...urlArr: Array<string>
   ): Promise<returnType> => {
-    const url = this.urlFormat(REQUEST_NAME[requestName], [...urlArr])
-    try {
-      const response: returnType = await this.axiosIns.get(url, {
-        params
-      })
-      return new Promise(resolve => {
-        this.codeType(response, (data: returnType) => {
-          resolve(data)
-        })
-      })
-    } catch (err) {
-      return new Promise(resolve => {
-        this.httpErrorHandle(err, (data: returnType) => {
-          resolve(data)
-        })
-      })
-    }
+    const url = this.urlFormatHandle(REQUEST_NAME[requestName], [...urlArr])
+
+    return this.tryCatchHandle(`get`, url, params)
   }
 
+  // post
   public httpPOST = async <T>(
     requestName: keyof typeof REQUEST_NAME,
     params: T,
     ...urlArr: Array<string>
   ): Promise<returnType> => {
-    const url = this.urlFormat(REQUEST_NAME[requestName], [...urlArr])
-    try {
-      const response: returnType = await this.axiosIns.post(url, params)
-      return new Promise(resolve => {
-        this.codeType(response, (data: returnType) => {
-          resolve(data)
-        })
-      })
-    } catch (err) {
-      return new Promise(resolve => {
-        this.httpErrorHandle(err, (data: returnType) => {
-          resolve(data)
-        })
-      })
-    }
+    const url = this.urlFormatHandle(REQUEST_NAME[requestName], [...urlArr])
+
+    return this.tryCatchHandle(`post`, url, params)
   }
 
+  // put
   public httpPUT = async <T>(
     requestName: keyof typeof REQUEST_NAME,
     params: T,
     ...urlArr: Array<string>
   ): Promise<returnType> => {
-    const url = this.urlFormat(REQUEST_NAME[requestName], [...urlArr])
-    try {
-      const response: returnType = await this.axiosIns.put(url, params)
-      return new Promise(resolve => {
-        this.codeType(response, (data: returnType) => {
-          resolve(data)
-        })
-      })
-    } catch (err) {
-      return new Promise(resolve => {
-        this.httpErrorHandle(err, (data: returnType) => {
-          resolve(data)
-        })
-      })
-    }
+    const url = this.urlFormatHandle(REQUEST_NAME[requestName], [...urlArr])
+
+    return this.tryCatchHandle(`put`, url, params)
   }
 
+  // all
   public httpAll = async <T extends httpAllParams>(params: Array<T>): Promise<returnType[]> => {
     const httpList = params.map(
       (item: T): Promise<returnType> => {
@@ -167,7 +134,7 @@ class RequestData {
     try {
       const response: Array<returnType> = await axios.all(httpList)
       return new Promise(resolve => {
-        this.codeType(response, (data: Array<returnType>) => {
+        this.codeTypeHandle(response, (data: Array<returnType>) => {
           resolve(data)
         })
       })
@@ -185,7 +152,8 @@ class RequestData {
     }
   }
 
-  private urlFormat(url: string, urlArr: Array<string>): string {
+  // 格式化url
+  private urlFormatHandle(url: string, urlArr: Array<string>): string {
     let u: string = url
     if (urlArr.length > 0) {
       urlArr.forEach(element => {
@@ -195,8 +163,34 @@ class RequestData {
     return u
   }
 
+  // 统一错误处理try catch
+  private async tryCatchHandle<T>(
+    method: keyof Pick<AxiosInstance, 'get' | 'post' | 'put'>,
+    url: string,
+    params: T
+  ): Promise<returnType> {
+    try {
+      // 如果是get请求，需要传入config，其他请求直接传入 params
+      const response: returnType = await (method === 'get'
+        ? this.axiosIns[method](url, { params })
+        : this.axiosIns[method](url, params))
+
+      return new Promise(resolve => {
+        this.codeTypeHandle(response, (data: returnType) => {
+          resolve(data)
+        })
+      })
+    } catch (err) {
+      return new Promise(resolve => {
+        this.httpErrorHandle(err, (data: returnType) => {
+          resolve(data)
+        })
+      })
+    }
+  }
+
   // 捕捉业务上的错误：直接显示后端错误码
-  private codeType(response: Array<returnType> | returnType, callback: Function) {
+  private codeTypeHandle(response: Array<returnType> | returnType, callback: Function) {
     let code = 0
     let message = ''
     let _error: {} | Array<{}>
@@ -231,7 +225,7 @@ class RequestData {
         // 异步弹出重新登录的请求，防止与其他弹框冲突
         setTimeout(() => {
           alertUtil.close()
-          alertUtil.open(`${message}，请尝试重新登录`, true, 'error')
+          alertUtil.open(`${message}，请尝试重新登录`, true, 'error', 5000)
         }, 100)
         // 登出
         setTimeout(() => {
@@ -253,16 +247,16 @@ class RequestData {
     }
   }
   // 捕捉http错误：显示http错误码
-  private httpErrorHandle(
+  private httpErrorHandle<T>(
     err: { httpStatus: string | number; code: number; message: string },
     callback: Function,
-    data?: Array<unknown>
+    data?: Array<T>
   ) {
     // console.log('error status:' + err.status)
     let _message = ''
     switch (err.httpStatus) {
       case '取消':
-        // 如果是取消请求，直接返回，不提示错误
+        // 如果是取消请求 cancelToken，直接返回，不提示错误
         return
       case '网络错误':
         _message = '网络错误，请检查网络连接'

@@ -27,7 +27,7 @@
           <v-icon>{{ mdiClose }}</v-icon>
         </v-btn>
         <v-alert style="font-size: 0.875rem" v-for="item in events" :key="item.id" :color="item.color" dark dense>
-          <span>主题ID: {{ item.name }}</span>
+          <span>{{ item.label }}: {{ item.name }}</span>
           <br />
           <span>状态: {{ item.status }}</span>
           <br />
@@ -36,9 +36,6 @@
           <span>描述: {{ item.remarks }}</span>
         </v-alert>
       </div>
-      <!-- <v-btn v-else id="alert-small" icon color="error" large @click="handleShowAlert">
-        <v-icon>mdi-alert</v-icon>
-      </v-btn> -->
     </div>
   </v-app>
 </template>
@@ -61,7 +58,7 @@ import { mdiClose } from '@mdi/js'
 @http
 @util
 export default class Layout extends Vue {
-  mdiClose = mdiClose
+  private mdiClose = mdiClose
 
   private timer = 0
   private interval = 60
@@ -70,10 +67,11 @@ export default class Layout extends Vue {
   private showAlert = false
 
   private async updateRange() {
-    // const data: Array<CalendarData> = [
+    // const data: Array<realTimeData> = [
     //   {
     //     'id': 1,
     //     'topicId': 88888888,
+    //     'taskId': 1234,
     //     'serverName': '日志',
     //     'status': 1,
     //     'createTime': '1614783227618',
@@ -83,6 +81,7 @@ export default class Layout extends Vue {
     //   {
     //     'id': 2,
     //     'topicId': 88888889,
+    //     'taskId': 1234,
     //     'serverName': '视频',
     //     'status': 2,
     //     'createTime': '1614094237618',
@@ -91,6 +90,7 @@ export default class Layout extends Vue {
     //   {
     //     'id': 3,
     //     'topicId': 88888890,
+    //     'taskId': 1234,
     //     'serverName': '事务',
     //     'status': 3,
     //     'createTime': '1614094237618',
@@ -121,8 +121,9 @@ export default class Layout extends Vue {
         color: calendarColorType[item['status']],
         remarks: item['remarks'],
         status: calendarType[item['status']],
-        name: item['topicId'].toString(),
         serverName: item['serverName'],
+        name: item['serverName'] === '事务' ? item['taskId'] : item['topicId'],
+        label: item['serverName'] === '事务' ? `任务ID` : '主题ID',
         timed: true
       }
     })
@@ -147,13 +148,11 @@ export default class Layout extends Vue {
   //   }
   // }
 
+  // 只有用户主动关闭警告，警告才会关闭
   private handleHideAlert() {
     this.showAlert = false
   }
 
-  private handleShowAlert() {
-    this.showAlert = true
-  }
   mounted(): void {
     // this.updateRange()
 
@@ -178,6 +177,9 @@ export default class Layout extends Vue {
 }
 #alert {
   position: fixed;
+  max-height: 85vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
   right: 20px;
   bottom: 10px;
   width: 300px;

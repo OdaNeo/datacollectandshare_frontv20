@@ -38,10 +38,11 @@
               >{{ item.userSubNameList.length }}</v-btn
             >
           </template>
-          <!-- 数据结构 -->
+          <!-- 显示详情 -->
           <template v-slot:buttons2="{ item }">
             <v-btn text color="primary" @click="dataStructure(item)">数据结构详情</v-btn>
             <v-btn text color="primary" @click="ancillaryInformation(item)">附加信息</v-btn>
+            <v-btn text color="primary" @click="validationInfo(item)">预处理</v-btn>
           </template>
           <!-- 操作 -->
           <template v-slot:buttons="{ item }">
@@ -524,6 +525,11 @@ export default class OnlineDataTopicList extends Vue {
     this.tDialogFlag = true
     this.tDialogShow = 2
     this.formProvide.title = '附加信息'
+  }
+
+  // 预处理
+  private validationInfo(item: { id: number }) {
+    console.log(item.id)
   }
 
   // 订阅用户详情

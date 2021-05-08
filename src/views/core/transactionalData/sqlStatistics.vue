@@ -58,7 +58,7 @@ export default class SqlStatistics extends Vue {
 
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
-  private pageSize = 20 // 每页展示多少条数据
+  private pageSize = 10 // 每页展示多少条数据
   private desserts: Array<topicTable> = [] // 数据列表
   private loading = true
   private headers = [
