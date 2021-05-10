@@ -4,3 +4,8 @@ export enum userState {
   正常,
   锁定
 }
+export enum userStateColor {
+  error,
+  success,
+  warning
+}

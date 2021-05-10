@@ -55,7 +55,7 @@
     </f-dialog>
 
     <!-- table -->
-    <t-dialog v-model="tDialogFlag">
+    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
       <cmd-information-dialog v-if="tDialogShow === 1" :rowDescription="rowDescription" />
       <data-structure-dialog v-if="tDialogShow === 2" :headersObj="headersObj" :dessertsObj="dessertsObj" />
     </t-dialog>
@@ -212,7 +212,7 @@ export default class CmdList extends Vue {
 
     params.cmdName = formObj.cmdName
     params.producer = formObj.producer
-    params.description = formObj.description
+    params.description = formObj.description ? formObj.description : ''
     params.consumers = formObj.consumers.join(',')
 
     const { success } = await this.h_request.httpPOST(!formObj.id ? 'POST_CMD_ADD' : 'POST_CMD_UPDATE', params)

@@ -108,7 +108,7 @@
     </HDialog>
 
     <!-- 表格显示 -->
-    <TDialog v-model="tDialogFlag" :width="dialogFlag === 5 ? 950 : 700">
+    <TDialog v-if="tDialogFlag" v-model="tDialogFlag" :width="dialogFlag === 5 ? 950 : 700">
       <HContentDetails v-if="dialogFlag === 3" :row="row" />
       <HTable v-if="dialogFlag === 4 || dialogFlag === 5" :headers="headersObj" :desserts="dessertsObj"></HTable>
     </TDialog>
@@ -362,7 +362,9 @@ export default class transactionalDataList extends Vue {
         topicName: items.t.topicName,
         dataStruct: items.t.dataStruct
       })
-      const _colum: { field: string; type: string; iskey: boolean }[] = JSON.parse(activeTopicIDs[0].dataStruct)
+      const _column: { field: string; type: string; description?: string; iskey: boolean }[] = JSON.parse(
+        activeTopicIDs[0].dataStruct
+      )
 
       this.formProvide.formObj = {
         isEdit: true,
@@ -385,7 +387,7 @@ export default class transactionalDataList extends Vue {
         writer_database: _inputContent.writer.database,
         writer_table: _inputContent.writer.info.table,
         writer_zookeeper_url: _inputContent.writer.info.zookeeper_url,
-        column: _colum.map((item: { field: string; type: string; iskey: boolean }) => {
+        column: _column.map((item: { field: string; type: string; description?: string; iskey: boolean }) => {
           return {
             ...item,
             iskey: `${item.iskey}`,
@@ -412,7 +414,7 @@ export default class transactionalDataList extends Vue {
             field: '',
             type: 'string',
             iskey: 'false',
-            // description: '',
+            description: '',
             disabled: false
           }
         ]
@@ -513,7 +515,7 @@ export default class transactionalDataList extends Vue {
       return {
         field: item.field,
         type: item.type,
-        // description: item.description,
+        description: item.description,
         iskey: JSON.parse(item.iskey)
       }
     })

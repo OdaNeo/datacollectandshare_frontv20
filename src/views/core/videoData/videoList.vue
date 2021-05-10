@@ -102,7 +102,7 @@
     </FDialog>
 
     <!-- 表格显示 -->
-    <TDialog v-model="tDialogFlag">
+    <TDialog v-if="tDialogFlag" v-model="tDialogFlag">
       <VideoDetail v-if="tDialogShow === 1" :dessertsObj="dessertsObj" />
     </TDialog>
 

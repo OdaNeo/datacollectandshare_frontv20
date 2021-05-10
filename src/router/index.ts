@@ -395,9 +395,9 @@ const routes: Array<RouteConfig> = [
       {
         path: 'dataList',
         component: () => import('@/views/core/dataMonitor/dataList.vue'),
-        name: '监控日志',
+        name: '报警列表',
         meta: {
-          title: '监控日志',
+          title: '报警列表',
           access: true,
           url: '/dataMonitor/dataList'
         }

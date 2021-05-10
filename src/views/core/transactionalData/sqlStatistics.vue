@@ -16,7 +16,7 @@
       </template>
     </h-table>
     <!-- 表格显示 -->
-    <t-dialog v-model="tDialogFlag">
+    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
       <HContentDetails :row="row" />
     </t-dialog>
   </div>

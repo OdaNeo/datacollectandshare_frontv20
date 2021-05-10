@@ -12,8 +12,8 @@
         v-clipboard:success="onCopy"
         v-clipboard:error="onError"
       >
-        一键复制</v-btn
-      >
+        一键复制
+      </v-btn>
     </v-card-actions>
   </div>
 </template>
@@ -30,7 +30,7 @@ export default class HContentDetails extends Vue {
     if (typeof this.row === 'object') {
       return `{${this.h_utils['formatUtil'].objToHTML(this.row)}}`
     } else {
-      return this.row.replaceAll('/n', '<br />')
+      return this.row.replaceAll('\n', '<br />')
     }
   }
 

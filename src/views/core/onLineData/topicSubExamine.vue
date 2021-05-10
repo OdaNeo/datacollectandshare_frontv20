@@ -30,7 +30,7 @@
       </template>
     </h-table>
 
-    <t-dialog v-model="dialogFlag">
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
       <DataStructureDialog v-if="tDialogShow === 1" :rowObj="rowObj" />
       <HContentDetails v-if="tDialogShow === 2" :row="str" />
     </t-dialog>

@@ -71,7 +71,7 @@
     </f-dialog>
 
     <!-- 表格显示 -->
-    <t-dialog v-model="tDialogFlag">
+    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
       <LogDataDialog v-if="tDialogShow === 1" :dessertsObj="dessertsObj" />
     </t-dialog>
 

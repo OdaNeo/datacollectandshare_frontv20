@@ -80,11 +80,12 @@
     </HDialog>
 
     <!-- 表格显示 -->
-    <TDialog v-model="tDialogFlag">
+    <TDialog v-if="tDialogFlag" v-model="tDialogFlag">
       <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <TopicAncillaryInformationDialog :rowObj="rowObj" v-else-if="tDialogShow === 2" />
       <UserSubNameList :rowObj="rowObj" v-else-if="tDialogShow === 3" />
       <HContentDetails :row="str" v-else-if="tDialogShow === 4" />
+      <HValidationInfo :id="validateId" v-else-if="tDialogShow === 5" />
     </TDialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -119,6 +120,7 @@ import HTabs from '@/components/h-tabs.vue'
 import HContentDetails from '@/components/h-content-details.vue'
 import { tableHeaderType } from '@/type/table.type'
 import { queneType } from '@/enum/topic-list-enum'
+import HValidationInfo from '@/components/h-validationInfo.vue'
 
 @Component({
   components: {
@@ -134,7 +136,8 @@ import { queneType } from '@/enum/topic-list-enum'
     HSearch,
     UserSubNameList,
     HTabs,
-    HContentDetails
+    HContentDetails,
+    HValidationInfo
   }
 })
 @http
@@ -174,6 +177,8 @@ export default class OnlineDataTopicList extends Vue {
     topicName: '',
     topicInterFaceType: 0
   }
+
+  private validateId = 0
   private protoFile: File | null = null
   private protoForms = new FormData()
 
@@ -505,7 +510,7 @@ export default class OnlineDataTopicList extends Vue {
   }
 
   // 数据结构展示方法
-  private dataStructure(item: topicTable) {
+  private dataStructure(item: { topicInterFaceType: number; dataStruct: string }) {
     this.tDialogFlag = true
     this.formProvide.title = '数据结构详情'
     // protobuf
@@ -527,17 +532,20 @@ export default class OnlineDataTopicList extends Vue {
     this.formProvide.title = '附加信息'
   }
 
-  // 预处理
-  private validationInfo(item: { id: number }) {
-    console.log(item.id)
-  }
-
   // 订阅用户详情
   private showUserSubNameList(item: topicTable) {
     this.rowObj = item
     this.tDialogFlag = true
     this.tDialogShow = 3
     this.formProvide.title = '订阅用户详情'
+  }
+
+  // 预处理
+  private async validationInfo(item: { id: number }) {
+    this.formProvide.title = `主题${item.id}预处理结果`
+    this.validateId = item.id
+    this.tDialogFlag = true
+    this.tDialogShow = 5
   }
 
   // 删除

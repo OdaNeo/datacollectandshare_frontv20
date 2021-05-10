@@ -78,7 +78,7 @@
         </h-table>
       </v-tab-item>
     </v-tabs-items>
-    <t-dialog v-model="dialogFlag">
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
       <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <UserSubNameList :rowObj="rowObj" v-else-if="tDialogShow === 2" />
       <HContentDetails :row="str" v-else-if="tDialogShow === 3" />

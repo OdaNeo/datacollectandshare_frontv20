@@ -90,11 +90,12 @@
     </f-dialog>
 
     <!-- 表格显示 -->
-    <t-dialog v-model="tDialogFlag">
+    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
       <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <TopicAncillaryInformationDialog :otherObj="otherObj" v-else-if="tDialogShow === 2" />
-      <HTable v-else-if="tDialogShow === 3" :headers="headersObj" :desserts="otherObj"></HTable>
+      <HTable v-else-if="tDialogShow === 3" :headers="headersObj" :desserts="otherObj" />
       <HContentDetails v-if="tDialogShow === 4" :row="row" />
+      <HValidationInfo :id="validateId" v-else-if="tDialogShow === 5" />
     </t-dialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -127,6 +128,7 @@ import { topicState, stateColor } from '@/enum/state-enum'
 import cronstrue from 'cronstrue/i18n'
 import { taskResult } from '@/enum/state-enum'
 import HContentDetails from '@/components/h-content-details.vue'
+import HValidationInfo from '@/components/h-validationInfo.vue'
 @Component({
   components: {
     HTable,
@@ -140,7 +142,8 @@ import HContentDetails from '@/components/h-content-details.vue'
     TopicAncillaryInformationDialog,
     HSearch,
     HTabs,
-    HContentDetails
+    HContentDetails,
+    HValidationInfo
   }
 })
 @http
@@ -170,6 +173,7 @@ export default class OfflineTopicList extends Vue {
   private rowObj: object = {}
   private otherObj: object = {}
   private row = ''
+  private validateId = 0
 
   private loading = true
   private createUrlLoading = false
@@ -829,6 +833,7 @@ export default class OfflineTopicList extends Vue {
     this.rowObj = this.tab === 0 || this.tab === 1 ? item.t : item
     this.formProvide.title = '数据结构详情'
   }
+
   // 最新日志
   private async getCurrentLog(item: { id: number }) {
     this.$set(item, `loading`, true)
@@ -884,8 +889,11 @@ export default class OfflineTopicList extends Vue {
   }
 
   // 预处理
-  private validationInfo(item: { id: number }) {
-    console.log(item.id)
+  private async validationInfo(item: { id: number }) {
+    this.formProvide.title = `任务${item.id}预处理结果`
+    this.validateId = item.id
+    this.tDialogFlag = true
+    this.tDialogShow = 5
   }
 
   // 主题详情

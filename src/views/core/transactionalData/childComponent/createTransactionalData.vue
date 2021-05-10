@@ -212,6 +212,7 @@ export default class CreateTransactionalData extends Vue {
           field: '',
           type: 'string',
           iskey: 'false',
+          description: '',
           disabled: false
         }
       ]

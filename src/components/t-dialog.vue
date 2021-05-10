@@ -1,6 +1,6 @@
 <template>
   <!-- retain-focus=false  https://vuetifyjs.com/zh-Hans/api/v-dialog/#section-5c5e6027 -->
-  <v-dialog v-model="closeDialog" :width="width" persistent :retain-focus="false">
+  <v-dialog v-model="dialog" :width="width" persistent :retain-focus="false">
     <v-card>
       <v-card-title>
         <span style="font-size: 18px">{{ formProvide.title }}</span>
@@ -28,21 +28,18 @@ import { mdiClose } from '@mdi/js'
 @Component
 export default class TDialog extends Vue {
   @Prop({ default: false }) private loading!: boolean
-  @Model('tdialog') private checked!: boolean
+  @Model('closedialog') private checked!: boolean
   @Inject() private readonly formProvide!: H_Vue
   @Prop({ default: 700 }) private width!: number
   private mdiClose = mdiClose
 
-  set closeDialog(val: boolean) {
-    val
-  }
+  private dialog = true
 
-  get closeDialog(): boolean {
-    return this.checked
-  }
-
-  public closeMethod(): void {
-    this.$emit('tdialog')
+  private closeMethod(): void {
+    this.dialog = false
+    setTimeout(() => {
+      this.$emit('closedialog')
+    }, 290)
   }
 }
 </script>

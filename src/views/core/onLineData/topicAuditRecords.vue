@@ -60,7 +60,7 @@
       </v-tab-item>
     </v-tabs-items>
 
-    <t-dialog v-model="dialogFlag">
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
       <DataStructureDialog v-if="dialogShow === 1" :rowObj="rowObj" />
       <SubDetails v-else-if="dialogShow === 2" :rowObj="rowObj" />
       <AllDetails v-else-if="dialogShow === 3" :rowObj="rowObj" />

@@ -20,6 +20,17 @@
             height="35"
           ></v-text-field>
         </v-col>
+        <!-- 描述 -->
+        <v-col class="mr-2">
+          <v-text-field
+            v-model="item.description"
+            dense
+            outlined
+            :disabled="item.disabled"
+            label="描述"
+            height="35"
+          ></v-text-field>
+        </v-col>
         <!-- 字段类型 -->
         <v-col class="mr-2">
           <v-select
@@ -33,18 +44,6 @@
             height="35"
           ></v-select>
         </v-col>
-        <!-- 描述 -->
-        <!-- <v-col class="mr-2">
-          <v-text-field
-            v-model="item.description"
-            dense
-            outlined
-            :disabled="item.disabled"
-            label="描述"
-            :rules="[...h_validator.noEmpty('描述')]"
-            height="35"
-          ></v-text-field>
-        </v-col> -->
         <!-- 是否为key -->
         <v-col>
           <v-select
@@ -125,6 +124,7 @@ export default class columnList extends Vue {
       field: '',
       type: 'string',
       iskey: 'false',
+      description: '',
       disabled: false
     })
   }
