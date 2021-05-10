@@ -49,9 +49,9 @@ class RequestData {
       // 合并用户配置与默认配置
       config = { ...config, ...this.DEFAULT_CONFIG, ...otherConfig }
 
-      if (config.method === "get") {
+      if (config.method === 'get') {
         config.paramsSerializer = function (params) {
-          return qs.stringify(params,{arrayFormat: 'repeat'})
+          return qs.stringify(params, { arrayFormat: 'repeat' })
         }
       }
 

@@ -53,6 +53,7 @@
           <template v-slot:videoState="{ item }">
             <v-btn text :color="stateColor[item.videoState]">{{ videoState[item.videoState] }}</v-btn>
           </template>
+          <!-- 选择视频 -->
           <template v-slot:viewVideo="{ item }">
             <v-btn
               text
@@ -242,6 +243,12 @@ export default class VideoDataList extends Vue {
         text: '关键字',
         align: 'center',
         value: 'videoKeyword'
+      },
+      {
+        text: '查看视频',
+        align: 'center',
+        slot: 'viewVideo',
+        isHide: this.tab === 0
       },
       {
         text: '描述',
