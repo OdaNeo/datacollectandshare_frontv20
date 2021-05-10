@@ -63,6 +63,12 @@
               {{ item.existVideo ? '选择视频' : '暂无视频' }}
             </v-btn>
           </template>
+          <!-- 查看描述 -->
+          <template v-slot:videoDescribe="{ item }">
+            <v-btn text color="primary" :disabled="!item.videoDescribe" @click="showVideoDescribe(item)"
+              >查看描述</v-btn
+            >
+          </template>
           <!-- 显示详情 -->
           <template v-slot:buttons="{ item }">
             <v-btn text color="primary" @click="showVideoDetail(item)">视频详情信息</v-btn>
@@ -95,15 +101,16 @@
       </v-tab-item>
     </v-tabs-items>
     <!-- 表单 -->
-    <FDialog v-if="dialogFlag" v-model="dialogFlag" :width="dialogShow === 3 ? 768 : 700">
+    <HDialog v-if="dialogFlag" v-model="dialogFlag" :width="dialogShow === 3 ? 768 : 700">
       <CreateVideoTopicDialog v-if="dialogShow === 1" />
       <SetDateRange v-else-if="dialogShow === 2" />
       <VideoDatePicker v-else-if="dialogShow === 3" />
-    </FDialog>
+    </HDialog>
 
     <!-- 表格显示 -->
     <TDialog v-if="tDialogFlag" v-model="tDialogFlag">
       <VideoDetail v-if="tDialogShow === 1" :dessertsObj="dessertsObj" />
+      <HContentDetails v-if="tDialogShow === 2" :row="row" />
     </TDialog>
 
     <!-- 视频 -->
@@ -130,7 +137,7 @@ import { VideoTimeRange, VideoTopicAdd, VideoTopicTable } from '@/type/video-add
 import util from '@/decorator/utilsDecorator'
 import { dataType } from '@/enum/topic-datatype-enum'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
-import FDialog from '@/components/h-dialog.vue'
+import HDialog from '@/components/h-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicTable } from '@/type/topic.type'
 import { tableHeaderType } from '@/type/table.type'
@@ -141,6 +148,7 @@ import HTabs from '@/components/h-tabs.vue'
 import VideoDatePicker from './childComponent/videoDatePicker.vue'
 import { topicState, stateColor } from '@/enum/state-enum'
 import { calendarType, calendarColorType } from '@/enum/calendar-enum'
+import HContentDetails from '@/components/h-content-details.vue'
 
 @Component({
   components: {
@@ -149,12 +157,13 @@ import { calendarType, calendarColorType } from '@/enum/calendar-enum'
     CreateVideoTopicDialog,
     VideoPopup,
     SetDateRange,
-    FDialog,
+    HDialog,
     HSearch,
     TDialog,
     VideoDetail,
     HTabs,
-    VideoDatePicker
+    VideoDatePicker,
+    HContentDetails
   }
 })
 @http
@@ -194,6 +203,8 @@ export default class VideoDataList extends Vue {
   private showVideoPopup = false
   private videoState = topicState
   private stateColor = stateColor
+
+  private row = ''
 
   private desserts: Array<topicTable> = [] // 数据列表
   private dessertsObj: Partial<Array<topicTable>> = [] // 表格弹框
@@ -235,7 +246,7 @@ export default class VideoDataList extends Vue {
       {
         text: '描述',
         align: 'center',
-        value: 'videoDescribe'
+        slot: 'videoDescribe'
       },
       {
         text: '详情信息',
@@ -613,6 +624,14 @@ export default class VideoDataList extends Vue {
 
     this.tDialogFlag = true
     this.tDialogShow = 1
+  }
+
+  // 查看视频描述
+  private showVideoDescribe(item: { videoDescribe: string }) {
+    this.row = item.videoDescribe
+    this.formProvide.title = '视频描述'
+    this.tDialogFlag = true
+    this.tDialogShow = 2
   }
 
   // 视频启动

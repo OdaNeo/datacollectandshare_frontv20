@@ -47,9 +47,9 @@
       </v-col>
     </v-row>
     <!-- 修改密码弹框 -->
-    <FDialog v-if="dialogFlag" v-model="dialogFlag">
+    <HDialog v-if="dialogFlag" v-model="dialogFlag">
       <UpdatePassword v-if="fDialogFlag === 1" />
-    </FDialog>
+    </HDialog>
   </div>
 </template>
 
@@ -60,7 +60,7 @@ import { userState } from '@/enum/user-enum'
 import { PROJECT_TITLE, PROJECT_SUB_TITLE } from '../../../../config'
 import { mdiAccount } from '@mdi/js'
 import util from '@/decorator/utilsDecorator'
-import FDialog from '@/components/h-dialog.vue'
+import HDialog from '@/components/h-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { updateUserPassword } from '@/type/user.type'
 import UpdatePassword from './updatePassword.vue'
@@ -68,7 +68,7 @@ import http from '@/decorator/httpDecorator'
 import { returnType } from '@/type/http-request.type'
 @Component({
   components: {
-    FDialog,
+    HDialog,
     UpdatePassword
   }
 })

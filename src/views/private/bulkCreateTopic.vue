@@ -3,7 +3,7 @@
     <div class="mt-6">First To the Egg: {{ BRANCH }}</div>
     <div class="mt-6">First To the Key: {{ COMMITHASH }}</div>
     <v-btn class="mt-6" color="primary" small dark @click.stop="createTopicVideo">视频</v-btn>
-    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <HDialog v-if="dialogFlag" v-model="dialogFlag">
       <v-row no-gutters>
         <!-- 主题名称母版 -->
         <v-col cols="12" class="d-flex">
@@ -42,20 +42,20 @@
           ></v-text-field>
         </v-col>
       </v-row>
-    </f-dialog>
+    </HDialog>
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Provide } from 'vue-property-decorator'
 import http from '@/decorator/httpDecorator'
-import FDialog from '@/components/h-dialog.vue'
+import HDialog from '@/components/h-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import { dataType } from '@/enum/topic-datatype-enum'
 
 @Component({
   components: {
-    FDialog
+    HDialog
   }
 })
 @http

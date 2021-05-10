@@ -83,20 +83,20 @@
     </v-tabs-items>
 
     <!-- 表单展示 -->
-    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
+    <HDialog v-if="fDialogFlag" v-model="fDialogFlag">
       <CreateDataBaseAcquisition v-if="fDialogShow === 1" />
       <CreateServePull v-else-if="fDialogShow === 2" />
       <PullFTP v-else-if="fDialogShow === 3" />
-    </f-dialog>
+    </HDialog>
 
     <!-- 表格显示 -->
-    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
+    <TDialog v-if="tDialogFlag" v-model="tDialogFlag">
       <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <TopicAncillaryInformationDialog :otherObj="otherObj" v-else-if="tDialogShow === 2" />
       <HTable v-else-if="tDialogShow === 3" :headers="headersObj" :desserts="otherObj" />
       <HContentDetails v-if="tDialogShow === 4" :row="row" />
       <HValidationInfo :id="validateId" v-else-if="tDialogShow === 5" />
-    </t-dialog>
+    </TDialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
   </div>
@@ -109,7 +109,7 @@ import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
 import TDialog from '@/components/t-dialog.vue'
-import FDialog from '@/components/h-dialog.vue'
+import HDialog from '@/components/h-dialog.vue'
 import { TopicAdd } from '@/type/topic-add.type'
 import util from '@/decorator/utilsDecorator'
 import { dataType } from '@/enum/topic-datatype-enum'
@@ -133,7 +133,7 @@ import HValidationInfo from '@/components/h-validationInfo.vue'
   components: {
     HTable,
     HConfirm,
-    FDialog,
+    HDialog,
     TDialog,
     CreateDataBaseAcquisition,
     CreateServePull,

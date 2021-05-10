@@ -36,9 +36,9 @@
       </template>
     </h-table>
 
-    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <HDialog v-if="dialogFlag" v-model="dialogFlag">
       <user-dialog :userRoots="userRoots" :systemNames="systemNames" />
-    </f-dialog>
+    </HDialog>
   </div>
 </template>
 <script lang="ts">
@@ -55,7 +55,7 @@ import {
 } from '@/type/user.type'
 import util from '@/decorator/utilsDecorator'
 import UserDialog from './childComponent/userDialog.vue'
-import FDialog from '@/components/h-dialog.vue'
+import HDialog from '@/components/h-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import HTable from '@/components/h-table.vue'
 import HSearch from '@/components/h-search.vue'
@@ -67,7 +67,7 @@ import { userState, userStateColor } from '@/enum/user-enum'
 @Component({
   components: {
     UserDialog,
-    FDialog,
+    HDialog,
     HTable,
     HSearch
   }
