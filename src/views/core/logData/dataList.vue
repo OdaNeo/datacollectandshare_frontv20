@@ -66,9 +66,9 @@
     </v-tabs-items>
 
     <!-- 表单展示 -->
-    <f-dialog v-if="fDialogFlag" v-model="fDialogFlag">
+    <HDialog v-if="fDialogFlag" v-model="fDialogFlag">
       <CreateLogTopic v-if="fDialogShow === 1" />
-    </f-dialog>
+    </HDialog>
 
     <!-- 表格显示 -->
     <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
@@ -84,7 +84,7 @@ import { paramsType, returnType, returnTypeData } from '@/type/http-request.type
 import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
-import FDialog from '@/components/h-dialog.vue'
+import HDialog from '@/components/h-dialog.vue'
 import TDialog from '@/components/t-dialog.vue'
 import { TopicAdd } from '@/type/topic-add.type'
 import util from '@/decorator/utilsDecorator'
@@ -104,7 +104,7 @@ import { topicState, stateColor } from '@/enum/state-enum'
   components: {
     HConfirm,
     HTable,
-    FDialog,
+    HDialog,
     CreateLogTopic,
     LogDataDialog,
     TDialog,

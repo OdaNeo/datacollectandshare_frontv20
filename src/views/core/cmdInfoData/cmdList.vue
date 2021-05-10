@@ -29,10 +29,16 @@
           @PaginationNow="PaginationNow"
           :paginationLength="paginationLength"
         >
+          <!-- 订阅系统信息 -->
           <template v-slot:buttons="{ item }">
             <v-btn text color="primary" @click="consumersSystem(item)">订阅系统信息详情</v-btn>
           </template>
-          <template v-slot:buttons2="{ item }">
+          <!-- 描述 -->
+          <template v-slot:description="{ item }">
+            <v-btn text color="primary" @click="getCmdDescription(item)">查看描述</v-btn>
+          </template>
+          <!-- 操作 -->
+          <template v-slot:option="{ item }">
             <v-btn v-if="tab" text color="primary" @click.stop="createCommend(item)">修改</v-btn>
             <v-btn
               v-if="tab"
@@ -44,15 +50,14 @@
               "
               >删除</v-btn
             >
-            <v-btn text color="primary" @click="getCmdDescription(item)">查看描述</v-btn>
           </template>
         </h-table>
       </v-tab-item>
     </v-tabs-items>
     <!-- form -->
-    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <HDialog v-if="dialogFlag" v-model="dialogFlag">
       <create-cmd-dialog v-if="dialogShow === 1" />
-    </f-dialog>
+    </HDialog>
 
     <!-- table -->
     <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
@@ -68,7 +73,7 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import { returnType, returnTypeData } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import HConfirm from '@/components/h-confirm.vue'
-import FDialog from '@/components/h-dialog.vue'
+import HDialog from '@/components/h-dialog.vue'
 import TDialog from '@/components/t-dialog.vue'
 import CreateCmdDialog from './childComponent/createCmdDialog.vue'
 import { CmdAdd, CmdForm } from '@/type/cmd-add.type'
@@ -87,7 +92,7 @@ import HTabs from '@/components/h-tabs.vue'
   components: {
     HTable,
     TDialog,
-    FDialog,
+    HDialog,
     HConfirm,
     CreateCmdDialog,
     CmdInformationDialog,
@@ -109,7 +114,7 @@ export default class CmdList extends Vue {
       }
     }
   })
-  private tab = null
+  private tab = 0
   private items = ['所有命令', '我的命令']
   private dialogFlag = false // 弹窗展示
   private dialogShow = 0 // 展示哪个弹窗 1.是添加和修改弹窗 2.是订阅系统详情和查看描述
@@ -136,39 +141,48 @@ export default class CmdList extends Vue {
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
   private loading = true
-  private headers: Array<tableHeaderType> = [
-    // 表头内容 所有命令
-    {
-      text: '命令ID',
-      align: 'center',
-      value: 'id'
-    },
-    {
-      text: '命令名称',
-      align: 'center',
-      value: 'cmdName'
-    },
-    {
-      text: '所属用户',
-      align: 'center',
-      value: 'userName'
-    },
-    {
-      text: '生产系统名',
-      align: 'center',
-      value: 'producer'
-    },
-    {
-      text: '订阅系统信息',
-      align: 'center',
-      slot: 'buttons'
-    },
-    {
-      text: '操作',
-      align: 'center',
-      slot: 'buttons2'
-    }
-  ]
+
+  private get headers(): Array<tableHeaderType> {
+    return [
+      // 表头内容 所有命令
+      {
+        text: '命令ID',
+        align: 'center',
+        value: 'id'
+      },
+      {
+        text: '命令名称',
+        align: 'center',
+        value: 'cmdName'
+      },
+      {
+        text: '所属用户',
+        align: 'center',
+        value: 'userName'
+      },
+      {
+        text: '生产系统名',
+        align: 'center',
+        value: 'producer'
+      },
+      {
+        text: '订阅系统信息',
+        align: 'center',
+        slot: 'buttons'
+      },
+      {
+        text: '描述',
+        align: 'center',
+        slot: 'description'
+      },
+      {
+        text: '操作',
+        align: 'center',
+        slot: 'option',
+        isHide: this.tab === 0
+      }
+    ]
+  }
 
   //  创建命令
   private createCommend(item: CmdForm | false) {

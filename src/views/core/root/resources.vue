@@ -26,9 +26,9 @@
         >
       </template>
     </h-table>
-    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <HDialog v-if="dialogFlag" v-model="dialogFlag">
       <resources-dialog :desserts="desserts"></resources-dialog>
-    </f-dialog>
+    </HDialog>
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteItem" />
   </div>
 </template>
@@ -37,7 +37,7 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import { returnType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import HTable from '@/components/h-table.vue'
-import FDialog from '@/components/h-dialog.vue'
+import HDialog from '@/components/h-dialog.vue'
 import ResourcesDialog from './childComponent/resourcesDialog.vue'
 import { ResourcesFormObj } from '@/type/resources.type'
 import util from '@/decorator/utilsDecorator'
@@ -50,7 +50,7 @@ import HSearch from '@/components/h-search.vue'
 @Component({
   components: {
     HTable,
-    FDialog,
+    HDialog,
     ResourcesDialog,
     HConfirm,
     HSearch

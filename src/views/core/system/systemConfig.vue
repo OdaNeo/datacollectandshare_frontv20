@@ -40,9 +40,9 @@
         >
       </template>
     </h-table>
-    <f-dialog v-if="dialogFlag" v-model="dialogFlag">
+    <HDialog v-if="dialogFlag" v-model="dialogFlag">
       <create-configure-dialog></create-configure-dialog>
-    </f-dialog>
+    </HDialog>
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteConfigure" />
   </div>
 </template>
@@ -51,7 +51,7 @@ import { Component, Vue, Provide } from 'vue-property-decorator'
 import HTable from '@/components/h-table.vue'
 import { returnType } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
-import FDialog from '@/components/h-dialog.vue'
+import HDialog from '@/components/h-dialog.vue'
 import CreateConfigureDialog from './childComponent/createConfigureDialog.vue'
 import { SystemConfigFormObj } from '@/type/system-config.type'
 import HConfirm from '@/components/h-confirm.vue'
@@ -64,7 +64,7 @@ import HSearch from '@/components/h-search.vue'
 @Component({
   components: {
     HTable,
-    FDialog,
+    HDialog,
     CreateConfigureDialog,
     HConfirm,
     HSearch

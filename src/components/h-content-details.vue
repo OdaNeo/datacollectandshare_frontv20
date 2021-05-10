@@ -27,10 +27,12 @@ export default class HContentDetails extends Vue {
   @Prop() private row!: object | string
 
   private get obj() {
-    if (typeof this.row === 'object') {
+    if (Object.prototype.toString.call(this.row) === '[object Object]') {
       return `{${this.h_utils['formatUtil'].objToHTML(this.row)}}`
-    } else {
+    } else if (typeof this.row === 'string') {
       return this.row.replaceAll('\n', '<br />')
+    } else {
+      return this.row
     }
   }
 
