@@ -8,8 +8,9 @@
     </v-overlay>
     <v-row>
       <HSearch :cols="2" v-model="queryUserName" label="请输入用户名" :showAppEnd="false" />
-      <HSearch :cols="2" v-model="queryMethodName" label="请输入方法名称" :showAppEnd="false" />
-      <HSearch :cols="2" v-model="queryMethodType" label="请输入方法类型" :showAppEnd="false" />
+      <HSearch :cols="2" v-model="queryDescribeInfo" label="请输入描述信息" :showAppEnd="false" />
+      <!-- <HSearch :cols="2" v-model="queryMethodName" label="请输入方法名称" :showAppEnd="false" />
+      <HSearch :cols="2" v-model="queryMethodType" label="请输入方法类型" :showAppEnd="false" /> -->
       <v-col cols="2">
         <h-date-picker
           label="起始时间"
@@ -40,10 +41,10 @@
         >
         </v-select>
       </v-col>
-      <v-col>
+      <v-col cols="1">
         <v-btn color="primary" small depressed dark @click="clickSearch(false)">查询日志</v-btn>
       </v-col>
-      <v-col>
+      <v-col cols="1">
         <v-btn color="success" small depressed dark @click="exportFromDialog()">导出报表</v-btn>
       </v-col>
     </v-row>
@@ -110,8 +111,9 @@ export default class ViewLog extends Vue {
   private paginationLength = 0
   private dialogFlag = false
   private queryUserName = ''
-  private queryMethodName = ''
-  private queryMethodType = ''
+  private queryDescribeInfo = ''
+  // private queryMethodName = ''
+  // private queryMethodType = ''
   private beginDate: string | null = null
   private afterDate: string | null = null
   private timeRang: any = { 'val': 3, 'rang': '3天' }
@@ -183,8 +185,9 @@ export default class ViewLog extends Vue {
       pageSize: this.pageSize,
       pageNum: this.pageNum,
       username: this.queryUserName ? this.queryUserName : null,
-      method: this.queryMethodName ? this.queryMethodName : null,
-      operationType: this.queryMethodType ? this.queryMethodType : null,
+      operation:this.queryDescribeInfo?this.queryDescribeInfo:null,
+      // method: this.queryMethodName ? this.queryMethodName : null,
+      // operationType: this.queryMethodType ? this.queryMethodType : null,
       startTime: startTime,
       endTime: endTime
     })
@@ -207,8 +210,9 @@ export default class ViewLog extends Vue {
       pageSize: this.pageSize,
       pageNum: this.pageNum,
       username: this.queryUserName ? this.queryUserName : null,
-      method: this.queryMethodName ? this.queryMethodName : null,
-      operationType: this.queryMethodType ? this.queryMethodType : null,
+      operation:this.queryDescribeInfo?this.queryDescribeInfo:null,
+      // method: this.queryMethodName ? this.queryMethodName : null,
+      // operationType: this.queryMethodType ? this.queryMethodType : null,
       startTime: startTime,
       endTime: endTime
     })
@@ -229,8 +233,9 @@ export default class ViewLog extends Vue {
 
     const data = await this.h_download.httpGET('GET_LOGMGT_VIEWLOG_LOG_EXPORTSYSLOG', {
       username: this.queryUserName ? this.queryUserName : null,
-      method: this.queryMethodName ? this.queryMethodName : null,
-      operationType: this.queryMethodType ? this.queryMethodType : null,
+      operation:this.queryDescribeInfo?this.queryDescribeInfo:null,
+      // method: this.queryMethodName ? this.queryMethodName : null,
+      // operationType: this.queryMethodType ? this.queryMethodType : null,
       startTime: startTime,
       endTime: endTime
     })
@@ -295,8 +300,9 @@ export default class ViewLog extends Vue {
         : this.h_utils.timeUtil.timeToStamp(this.beginDate, '-') + this.timeRang.val * 24 * 3600 * 1000
     let params = {
       username: this.queryUserName ? this.queryUserName : null,
-      method: this.queryMethodName ? this.queryMethodName : null,
-      operationType: this.queryMethodType ? this.queryMethodType : null,
+      operation:this.queryDescribeInfo?this.queryDescribeInfo:null,
+      // method: this.queryMethodName ? this.queryMethodName : null,
+      // operationType: this.queryMethodType ? this.queryMethodType : null,
       startTime: startTime,
       endTime: endTime
     }
