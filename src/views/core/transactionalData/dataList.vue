@@ -108,7 +108,7 @@
     </HDialog>
 
     <!-- 表格显示 -->
-    <TDialog v-model="tDialogFlag" :width="dialogFlag === 5 ? 950 : 700">
+    <TDialog v-if="tDialogFlag" v-model="tDialogFlag" :width="dialogFlag === 5 ? 950 : 700">
       <HContentDetails v-if="dialogFlag === 3" :row="row" />
       <HTable v-if="dialogFlag === 4 || dialogFlag === 5" :headers="headersObj" :desserts="dessertsObj"></HTable>
     </TDialog>
@@ -138,7 +138,7 @@ import { uploadStoreModule } from '@/store/modules/upload'
 import HTabs from '@/components/h-tabs.vue'
 import { transactionalTableType } from '@/type/transactional-data.type'
 import cronstrue from 'cronstrue/i18n'
-import { transactionalState, stateColor, transactionalResult } from '@/enum/state-enum'
+import { topicState, stateColor, taskResult } from '@/enum/state-enum'
 import { dataType } from '@/enum/topic-datatype-enum'
 
 @Component({
@@ -177,7 +177,7 @@ export default class transactionalDataList extends Vue {
   private queryTopicID = '' // 查询主题ID input框内容
   private searchLabel: `任务` | `主题` = `任务`
 
-  private transactionalState = transactionalState
+  private transactionalState = topicState
   private stateColor = stateColor
 
   private paginationLength = 0 // 分页数
@@ -268,7 +268,14 @@ export default class transactionalDataList extends Vue {
         width: 100,
         isHide: this.tab === 2 || this.tab === 3,
         format: (cron: string) => {
-          return cron ? cronstrue.toString(cron, { locale: 'zh_CN', use24HourTimeFormat: true }) : ''
+          // cronstrue 插件报错会导致整个dom树崩掉
+          let _corn = ''
+          try {
+            _corn = cronstrue.toString(cron, { locale: 'zh_CN', use24HourTimeFormat: true })
+          } catch {
+            _corn = cron
+          }
+          return _corn
         }
       },
       {
@@ -355,7 +362,9 @@ export default class transactionalDataList extends Vue {
         topicName: items.t.topicName,
         dataStruct: items.t.dataStruct
       })
-      const _colum: { field: string; type: string; iskey: boolean }[] = JSON.parse(activeTopicIDs[0].dataStruct)
+      const _column: { field: string; type: string; description?: string; iskey: boolean }[] = JSON.parse(
+        activeTopicIDs[0].dataStruct
+      )
 
       this.formProvide.formObj = {
         isEdit: true,
@@ -378,7 +387,7 @@ export default class transactionalDataList extends Vue {
         writer_database: _inputContent.writer.database,
         writer_table: _inputContent.writer.info.table,
         writer_zookeeper_url: _inputContent.writer.info.zookeeper_url,
-        column: _colum.map((item: { field: string; type: string; iskey: boolean }) => {
+        column: _column.map((item: { field: string; type: string; description?: string; iskey: boolean }) => {
           return {
             ...item,
             iskey: `${item.iskey}`,
@@ -405,6 +414,7 @@ export default class transactionalDataList extends Vue {
             field: '',
             type: 'string',
             iskey: 'false',
+            description: '',
             disabled: false
           }
         ]
@@ -475,7 +485,7 @@ export default class transactionalDataList extends Vue {
     const topicId = !newTopics ? id : undefined
     const _id = isEdit ? taskId : undefined
     // 验证cron合法性
-    const cronValidated = this.h_utils.cronUtil.cronValidator(cron)
+    const cronValidated = this.h_utils.lib.cronValidator(cron)
     if (!cronValidated) {
       return
     }
@@ -501,10 +511,11 @@ export default class transactionalDataList extends Vue {
     }
 
     // column
-    params.column = column.map((item: { field: string; type: string; iskey: string }) => {
+    params.column = column.map((item: { field: string; type: string; description?: string; iskey: string }) => {
       return {
         field: item.field,
         type: item.type,
+        description: item.description,
         iskey: JSON.parse(item.iskey)
       }
     })
@@ -548,7 +559,6 @@ export default class transactionalDataList extends Vue {
   }
 
   // 上传SQl文件
-  // TODO: 表字段说明不能有英文的分号 ❓ ⭕
   private async uploadSQL() {
     // 查询当前是否有任务在执行
     this.uploadBtnLoading = true
@@ -817,7 +827,7 @@ export default class transactionalDataList extends Vue {
       this.row = `
       <v-card-text>
         <div>时间：${item.executeTime}</div>
-        <div>状态：${transactionalResult[item.result]}</div>
+        <div>状态：${taskResult[item.result]}</div>
         <div>日志：${item.log}</div>
       </v-card-text>
       `
@@ -888,9 +898,14 @@ export default class transactionalDataList extends Vue {
         value: 'field'
       },
       {
-        text: '类型',
+        text: '字段类型',
         align: 'center',
         value: 'type'
+      },
+      {
+        text: '描述',
+        align: 'center',
+        value: `description`
       },
       {
         text: '是否为key',

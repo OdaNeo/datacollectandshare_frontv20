@@ -9,7 +9,7 @@ export type paramsType = {
   userName?: string
   id?: string
   status?: number | string
-  topicId?: string
+  topicId?: string | number
   topicID?: string
   num?: number
   createTime?: number

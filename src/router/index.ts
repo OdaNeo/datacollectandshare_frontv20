@@ -19,6 +19,7 @@ import {
 Vue.use(VueRouter)
 
 // 解决重复点击报错的问题 push replace
+// https://github.com/vuejs/vue-router/issues/2881
 const VueRouterPush = VueRouter.prototype.push
 const VueRouterReplace = VueRouter.prototype.replace
 
@@ -394,9 +395,9 @@ const routes: Array<RouteConfig> = [
       {
         path: 'dataList',
         component: () => import('@/views/core/dataMonitor/dataList.vue'),
-        name: '监控日志',
+        name: '报警列表',
         meta: {
-          title: '监控日志',
+          title: '报警列表',
           access: true,
           url: '/dataMonitor/dataList'
         }
@@ -463,7 +464,7 @@ const routes: Array<RouteConfig> = [
       }
     ]
   },
-  // 系统统计--隐藏页，在private中查看
+  // 系统统计--隐藏页，在/private中查看
   {
     path: '/private',
     name: '内部调试页面',

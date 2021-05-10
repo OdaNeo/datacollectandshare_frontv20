@@ -20,7 +20,7 @@ export interface transactionalTableType extends baseType {
   isEdit: boolean
   dataStruct: string
   taskInfoList: Array<unknown>
-  column: { field: string; type: string; iskey: string }[]
+  column: { field: string; type: string; iskey: string; description?: string }[]
   increment: string
   reader_database: string
   reader_jdbcUrl: string

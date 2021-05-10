@@ -26,6 +26,11 @@
       @PaginationNow="PaginationNow"
       :paginationLength="paginationLength"
     >
+      <!-- 用户状态 -->
+      <template v-slot:userState="{ item }">
+        <v-btn text :color="userStateColor[item.userState]">{{ userState[item.userState] }}</v-btn>
+      </template>
+      <!-- 编辑 -->
       <template v-slot:buttons="{ item }">
         <v-btn text color="primary" :loading="!!item.loading" @click="editItem(item)">编辑</v-btn>
       </template>
@@ -49,7 +54,6 @@ import {
   userFormVar
 } from '@/type/user.type'
 import util from '@/decorator/utilsDecorator'
-import Enum from '@/decorator/enumDecorator'
 import UserDialog from './childComponent/userDialog.vue'
 import FDialog from '@/components/h-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
@@ -57,6 +61,7 @@ import HTable from '@/components/h-table.vue'
 import HSearch from '@/components/h-search.vue'
 import { rootStoreModule } from '@/store/modules/root'
 import { CAN_EDIT_PASSWORD_WHITE_LIST } from '../../../../config'
+import { userState, userStateColor } from '@/enum/user-enum'
 // 用户管理 只有 超管理管理员  admin 才能改  2个新密码
 // 用户只能自己修改自己的密码，老密码+2个新密码
 @Component({
@@ -69,12 +74,6 @@ import { CAN_EDIT_PASSWORD_WHITE_LIST } from '../../../../config'
 })
 @http
 @util
-@Enum([
-  {
-    tsFileName: 'user-enum',
-    enumName: 'userState'
-  }
-])
 export default class User extends Vue {
   @Provide('formProvide') private formProvide: FormObj = new Vue({
     data() {
@@ -87,6 +86,9 @@ export default class User extends Vue {
     }
   })
   private dialogFlag = false
+  private userState = userState
+  private userStateColor = userStateColor
+
   private desserts: Array<userInfo> = []
   private pageNum = 1
   private pageSize = 10
@@ -131,10 +133,7 @@ export default class User extends Vue {
     {
       text: '用户状态',
       align: 'center',
-      value: 'userState',
-      format: (n: number) => {
-        return this.h_enum['userState'][n]
-      }
+      slot: 'userState'
     },
     {
       text: '系统名称',

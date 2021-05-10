@@ -1,11 +1,11 @@
 export type CalendarData = {
-  name: string
-  start: string
+  name: number
+  start: Date
   color: string
   timed: boolean
   remarks: string
   status: string
-  timeFormatter: string
+  label: string
   serverName: string
 }
 
@@ -16,4 +16,5 @@ export type realTimeData = {
   status: number
   createTime: string
   remarks: string
+  taskId: number
 }

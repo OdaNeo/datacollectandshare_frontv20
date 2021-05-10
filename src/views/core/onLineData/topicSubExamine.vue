@@ -30,7 +30,7 @@
       </template>
     </h-table>
 
-    <t-dialog v-model="dialogFlag">
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
       <DataStructureDialog v-if="tDialogShow === 1" :rowObj="rowObj" />
       <HContentDetails v-if="tDialogShow === 2" :row="str" />
     </t-dialog>
@@ -43,13 +43,13 @@ import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import util from '@/decorator/utilsDecorator'
-import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
 import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import HContentDetails from '@/components/h-content-details.vue'
+import { queneType } from '@/enum/topic-list-enum'
 @Component({
   components: {
     HTable,
@@ -61,12 +61,6 @@ import HContentDetails from '@/components/h-content-details.vue'
 })
 @http
 @util
-@Enum([
-  {
-    tsFileName: 'topic-list-enum',
-    enumName: 'queneType'
-  }
-])
 export default class TopicSubExamine extends Vue {
   @Provide('formProvide') private formObj = new Vue({
     data() {
@@ -127,8 +121,8 @@ export default class TopicSubExamine extends Vue {
       text: '消息类型',
       align: 'center',
       value: 'queneType',
-      format: (quene: number): number => {
-        return this.h_enum['queneType'][quene]
+      format: (quene: number): string => {
+        return queneType[quene]
       }
     },
     {

@@ -10,6 +10,7 @@
       :rules="[...h_validator.fileSQLValidate()]"
       @change="$emit('change', $event)"
     />
+    <v-card-subtitle class="ml-10 pt-0" style="color: red">注意：表字段说明不能有英文的分号。</v-card-subtitle>
   </v-row>
 </template>
 <script lang="ts">

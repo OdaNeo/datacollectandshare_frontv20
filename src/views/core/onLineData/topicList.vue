@@ -17,9 +17,7 @@
     </v-row>
     <!-- tab -->
     <HTabs v-model="tab" :items="items" @change="tabChange" />
-    <!-- <v-tabs v-model="tab" @change="tabChange">
-      <v-tab v-for="item in items" :key="item">{{ item }}</v-tab>
-    </v-tabs> -->
+
     <v-tabs-items v-model="tab">
       <v-tab-item v-for="item in items" :key="item">
         <h-table
@@ -40,10 +38,11 @@
               >{{ item.userSubNameList.length }}</v-btn
             >
           </template>
-          <!-- 数据结构 -->
+          <!-- 显示详情 -->
           <template v-slot:buttons2="{ item }">
             <v-btn text color="primary" @click="dataStructure(item)">数据结构详情</v-btn>
             <v-btn text color="primary" @click="ancillaryInformation(item)">附加信息</v-btn>
+            <v-btn text color="primary" @click="validationInfo(item)">预处理</v-btn>
           </template>
           <!-- 操作 -->
           <template v-slot:buttons="{ item }">
@@ -81,12 +80,13 @@
     </HDialog>
 
     <!-- 表格显示 -->
-    <t-dialog v-model="tDialogFlag">
+    <TDialog v-if="tDialogFlag" v-model="tDialogFlag">
       <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <TopicAncillaryInformationDialog :rowObj="rowObj" v-else-if="tDialogShow === 2" />
       <UserSubNameList :rowObj="rowObj" v-else-if="tDialogShow === 3" />
       <HContentDetails :row="str" v-else-if="tDialogShow === 4" />
-    </t-dialog>
+      <HValidationInfo :id="validateId" v-else-if="tDialogShow === 5" />
+    </TDialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
   </div>
@@ -100,7 +100,6 @@ import download from '@/decorator/downloadDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
-import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import HDialog from '@/components/h-dialog.vue'
 import { TopicAdd } from '@/type/topic-add.type'
@@ -120,6 +119,9 @@ import { onlineDataParamType } from '@/type/online-data.type'
 import HTabs from '@/components/h-tabs.vue'
 import HContentDetails from '@/components/h-content-details.vue'
 import { tableHeaderType } from '@/type/table.type'
+import { queneType } from '@/enum/topic-list-enum'
+import HValidationInfo from '@/components/h-validationInfo.vue'
+
 @Component({
   components: {
     HTable,
@@ -134,18 +136,13 @@ import { tableHeaderType } from '@/type/table.type'
     HSearch,
     UserSubNameList,
     HTabs,
-    HContentDetails
+    HContentDetails,
+    HValidationInfo
   }
 })
 @http
 @upload
 @download
-@Enum([
-  {
-    tsFileName: 'topic-list-enum',
-    enumName: 'queneType'
-  }
-])
 @util
 // 1，4，6
 export default class OnlineDataTopicList extends Vue {
@@ -180,6 +177,8 @@ export default class OnlineDataTopicList extends Vue {
     topicName: '',
     topicInterFaceType: 0
   }
+
+  private validateId = 0
   private protoFile: File | null = null
   private protoForms = new FormData()
 
@@ -225,7 +224,7 @@ export default class OnlineDataTopicList extends Vue {
         align: 'center',
         value: 'queneType',
         format: (quene: number) => {
-          return this.h_enum['queneType'][quene]
+          return queneType[quene]
         }
       },
       {
@@ -271,7 +270,7 @@ export default class OnlineDataTopicList extends Vue {
   ]
 
   // REST
-  private createRest(item?: topicTable) {
+  private createRest(item?: onlineDataParamType) {
     this.fDialogFlag = true
     this.fDialogShow = 1
     this.formProvide.btnName = ['立即提交']
@@ -279,18 +278,8 @@ export default class OnlineDataTopicList extends Vue {
     this.formProvide.methodName = 'addRest' // 立即提交
     // 修改
     if (item) {
-      const obj1 = item.dsAnnotation ? JSON.parse(item.dsAnnotation) : undefined
-      const obj2 = item.dataStruct ? JSON.parse(item.dataStruct)[0] : undefined
+      const _topicList = this.h_utils.topicListUtil.transJsonToTopicList(item.dataStruct, item.dsAnnotation)
 
-      let _topicList = []
-      for (const k in obj1) {
-        _topicList.push({
-          key: k,
-          description: obj1[k],
-          type: typeof obj2[k] === 'number' && obj2[k] > 1 ? 'TimeStamp' : obj2[k],
-          disabled: true
-        })
-      }
       this.formProvide.formObj = {
         canNotEdit: true,
         id: item.id,
@@ -298,7 +287,7 @@ export default class OnlineDataTopicList extends Vue {
         redisTimer: item.redisTimer,
         topicName: item.topicName,
         // writeElasticsearch: item.writeElasticsearch === 1 ? '是' : '否',
-        topicList: _topicList
+        topicList: _topicList.map((item: {}) => ({ ...item, disabled: true }))
       }
     } else {
       this.formProvide.formObj = {
@@ -318,19 +307,12 @@ export default class OnlineDataTopicList extends Vue {
   private async addRest(formObj: TopicAdd) {
     const canNotEdit = formObj.canNotEdit
 
-    const dataStruct: any = {}
-    const dataStructNumber: any = {}
-
-    formObj.topicList.forEach(val => {
-      dataStruct[val.key] = val.description
-      dataStructNumber[val.key] = val.type === 'TimeStamp' ? Date.now() : val.type
-    })
-    const _numberS = JSON.stringify(dataStruct)
-    const _keyS = '[' + JSON.stringify(dataStructNumber) + ']'
+    // 获得转化后的 topicList
+    const [numberS, keyS] = this.h_utils.topicListUtil.transTopicListToJson(formObj.topicList)
 
     const params: Partial<onlineDataParamType> = {
-      dataStruct: _keyS,
-      dsAnnotation: _numberS,
+      dataStruct: keyS,
+      dsAnnotation: numberS,
       dataType: dataType['结构化']
     }
     // params.writeElasticsearch = formObj.writeElasticsearch === '是' ? 1 : 0
@@ -458,7 +440,7 @@ export default class OnlineDataTopicList extends Vue {
   }
 
   // 添加
-  private addItems(item: topicTable) {
+  private addItems(item: onlineDataParamType) {
     // rest
     if (item.topicInterFaceType === 1) {
       this.createRest(item)
@@ -470,8 +452,8 @@ export default class OnlineDataTopicList extends Vue {
     this.loading = true
     let _data: returnTypeData
 
-    // params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['多级嵌套免校验']},${topicInterFaceType['PROTOBUF']}`
-    params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['PROTOBUF']}`
+    params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['多级嵌套免校验']},${topicInterFaceType['PROTOBUF']}`
+    // params.faceTypes = `${topicInterFaceType['通用Rest接口']},${topicInterFaceType['PROTOBUF']}`
     params.dataType = dataType['结构化']
 
     if (tab) {
@@ -501,7 +483,6 @@ export default class OnlineDataTopicList extends Vue {
         !!this.tab
       )
     } else {
-      console.log(`ondata` + this.queryTopicID)
       this.searchMethod(
         true,
         {
@@ -529,7 +510,7 @@ export default class OnlineDataTopicList extends Vue {
   }
 
   // 数据结构展示方法
-  private dataStructure(item: topicTable) {
+  private dataStructure(item: { topicInterFaceType: number; dataStruct: string }) {
     this.tDialogFlag = true
     this.formProvide.title = '数据结构详情'
     // protobuf
@@ -557,6 +538,14 @@ export default class OnlineDataTopicList extends Vue {
     this.tDialogFlag = true
     this.tDialogShow = 3
     this.formProvide.title = '订阅用户详情'
+  }
+
+  // 预处理
+  private async validationInfo(item: { id: number }) {
+    this.formProvide.title = `主题${item.id}预处理结果`
+    this.validateId = item.id
+    this.tDialogFlag = true
+    this.tDialogShow = 5
   }
 
   // 删除
@@ -697,26 +686,10 @@ export default class OnlineDataTopicList extends Vue {
     const data = await this.h_download.httpGET('GET_TOPICS_PROTOBUFDOWNLOAD', {
       id: item.id
     })
-    console.log(data)
+    const filename = data.filename?.split('=')[1]?.split('"')[1]
 
-    if (data.filename) {
-      const blob = new Blob([data] as any, {
-        type: 'application/octet-stream'
-      })
-      const tempLink = document.createElement('a')
-      const blobURL = window.URL.createObjectURL(blob)
-
-      tempLink.style.display = 'none'
-      tempLink.href = blobURL
-      tempLink.setAttribute('download', decodeURI(data.filename))
-
-      if (typeof tempLink.download === 'undefined') {
-        tempLink.setAttribute('target', '_blank')
-      }
-      document.body.appendChild(tempLink)
-      tempLink.click()
-      document.body.removeChild(tempLink)
-      window.URL.revokeObjectURL(blobURL)
+    if (filename) {
+      this.h_utils.lib.downloadUtil(data, filename)
     } else {
       this.h_utils['alertUtil'].open('文件不存在或者下载失败', true, 'error')
     }

@@ -38,7 +38,7 @@
           </template>
           <!-- 关联主题 -->
           <template v-slot:topic="{ item }">
-            <v-btn text color="primary" @click.stop="showTopicDetail(item)">详情</v-btn>
+            <v-btn text color="primary" @click="showTopicDetail(item)">详情</v-btn>
           </template>
           <!-- 数据结构 -->
           <template v-slot:buttons="{ item }">
@@ -46,13 +46,14 @@
           </template>
           <!-- 日志 -->
           <template v-slot:log="{ item }">
-            <v-btn text color="primary" :loading="!!item.loading" @click.stop="getCurrentLog(item)">最新</v-btn>
-            <v-btn text color="primary" @click.stop="getHistoryLog(item.id)">历史</v-btn>
+            <v-btn text color="primary" :loading="!!item.loading" @click="getCurrentLog(item)">最新</v-btn>
+            <v-btn text color="primary" @click="getHistoryLog(item.id)">历史</v-btn>
           </template>
           <!-- 附加信息 -->
           <template v-slot:details="{ item }">
-            <v-btn text color="primary" @click.stop="showTimerLog(item)">时间信息</v-btn>
+            <v-btn text color="primary" @click="showTimerLog(item)">时间信息</v-btn>
             <v-btn text color="primary" @click="getTopicInformation(item)">附加信息</v-btn>
+            <v-btn text color="primary" @click="validationInfo(item)">预处理</v-btn>
           </template>
           <!-- 操作 -->
           <template v-slot:buttons2="{ item }">
@@ -89,11 +90,12 @@
     </f-dialog>
 
     <!-- 表格显示 -->
-    <t-dialog v-model="tDialogFlag">
+    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
       <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <TopicAncillaryInformationDialog :otherObj="otherObj" v-else-if="tDialogShow === 2" />
-      <HTable v-else-if="tDialogShow === 3" :headers="headersObj" :desserts="otherObj"></HTable>
+      <HTable v-else-if="tDialogShow === 3" :headers="headersObj" :desserts="otherObj" />
       <HContentDetails v-if="tDialogShow === 4" :row="row" />
+      <HValidationInfo :id="validateId" v-else-if="tDialogShow === 5" />
     </t-dialog>
 
     <h-confirm v-model="HConfirmShow" @hconfirm="deleteTopic" />
@@ -106,7 +108,6 @@ import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
 import HConfirm from '@/components/h-confirm.vue'
-import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import FDialog from '@/components/h-dialog.vue'
 import { TopicAdd } from '@/type/topic-add.type'
@@ -123,10 +124,11 @@ import TopicAncillaryInformationDialog from './childComponent/topicAncillaryInfo
 import HTabs from '@/components/h-tabs.vue'
 import { tableHeaderType } from '@/type/table.type'
 import { offlineTableType } from '@/type/offline-data.type'
-import { offlineState, stateColor } from '@/enum/state-enum'
+import { topicState, stateColor } from '@/enum/state-enum'
 import cronstrue from 'cronstrue/i18n'
-import { offlineResult } from '@/enum/state-enum'
+import { taskResult } from '@/enum/state-enum'
 import HContentDetails from '@/components/h-content-details.vue'
+import HValidationInfo from '@/components/h-validationInfo.vue'
 @Component({
   components: {
     HTable,
@@ -140,16 +142,11 @@ import HContentDetails from '@/components/h-content-details.vue'
     TopicAncillaryInformationDialog,
     HSearch,
     HTabs,
-    HContentDetails
+    HContentDetails,
+    HValidationInfo
   }
 })
 @http
-@Enum([
-  {
-    tsFileName: 'topic-list-enum',
-    enumName: 'queneType'
-  }
-])
 @util
 export default class OfflineTopicList extends Vue {
   @Provide('formProvide') private formProvide: FormObj = new Vue({
@@ -167,7 +164,7 @@ export default class OfflineTopicList extends Vue {
   private searchLabel: `任务` | `主题` = `任务`
   private fDialogFlag = false // 弹窗展示
   private tDialogFlag = false // 表格展示
-  private offlineState = offlineState
+  private offlineState = topicState
   private stateColor = stateColor
 
   private fDialogShow = 0 // 展示哪个弹窗 1.数据库采集 2.服务主动拉取 3.拉取FTP
@@ -176,6 +173,7 @@ export default class OfflineTopicList extends Vue {
   private rowObj: object = {}
   private otherObj: object = {}
   private row = ''
+  private validateId = 0
 
   private loading = true
   private createUrlLoading = false
@@ -248,7 +246,14 @@ export default class OfflineTopicList extends Vue {
         width: 100,
         isHide: this.tab === 2 || this.tab === 3,
         format: (cron: string) => {
-          return cron ? cronstrue.toString(cron, { locale: 'zh_CN', use24HourTimeFormat: true }) : ''
+          // cronstrue 插件报错会导致整个dom树崩掉
+          let _corn = ''
+          try {
+            _corn = cronstrue.toString(cron, { locale: 'zh_CN', use24HourTimeFormat: true })
+          } catch {
+            _corn = cron
+          }
+          return _corn
         }
       },
       {
@@ -463,7 +468,7 @@ export default class OfflineTopicList extends Vue {
     } = items
 
     // 验证cron合法性
-    const cronValidated = this.h_utils.cronUtil.cronValidator(cron)
+    const cronValidated = this.h_utils.lib.cronValidator(cron)
     if (!cronValidated) {
       return
     }
@@ -648,7 +653,7 @@ export default class OfflineTopicList extends Vue {
     } = items
 
     // 验证cron合法性
-    const cronValidated = this.h_utils.cronUtil.cronValidator(cron)
+    const cronValidated = this.h_utils.lib.cronValidator(cron)
     if (!cronValidated) {
       return
     }
@@ -828,6 +833,7 @@ export default class OfflineTopicList extends Vue {
     this.rowObj = this.tab === 0 || this.tab === 1 ? item.t : item
     this.formProvide.title = '数据结构详情'
   }
+
   // 最新日志
   private async getCurrentLog(item: { id: number }) {
     this.$set(item, `loading`, true)
@@ -847,7 +853,7 @@ export default class OfflineTopicList extends Vue {
       this.row = `
       <v-card-text>
         <div>时间：${item.executeTime}</div>
-        <div>状态：${offlineResult[item.result]}</div>
+        <div>状态：${taskResult[item.result]}</div>
         <div>日志：${item.log}</div>
       </v-card-text>
       `
@@ -880,6 +886,14 @@ export default class OfflineTopicList extends Vue {
     this.tDialogShow = 2
     this.formProvide.title = '附加信息'
     item.t && (this.otherObj = { taskType: item.taskType, ...item.t })
+  }
+
+  // 预处理
+  private async validationInfo(item: { id: number }) {
+    this.formProvide.title = `任务${item.id}预处理结果`
+    this.validateId = item.id
+    this.tDialogFlag = true
+    this.tDialogShow = 5
   }
 
   // 主题详情
@@ -1015,24 +1029,15 @@ export default class OfflineTopicList extends Vue {
 
     // 修改
     if (item) {
-      const obj1: any = JSON.parse(item.dsAnnotation)
-      const obj2: any = JSON.parse(item.dataStruct)[0]
-      let _topicList = []
-      for (const k in obj1) {
-        _topicList.push({
-          key: k,
-          description: obj1[k],
-          type: typeof obj2[k] === 'number' && obj2[k] > 1 ? 'TimeStamp' : obj2[k],
-          disabled: true
-        })
-      }
+      const _topicList = this.h_utils.topicListUtil.transJsonToTopicList(item.dataStruct, item.dsAnnotation)
+
       this.formProvide.formObj = {
         canNotEdit: true,
         id: item.id,
         topicName: item.topicName,
         dataBaseType: item.dataBaseType,
         dataBaseIp: item.dataBaseIp,
-        topicList: _topicList
+        topicList: _topicList.map((item: {}) => ({ ...item, disabled: true }))
       }
     } else {
       this.formProvide.formObj = {
@@ -1052,18 +1057,12 @@ export default class OfflineTopicList extends Vue {
   private async addDataBaseAcquisition(formObj: TopicAdd) {
     const canNotEdit = formObj.canNotEdit
 
-    const dataStruct: any = {}
-    const dataStructNumber: any = {}
+    // 获得转化后的 topicList
+    const [numberS, keyS] = this.h_utils.topicListUtil.transTopicListToJson(formObj.topicList)
 
-    formObj.topicList.forEach(val => {
-      dataStruct[val.key] = val.description
-      dataStructNumber[val.key] = val.type === 'TimeStamp' ? Date.now() : val.type
-    })
-    const _numberS = JSON.stringify(dataStruct)
-    const _keyS = '[' + JSON.stringify(dataStructNumber) + ']'
     const params: any = {
-      dataStruct: _keyS,
-      dsAnnotation: _numberS,
+      dataStruct: keyS,
+      dsAnnotation: numberS,
       dataType: dataType['结构化']
     }
     params.topicName = formObj.topicName

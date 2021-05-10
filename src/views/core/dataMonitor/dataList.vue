@@ -95,7 +95,7 @@
     </h-table>
 
     <!-- 表格显示 -->
-    <t-dialog v-model="tDialogFlag">
+    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
       <HContentDetails :row="row" v-if="tDialogShow === 1" />
     </t-dialog>
   </div>
@@ -147,11 +147,11 @@ export default class dataMonitor extends Vue {
 
   private menu = false
   private mdiMagnify = mdiMagnify
-  private serverNameItems = [`事务`, `日志`, `视频`]
+  private serverNameItems = [`事务`, `离线`, `日志`, `视频`]
   private statusItems = [`异常`, `离线`, `警告`]
 
   private get topicTaskFlag() {
-    if (this.queryServerName === this.serverNameItems[0]) {
+    if (this.queryServerName === this.serverNameItems[0] || this.queryServerName === this.serverNameItems[1]) {
       return `任务`
     } else {
       return `主题`
@@ -199,7 +199,7 @@ export default class dataMonitor extends Vue {
         align: 'center',
         value: 'createTime',
         format: (value: string) => {
-          return this.h_utils.timeUtil.stamptoFullTime(value, '/')
+          return Moment(Number(value)).format('YYYY/MM/DD HH:mm:ss')
         }
       },
       {
@@ -246,7 +246,10 @@ export default class dataMonitor extends Vue {
       pageNum: this.pageNum
     }
 
-    const _query = this.queryServerName === this.serverNameItems[0] ? `taskId` : `topicId`
+    const _query =
+      this.queryServerName === this.serverNameItems[0] || this.queryServerName === this.serverNameItems[1]
+        ? `taskId`
+        : `topicId`
     this.queryTopicID && (params[_query] = this.queryTopicID)
     this.queryServerName && (params.serverName = this.queryServerName)
     this.queryStatus && (params.status = calendarType[this.queryStatus as keyof typeof calendarType])

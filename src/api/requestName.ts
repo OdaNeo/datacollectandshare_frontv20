@@ -23,8 +23,7 @@ const POST_PERMISSION_AUTHORIZATION_ADDROLEIDPERMISSIONID = '/permission/authori
 const GET_STATISTICS_STAT_TOPIC_DATA = '/statistics/statTopicData' // 系统统计 隐藏页
 const GET_STATISTICS_STAT_SYS_TOPIC = '/statistics/statSysTopic' // 系统统计 隐藏页
 const POST_USER_UPDATEPASSWORD = '/user/updatePassword' // 用户修改自己密码
-// const GET_SYSTEM_GETSYSTEMINFO = '/system/getSystemInfo' // 获取系统信息 全局 与 /user/addUser/getSystemInfoAndAddUser 重复
-// /system/getSystemTypeInfo ？
+const GET_SYSTEM_GETSYSTEMINFO = '/system/getSystemInfo' // 获取系统信息 全局
 // /user/delete/* ?
 // /permission/findPermissionListByRoleId/* ?
 
@@ -51,6 +50,7 @@ const GET_SUBMODERATIONS_SELECTBYUSERNAMESTATUS = '/subModerations/selectByUserN
 const GET_SUBMODERATIONS_SELECTAUDITSTATUSBYTOPICID = '/subModerations/selectAuditStatusByTopicID' // 通过ID获取主题审核记录
 const GET_SUBMODERATIONS_SELECTMYSUBTOPICLIST = '/subModerations/selectMySubTopicList' // 查看我的订阅
 const GET_SUBMODERATIONS_SELECTMYSUBTOPICBYTOPICIDORNAME = '/subModerations/selectMySubTopicByTopicIdOrTopicName' // 搜索我的订阅
+const GET_VALIDATION_LOG = '/validation/log'
 // /topics/alterTopic ?
 // /topics/addSubUser ?
 
@@ -79,7 +79,7 @@ const GET_SYSNET_GETBINDLIST = '/sysnet/getBindList' // 绑定网络
 const GET_SYSNET_GETBINDBYNAME = '/sysnet/getBindByName'
 const GET_SYSNET_GETSYSNETLIST = '/sysnet/getSysNetList'
 const GET_SYSNET_ADDBINDINFO = '/sysnet/addBindInfo'
-const POST_SYSNET_DELETEBINDINFO = '/sysnet/delBindInfo' 
+const POST_SYSNET_DELETEBINDINFO = '/sysnet/delBindInfo'
 
 // ---------------------------- 操作日志 ---------------------------
 const GET_LOGMGT_VIEWLOG_LOG_FINDALLLOG = '/logMGT/viewLog/log/findAllLog'
@@ -216,7 +216,7 @@ const REQUEST_NAME = {
   GET_TOPICS_LOGGER_TOPIC_STATISTICS_BY_DAYTIME,
   GET_TOPICS_LOGGER_TOPIC_STATISTICS_ADD_TOPIC,
   GET_TOPICS_CANCEL_FOLLOW,
-  // GET_SYSTEM_GETSYSTEMINFO,
+  GET_SYSTEM_GETSYSTEMINFO,
   POST_TOPICS_ADD,
   GET_TOPICS_DELETE,
   GET_TOPICS_INFORMATION,
@@ -287,7 +287,8 @@ const REQUEST_NAME = {
   GET_LOGMGT_VIEWLOG_LOG_SYSLOGCOUNT,
   GET_OFFLINE_SELECTTOPICBYTYPE,
   GET_OFFLINE_SELECTOFFLINELOG,
-  POST_USER_UPDATEPASSWORD
+  POST_USER_UPDATEPASSWORD,
+  GET_VALIDATION_LOG
 }
 
 export default REQUEST_NAME

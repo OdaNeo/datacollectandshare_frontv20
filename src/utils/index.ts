@@ -4,8 +4,7 @@ import formatUtil from './formatUtil'
 import topicRanking from './topicRanking'
 import noRepeat from './noRepeat'
 import topicListUtil from './topicListUtil'
-import authUtil from './authenticateUtil'
-import cronUtil from './cronUtil'
+import lib from './lib'
 
 class Utils {
   public timeUtil = timeUtil
@@ -14,8 +13,7 @@ class Utils {
   public topicRanking = topicRanking
   public noRepeat = noRepeat
   public topicListUtil = topicListUtil
-  public authUtil = authUtil
-  public cronUtil = cronUtil
+  public lib = lib
 }
 
 export default Utils

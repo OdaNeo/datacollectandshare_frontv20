@@ -129,7 +129,7 @@ export default class TopBar extends Vue {
   }
 
   private clickLogout(): void {
-    this.h_utils.authUtil.logout()
+    this.h_utils.lib.logout()
   }
 
   // 修改密码

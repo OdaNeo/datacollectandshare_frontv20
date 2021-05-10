@@ -73,14 +73,12 @@
           </template>
           <!-- 订阅状态 -->
           <template v-slot:subStatus="{ item }">
-            <v-btn text :color="h_enum['examineTypeColor'][item.subStatus]" class="my-2">{{
-              h_enum['examineType'][item.subStatus]
-            }}</v-btn>
+            <v-btn text :color="examineTypeColor[item.subStatus]" class="my-2">{{ examineType[item.subStatus] }}</v-btn>
           </template>
         </h-table>
       </v-tab-item>
     </v-tabs-items>
-    <t-dialog v-model="dialogFlag">
+    <t-dialog v-if="dialogFlag" v-model="dialogFlag">
       <DataStructureDialog :rowObj="rowObj" v-if="tDialogShow === 1" />
       <UserSubNameList :rowObj="rowObj" v-else-if="tDialogShow === 2" />
       <HContentDetails :row="str" v-else-if="tDialogShow === 3" />
@@ -93,7 +91,6 @@ import { returnType, returnTypeData } from '@/type/http-request.type'
 import http from '@/decorator/httpDecorator'
 import { topicTable } from '@/type/topic.type'
 import HTable from '@/components/h-table.vue'
-import Enum from '@/decorator/enumDecorator'
 import TDialog from '@/components/t-dialog.vue'
 import DataStructureDialog from './childComponent/dataStructureDialog.vue'
 import UserSubNameList from './childComponent/userSubNameList.vue'
@@ -103,6 +100,8 @@ import { topicInterFaceType } from '@/enum/topic-interfacetype-enum'
 import HSearch from '@/components/h-search.vue'
 import HTabs from '@/components/h-tabs.vue'
 import HContentDetails from '@/components/h-content-details.vue'
+import { queneType } from '@/enum/topic-list-enum'
+import { examineType, examineTypeColor } from '@/enum/topic-audit-enum'
 // topicInterFaceType = 1，4，6
 @Component({
   components: {
@@ -116,20 +115,6 @@ import HContentDetails from '@/components/h-content-details.vue'
   }
 })
 @http
-@Enum([
-  {
-    tsFileName: 'topic-list-enum',
-    enumName: 'queneType'
-  },
-  {
-    tsFileName: 'topic-audit-enum',
-    enumName: 'examineType'
-  },
-  {
-    tsFileName: 'topic-audit-enum',
-    enumName: 'examineTypeColor'
-  }
-])
 export default class TopicSub extends Vue {
   @Provide('formProvide') private formObj = new Vue({
     data() {
@@ -142,6 +127,9 @@ export default class TopicSub extends Vue {
     }
   })
 
+  private queneType = queneType
+  private examineType = examineType
+  private examineTypeColor = examineTypeColor
   private mdiMagnify = mdiMagnify
   private tab = null
   private items = ['可订阅主题', '我的订阅']
@@ -204,8 +192,8 @@ export default class TopicSub extends Vue {
         text: '消息类型',
         align: 'center',
         value: 'queneType',
-        format: (quene: number): number => {
-          return this.h_enum['queneType'][quene]
+        format: (quene: number): string => {
+          return queneType[quene]
         }
       },
       {

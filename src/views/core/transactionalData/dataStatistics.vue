@@ -30,7 +30,7 @@
       </template>
     </h-table>
     <!-- 表格显示 -->
-    <t-dialog v-model="tDialogFlag">
+    <t-dialog v-if="tDialogFlag" v-model="tDialogFlag">
       <HContentDetails slot="default" :row="row" />
     </t-dialog>
   </div>
@@ -47,7 +47,7 @@ import TDialog from '@/components/t-dialog.vue'
 import { FormObj } from '@/type/dialog-form.type'
 import HContentDetails from '@/components/h-content-details.vue'
 import HSearch from '@/components/h-search.vue'
-import { transactionalResult, transactionalResultColor } from '@/enum/state-enum'
+import { taskResult, taskResultColor } from '@/enum/state-enum'
 @Component({
   components: {
     HTable,
@@ -73,8 +73,8 @@ export default class TransactionalDataStatistics extends Vue {
   private tDialogFlag = false
   private row = ''
   private currenttaskId = ''
-  private transactionalResult = transactionalResult
-  private transactionalResultColor = transactionalResultColor
+  private transactionalResult = taskResult
+  private transactionalResultColor = taskResultColor
 
   private paginationLength = 0 // 分页数
   private pageNum = 1 // 第几页
