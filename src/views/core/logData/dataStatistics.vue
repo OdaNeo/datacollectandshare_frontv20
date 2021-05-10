@@ -1,4 +1,4 @@
-<template>
+<template class="abc">
   <div id="LogDataStatistics">
     <!-- tab -->
     <v-tabs v-model="tab" @change="tabChange">
@@ -7,7 +7,8 @@
     </v-tabs>
     <!-- 切换 -->
     <v-tabs-items v-model="tab">
-      <v-tab-item eager style="display:flex;height:100%;overflow:hidden;height:570px">
+      <v-tab-item eager style="height:550px">
+        <div style="display:flex;height:100%">
         <v-row class="echartsLeft">
           <div id="eCharts3"></div>
         </v-row>
@@ -16,7 +17,7 @@
           <div id="eCharts4"></div>
           <div id="followListContainer">
             <v-row>
-            <HSearch :cols="7" v-model="followTopicName" label="添加关注主题名称" :showAppEnd="false" style="margin-left:30px"/>
+            <HSearch :cols="7" v-model="followTopicId" label="添加关注主题名称" :showAppEnd="false" style="margin-left:30px"/>
             <v-col>
               <v-btn color="primary" small depressed dark @click="follow()">关注</v-btn>
             </v-col>
@@ -45,6 +46,7 @@
             </v-list>
           </div>
         </v-row>
+        </div>
       </v-tab-item>
       <v-tab-item eager>
         <v-row class="ml-2" style="padding-top:10px;padding-left:10px">
@@ -106,6 +108,7 @@ import util from '@/decorator/utilsDecorator'
 import { mdiCloseCircleOutline } from '@mdi/js'
 import Moment from 'moment'
 import HTabs from '@/components/h-tabs.vue'
+import {log_statistics} from "./type/log_type"
 @Component({
   components: {
     HSearch,
@@ -133,21 +136,13 @@ export default class LogDataStatistics extends Vue {
   private queryTopicDate = this.queryEndDate
 
   private showMenu = false
-  private followList:any[] = []
-  private followTopicName = "" 
+  private followList:log_statistics[] = []
+  private followTopicId = "" 
 
-  private data3 = [
-    {name:"abc01000000",topicId:900300,value:100},
-    {name:"abc02000000",topicId:900300,value:200},
-    {name:"abc03000000",topicId:900300,value:300},
-    {name:"abc04000000",topicId:900300,value:400},
-    {name:"abc05000000",topicId:900300,value:500},
-    {name:"abc06000000",topicId:900300,value:600},
-    {name:"abc07000000",topicId:900300,value:700},
-    {name:"abc08000000",topicId:900300,value:800},
-    {name:"abc09000000",topicId:900300,value:900},
-    {name:"abc10000000",topicId:900300,value:1000}
-  ]
+  private statistics:log_statistics[] = []
+  private statistics_spare:log_statistics[] = []
+  private radarValues:number[] = []
+  private excTopics = new Set()
 
   // 获得30天数据并生成option1
   private async getStatisticsLoggerTopicByTopicIdAnd30Days(params: { topicId: number; timeDate: string }) {
@@ -169,22 +164,47 @@ export default class LogDataStatistics extends Vue {
   }
 
 
-  private follow(){
-    this.data3.shift()
-    this.data3.push({
-      name:this.followTopicName,topicId:900300,value:1100
-    })
-    this.followList.push({
-      name:this.followTopicName,topicId:900300,value:1100,flag:true
-    })
-    this.myChartElement3.setOption(this.getOption3(), true)
-    this.myChartElement4.setOption(this.getOption4(), true)
-    this.followTopicName = ""
+  private async follow(){
+    try{
+      const { data } = await this.h_request['httpPOST'](
+        'POST_TOPICS_ADDFOLLOW',
+        {
+          topicId:Number(this.followTopicId),
+          followTime:new Date().getTime()+""
+        }
+      )
+      this.statistics_spare.push(this.statistics.shift() as log_statistics)
+      this.statistics.push({
+        name:data.topicName,
+        topicId:data.topicId,
+        value:data.count,
+        latest:data.latest,
+        earliest:data.earliest,
+        follow:data.follow,
+        uid:data.uid
+      })
+      this.radarValues.shift()
+      this.radarValues.push(data.count)
+      this.followList.push({
+        name:data.topicName,
+        topicId:data.topicId,
+        value:data.count,
+        latest:data.latest,
+        earliest:data.earliest,
+        follow:data.follow,
+        uid:data.uid,
+        flag:true
+      })
+      this.myChartElement3.setOption(this.getOption3(), true)
+      this.myChartElement4.setOption(this.getOption4(), true)
+      this.followTopicId = ""
+    }catch{
+
+    }
   }
 
   private getOption4(){
     const colorList = ['#FC619D', '#FF904D', '#48BFE3', '#00a0e9', '#8957a1', '#80f1b0', '#ff6692', '#f29b76','#ff6692', '#f29b76'];
-    let areaValueData = [15, 20, 30, 40, 50, 65,15, 20, 30, 40]
     return{
       title:{
         text:"主题数据占比",
@@ -213,7 +233,7 @@ export default class LogDataStatistics extends Vue {
         zlevel: 11,
         shape: 'circle',
         scale: true,
-        indicator: this.data3,
+        indicator: this.statistics,
         center: ['50%', '50%'],
         radius: '40%',
         startAngle: 30,
@@ -283,7 +303,7 @@ export default class LogDataStatistics extends Vue {
         {
           type: 'radar',
           data: [{
-            value: [15000, 20000, 30000, 40000, 50000, 65000,15000, 20000, 30000, 40000],
+            value: this.radarValues,
             name: '各主题数据量：',
             areaStyle: {
               normal: {
@@ -310,7 +330,7 @@ export default class LogDataStatistics extends Vue {
         {
           type: 'pie',
           startAngle: 0,
-          data: this.data3.map(item => {
+          data: this.statistics.map((item:any) => {
             return {
               name: item.name,
               value: item.value,
@@ -460,13 +480,12 @@ export default class LogDataStatistics extends Vue {
             show: true
         },
         data: (function(data) {
-            console.log(data)
             var arr:String[] = [];
             data.forEach(function(items:any) {
                 arr.push(items.name);
             });
             return arr;
-        })(this.data3) // 载入y轴数据
+        })(this.statistics) // 载入y轴数据
       },
       series: [{
         type: 'bar',
@@ -491,7 +510,7 @@ export default class LogDataStatistics extends Vue {
                 arBorderRadius: [0, 17, 17, 0]  //圆角
             }
         },
-        data: this.data3, // 载入数据(内含自定义参数)
+        data: this.statistics, // 载入数据(内含自定义参数)
         z: 1
       }]
     }
@@ -646,7 +665,6 @@ export default class LogDataStatistics extends Vue {
     const { data } = await this.h_request.httpGET('GET_TOPICS_STATISTICSALLLOGGERTOPICBYDAYTIME', {
       dayTime: Moment(new Date()).format(`YYYY-MM-DD`)
     })
-    console.log(data)
   }
 
   // echarts1 2 3 handle
@@ -674,48 +692,140 @@ export default class LogDataStatistics extends Vue {
     console.log(number)
   }
 
-  private cancelFollow(item:any,index:number){
+  private async cancelFollow(item:log_statistics,index:number){
     this.followList.splice(index,1)
-    this.data3.forEach((obj,index)=>{
+    this.statistics.forEach((obj,index)=>{
         if(item.name==obj.name){
-          this.data3.splice(index,1)
+          this.statistics_spare.push(this.statistics_spare[index])
+          this.statistics.splice(index,1)
         }
     })
+    await this.h_request['httpGET'](
+      'GET_TOPICS_CANCEL_FOLLOW',
+      {topicId:item.topicId}
+    )
     this.myChartElement3.setOption(this.getOption3(), true)
     this.myChartElement4.setOption(this.getOption4(), true)
   }
 
   private changeCheckBox(item:any){
     if(item.flag==true){
-      this.data3.push(item)
+      this.statistics.push(item)
+      if(this.statistics.length>10){
+        this.statistics_spare.unshift(this.statistics.shift() as log_statistics)
+      }
     }else{
-      this.data3.forEach((obj,index)=>{
+      this.statistics.forEach((obj,index)=>{
         if(item.name==obj.name){
-          this.data3.splice(index,1)
+          this.statistics.splice(index,1)
         }
       })
+      this.supplement()
     }
     this.myChartElement3.setOption(this.getOption3(), true)
     this.myChartElement4.setOption(this.getOption4(), true)
+  }
+
+  private async supplement(){
+    if(this.statistics_spare.length>0){
+      this.statistics.unshift(this.statistics_spare.shift() as log_statistics)
+    }else{
+      const { data } = await this.h_request['httpGET'](
+        'GET_TOPICS_LOGGER_TOPIC_STATISTICS_ADD_TOPIC',
+        {excTopics:[...this.excTopics]}
+      )
+      if(data.length>0){
+        let stat = data.shift()
+        this.statistics.push({
+          name:stat.topicName,
+          topicId:stat.topicId,
+          value:stat.count,
+          latest:stat.latest,
+          earliest:stat.earliest,
+          follow:stat.follow,
+          uid:stat.uid
+        })
+        if(data.length>0){
+          data.forEach((element:any) => {
+            this.statistics_spare.push({
+              name:element.topicName,
+              topicId:element.topicId,
+              value:element.count,
+              latest:element.latest,
+              earliest:element.earliest,
+              follow:element.follow,
+              uid:element.uid
+            })
+          });
+        }
+      }
+    }
+  }
+
+
+  private async initRequest(){
+      const _this =this
+      const { data } = await this.h_request['httpGET'](
+        'GET_TOPICS_LOGGER_TOPIC_STATISTICS_BY_DAYTIME',
+        {}
+      )
+      let reverseData = data.map((item:any)=>{
+        this.excTopics.add(item.topicId)
+        this.radarValues.unshift(item.count)
+        if(item.follow){
+          this.followList.push({
+            name:item.topicName,
+            topicId:item.topicId,
+            value:item.count,
+            latest:item.latest,
+            earliest:item.earliest,
+            follow:item.follow,
+            uid:item.uid,
+            flag:true
+          })
+        }
+        return {
+          name:item.topicName,
+          topicId:item.topicId,
+          value:item.count,
+          latest:item.latest,
+          earliest:item.earliest,
+          follow:item.follow,
+          uid:item.uid
+        }
+      }).reverse()
+      if(reverseData.length>10){
+        this.statistics = reverseData.slice(data.length-10,data.length)
+        this.statistics_spare = reverseData.slice(0,data.length-10)
+      }else{
+        this.statistics = reverseData
+      }
+      this.myChartElement3.setOption(this.getOption3(), true)
+      this.myChartElement4.setOption(this.getOption4(), true)
+      this.myChartElement3.on("click",function(params:any){
+        _this.tab = 1
+        _this.queryTopicID = params.data.topicId
+        _this.queryTopicDate = params.data.latest
+        setTimeout(()=>{
+          _this.myChartElement1.resize()
+          _this.myChartElement2.resize()
+          _this.searchMethod()
+        },0)
+      })
   }
 
   mounted(): void {
     // 初始化
     let _this =this
     this.initECharts()
-    this.$nextTick(()=>{
-      this.myChartElement3.setOption(this.getOption3(), true)
-      this.myChartElement4.setOption(this.getOption4(), true)
-      this.myChartElement3.on("click",function(params:any){
-        console.log(params)
-        _this.tab = 1
-        _this.queryTopicID = params.data.topicId
-      })
-    })
+    this.initRequest()
   }
 }
 </script>
 <style scoped>
+#LogDataStatistics{
+  height: 100%;
+}
 #eCharts1 {
   width: 100%;
   height: 250px;

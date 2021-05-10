@@ -8,6 +8,7 @@ import authUtil from '../utils/authenticateUtil'
 import { VUE_APP_BASE_API, BASE_REQUEST_TIME_OUT } from '../../config'
 import { uploadStoreModule } from '@/store/modules/upload'
 import { httpErrorMsg } from '@/enum/http-enum'
+import qs from 'qs'
 
 class RequestData {
   private axiosIns: AxiosInstance = axios.create({
@@ -47,6 +48,12 @@ class RequestData {
 
       // 合并用户配置与默认配置
       config = { ...config, ...this.DEFAULT_CONFIG, ...otherConfig }
+
+      if (config.method === "get") {
+        config.paramsSerializer = function (params) {
+          return qs.stringify(params,{arrayFormat: 'repeat'})
+        }
+      }
 
       return config
     })
