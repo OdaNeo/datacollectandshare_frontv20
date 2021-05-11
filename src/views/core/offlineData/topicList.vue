@@ -43,6 +43,7 @@
           <!-- 数据结构 -->
           <template v-slot:buttons="{ item }">
             <v-btn text color="primary" @click="dataStructureDetails(item)">数据结构详情</v-btn>
+            <v-btn text color="primary" @click="validationInfo(item)">预处理</v-btn>
           </template>
           <!-- 日志 -->
           <template v-slot:log="{ item }">
@@ -53,7 +54,6 @@
           <template v-slot:details="{ item }">
             <v-btn text color="primary" @click="showTimerLog(item)">时间信息</v-btn>
             <v-btn text color="primary" @click="getTopicInformation(item)">附加信息</v-btn>
-            <v-btn text color="primary" @click="validationInfo(item)">预处理</v-btn>
           </template>
           <!-- 操作 -->
           <template v-slot:buttons2="{ item }">
@@ -890,7 +890,7 @@ export default class OfflineTopicList extends Vue {
 
   // 预处理
   private async validationInfo(item: { id: number }) {
-    this.formProvide.title = `任务${item.id}预处理结果`
+    this.formProvide.title = `主题${item.id}预处理结果`
     this.validateId = item.id
     this.tDialogFlag = true
     this.tDialogShow = 5

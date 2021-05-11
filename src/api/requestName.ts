@@ -51,6 +51,9 @@ const GET_SUBMODERATIONS_SELECTAUDITSTATUSBYTOPICID = '/subModerations/selectAud
 const GET_SUBMODERATIONS_SELECTMYSUBTOPICLIST = '/subModerations/selectMySubTopicList' // 查看我的订阅
 const GET_SUBMODERATIONS_SELECTMYSUBTOPICBYTOPICIDORNAME = '/subModerations/selectMySubTopicByTopicIdOrTopicName' // 搜索我的订阅
 const GET_VALIDATION_LOG = '/validation/log'
+const GET_TOPICS_STARTREALTOPIC = '/topics/startRealTopic'
+const GET_TOPICS_STOPREALTOPIC = '/topics/stopRealTopic'
+
 // /topics/alterTopic ?
 // /topics/addSubUser ?
 
@@ -288,7 +291,9 @@ const REQUEST_NAME = {
   GET_OFFLINE_SELECTTOPICBYTYPE,
   GET_OFFLINE_SELECTOFFLINELOG,
   POST_USER_UPDATEPASSWORD,
-  GET_VALIDATION_LOG
+  GET_VALIDATION_LOG,
+  GET_TOPICS_STOPREALTOPIC,
+  GET_TOPICS_STARTREALTOPIC
 }
 
 export default REQUEST_NAME

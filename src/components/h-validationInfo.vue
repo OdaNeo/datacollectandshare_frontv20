@@ -109,7 +109,6 @@ export default class ValidationInfo extends Vue {
   }
 
   mounted(): void {
-    console.log(1)
     this.pageNum = 1
     this.searchMethod({
       pageSize: this.pageSize,

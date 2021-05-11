@@ -38,7 +38,7 @@ export interface userParamsType extends paramsType {
 
 export type userFormVar = {
   text: string
-  value: string
+  value: string | number
 }
 export interface userFormVarDo extends userFormVar {
   childrenList?: Array<userFormVar>

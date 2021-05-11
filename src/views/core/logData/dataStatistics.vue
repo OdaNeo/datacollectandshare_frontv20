@@ -797,6 +797,10 @@ export default class LogDataStatistics extends Vue {
     // eslint-disable-next-line @typescript-eslint/no-this-alias
     const _this = this
     const { data } = await this.h_request['httpGET']('GET_TOPICS_LOGGER_TOPIC_STATISTICS_BY_DAYTIME', {})
+    // 边界条件
+    if (!data || data.length === 0) {
+      return
+    }
     let reverseData = data
       .map((item: any) => {
         this.excTopics.add(item.topicId)

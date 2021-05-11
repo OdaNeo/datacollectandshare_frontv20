@@ -15,6 +15,7 @@
       v-model="formProvide.formObj['type']"
       :rules="[...h_validator.noEmpty('权限类型')]"
       :items="types"
+      @input="handleTypeChange"
     />
 
     <!-- menu -->
@@ -35,6 +36,7 @@
       v-model="formProvide.formObj['grandparentid']"
       :rules="[...h_validator.noEmpty('父节点名称')]"
       :items="dessertsList"
+      @input="selectChange"
     />
 
     <!-- button -->
@@ -49,7 +51,7 @@
   </v-row>
 </template>
 <script lang="ts">
-import { Component, Vue, Prop, Inject, Watch } from 'vue-property-decorator'
+import { Component, Vue, Prop, Inject } from 'vue-property-decorator'
 import { userFormVar, userFormVarDo } from '@/type/user.type'
 import { H_Vue } from '@/declaration/vue-prototype'
 import Validator from '@/decorator/validatorDecorator'
@@ -78,8 +80,7 @@ export default class ResourcesDialog extends Vue {
   ]
 
   // toggle 下拉框
-  @Watch('formProvide.formObj.grandparentid', { immediate: true })
-  private selectChange(val: string) {
+  private selectChange(val: number) {
     this.dessertsList.forEach(item => {
       if (val === item.value) {
         item.childrenList && (this.dessertsListChild = item.childrenList)
@@ -87,6 +88,7 @@ export default class ResourcesDialog extends Vue {
     })
   }
 
+  // 获得嵌套列表
   private getDessertsList(items: Array<any>): Array<any> {
     return items.map((item: { name: string; id: number; childrenList?: Array<{ name: string; id: number }> }) => {
       if (!item.childrenList) {
@@ -104,72 +106,24 @@ export default class ResourcesDialog extends Vue {
     })
   }
 
+  // type 切换
+  private handleTypeChange() {
+    this.formProvide.formObj.parentid = null
+    this.formProvide.formObj.grandparentid = null
+  }
+
   created(): void {
     // 获得嵌套列表
     this.dessertsList = this.getDessertsList(this.desserts)
-    // 编辑页面填充
-    // if (this.formProvide.formObj.type) {
-    //   this.typesChange(this.formProvide.formObj.type, '')
-    // }
-    // if (this.formProvide.formObj.type === 'button') {
-    //   // this.getParentId(this.formProvide.formObj.parentid, this.dessertsList)
-    //   this.formProvide.formObj.grandparentid = this.parentItem.text
-    // }
-    // this.getParentId(54, this.dessertsList)
-    // console.log(this.dessertsList)
-    // console.log(this.parentItem)
+
+    // 显示 grandparentid
+    const grandparentid = this.formProvide.formObj.grandparentid
+    if (grandparentid) {
+      this.selectChange(grandparentid)
+    }
+
+    console.log(`parentid: ` + this.formProvide.formObj.parentid)
+    console.log(`grandparentid: ` + this.formProvide.formObj.grandparentid)
   }
 }
 </script>
-
-<style scoped>
-/* .selectInput {
-  width: 330px;
-  font-size: 14px;
-} */
-/* .selectCon {
-  width: 198px;
-  background: #fff;
-  position: absolute;
-  left: 140px;
-  top: 40px;
-  z-index: 99;
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-    0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-}
-.selectCon li {
-  width: 100%;
-  height: 32px;
-  font-size: 16px;
-  color: #000;
-  line-height: 32px;
-  padding-left: 10px;
-  cursor: pointer;
-  position: relative;
-}
-.selectConIcon {
-  float: right;
-  margin-right: 10px;
-  margin-top: 5px;
-}
-.selectCon .actionSelect {
-  color: #409eff;
-}
-.selectCon li:hover {
-  background: #f5f7fa;
-}
-.selectChildCon {
-  width: 100%;
-  height: 100%;
-  background: #fff;
-  position: absolute;
-  left: 198px;
-  top: 0;
-  z-index: 99;
-  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14),
-    0px 1px 5px 0px rgba(0, 0, 0, 0.12);
-}
-.selectChildCon li:hover {
-  color: #409eff;
-} */
-</style>

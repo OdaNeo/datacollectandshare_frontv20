@@ -39,11 +39,10 @@ import http from '@/decorator/httpDecorator'
 import HTable from '@/components/h-table.vue'
 import HDialog from '@/components/h-dialog.vue'
 import ResourcesDialog from './childComponent/resourcesDialog.vue'
-import { ResourcesFormObj } from '@/type/resources.type'
+import { ResourcesFormObj, ResourcesItem, ResourcesDessertType } from '@/type/resources.type'
 import util from '@/decorator/utilsDecorator'
 import HConfirm from '@/components/h-confirm.vue'
 import { FormObj } from '@/type/dialog-form.type'
-import { topicTable } from '@/type/topic.type'
 import { mdiMagnify } from '@mdi/js'
 import HSearch from '@/components/h-search.vue'
 
@@ -69,9 +68,9 @@ export default class Resources extends Vue {
       }
     }
   })
-  mdiMagnify = mdiMagnify
+  private mdiMagnify = mdiMagnify
   private queryResourcesName = ''
-  private desserts: Array<topicTable> = []
+  private desserts: Array<ResourcesDessertType> = []
   private dialogFlag = false
   private loading = true
   private headers = [
@@ -137,15 +136,27 @@ export default class Resources extends Vue {
     this.formProvide.formObj = {}
   }
 
-  private editItem(item: { name: string; url: string; type: string; id: string; parentid: number | null }) {
+  private editItem(item: ResourcesItem) {
+    // 根据 parentid 找出 grandparentid
+    if (item.type === 'button') {
+      this.desserts.forEach(i => {
+        const _data = i.childrenList?.filter(_i => _i.id === item.parentid)
+        if (_data && _data?.length > 0) {
+          item.grandparentid = Number(_data[0].parentid)
+          return
+        }
+      })
+    }
     this.dialogFlag = true
+
     this.formProvide.title = '修改权限'
     this.formProvide.btnName = ['立即修改', '取消']
-    this.formProvide.methodName = 'updataResources'
+    this.formProvide.methodName = 'updateResources'
     this.formProvide.formObj = {
       name: item.name,
       url: item.url,
       parentid: item.parentid,
+      grandparentid: item.grandparentid,
       type: item.type,
       id: item.id
     }
@@ -174,7 +185,7 @@ export default class Resources extends Vue {
     }
   }
 
-  private async updataResources(formObj: ResourcesFormObj) {
+  private async updateResources(formObj: ResourcesFormObj) {
     const { name, url, parentid, type, id } = formObj
     const { success } = await this.h_request['httpPUT']<ResourcesFormObj>('PUT_PERMISSION_UPDATE_PERMISSION', {
       name,

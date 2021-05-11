@@ -100,7 +100,7 @@ import { mdiPlus, mdiMinus } from '@mdi/js'
 // required 会在 description 前添加 * 标识
 @Component({})
 @Validator(['noEmpty', 'topicNameFormatter'])
-export default class columnList extends Vue {
+export default class ColumnList extends Vue {
   @Inject() private readonly formProvide!: H_Vue
   @Prop({ default: true }) private required!: boolean
   @Prop() private description!: string

@@ -67,7 +67,7 @@ class RequestData {
         return Promise.resolve(data)
       },
       (error: AxiosError) => {
-        // console.log(error.response)
+        // console.log(error.message)
         let _msg = '其他'
         if (error.message.includes('Network Error')) {
           _msg = '网络错误'
@@ -266,7 +266,7 @@ class RequestData {
         // 如果是取消请求 cancelToken，直接返回，不提示错误
         return
       case '网络错误':
-        _message = '网络错误，请检查网络连接'
+        _message = '网络错误，或请求被服务器拒绝'
         break
       case '超时':
         _message = '请求超时，请重试'

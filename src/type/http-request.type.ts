@@ -14,7 +14,7 @@ export type paramsType = {
   num?: number
   createTime?: number
   serverName?: string
-  taskId?: string
+  taskId?: string | number
   startTime?: number
   endTime?: number
   videoKeyword?: string

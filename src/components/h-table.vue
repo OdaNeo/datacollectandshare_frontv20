@@ -168,10 +168,6 @@ export default class HTable extends Vue {
 .v-pagination {
   background: transparent !important;
 }
-#h-table-no-data >>> .v-icon__svg {
-  height: 50px !important;
-  width: 50px !important;
-}
 #h-table >>> .v-btn__content {
   font-size: 0.85rem;
 }

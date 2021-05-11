@@ -185,7 +185,7 @@ export default class ViewLog extends Vue {
       pageSize: this.pageSize,
       pageNum: this.pageNum,
       username: this.queryUserName ? this.queryUserName : null,
-      operation:this.queryDescribeInfo?this.queryDescribeInfo:null,
+      operation: this.queryDescribeInfo ? this.queryDescribeInfo : null,
       // method: this.queryMethodName ? this.queryMethodName : null,
       // operationType: this.queryMethodType ? this.queryMethodType : null,
       startTime: startTime,
@@ -210,7 +210,7 @@ export default class ViewLog extends Vue {
       pageSize: this.pageSize,
       pageNum: this.pageNum,
       username: this.queryUserName ? this.queryUserName : null,
-      operation:this.queryDescribeInfo?this.queryDescribeInfo:null,
+      operation: this.queryDescribeInfo ? this.queryDescribeInfo : null,
       // method: this.queryMethodName ? this.queryMethodName : null,
       // operationType: this.queryMethodType ? this.queryMethodType : null,
       startTime: startTime,
@@ -233,7 +233,7 @@ export default class ViewLog extends Vue {
 
     const data = await this.h_download.httpGET('GET_LOGMGT_VIEWLOG_LOG_EXPORTSYSLOG', {
       username: this.queryUserName ? this.queryUserName : null,
-      operation:this.queryDescribeInfo?this.queryDescribeInfo:null,
+      operation: this.queryDescribeInfo ? this.queryDescribeInfo : null,
       // method: this.queryMethodName ? this.queryMethodName : null,
       // operationType: this.queryMethodType ? this.queryMethodType : null,
       startTime: startTime,
@@ -300,7 +300,7 @@ export default class ViewLog extends Vue {
         : this.h_utils.timeUtil.timeToStamp(this.beginDate, '-') + this.timeRang.val * 24 * 3600 * 1000
     let params = {
       username: this.queryUserName ? this.queryUserName : null,
-      operation:this.queryDescribeInfo?this.queryDescribeInfo:null,
+      operation: this.queryDescribeInfo ? this.queryDescribeInfo : null,
       // method: this.queryMethodName ? this.queryMethodName : null,
       // operationType: this.queryMethodType ? this.queryMethodType : null,
       startTime: startTime,

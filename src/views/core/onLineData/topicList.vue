@@ -44,6 +44,10 @@
             <v-btn text color="primary" @click="ancillaryInformation(item)">附加信息</v-btn>
             <v-btn text color="primary" @click="validationInfo(item)">预处理</v-btn>
           </template>
+          <!-- 当前状态 -->
+          <template v-slot:state="{ item }">
+            <v-btn text :color="stateColor[item.realState]">{{ topicState[item.realState] }}</v-btn>
+          </template>
           <!-- 操作 -->
           <template v-slot:buttons="{ item }">
             <!-- 操作下拉框 -->
@@ -55,7 +59,8 @@
                 <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
                   <v-btn
                     :disabled="
-                      (i.tab && tab !== Number(i.tab)) || (i.faceType && item.topicInterFaceType !== i.faceType)
+                      (i.state && item.realState === Number(i.state)) ||
+                      (i.faceType && item.topicInterFaceType !== i.faceType)
                     "
                     class="pa-0"
                     width="100%"
@@ -121,6 +126,7 @@ import HContentDetails from '@/components/h-content-details.vue'
 import { tableHeaderType } from '@/type/table.type'
 import { queneType } from '@/enum/topic-list-enum'
 import HValidationInfo from '@/components/h-validationInfo.vue'
+import { realTopicState, stateColor } from '@/enum/state-enum'
 
 @Component({
   components: {
@@ -188,6 +194,10 @@ export default class OnlineDataTopicList extends Vue {
   private pageNum = 1 // 第几页
   private pageSize = 20 // 每页展示多少条数据
   private loading = true
+
+  private topicState = realTopicState
+  private stateColor = stateColor
+
   private get headers(): Array<tableHeaderType> {
     return [
       // 表头内容 所有主题
@@ -228,6 +238,11 @@ export default class OnlineDataTopicList extends Vue {
         }
       },
       {
+        text: '当前状态',
+        align: 'center',
+        slot: 'state'
+      },
+      {
         text: '显示详情',
         align: 'center',
         slot: 'buttons2'
@@ -244,7 +259,6 @@ export default class OnlineDataTopicList extends Vue {
   private buttonItems = [
     {
       text: `增加字段`,
-      tab: `1`,
       faceType: 1,
       handle: this.addItems
     },
@@ -255,15 +269,16 @@ export default class OnlineDataTopicList extends Vue {
     },
     {
       text: `打开`,
-      tab: `1`
+      state: `1`,
+      handle: this.startRealTopic
     },
     {
       text: `关闭`,
-      tab: `1`
+      state: `0`,
+      handle: this.stopRealTopic
     },
     {
       text: '删除',
-      tab: `1`,
       color: `error`,
       handle: this.handelDeleteTopic
     }
@@ -471,6 +486,7 @@ export default class OnlineDataTopicList extends Vue {
     this.paginationLength = Math.ceil(_data?.total / this.pageSize) || 1
     this.loading = false
   }
+
   // 主题查询
   private searchTopic() {
     if (!this.queryTopicID) {
@@ -546,6 +562,30 @@ export default class OnlineDataTopicList extends Vue {
     this.validateId = item.id
     this.tDialogFlag = true
     this.tDialogShow = 5
+  }
+
+  // 打开
+  private async startRealTopic(item: { id: number }) {
+    const { success } = await this.h_request.httpGET('GET_TOPICS_STARTREALTOPIC', {
+      topicId: item.id
+    })
+
+    if (success) {
+      this.h_utils['alertUtil'].open(`主题${item.id}已打开`, true, 'success')
+      this.$set(item, `realState`, 1)
+    }
+  }
+
+  // 关闭
+  private async stopRealTopic(item: { id: number }) {
+    const { success } = await this.h_request.httpGET('GET_TOPICS_STOPREALTOPIC', {
+      topicId: item.id
+    })
+
+    if (success) {
+      this.h_utils['alertUtil'].open(`主题${item.id}已关闭`, true, 'success')
+      this.$set(item, `realState`, 0)
+    }
   }
 
   // 删除

@@ -51,7 +51,6 @@ input::-moz-placeholder {
 /* 浏览器自动填充 */
 
 input:-internal-autofill-previewed, input:-internal-autofill-selected {
-    -webkit-text-fill-color: #FFFFFF !important;
     transition: background-color 5000s ease-in-out 0s !important;
 }
 
