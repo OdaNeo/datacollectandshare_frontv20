@@ -13,6 +13,9 @@ Vue.directive('onlyNum', {
         break
       case 2:
         ele = ele[1]
+        break
+      default:
+        ele = ele[0]
     }
 
     ele.oninput = function () {

@@ -42,6 +42,9 @@
       accept=".xls,.xlsx"
       @change="$emit('upload-file', $event)"
     />
+
+    <!-- 文件上传示例 -->
+    <HExample :description="`文件上传示例`" :headers="headers" :desserts="desserts" />
   </v-row>
 </template>
 <script lang="ts">
@@ -91,5 +94,38 @@ export default class CreateRest extends Vue {
       '\t'
     )
   }
+
+  // 数据示例 headers
+  private headers = [
+    {
+      text: '字段名',
+      align: 'center',
+      value: 'key'
+    },
+    {
+      text: '字段类型(Int,String,TimeStamp)',
+      align: 'center',
+      value: 'type'
+    },
+    {
+      text: '字段含义',
+      align: 'center',
+      value: 'description'
+    }
+  ]
+
+  // 数据示例 desserts
+  private desserts = [
+    {
+      key: 'key1',
+      type: 'type1',
+      description: 'description1'
+    },
+    {
+      key: 'key2',
+      type: 'type2',
+      description: 'description2'
+    }
+  ]
 }
 </script>

@@ -12,7 +12,7 @@
       @click:append="$emit('append')"
       @keyup.enter="$emit('enter')"
       @click:clear="$emit('clear')"
-      @input="$emit('input', $event)"
+      @input.native.stop="handleInput"
     >
     </v-text-field>
   </v-col>
@@ -29,7 +29,12 @@ import { mdiCloseCircleOutline, mdiMagnify } from '@mdi/js'
 export default class HSearch extends Vue {
   @Prop({ default: 3 }) private cols!: number
   @Prop({ default: true }) private showAppEnd!: boolean
+
   private mdiCloseCircleOutline = mdiCloseCircleOutline
   private mdiMagnify = mdiMagnify
+
+  private handleInput($event: any) {
+    this.$emit('input', $event.target.value)
+  }
 }
 </script>

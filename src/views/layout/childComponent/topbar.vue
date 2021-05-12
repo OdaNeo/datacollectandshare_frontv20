@@ -114,14 +114,18 @@ export default class TopBar extends Vue {
   }
 
   private get userSysName(): string {
-    const data = JSON.parse(sessionStorage.systemInfo)
-    let name = ''
-    for (let i = 0; i < data.length; i++) {
-      if (data[i].id === rootStoreModule.UserState.userMessage.systemName) {
-        name = data[i].name
+    if (sessionStorage.systemInfo) {
+      const data = JSON.parse(sessionStorage.systemInfo)
+      let name = ''
+      for (let i = 0; i < data.length; i++) {
+        if (data[i].id === rootStoreModule.UserState.userMessage.systemName) {
+          name = data[i].name
+        }
       }
+      return `系统名称：${name}`
+    } else {
+      return `系统名称： -`
     }
-    return `系统名称：${name}`
   }
 
   private get userToken(): string {

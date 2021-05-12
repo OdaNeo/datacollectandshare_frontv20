@@ -40,10 +40,10 @@ import { mdiEye, mdiEyeOff } from '@mdi/js'
 @Component
 @http
 export default class Login extends Vue {
-  PROJECT_TITLE = PROJECT_TITLE
-
+  private PROJECT_TITLE = PROJECT_TITLE
   private mdiEye = mdiEye
   private mdiEyeOff = mdiEyeOff
+
   private userDialogValid = true
   private showPass = false
   private loading = false
@@ -80,9 +80,9 @@ export default class Login extends Vue {
     const username = this.username
     const bool: boolean = await rootStoreModule.login({ username, result })
 
-    // systemInfo 需要token
-    const { data } = await this.h_request.httpGET('GET_SYSTEM_GETSYSTEMINFO', {})
-    sessionStorage.systemInfo = JSON.stringify(data)
+    // systemInfo 合并入login接口
+    // const { data } = await this.h_request.httpGET('GET_SYSTEM_GETSYSTEMINFO', {})
+    // sessionStorage.systemInfo = JSON.stringify(data)
 
     this.loading = false
 

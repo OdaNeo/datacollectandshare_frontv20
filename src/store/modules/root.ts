@@ -77,17 +77,26 @@ export default class rootStore extends VuexModule {
 
   @Action({ rawError: true })
   public async login({ username, result }: login): Promise<boolean> {
-    getRouteRoot(result.data)
+    // 生成前端路由
+    getRouteRoot(result.data.permission)
+
+    // 保存用户权限和个人信息
     const userSession: UserLocalType = {
       username: username,
-      userRoot: result.data,
+      userRoot: result.data.permission,
       routeRoot: RouteRoot,
       userMessage: JSON.parse(result.message),
       token: 'Bearer ' + JSON.parse(result.message).place
     }
+
+    // 保存用户信息
     sessionStorage.setItem('userInfo', JSON.stringify(userSession))
+    // 保存系统名和ID映射
+    sessionStorage.setItem('systemInfo', JSON.stringify(result.data.systemInfo))
+
     this.context.commit('MET_LOGIN', userSession)
-    return true
+
+    return Promise.resolve(true)
   }
 
   @Action({ rawError: true })

@@ -164,7 +164,7 @@ export default class OnlineDataTopicList extends Vue {
     }
   })
 
-  private tab = null
+  private tab = 0
   private items = ['所有主题', '我的主题']
 
   private fDialogFlag = false // 弹窗展示
@@ -175,7 +175,6 @@ export default class OnlineDataTopicList extends Vue {
 
   private rowObj: topicTable = {}
   private str: string | undefined = ''
-  private sheetObj: any
 
   private HConfirmShow = false
   private HConfirmItem = {
@@ -628,7 +627,7 @@ export default class OnlineDataTopicList extends Vue {
 
   // 上传文件
   private upLoadFile(e: File) {
-    const file = e as File
+    const file = e
     if (!file) {
       return
     }
@@ -639,38 +638,31 @@ export default class OnlineDataTopicList extends Vue {
     ) {
       const reader = new FileReader()
       reader.readAsArrayBuffer(file)
-      reader.onload = (e: any) => {
+      // 读文件
+      reader.onload = async (e: any) => {
         const data = new Uint8Array(e.target.result)
-        const { Sheets } = XLSX.read(data, { type: 'array' })
+        const { SheetNames, Sheets } = XLSX.read(data, { type: 'array' })
 
-        // 表格需命名为sheet1
-        if (!Sheets[`sheet1`]) {
-          this.h_utils['alertUtil'].open('表格格式有误，请将表格命名为sheet1', true, 'error')
-          return
-        } else {
-          this.sheetObj = Sheets[`sheet1`]
-        }
+        // 只读取第一个sheet
+        const str = XLSX.utils.sheet_to_json(Sheets[SheetNames[0]])
+        const _topicName = file.name.split('.')[0]
 
-        // 格式不对报错
-        if (!this.sheetObj['!ref'] && !this.sheetObj['!ref'].includes('C')) {
-          this.h_utils['alertUtil'].open('表格格式有误', true, 'error')
-          return
-        }
+        const _topicList: { key: string; type: string | number; description: string; disabled: boolean }[] = str.map(
+          (item: any) => {
+            return {
+              key: item[`字段名`] ? item[`字段名`] : '',
+              type: item[`字段类型(Int,String,TimeStamp)`]
+                ? this.handleObjKeyType(item[`字段类型(Int,String,TimeStamp)`])
+                : '',
+              description: item[`字段含义`] ? item[`字段含义`] : '',
+              disabled: false
+            }
+          }
+        )
 
-        const _l: number = this.sheetObj['!ref'].split('C')[1]
-        const _topicList: Array<any> = []
-
-        for (let i = 1; i < _l; i++) {
-          _topicList.push({
-            [this.handleObjKey('A') as string]: this.handleObjKeyType(this.sheetObj[`A${i + 1}`]?.v),
-            [this.handleObjKey('B') as string]: this.handleObjKeyType(this.sheetObj[`B${i + 1}`]?.v),
-            [this.handleObjKey('C') as string]: this.handleObjKeyType(this.sheetObj[`C${i + 1}`]?.v),
-            disabled: false
-          })
-        }
         // 填充列表
         this.formProvide.formObj = {
-          topicName: file.name.split('.')[0],
+          topicName: _topicName,
           queneType: 1,
           topicList: _topicList
           // writeElasticsearch: '是'
@@ -681,25 +673,20 @@ export default class OnlineDataTopicList extends Vue {
         this.$nextTick(() => {
           parent.validate()
         })
+        // 触发主题名验重
+        const text = await this.h_utils['noRepeat'].topicName(_topicName)
+        if (!text) {
+          return
+        }
       }
     } else {
-      this.h_utils.alertUtil.open('文件格式错误', true, 'error')
+      this.h_utils.alertUtil.open('文件格式错误，仅支持xls或者xlsx格式', true, 'error')
     }
   }
-  //
-  private handleObjKey(k: string) {
-    switch (this.sheetObj[`${k}1`].v) {
-      case '字段名':
-        return 'key'
-      case '字段类型(Int,String,TimeStamp)':
-        return 'type'
-      case '字段含义':
-        return 'description'
-    }
-  }
-  // ['序号','字段名','字段类型(Int,String,TimeStamp)','字段含义']
+
+  // ['字段名','字段类型(Int,String,TimeStamp)','字段含义']
   // this.formObj.formObj.topicList.type 转义
-  private handleObjKeyType(k?: string) {
+  private handleObjKeyType(k: string) {
     switch (k) {
       case 'Int':
         return 1
