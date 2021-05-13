@@ -12,7 +12,8 @@
       @click:append="$emit('append')"
       @keyup.enter="$emit('enter')"
       @click:clear="$emit('clear')"
-      @input.native.stop="handleInput"
+      @input.native="handleInput"
+      @change.native="handleChange"
     >
     </v-text-field>
   </v-col>
@@ -33,8 +34,20 @@ export default class HSearch extends Vue {
   private mdiCloseCircleOutline = mdiCloseCircleOutline
   private mdiMagnify = mdiMagnify
 
-  private handleInput($event: any) {
-    this.$emit('input', $event.target.value)
+  private handleInput(e: any) {
+    // console.log(e)
+    // console.log(e.target.value)
+
+    const _target = e.target as HTMLInputElement
+    this.$emit('input', _target.value)
+  }
+
+  private handleChange(e: any) {
+    // console.log(e)
+    // console.log(e.target.value)
+
+    const _target = e.target as HTMLInputElement
+    this.$emit('change', _target.value)
   }
 }
 </script>

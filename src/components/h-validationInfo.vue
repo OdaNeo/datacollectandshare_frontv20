@@ -72,7 +72,19 @@ export default class ValidationInfo extends Vue {
     {
       text: '类型',
       align: 'center',
-      value: 'type'
+      value: 'type',
+      format: (val: string) => {
+        switch (val) {
+          case 'isRepeat':
+            return '重复数据'
+          case 'isNull':
+            return '字段值为空'
+          case 'isStruct':
+            return '结构错误'
+          default:
+            return val
+        }
+      }
     },
     {
       text: '详情',

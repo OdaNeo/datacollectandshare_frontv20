@@ -3,10 +3,21 @@ import Vue from 'vue'
 
 // const request = new RequestData()
 
+const handleOnlyNum = (val: string) => {
+  val = val.replace(/[^0-9]/g, '') // 清除"数字"和"."以外的字符
+  val = val.replace(/^0+/, '') // 首匹配去0
+  // 不能超过init最大值
+  if (Number(val) > 2147483647) {
+    val = val.substring(0, val.length - 1) // 截取超过init的字符
+  }
+  return val
+}
+
 // 搜索框仅数字
 Vue.directive('onlyNum', {
   bind: function (el) {
     let ele: any[] | any = el.tagName.toUpperCase() === 'INPUT' ? el : el.querySelectorAll('input')
+
     switch (ele.length) {
       case 1:
         ele = ele[0]
@@ -14,19 +25,13 @@ Vue.directive('onlyNum', {
       case 2:
         ele = ele[1]
         break
-      default:
-        ele = ele[0]
     }
-
-    ele.oninput = function () {
-      let val = ele.value
-      val = val.replace(/[^0-9]/g, '') // 清除"数字"和"."以外的字符
-      val = val.replace(/^0+/, '') // 首匹配去0
-      // 不能超过init最大值
-      if (val > 2147483647) {
-        val = val.substring(0, val.length - 1) // 截取超过init的字符
-      }
-      ele.value = val
+    // 监听 input 和 change 事件
+    ele.oninput = () => {
+      ele.value = handleOnlyNum(ele.value)
+    }
+    ele.onchange = () => {
+      ele.value = handleOnlyNum(ele.value)
     }
   }
 })

@@ -23,19 +23,21 @@ export const VUE_APP_BASE_API = process.env.VUE_APP_NINJA_CAT
   ? sessionStorage.getItem('staging') || undefined
   : 'http://172.51.216.106:49090'
 
+// http 默认超时
 export const BASE_REQUEST_TIME_OUT = 60000
+
+// 引入 packageJSON 文件
+// eslint-disable-next-line
+const packageJSON = require('./package.json')
 
 export const PROJECT_TITLE = process.env.VUE_APP_NINJA_CAT
   ? `${VUE_APP_BASE_API}，最近更新${new Date()}`
   : process.env.NODE_ENV === 'development'
   ? `开发环境IP${VUE_APP_BASE_API}`
-  : `交控科技天枢平台数据采集管理中心`
+  : `${packageJSON._title}`
 
 window.document.title = PROJECT_TITLE
 
-// 引入 packageJSON 文件
-// eslint-disable-next-line
-const packageJSON = require('./package.json')
 export const PROJECT_SUB_TITLE = `${packageJSON.version}-${process.env.BRANCH}`
 
 // 可以修改密码的角色白名单

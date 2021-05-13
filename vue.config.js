@@ -2,12 +2,12 @@
 // const userList = require('./mock/user.json')
 const GitRevisionPlugin = require('git-revision-webpack-plugin')
 const gitRevisionPlugin = new GitRevisionPlugin()
+const packageJSON = require('./package.json')
 
 // 生产环境版本号
 // 版本号 3.[月份].[自增打包次数]，自增打包次数每月一日重置
 if (process.env.NODE_ENV === 'production' && !process.env.VUE_APP_NINJA_CAT) {
   const fs = require('fs')
-  const packageJSON = require('./package.json')
 
   const date = new Date().getMonth() + 1
   const day = new Date().getDate()
@@ -70,6 +70,11 @@ module.exports = {
       // [ { 'process.env': { NODE_ENV: '"development"', BASE_URL: '"/"' } } ]
       args[0]['process.env']['COMMITHASH'] = JSON.stringify(gitRevisionPlugin.commithash())
       args[0]['process.env']['BRANCH'] = JSON.stringify(gitRevisionPlugin.branch())
+      return args
+    })
+    //  修改 htmlWebpackPlugin 配置 修改html title
+    config.plugin('html').tap(args => {
+      args[0].title = packageJSON._title
       return args
     })
   }
