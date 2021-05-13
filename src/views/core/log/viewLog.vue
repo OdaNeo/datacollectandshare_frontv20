@@ -79,7 +79,7 @@ import ExportExcelFromDialog from './child/exportExcelFromDialog.vue'
 // import { rootStoreModule } from '@/store/modules/root'
 import { FormObj } from '@/type/dialog-form.type'
 import download from '@/decorator/downloadDecorator'
-
+import Moment from 'moment'
 @Component({
   components: {
     HTable,
@@ -145,11 +145,11 @@ export default class ViewLog extends Vue {
       value: 'operationType'
     },
     {
-      text: '创建时间',
+      text: '操作时间',
       align: 'center',
       value: 'createdate',
-      format: (time: number) => {
-        return this.h_utils.timeUtil.stamptoTime(time, '-')
+      format: (time: string) => {
+        return Moment(Number(time)).format('YYYY-MM-DD HH:mm:ss')
       }
     },
     {

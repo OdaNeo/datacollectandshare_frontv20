@@ -66,7 +66,7 @@ export default class ValidationInfo extends Vue {
       align: 'center',
       value: 'createTime',
       format: (val: number) => {
-        return Moment(val).format('YYYY-MM-DD hh:mm:ss')
+        return Moment(val).format('YYYY-MM-DD HH:mm:ss')
       }
     },
     {

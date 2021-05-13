@@ -53,7 +53,16 @@
             <!-- 操作下拉框 -->
             <v-menu close-delay="150" left offset-x bottom max-width="90px" min-width="90px">
               <template v-slot:activator="{ on, attrs }">
-                <v-btn color="primary" text v-bind="attrs" v-on="on">...</v-btn>
+                <v-btn
+                  v-if="tab === 0 && item.topicInterFaceType === 6"
+                  color="primary"
+                  :disabled="item.topicInterFaceType !== 6"
+                  @click="downloadFile(item)"
+                  text
+                >
+                  下载
+                </v-btn>
+                <v-btn v-else-if="tab === 1" color="primary" text v-bind="attrs" v-on="on">...</v-btn>
               </template>
               <v-list dense>
                 <v-list-item dense v-for="(i, index) in buttonItems" :key="index" class="pa-0">
@@ -249,8 +258,7 @@ export default class OnlineDataTopicList extends Vue {
       {
         text: '操作',
         align: 'center',
-        slot: 'buttons',
-        isHide: this.tab === 0
+        slot: 'buttons'
       }
     ]
   }

@@ -1,7 +1,7 @@
 {
   "name": "tctdatacenter",
   "_title": "交控科技天枢平台数据采集管理中心",
-  "version": "3.5.32",
+  "version": "3.5.34",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
