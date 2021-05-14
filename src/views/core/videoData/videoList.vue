@@ -561,6 +561,7 @@ export default class VideoDataList extends Vue {
 
   // tab切换方法
   private tabChange(tab: number) {
+    this.queryVideoTopicID = ""
     this.searchMethod(
       false,
       {
@@ -575,6 +576,7 @@ export default class VideoDataList extends Vue {
   // 改变用搜索方式
   private changeSearchMode() {
     this.searchMode === `id` ? (this.searchMode = `videoKeyword`) : (this.searchMode = `id`)
+    this.queryVideoTopicID = ""
   }
 
   // handelDeleteTopic

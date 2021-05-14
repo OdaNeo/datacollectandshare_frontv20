@@ -33,6 +33,12 @@ Vue.directive('onlyNum', {
     ele.onchange = () => {
       ele.value = handleOnlyNum(ele.value)
     }
+    ele.onblur = () => {
+      ele.value = handleOnlyNum(ele.value)
+    }
+    ele.onfocus = () => {
+      ele.value = handleOnlyNum(ele.value)
+    }
   }
 })
 //
