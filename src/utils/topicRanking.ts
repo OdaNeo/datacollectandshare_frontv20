@@ -80,13 +80,13 @@ class topicRanking {
                 if (params[0].componentType === 'timeline') {
                   return params[0].name
                 } else {
-                  return `主题${params[0].name}发布${params[0].value}条主题`
+                  return `主题${params[0].name}发布${params[0].value}条数据`
                 }
               } else {
                 if (params.componentType === 'timeline') {
                   return params.name
                 } else {
-                  return `主题${params.name}发布${params.value}条主题`
+                  return `主题${params.name}发布${params.value}条数据`
                 }
               }
             }

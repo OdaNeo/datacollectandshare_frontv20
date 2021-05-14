@@ -444,4 +444,5 @@ export default class LogDataList extends Vue {
     }
   }
 }
+
 </script>

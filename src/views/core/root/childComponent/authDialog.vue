@@ -3,11 +3,12 @@
     class="authDialog ml-12"
     selectable
     :items="roles"
+    :active="roles"
     :transition="true"
     item-key="id"
     v-model="formProvide.formObj.roles"
     activatable
-    selection-type="independent"
+    selection-type="leaf"
   ></v-treeview>
 </template>
 <script lang="ts">

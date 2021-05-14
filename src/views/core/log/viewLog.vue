@@ -135,14 +135,9 @@ export default class ViewLog extends Vue {
       value: 'ip'
     },
     {
-      text: '方法名称',
-      align: 'center',
-      value: 'method'
-    },
-    {
       text: '方法类型',
       align: 'center',
-      value: 'operationType'
+      value: 'methodType'
     },
     {
       text: '创建时间',

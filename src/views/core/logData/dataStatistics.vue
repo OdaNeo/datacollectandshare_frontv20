@@ -20,7 +20,7 @@
                 <HSearch
                   :cols="7"
                   v-model="followTopicId"
-                  label="添加关注主题名称"
+                  label="添加关注主题ID"
                   :showAppEnd="false"
                   style="margin-left: 30px"
                 />
@@ -32,7 +32,7 @@
                 <v-list-item v-for="(item, index) in followList" :key="index">
                   <template v-slot:default="{}">
                     <v-list-item-action>
-                      <v-checkbox v-model="item.flag" color="primary" @change="changeCheckBox(item)"></v-checkbox>
+                      <v-checkbox v-model="item.flag" color="primary" @change="changeCheckBox(item)" :disabled="statistics.length==1&&item.flag"></v-checkbox>
                     </v-list-item-action>
                     <v-list-item-content style="color: rgb(0, 160, 233)">{{ item.name }}</v-list-item-content>
                     <v-list-item-action>
@@ -166,7 +166,10 @@ export default class LogDataStatistics extends Vue {
         topicId: Number(this.followTopicId),
         followTime: new Date().getTime() + ''
       })
-      this.statistics_spare.push(this.statistics.shift() as log_statistics)
+      let shiftTopic:log_statistics = this.statistics.shift() as log_statistics
+      if(shiftTopic.topicId!=Number(this.followTopicId)){
+        this.statistics_spare.push(shiftTopic)
+      }
       this.statistics.push({
         name: data.topicName,
         topicId: data.topicId,
@@ -724,20 +727,28 @@ export default class LogDataStatistics extends Vue {
 
   // tab 切换
   private tabChange(number: number) {
-    console.log(number)
+    let _this = this;
+    setTimeout(() => {
+      _this.myChartElement1.resize()
+      _this.myChartElement2.resize()
+    }, 0)
   }
 
   private async cancelFollow(item: log_statistics, index: number) {
     this.followList.splice(index, 1)
     this.statistics.forEach((obj, index) => {
       if (item.name === obj.name) {
-        this.statistics_spare.push(this.statistics_spare[index])
+        this.statistics_spare.push(this.statistics[index])
         this.statistics.splice(index, 1)
       }
     })
     await this.h_request['httpGET']('GET_TOPICS_CANCEL_FOLLOW', { topicId: item.topicId })
-    this.myChartElement3.setOption(this.getOption3(), true)
-    this.myChartElement4.setOption(this.getOption4(), true)
+    if(this.statistics.length>0){
+      this.myChartElement3.setOption(this.getOption3(), true)
+      this.myChartElement4.setOption(this.getOption4(), true)
+    }else{
+      this.initRequest()
+    }
   }
 
   private changeCheckBox(item: any) {
@@ -753,42 +764,43 @@ export default class LogDataStatistics extends Vue {
         }
       })
       this.supplement()
+      if(this.statistics_spare.length > 0){
+        this.statistics.unshift(this.statistics_spare.shift() as log_statistics)
+      }else{
+        this.supplement()
+      }
     }
     this.myChartElement3.setOption(this.getOption3(), true)
     this.myChartElement4.setOption(this.getOption4(), true)
   }
 
   private async supplement() {
-    if (this.statistics_spare.length > 0) {
-      this.statistics.unshift(this.statistics_spare.shift() as log_statistics)
-    } else {
-      const { data } = await this.h_request['httpGET']('GET_TOPICS_LOGGER_TOPIC_STATISTICS_ADD_TOPIC', {
-        excTopics: [...this.excTopics]
+    const { data } = await this.h_request['httpGET']('GET_TOPICS_LOGGER_TOPIC_STATISTICS_ADD_TOPIC', {
+      excTopics: [...this.excTopics]
+    })
+    if (data.length > 0) {
+      let stat = data.shift()
+      this.statistics.push({
+        name: stat.topicName,
+        topicId: stat.topicId,
+        value: stat.count,
+        latest: stat.latest,
+        earliest: stat.earliest,
+        follow: stat.follow,
+        uid: stat.uid
       })
       if (data.length > 0) {
-        let stat = data.shift()
-        this.statistics.push({
-          name: stat.topicName,
-          topicId: stat.topicId,
-          value: stat.count,
-          latest: stat.latest,
-          earliest: stat.earliest,
-          follow: stat.follow,
-          uid: stat.uid
-        })
-        if (data.length > 0) {
-          data.forEach((element: any) => {
-            this.statistics_spare.push({
-              name: element.topicName,
-              topicId: element.topicId,
-              value: element.count,
-              latest: element.latest,
-              earliest: element.earliest,
-              follow: element.follow,
-              uid: element.uid
-            })
+        data.forEach((element: any) => {
+          this.statistics_spare.push({
+            name: element.topicName,
+            topicId: element.topicId,
+            value: element.count,
+            latest: element.latest,
+            earliest: element.earliest,
+            follow: element.follow,
+            uid: element.uid
           })
-        }
+        })
       }
     }
   }
@@ -840,11 +852,7 @@ export default class LogDataStatistics extends Vue {
       _this.tab = 1
       _this.queryTopicID = params.data.topicId
       _this.queryTopicDate = params.data.latest
-      setTimeout(() => {
-        _this.myChartElement1.resize()
-        _this.myChartElement2.resize()
-        _this.searchMethod()
-      }, 0)
+      _this.searchMethod()
     })
   }
 
