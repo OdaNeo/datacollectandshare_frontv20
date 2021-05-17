@@ -44,7 +44,12 @@
     />
 
     <!-- 文件上传示例 -->
-    <HExample :description="`文件上传示例`" :headers="headers" :desserts="desserts" />
+    <HExample
+      v-if="!formProvide.formObj.canNotEdit"
+      :description="`文件上传示例`"
+      :headers="headers"
+      :desserts="desserts"
+    />
   </v-row>
 </template>
 <script lang="ts">
